@@ -1,1 +1,127 @@
-RsrObject subclass: #CustomerObjectTest	instanceVariableNames: 'counter'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!CustomerObjectTest commentStamp: 'AaronBlakeman 10/31/2017 10:43' prior: 0!Verify that a sample customer object that inherits from RsrObject behaves as expected.!!CustomerObjectTest methodsFor: 'accessing' stamp: 'AaronBlakeman 11/10/2017 10:14'!counter: countcounter := count.^ counter! !!CustomerObjectTest methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:47'!counter^counter 	ifNil: [ counter := 5]! !!CustomerObjectTest methodsFor: 'initialization' stamp: 'AaronBlakeman 11/1/2017 13:46'!new^ super new.! !Object subclass: #MockRsrService	instanceVariableNames: ''	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!MockRsrService commentStamp: '<historical>' prior: 0!The RsrService class is intended to be a service that actively maintains the state of group of local objects as well as the status of remote objects.  To test this properly, use this mocking class to simulate a live RsrService object,!TestCase subclass: #RsrObjectTest	instanceVariableNames: 'rsr cot'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!RsrObjectTest commentStamp: 'AaronBlakeman 11/13/2017 10:29' prior: 0!Tests for the remote services replication base object class.Needs updated to use the MockRsrService.!!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:07'!testIsLocal|cot|cot := CustomerObjectTest new.cot rsrRegister.self assert: (cot isLocal )! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/6/2017 13:30'!testIncrementAndReturnSerialNumber|cot before after|cot := CustomerObjectTest new.before := cot rsrSerialNumber.after := cot incrementAndReturnSerialNumber.self assert: cot rsrSerialNumber equals: after.! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:20'!testRsrName"Verify that the name of the Rsr object properly gets set as the name of the subclass"|cot number|cot := CustomerObjectTest new.number := RsrService objectOffset.self assert: ((cot rsrName) includesSubstring: 'CustomerObjectTest' ).! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:16'!testIsRemote|cot|cot := CustomerObjectTest new.cot rsrRegister.self assert: (cot isRemote) not.! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/1/2017 15:38'!testRsrSerialNumber|customerA customerB|customerA := CustomerObjectTest new.customerB := CustomerObjectTest new.self assert: (customerA rsrSerialNumber ~= customerB rsrSerialNumber  )! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:27'!testRsrRegister"Verify that when a new RsrObject is created that it registers with RsrService."|rsrService beforeCount afterCount tmpObject|rsrService  := RsrService uniqueInstance.beforeCount := rsrService numberOfLocalObjects.tmpObject := CustomerObjectTest  new.tmpObject rsrRegister.afterCount := rsrService numberOfLocalObjects.self assert: beforeCount  equals: (afterCount - 1). ! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:28'!testRsrUpdate"Verify that upon update the serial number for an object is changed but the name remains the same."| cot beforeSerial afterSerial beforeName |cot := CustomerObjectTest new.beforeName := cot rsrName.beforeSerial  := cot rsrSerialNumber.cot rsrUpdate .afterSerial := cot rsrSerialNumber.self assert: beforeSerial ~= afterSerial.self assert: beforeName  = cot rsrName.! !!RsrObjectTest methodsFor: 'initialization' stamp: 'AaronBlakeman 11/15/2017 13:37'!setUprsr := RsrService uniqueInstance.cot := CustomerObjectTest new.! !!RsrObjectTest methodsFor: 'running' stamp: 'AaronBlakeman 11/15/2017 13:38'!tearDownrsr removeAllLocalObjects.! !TestCase subclass: #RsrServiceProxyTest	instanceVariableNames: ''	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!RsrServiceProxyTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 14:44'!testHostname|rp testHostname|testHostname := 'localhost'.rp := RsrServiceProxy new.rp port: testHostname.self assert: rp port equals: testHostname.! !!RsrServiceProxyTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 14:44'!testPort|rp testPort|testPort := 1234.rp := RsrServiceProxy new.rp port: testPort.self assert: rp port equals: testPort.! !TestCase subclass: #RsrServiceTest	instanceVariableNames: 'rsr cot'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!RsrServiceTest commentStamp: '<historical>' prior: 0!Tests for the RsrService!!RsrServiceTest methodsFor: 'initialization' stamp: 'AaronBlakeman 11/14/2017 13:20'!setUprsr := RsrService uniqueInstance.cot := CustomerObjectTest new.! !!RsrServiceTest methodsFor: 'running' stamp: 'AaronBlakeman 11/15/2017 15:49'!tearDownrsr removeAllLocalObjects.rsr removeAllRemoteObjects.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/16/2017 15:01'!testBacklogSizeself assert: rsr backlogSize  equals: 100. ! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 13:56'!testAddObserverPortrsr addObserver: 'localhost' port: 8082.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 10/31/2017 14:22'!testSingleton|a b|a := RsrService uniqueInstance.b := RsrService uniqueInstance.self assert: a == b.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 14:50'!testAddLocalObjectrsr addLocalObject: cot.self assert: (rsr getLocalObject: cot rsrName) rsrName equals: cot rsrName ! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:00'!testGetObject	|results|	rsr addLocalObject: cot.	results := rsr getObject: cot rsrName.	self assert: results rsrName equals: cot rsrName.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 13:56'!testAddObserverrsr addObserver: 'localhost'.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 13:56'!testAddRemoteObjectrsr addRemoteObject: cot.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 16:31'!testLocalSerialNumbers	|results|	cot rsrRegister.	results := rsr localSerialNumbers.	self assert: (results at: cot rsrName ) equals: cot rsrSerialNumber.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:00'!testGetRemoteObject	|results|	rsr addRemoteObject: cot.	results := rsr getRemoteObject: cot rsrName.	self assert: results rsrName equals: cot rsrName.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:00'!testGetLocalObject	|results|	rsr addLocalObject: cot.	results := rsr getLocalObject: cot rsrName.	self assert: results rsrName equals: cot rsrName.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:05'!testLocalObjects	|results|	rsr addLocalObject: cot.	results := rsr localObjects.	self assert: (results isKindOf: WeakValueDictionary).! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 10/31/2017 14:28'!testSingletonException"There should only be a single instance of RsrService per image.  To retrieve this instance RsrService>>uniqueInstance should be used.  This test confirms that RsrService>>new throws an Error."self should: [ RsrService new ] raise: Error.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 16:03'!testNumberOfLocalObjects	|nlo|	nlo := rsr numberOfLocalObjects.	cot rsrRegister.	self assert: nlo + 1  equals: rsr numberOfLocalObjects .! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/14/2017 13:23'!testRemoveObserverrsr addObserver: 'localhost' port: 8082.rsr removeObserver: 'localhost'.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/16/2017 16:01'!testNotifyObservers	rsr addObserver: 'localhost'.	cot := CustomerObjectTest new.	"Not registering this because we don't want RSR to know that it's local."	cot rsrName.	rsr notifyObservers: cot.	self assert: cot rsrName equals: (rsr getRemoteObject: cot rsrName) rsrName.	cot rsrName.! !
+RsrObject subclass: #CustomerObjectTest	instanceVariableNames: 'counter'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!CustomerObjectTest commentStamp: 'AaronBlakeman 10/31/2017 10:43' prior: 0!Verify that a sample customer object that inherits from RsrObject behaves as expected.!!CustomerObjectTest methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:47'!counter
+^counter 
+	ifNil: [ counter := 5]! !!CustomerObjectTest methodsFor: 'accessing' stamp: 'AaronBlakeman 11/10/2017 10:14'!counter: count
+counter := count.
+^ counter! !!CustomerObjectTest methodsFor: 'initialization' stamp: 'AaronBlakeman 11/1/2017 13:46'!new
+^ super new.! !Object subclass: #MockRsrService	instanceVariableNames: ''	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!MockRsrService commentStamp: '<historical>' prior: 0!The RsrService class is intended to be a service that actively maintains the state of group of local objects as well as the status of remote objects.  To test this properly, use this mocking class to simulate a live RsrService object,!TestCase subclass: #RsrObjectTest	instanceVariableNames: 'rsr cot'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!RsrObjectTest commentStamp: 'AaronBlakeman 11/13/2017 10:29' prior: 0!Tests for the remote services replication base object class.
+
+Needs updated to use the MockRsrService.!!RsrObjectTest methodsFor: 'initialization' stamp: 'AaronBlakeman 11/15/2017 13:37'!setUp
+rsr := RsrService uniqueInstance.
+cot := CustomerObjectTest new.! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:28'!testRsrUpdate
+"Verify that upon update the serial number for an object is changed but the name remains the same."
+| cot beforeSerial afterSerial beforeName |
+cot := CustomerObjectTest new.
+beforeName := cot rsrName.
+beforeSerial  := cot rsrSerialNumber.
+cot rsrUpdate .
+afterSerial := cot rsrSerialNumber.
+self assert: beforeSerial ~= afterSerial.
+self assert: beforeName  = cot rsrName.! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:20'!testRsrName
+"Verify that the name of the Rsr object properly gets set as the name of the subclass"
+|cot number|
+
+cot := CustomerObjectTest new.
+number := RsrService objectOffset.
+self assert: ((cot rsrName) includesSubstring: 'CustomerObjectTest' ).! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/6/2017 13:30'!testIncrementAndReturnSerialNumber
+|cot before after|
+cot := CustomerObjectTest new.
+before := cot rsrSerialNumber.
+after := cot incrementAndReturnSerialNumber.
+self assert: cot rsrSerialNumber equals: after.! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:27'!testRsrRegister
+"Verify that when a new RsrObject is created that it registers with RsrService."
+|rsrService beforeCount afterCount tmpObject|
+
+rsrService  := RsrService uniqueInstance.
+beforeCount := rsrService numberOfLocalObjects.
+tmpObject := CustomerObjectTest  new.
+tmpObject rsrRegister.
+afterCount := rsrService numberOfLocalObjects.
+self assert: beforeCount  equals: (afterCount - 1). ! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:07'!testIsLocal
+|cot|
+
+cot := CustomerObjectTest new.
+cot rsrRegister.
+
+self assert: (cot isLocal )! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 10:16'!testIsRemote
+|cot|
+
+cot := CustomerObjectTest new.
+cot rsrRegister.
+
+self assert: (cot isRemote) not.! !!RsrObjectTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/1/2017 15:38'!testRsrSerialNumber
+|customerA customerB|
+
+customerA := CustomerObjectTest new.
+customerB := CustomerObjectTest new.
+self assert: (customerA rsrSerialNumber ~= customerB rsrSerialNumber  )! !!RsrObjectTest methodsFor: 'running' stamp: 'AaronBlakeman 11/15/2017 13:38'!tearDown
+rsr removeAllLocalObjects.! !TestCase subclass: #RsrServiceProxyTest	instanceVariableNames: ''	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!RsrServiceProxyTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 14:44'!testPort
+|rp testPort|
+testPort := 1234.
+
+rp := RsrServiceProxy new.
+rp port: testPort.
+self assert: rp port equals: testPort.
+! !!RsrServiceProxyTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 14:44'!testHostname
+|rp testHostname|
+testHostname := 'localhost'.
+
+rp := RsrServiceProxy new.
+rp port: testHostname.
+self assert: rp port equals: testHostname.! !TestCase subclass: #RsrServiceTest	instanceVariableNames: 'rsr cot'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication-Tests'!!RsrServiceTest commentStamp: '<historical>' prior: 0!Tests for the RsrService!!RsrServiceTest methodsFor: 'running' stamp: 'AaronBlakeman 11/15/2017 15:49'!tearDown
+rsr removeAllLocalObjects.
+rsr removeAllRemoteObjects.
+! !!RsrServiceTest methodsFor: 'initialization' stamp: 'AaronBlakeman 11/14/2017 13:20'!setUp
+rsr := RsrService uniqueInstance.
+cot := CustomerObjectTest new.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:00'!testGetObject
+	|results|
+	rsr addLocalObject: cot.
+	results := rsr getObject: cot rsrName.
+	self assert: results rsrName equals: cot rsrName.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 10/31/2017 14:28'!testSingletonException
+"There should only be a single instance of RsrService per image.  To retrieve this instance 
+RsrService>>uniqueInstance should be used.  This test confirms that RsrService>>new throws an Error."
+
+self should: [ RsrService new ] raise: Error.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:05'!testLocalObjects
+	|results|
+	rsr addLocalObject: cot.
+	results := rsr localObjects.
+	self assert: (results isKindOf: WeakValueDictionary).! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 13:56'!testAddRemoteObject
+rsr addRemoteObject: cot.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/16/2017 15:01'!testBacklogSize
+self assert: rsr backlogSize  equals: 100. ! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:00'!testGetLocalObject
+	|results|
+	rsr addLocalObject: cot.
+	results := rsr getLocalObject: cot rsrName.
+	self assert: results rsrName equals: cot rsrName.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 10/31/2017 14:22'!testSingleton
+|a b|
+
+a := RsrService uniqueInstance.
+b := RsrService uniqueInstance.
+
+self assert: a == b.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/14/2017 13:23'!testRemoveObserver
+rsr addObserver: 'localhost' port: 8082.
+rsr removeObserver: 'localhost'.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/16/2017 16:01'!testNotifyObservers
+	rsr addObserver: 'localhost'.
+	cot := CustomerObjectTest new.
+	"Not registering this because we don't want RSR to know that it's local."
+	cot rsrName.
+	rsr notifyObservers: cot.
+	self assert: cot rsrName equals: (rsr getRemoteObject: cot rsrName) rsrName.
+	cot rsrName.
+! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 13:56'!testAddObserverPort
+rsr addObserver: 'localhost' port: 8082.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 16:31'!testLocalSerialNumbers
+	|results|
+	cot rsrRegister.
+	results := rsr localSerialNumbers.
+	self assert: (results at: cot rsrName ) equals: cot rsrSerialNumber.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 13:56'!testAddObserver
+rsr addObserver: 'localhost'.! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/13/2017 14:50'!testAddLocalObject
+rsr addLocalObject: cot.
+
+self assert: (rsr getLocalObject: cot rsrName) rsrName equals: cot rsrName 
+! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 16:03'!testNumberOfLocalObjects
+	|nlo|
+	nlo := rsr numberOfLocalObjects.
+	cot rsrRegister.
+	self assert: nlo + 1  equals: rsr numberOfLocalObjects .! !!RsrServiceTest methodsFor: 'tests' stamp: 'AaronBlakeman 11/15/2017 14:00'!testGetRemoteObject
+	|results|
+	rsr addRemoteObject: cot.
+	results := rsr getRemoteObject: cot rsrName.
+	self assert: results rsrName equals: cot rsrName.! !
