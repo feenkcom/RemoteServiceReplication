@@ -1,85 +1,109 @@
 Object subclass: #RsrCleanupProxy	instanceVariableNames: 'entriesToClean'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrCleanupProxy commentStamp: 'AaronBlakeman 11/16/2017 08:36' prior: 0!I transport the names of the deceased so that they may be properly disposed of on the observers.!!RsrCleanupProxy methodsFor: 'as yet unclassified' stamp: 'AaronBlakeman 11/16/2017 08:38'!objectsToClean: aLinkedList
 	entriesToClean := aLinkedList! !!RsrCleanupProxy methodsFor: 'as yet unclassified' stamp: 'AaronBlakeman 11/16/2017 08:38'!objectsToClean
 	^entriesToClean
-		ifNil: [ ^LinkedList new. ]! !Object subclass: #RsrObject	instanceVariableNames: 'rsrSerialNumber rsrName'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrObject commentStamp: 'AaronBlakeman 11/16/2017 08:37' prior: 0!I represent an Rsr object that can be replicated amongst Rsr services.!!RsrObject methodsFor: 'updating' stamp: 'AaronBlakeman 11/21/2017 10:38'!rsrUpdate
-"Informs the RsrService that changes have been made and the object must be propagated."
-|rsr oldSerial|
-rsr := RsrService uniqueInstance.(rsr isRegistered: self)	ifFalse: [ ^Error signal: 'Object must first be registered to rsr.' ]	ifTrue: [ 
-		oldSerial := self rsrSerialNumber.
-		rsrSerialNumber := self incrementAndReturnSerialNumber.
+		ifNil: [ ^LinkedList new. ]! !Object subclass: #RsrObject	instanceVariableNames: 'rsrSerialNumber rsrName'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrObject commentStamp: 'AaronBlakeman 11/16/2017 08:37' prior: 0!I represent an Rsr object that can be replicated amongst Rsr services.!!RsrObject methodsFor: 'updating' stamp: 'AaronBlakeman 11/21/2017 11:45'!rsrUpdate
+	"Informs the RsrService that changes have been made and the object must be propagated."
+	|rsr oldSerial|
+	rsr := RsrService uniqueInstance.	(rsr isRegistered: self)		ifFalse: [ ^Error signal: 'Object must first be registered to rsr.' ]		ifTrue: [ 
+			oldSerial := self rsrSerialNumber.
+			rsrSerialNumber := self incrementAndReturnSerialNumber.
 
-		rsr update: self].! !!RsrObject methodsFor: 'accessing' stamp: 'AaronBlakeman 11/14/2017 17:08'!rsrName
-^ rsrName 
-	ifNil: [ rsrName := self class printString, RsrService objectOffset printString. ]
-! !!RsrObject methodsFor: 'accessing' stamp: 'AaronBlakeman 11/1/2017 15:36'!rsrSerialNumber
-^rsrSerialNumber 
-	ifNil: [ rsrSerialNumber := (DateAndTime now asNanoSeconds) + 
-		(RsrService objectOffset) ]
-! !!RsrObject methodsFor: 'tools registry' stamp: 'AaronBlakeman 11/16/2017 14:42'!rsrRegister
-|rsr|
-rsr := RsrService uniqueInstance.
-"Ensure that the rsrName has been initialized before registration."
-self rsrName.
-rsr addLocalObject: self.
+			rsr update: self	].! !!RsrObject methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:45'!rsrName
+	^ rsrName 
+		ifNil: [ rsrName := self class printString, RsrService objectOffset printString. ]
+! !!RsrObject methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:45'!rsrSerialNumber
+	^rsrSerialNumber 
+		ifNil: [ rsrSerialNumber := (DateAndTime now asNanoSeconds) + 
+			(RsrService objectOffset) ]
+! !!RsrObject methodsFor: 'tools registry' stamp: 'AaronBlakeman 11/21/2017 11:45'!rsrRegister
+	|rsr|
+	rsr := RsrService uniqueInstance.
+	"Ensure that the rsrName has been initialized before registration."
+	self rsrName.
+	rsr addLocalObject: self.	
 
-"We now know that this object will be managed by RSR, add cleanup stuff."
-self class finalizationRegistry add: self.
+	"We now know that this object will be managed by RSR, add cleanup stuff."
+	self class finalizationRegistry add: self.
 ! !!RsrObject methodsFor: 'finalization' stamp: 'AaronBlakeman 11/21/2017 10:55'!finalize
 	|rsr|
 	rsr := RsrService  uniqueInstance.
 	rsr cleanup.	rsr debug ifTrue: [ Transcript show: self rsrName ;show: ' finalized.' ; cr. ]
 
-! !!RsrObject methodsFor: 'testing' stamp: 'AaronBlakeman 11/10/2017 11:46'!isLocal
-|rsr |
-rsr  := RsrService uniqueInstance.
-rsr localObjects keysDo:   
-	[ :key |
-		key = self rsrName 
-			ifTrue: [ ^true ] ].
-^false! !!RsrObject methodsFor: 'testing' stamp: 'AaronBlakeman 11/13/2017 10:15'!isRemote
-|rsr |
-rsr  := RsrService uniqueInstance.
-rsr remoteObjects keysDo:   
-	[ :key |
-		key = self rsrName 
-			ifTrue: [ ^true ] ].
-^false! !!RsrObject methodsFor: 'as yet unclassified' stamp: 'AaronBlakeman 11/1/2017 15:41'!incrementAndReturnSerialNumber
-rsrSerialNumber := rsrSerialNumber +1.
-^rsrSerialNumber! !Object subclass: #RsrService	instanceVariableNames: 'localObjects remoteObjects localSerialNumbers remoteSerialNumbers port timeout backlogSize observers debug process connectionSocket isRunning isRunningLock'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrService commentStamp: '<historical>' prior: 0!Root service object for keeping track of the locally defined objects to be replicated and service manager for maintaining state of remote connections.!!RsrService methodsFor: 'removing' stamp: 'AaronBlakeman 11/10/2017 14:46'!removeObserver: hostname
-observers removeKey: hostname.! !!RsrService methodsFor: 'testing' stamp: 'AaronBlakeman 11/21/2017 10:58'!isRegistered: anRsrObject	|results|	results := self getObjectByName: anRsrObject rsrName.	results ifNil: [^false] ifNotNil: [^true].! !!RsrService methodsFor: 'as yet unclassified' stamp: 'AaronBlakeman 11/17/2017 08:52'!handleConnection
-	|interactionSocket|
-	interactionSocket := connectionSocket 
-									waitForAcceptFor: (self timeout) 
-									ifTimedOut: [ ^self ].
-	[  self receiveDataUsing: interactionSocket ] fork.
-! !!RsrService methodsFor: 'as yet unclassified' stamp: 'AaronBlakeman 11/16/2017 17:03'!receiveDataUsing: aSocket
-	|data stream results|
-	[ data := aSocket receiveDataTimeout: self timeout.
-	  stream := STONReader on: data readStream. 
-	  results := stream next.
-	  self processReceivedObject: results.
-	] ensure: [ 
-		aSocket closeAndDestroy. ].
-	! !!RsrService methodsFor: 'request handling' stamp: 'AaronBlakeman 11/17/2017 08:52'!listenLoop
-	[[isRunning] 
-		whileTrue: [ self handleConnection ]]
-		ensure: [ connectionSocket closeAndDestroy. ]
-	
-
-	! !!RsrService methodsFor: 'request handling' stamp: 'AaronBlakeman 11/20/2017 13:28'!processReceivedObject: anObject
-Transcript show: anObject ; cr.
+! !!RsrObject methodsFor: 'testing' stamp: 'AaronBlakeman 11/21/2017 11:44'!isLocal
+	|rsr |
+	rsr  := RsrService uniqueInstance.
+	rsr localObjects keysDo:   
+		[ :key |
+			key = self rsrName 
+				ifTrue: [ ^true ] ].
+	^false! !!RsrObject methodsFor: 'testing' stamp: 'AaronBlakeman 11/21/2017 11:45'!isRemote
+	|rsr |
+	rsr  := RsrService uniqueInstance.
+	rsr remoteObjects keysDo:   
+		[ :key |
+			key = self rsrName 
+				ifTrue: [ ^true ] ].
+	^false! !!RsrObject methodsFor: 'as yet unclassified' stamp: 'AaronBlakeman 11/21/2017 11:44'!incrementAndReturnSerialNumber
+	rsrSerialNumber := rsrSerialNumber +1.
+	^rsrSerialNumber! !Object subclass: #RsrService	instanceVariableNames: 'localObjects remoteObjects localSerialNumbers remoteSerialNumbers port timeout backlogSize observers debug process connectionSocket isRunning isRunningLock'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrService commentStamp: '<historical>' prior: 0!Root service object for keeping track of the locally defined objects to be replicated and service manager for maintaining state of remote connections.!!RsrService methodsFor: 'initialization' stamp: 'AaronBlakeman 11/16/2017 17:11'!initialize
+	super initialize.
+	isRunningLock  := Mutex new.
+	self isRunning: false.
+	debug := true.
+	! !!RsrService methodsFor: 'request handling' stamp: 'AaronBlakeman 11/21/2017 11:31'!processReceivedObject: anObject	"This method receives an object over the wire and processes it based on it's type."	self debug		ifTrue: [  Transcript show: anObject ; cr. ].
 
 	(anObject isKindOf: RsrServiceProxy  ) 
-		ifTrue: [ self addObserver: anObject hostname port: anObject port].
+		ifTrue: [ self 						addObserver: anObject 						hostname port: anObject port ].
 	(anObject isKindOf: RsrCleanupProxy  ) 
 		ifTrue: [ self cleanupLocalRemotes: anObject. ]
 		ifFalse: [ anObject isLocal
 						ifFalse: [ self addRemoteObject: anObject]
 						"Need to check serial numbers here."
-						ifTrue:  [ self localObjects at: anObject rsrName put: anObject]
-				].
+						ifTrue:  [ self 										localObjects at: anObject rsrName 										put: anObject]
+		].
 	
-! !!RsrService methodsFor: 'request handling' stamp: 'AaronBlakeman 11/16/2017 16:19'!sendTo: address port: aPort object: anObject 
+! !!RsrService methodsFor: 'request handling' stamp: 'AaronBlakeman 11/21/2017 11:19'!notifyObservers: anRsrObject
+	observers associationsDo:  [ :entry | 		self sendTo: entry key 			  port: entry value 			  object: anRsrObject   	]
+! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/21/2017 11:15'!addObserver: hostname
+	observers 
+		ifNil: [ self observers. ].
+	observers 		at: hostname 		put: self port.! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/21/2017 11:16'!addObserver: hostname port: aPort
+	observers 		at: hostname 		put: aPort.! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/21/2017 11:17'!addRemoteObject: anRsrObject
+	remoteObjects  
+		ifNil: [ self remoteObjects. ].
+	remoteObjects 		at: anRsrObject rsrName 		put: anRsrObject.	self addRemoteSerialNumber: anRsrObject.
+! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/21/2017 11:15'!addLocalSerialNumber: anRsrObject
+	localSerialNumbers   
+		ifNil: [ self localSerialNumbers. ].
+	localSerialNumbers 		at: anRsrObject rsrName 		put: anRsrObject rsrSerialNumber.
+! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/21/2017 11:17'!addRemoteSerialNumber: anRsrObject
+	remoteSerialNumbers    
+		ifNil: [ self remoteSerialNumbers. ].
+	remoteSerialNumbers 		at: anRsrObject rsrName 		put: anRsrObject rsrSerialNumber.
+! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/16/2017 14:42'!addLocalObject: anRsrObject
+	localObjects  
+		ifNil: [ self localObjects. ].
+	localObjects at: anRsrObject rsrName put: anRsrObject.
+	self addLocalSerialNumber: anRsrObject.
+
+! !!RsrService methodsFor: 'updating' stamp: 'AaronBlakeman 11/21/2017 11:23'!update: anRsrObject
+	anRsrObject isLocal 
+		ifTrue: [ localObjects 						at: anRsrObject rsrName 						put: anRsrObject.	 
+					 localSerialNumbers 						at: anRsrObject rsrName 						put: anRsrObject rsrSerialNumber 					].
+	self notifyObservers: anRsrObject.
+! !!RsrService methodsFor: 'network' stamp: 'AaronBlakeman 11/17/2017 08:52'!listenLoop
+	[[isRunning] 
+		whileTrue: [ self handleConnection ]]
+		ensure: [ connectionSocket closeAndDestroy. ]
+	
+
+	! !!RsrService methodsFor: 'network' stamp: 'AaronBlakeman 11/17/2017 08:52'!handleConnection
+	|interactionSocket|
+	interactionSocket := connectionSocket 
+									waitForAcceptFor: (self timeout) 
+									ifTimedOut: [ ^self ].
+	[  self receiveDataUsing: interactionSocket ] fork.
+! !!RsrService methodsFor: 'network' stamp: 'AaronBlakeman 11/16/2017 16:19'!sendTo: address port: aPort object: anObject 
 	|host socket serializedObject|
 	socket := Socket newTCP.
 	host := NetNameResolver addressForName: address.
@@ -88,32 +112,15 @@ Transcript show: anObject ; cr.
 		connectTo: host port: aPort;
 		waitForConnectionFor: 10.
 		socket sendData: serializedObject. 
-	]ensure: [ socket closeAndDestroy  ].! !!RsrService methodsFor: 'request handling' stamp: 'AaronBlakeman 11/15/2017 13:15'!notifyObservers: anRsrObject
-observers associationsDo:  [ :entry | self sendTo: entry key port: entry value object: anRsrObject   ]
-! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/16/2017 14:36'!addObserver: hostname
-	observers 
-		ifNil: [ self observers. ].
-	
-	observers at: hostname put: self port.! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/16/2017 15:01'!addObserver: hostname port: aPort
-	observers at: hostname put: aPort.! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/20/2017 08:49'!addRemoteObject: anRsrObject
-	remoteObjects  
-		ifNil: [ self remoteObjects. ].
-	remoteObjects at: anRsrObject rsrName put: anRsrObject.	self addRemoteSerialNumber: anRsrObject.
-! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/16/2017 14:38'!addLocalSerialNumber: anRsrObject
-	localSerialNumbers   
-		ifNil: [ self localSerialNumbers. ].
-	localSerialNumbers at: anRsrObject rsrName put: anRsrObject rsrSerialNumber.
-! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/20/2017 08:49'!addRemoteSerialNumber: anRsrObject
-	remoteSerialNumbers    
-		ifNil: [ self remoteSerialNumbers. ].
-	remoteSerialNumbers at: anRsrObject rsrName put: anRsrObject rsrSerialNumber.
-! !!RsrService methodsFor: 'adding' stamp: 'AaronBlakeman 11/16/2017 14:42'!addLocalObject: anRsrObject
-	localObjects  
-		ifNil: [ self localObjects. ].
-	localObjects at: anRsrObject rsrName put: anRsrObject.
-	self addLocalSerialNumber: anRsrObject.
-
-! !!RsrService methodsFor: 'private' stamp: 'AaronBlakeman 11/16/2017 16:00'!removeAllLocalObjects
+	]ensure: [ socket closeAndDestroy  ].! !!RsrService methodsFor: 'network' stamp: 'AaronBlakeman 11/16/2017 17:03'!receiveDataUsing: aSocket
+	|data stream results|
+	[ data := aSocket receiveDataTimeout: self timeout.
+	  stream := STONReader on: data readStream. 
+	  results := stream next.
+	  self processReceivedObject: results.
+	] ensure: [ 
+		aSocket closeAndDestroy. ].
+	! !!RsrService methodsFor: 'private' stamp: 'AaronBlakeman 11/16/2017 16:00'!removeAllLocalObjects
 	localObjects := nil.
 	self localObjects.
 	localSerialNumbers := nil.
@@ -121,46 +128,46 @@ observers associationsDo:  [ :entry | self sendTo: entry key port: entry value o
 	remoteObjects := nil.
 	self remoteObjects .
 	remoteSerialNumbers := nil.
-	self remoteSerialNumbers .! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:47'!timeout
-^timeout
+	self remoteSerialNumbers .! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:22'!timeout
+	^timeout
 		ifNil: [ timeout := 600  ].
 	! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/16/2017 15:56'!getRemoteObject: name
 	^remoteObjects at: name ! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/6/2017 13:43'!backlogSize: size
 	backlogSize := size! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:41'!remoteObjects
 	^ remoteObjects 
-		ifNil: [ remoteObjects := Dictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:54'!numberOfLocalObjects
+		ifNil: [ remoteObjects := Dictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/16/2017 15:00'!getLocalObject: name
+	^localObjects at: name ! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 10:54'!debug	^debug! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:40'!localObjects
+	^ localObjects 
+		ifNil: [ localObjects := WeakValueDictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:18'!cleanupLocalRemotes: anRsrCleanup
+	(anRsrCleanup objectsToClean ) do: [ :entry |
+		remoteObjects 			at: entry 				ifPresent: [ remoteObjects removeKey: entry.].
+		remoteSerialNumbers 			at: entry 				ifPresent: [ remoteSerialNumbers removeKey: entry ].
+	 ].
+! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:20'!numberOfLocalObjects
 	| count |
 	count := 0.
-	self localObjects keysDo: [ :element | count := count + 1 ].
-	^ count! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/10/2017 10:09'!observe: hostname port: aPort
-|rsrProxy |
-rsrProxy  := RsrServiceProxy new.
-rsrProxy hostname: NetNameResolver localHostName.
-rsrProxy port: self port.
-self sendTo: hostname port: aPort object: rsrProxy.! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:40'!localObjects
-	^ localObjects 
-		ifNil: [ localObjects := WeakValueDictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/16/2017 10:19'!cleanupLocalRemotes: anRsrCleanup
-	(anRsrCleanup objectsToClean ) do: [ :entry |
-		remoteObjects at: entry ifPresent: [ remoteObjects removeKey: entry.].
-		remoteSerialNumbers at: entry ifPresent: [ remoteSerialNumbers removeKey: entry ].
-	 ].
-! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:45'!port
-^port 
-	ifNil: [ port := 8080].
-! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/17/2017 08:55'!isRunning: aBoolean
-	isRunningLock critical: [ isRunning := aBoolean  ].! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/16/2017 15:00'!getLocalObject: name
-	^localObjects at: name ! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 10:54'!debug	^debug! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/17/2017 08:50'!start
+	self localObjects keysDo: [ :element | 		count := count + 1 ].
+	^ count! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/17/2017 08:55'!isRunning: aBoolean
+	isRunningLock critical: [ isRunning := aBoolean  ].! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:20'!observe: hostname port: aPort
+	|rsrProxy |
+	rsrProxy := RsrServiceProxy new.
+	rsrProxy hostname: NetNameResolver localHostName.
+	rsrProxy port: self port.
+	self 		sendTo: hostname 		port: aPort 		object: rsrProxy.! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:20'!port
+	^port 
+		ifNil: [ port := 8080].
+! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:22'!start
 	isRunningLock critical: [ 
 		self isRunning ifTrue: [ ^self ].
 		self isRunning: true].
 	
 	connectionSocket := Socket newTCP.
-	connectionSocket listenOn: self port backlogSize: self backlogSize.
+	connectionSocket 		listenOn: self port 		backlogSize: self backlogSize.
 	
    [ self listenLoop ]  fork.
-	Transcript clear ; show: 'Server started' ; cr.
-	! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/16/2017 17:10'!isRunning
-^ isRunningLock critical: [ isRunning  ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/6/2017 13:42'!port: newPort
+	self debug 		ifTrue: [Transcript clear ; show: 'Server started' ; cr].
+	! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:19'!isRunning
+	^ isRunningLock critical: [ isRunning  ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/6/2017 13:42'!port: newPort
 	port := newPort.
 	! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:43'!remoteSerialNumbers
 	^ remoteSerialNumbers
@@ -184,18 +191,13 @@ self sendTo: hostname port: aPort object: rsrProxy.! !!RsrService methodsFor: 
 	rc := RsrCleanupProxy new.
 	rc objectsToClean: orphanedKeys.
 	self notifyObservers: rc.
-! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 10:58'!getObjectByName: objectName	localObjects associationAt: objectName ifPresent: [ 		^ (localObjects at: objectName) 			"The object has been garbage collected."			ifNil: [ ^Error signal: 'Object no longer exists.' ].	].	remoteObjects associationAt: objectName ifPresent: [ 		^ (remoteObjects at: objectName)			ifNil: [ ^Error signal: 'Object no longer exists.' ]	].	^nil.! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:41'!localSerialNumbers
+! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:18'!getObjectByName: objectName	"Get back an RsrObject by its instance name or get back nil"	{localObjects . remoteObjects} do: [ :each |		each associationAt: objectName ifPresent: [ 			^ (localObjects at: objectName) 				"The object has been garbage collected."				ifNil: [ ^Error signal: 'Object no longer exists.' ].		].	].	^nil.! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:41'!localSerialNumbers
 	^ localSerialNumbers 
-		ifNil: [ localSerialNumbers := Dictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 16:28'!update: anRsrObject
-anRsrObject isLocal 
-	ifTrue: [ localObjects at: anRsrObject rsrName put: anRsrObject.	 
-				 localSerialNumbers at: anRsrObject rsrName put: anRsrObject rsrSerialNumber. ].
-self notifyObservers: anRsrObject.
-! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:42'!observers
+		ifNil: [ localSerialNumbers := Dictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/15/2017 13:42'!observers
 	^observers 
-		ifNil: [ observers := Dictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/16/2017 15:01'!backlogSize
-^backlogSize 
-		ifNil: [ backlogSize  := 100  ].
+		ifNil: [ observers := Dictionary new. ]! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:17'!backlogSize
+	^backlogSize 
+			ifNil: [ backlogSize  := 100  ].
 
 	! !!RsrService methodsFor: 'accessing' stamp: 'AaronBlakeman 11/17/2017 14:33'!cleanupLocal: orphanedKeys
 	orphanedKeys do: [ :entry |
@@ -208,12 +210,8 @@ self notifyObservers: anRsrObject.
 		orphans := self findOrphanedKeys.
 		self cleanupLocal: orphans.
 		self cleanupRemote: orphans.
-	] fork. "Don't want finalization to hang, so fork this and return.... though not sure that this is true"! !!RsrService methodsFor: 'initialization' stamp: 'AaronBlakeman 11/16/2017 17:11'!initialize
-	super initialize.
-	isRunningLock  := Mutex new.
-	self isRunning: false.
-	debug := true.
-	! !"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!RsrService class	instanceVariableNames: 'uniqueInstance objectOffset'!!RsrService class methodsFor: 'private' stamp: 'AaronBlakeman 11/16/2017 12:32'!reset
+	] fork. "Don't want finalization to hang, so fork this and return.... though not sure that this is true"! !!RsrService methodsFor: 'removing' stamp: 'AaronBlakeman 11/21/2017 11:21'!removeObserver: hostname
+	observers removeKey: hostname.! !!RsrService methodsFor: 'testing' stamp: 'AaronBlakeman 11/21/2017 11:19'!isRegistered: anRsrObject	|results|	results := self getObjectByName: anRsrObject rsrName.	results 		ifNil: [^false] 		ifNotNil: [^true].! !"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!RsrService class	instanceVariableNames: 'uniqueInstance objectOffset'!!RsrService class methodsFor: 'private' stamp: 'AaronBlakeman 11/16/2017 12:32'!reset
 uniqueInstance stop.
 uniqueInstance removeAllLocalObjects.
 uniqueInstance removeAllRemoteObjects.
@@ -228,8 +226,8 @@ uniqueInstance := nil.! !!RsrService class methodsFor: 'instance creation' st
 	ifNil: [ 
 		uniqueInstance := self basicNew initialize.
 		]
-! !Object subclass: #RsrServiceProxy	instanceVariableNames: 'hostname port'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrServiceProxy commentStamp: 'AaronBlakeman 11/20/2017 13:43' prior: 0!I am a proxy object used to convey information about an RsrService over the wire.!!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:04'!hostname
-^hostname! !!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:05'!hostname: aHostname
-hostname := aHostname! !!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:05'!port: aPort
-port := aPort! !!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/9/2017 16:05'!port
-^port! !
+! !Object subclass: #RsrServiceProxy	instanceVariableNames: 'hostname port'	classVariableNames: ''	poolDictionaries: ''	category: 'RemoteServicesReplication'!!RsrServiceProxy commentStamp: 'AaronBlakeman 11/20/2017 13:43' prior: 0!I am a proxy object used to convey information about an RsrService over the wire.!!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:44'!hostname: aHostname
+	hostname := aHostname! !!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:44'!port: aPort
+	port := aPort! !!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:44'!port
+	^port! !!RsrServiceProxy methodsFor: 'accessing' stamp: 'AaronBlakeman 11/21/2017 11:44'!hostname
+	^hostname! !
