@@ -1,0 +1,10 @@
+{
+	"instance" : {
+		"port:" : "",
+		"port" : "",
+		"hostname:" : "",
+		"hostname" : "",
+		"defaultPort" : ""
+	},
+	"class" : { }
+}

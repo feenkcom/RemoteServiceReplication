@@ -1,0 +1,12 @@
+{
+	"instance" : {
+		"rsrName" : "",
+		"getObject:" : "",
+		"rsrSerialNumber" : "",
+		"finalize" : "",
+		"put:" : ""
+	},
+	"class" : {
+		"wrap:" : ""
+	}
+}

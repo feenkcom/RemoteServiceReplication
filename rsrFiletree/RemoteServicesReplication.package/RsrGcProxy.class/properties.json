@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServicesReplication",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"entriesToClean"
+	],
+	"name" : "RsrGcProxy",
+	"type" : "normal"
+}

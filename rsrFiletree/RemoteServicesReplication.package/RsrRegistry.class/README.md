@@ -1,0 +1,1 @@
+I maintain the associations between locally stored objects and their remote counterparts.

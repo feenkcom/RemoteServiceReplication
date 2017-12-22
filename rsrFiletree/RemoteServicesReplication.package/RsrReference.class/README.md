@@ -1,0 +1,1 @@
+I represent and object that can safely be sent over the wire.

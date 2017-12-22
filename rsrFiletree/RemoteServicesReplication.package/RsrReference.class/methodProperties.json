@@ -1,0 +1,9 @@
+{
+	"instance" : {
+		"put:" : ""
+	},
+	"class" : {
+		"wrap:" : "",
+		"getReference:" : ""
+	}
+}

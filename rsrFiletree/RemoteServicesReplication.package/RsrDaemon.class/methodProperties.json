@@ -1,0 +1,28 @@
+{
+	"instance" : {
+		"port:" : "",
+		"initialize" : "",
+		"debug" : "",
+		"isRunning" : "",
+		"timeout" : "",
+		"remoteServerName:" : "",
+		"backlogSize:" : "",
+		"remoteServerName" : "",
+		"handleConnection" : "",
+		"stop" : "",
+		"listenLoop" : "",
+		"receiveDataUsing:" : "",
+		"port" : "",
+		"backlogSize" : "",
+		"send:to:" : "",
+		"send:" : "",
+		"timeout:" : "",
+		"start" : "",
+		"isRunning:" : ""
+	},
+	"class" : {
+		"new" : "",
+		"uniqueInstance" : "",
+		"objectOffset" : ""
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"instance" : {
+		"cleanupManagedObjects:" : "",
+		"cleanup" : "",
+		"findOrphanedKeys" : "",
+		"getObject:" : "",
+		"initialize" : "",
+		"removeAllLocalObjects" : "",
+		"managedObjects" : "",
+		"addObject:" : ""
+	},
+	"class" : {
+		"new" : "",
+		"uniqueInstance" : "",
+		"objectOffset" : ""
+	}
+}

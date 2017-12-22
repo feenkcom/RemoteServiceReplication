@@ -1,0 +1,1 @@
+I represent an object that's being managed by Rsr.
