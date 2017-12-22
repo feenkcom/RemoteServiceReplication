@@ -1,4 +1,4 @@
 sending
 prepare: anObject.
-	"test asdf asdf"
+	"Last"
 	^STON toString: anObject.
