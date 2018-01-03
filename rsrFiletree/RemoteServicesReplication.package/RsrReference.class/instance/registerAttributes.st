@@ -1,5 +1,4 @@
-as yet unclassified
+instance creation
 registerAttributes
 	self rsrName.
 	self rsrSerialNumber.
-	

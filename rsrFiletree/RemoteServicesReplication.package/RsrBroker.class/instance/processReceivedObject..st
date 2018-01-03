@@ -5,6 +5,10 @@ processReceivedObject: anObject
 		ifTrue: [ |rr|
 			rr := RsrRegistry uniqueInstance.
 			rr cleanup.
+			^nil
 		].
+	
+	(anObject isKindOf: RsrEvaluateOnServer) 
+		ifTrue: [ ^anObject execute ].
 	
 	

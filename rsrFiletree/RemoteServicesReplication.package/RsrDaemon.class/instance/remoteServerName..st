@@ -1,7 +1,6 @@
 accessing
-remoteServerName: aServerName
-	|aRsrServer|
-	
-	aRsrServer := RsrServer new.
-	aRsrServer hostname: aServerName.
-	remoteRsrServer := aRsrServer.
+remoteServerName: serverName
+	|rs|
+	rs := RsrServer new.
+	rs hostname: serverName.
+	remoteRsrServer := rs.

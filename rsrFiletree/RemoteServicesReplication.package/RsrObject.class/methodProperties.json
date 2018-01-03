@@ -1,9 +1,9 @@
 {
 	"instance" : {
 		"rsrName" : "",
-		"getObject:" : "",
 		"rsrSerialNumber" : "",
-		"finalize" : "",
+		"finalize" : "AaronBlakeman 1/2/2018 11:07",
+		"getRemoteObject:" : "AaronBlakeman 1/2/2018 11:02",
 		"put:" : ""
 	},
 	"class" : {

@@ -2,4 +2,4 @@ accessing
 status
 	|rsr|
 	rsr := RsrDaemon uniqueInstance.
-	rsr status.
+	^rsr status.

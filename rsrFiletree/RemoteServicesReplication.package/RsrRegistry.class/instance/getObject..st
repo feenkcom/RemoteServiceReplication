@@ -1,4 +1,4 @@
 initialization
 getObject: rsrObjectName
 	^ managedObjects at: rsrObjectName 
-		ifAbsent: [  ]
+		ifAbsent: [ Transcript show: 'not found.' ]

@@ -1,8 +1,9 @@
 initialization
 testHappyPathForInstanceInspection
-	|cot ref inspectResults |
+	|cot results|
 	cot := CustomerObject new.
-	ref := RsrReferenceServer getReference: cot.
-	inspectResults := RsrInspectorClient inspect: ref.
+	
+	results := RsrEvaluateOnServer command: 'CustomerObject new'.
+
 	"Need some better assertion here."
-	self assert: (inspectResults isKindOf: RsrInspector).
+	self assert: results  equals: 'CustomerObject'.

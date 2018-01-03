@@ -3,7 +3,7 @@
 		"cleanupManagedObjects:" : "",
 		"cleanup" : "",
 		"findOrphanedKeys" : "",
-		"getObject:" : "",
+		"getObject:" : "AaronBlakeman 1/2/2018 11:29",
 		"initialize" : "",
 		"removeAllLocalObjects" : "",
 		"managedObjects" : "",
@@ -12,6 +12,7 @@
 	"class" : {
 		"new" : "",
 		"uniqueInstance" : "",
+		"add:" : "AaronBlakeman 1/2/2018 11:17",
 		"objectOffset" : ""
 	}
 }
