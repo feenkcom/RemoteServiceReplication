@@ -1,0 +1,1 @@
+I represent some custom enduser object.

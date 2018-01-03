@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "AaronBlakeman 1/2/2018 09:02",
+	"super" : "Object",
+	"category" : "RemoteServicesReplication-tests",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "CustomerObject",
+	"type" : "normal"
+}

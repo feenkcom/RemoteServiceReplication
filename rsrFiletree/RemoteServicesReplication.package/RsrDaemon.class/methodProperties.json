@@ -17,12 +17,16 @@
 		"send:to:" : "",
 		"send:" : "",
 		"timeout:" : "",
+		"status" : "AaronBlakeman 1/2/2018 10:23",
 		"start" : "",
 		"isRunning:" : ""
 	},
 	"class" : {
 		"new" : "",
+		"status" : "AaronBlakeman 1/2/2018 10:23",
+		"objectOffset" : "",
+		"stop" : "AaronBlakeman 1/2/2018 10:23",
 		"uniqueInstance" : "",
-		"objectOffset" : ""
+		"start" : "AaronBlakeman 1/2/2018 10:23"
 	}
 }

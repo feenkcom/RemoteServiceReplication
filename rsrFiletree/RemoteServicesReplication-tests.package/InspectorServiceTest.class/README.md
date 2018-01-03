@@ -1,0 +1,1 @@
+I test that the inspector service is working.
