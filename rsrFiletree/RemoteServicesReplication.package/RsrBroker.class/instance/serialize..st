@@ -1,4 +1,4 @@
 sending
-prepare: anObject.
+serialize: anObject.
 	"Last"
 	^STON toString: anObject.

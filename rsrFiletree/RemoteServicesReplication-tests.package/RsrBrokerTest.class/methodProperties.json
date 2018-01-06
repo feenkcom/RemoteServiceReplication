@@ -1,4 +1,6 @@
 {
-	"instance" : { },
+	"instance" : {
+		"testSerializationHappyPath" : "AaronBlakeman 1/5/2018 13:13"
+	},
 	"class" : { }
 }

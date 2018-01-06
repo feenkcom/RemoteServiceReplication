@@ -1,8 +1,9 @@
 {
 	"instance" : {
-		"prepare:" : "AaronBlakeman 12/22/2017 10:43",
-		"processReceivedObject:" : "AaronBlakeman 1/2/2018 16:36",
-		"receive:" : "AaronBlakeman 1/2/2018 16:05"
+		"deserializeAndProcess:" : "AaronBlakeman 1/5/2018 13:00",
+		"processDeserializedObject:" : "AaronBlakeman 1/5/2018 13:02",
+		"serialize:" : "AaronBlakeman 1/5/2018 12:54",
+		"deSerializeStream:" : "AaronBlakeman 1/5/2018 10:25"
 	},
 	"class" : { }
 }
