@@ -1,6 +1,6 @@
 instance creation
 getReference: anObject
-	| rsr |
-	rsr := RsrReference new.
-	rsr put: anObject.
-	^ rsr
+	| rsrReference |
+	rsrReference := RsrReference new.
+	rsrReference put: anObject.
+	^rsrReference

@@ -1,13 +1,13 @@
 {
-	"commentStamp" : "",
-	"super" : "Object",
+	"commentStamp" : "AaronBlakeman 1/11/2018 09:45",
+	"super" : "RsrService",
 	"category" : "RemoteServicesReplication",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"entriesToClean"
+		"stringToExecute"
 	],
-	"name" : "RsrGcProxy",
+	"name" : "RsrStringEvaluationService",
 	"type" : "normal"
 }

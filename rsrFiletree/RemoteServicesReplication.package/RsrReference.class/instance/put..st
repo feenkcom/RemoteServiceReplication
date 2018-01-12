@@ -1,7 +1,10 @@
 instance creation
 put: anObject
-	|rr|
-	rr := RsrRegistry uniqueInstance.
+	|rsrRegistry|
 	representedObject := anObject.
 	self registerAttributes.
-	rr addObject: self.
+	
+	rsrRegistry := RsrRegistry uniqueInstance.
+	rsrRegistry addObject: self.
+
+

@@ -1,0 +1,1 @@
+I represent a service that evaluates strings on a remote Rsr server instance.

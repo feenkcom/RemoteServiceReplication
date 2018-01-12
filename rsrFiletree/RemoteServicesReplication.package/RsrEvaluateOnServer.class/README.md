@@ -1,1 +1,0 @@
-I'm responsible for executing commands on the server and returning their results.
