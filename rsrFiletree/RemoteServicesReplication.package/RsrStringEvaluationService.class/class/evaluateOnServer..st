@@ -1,5 +1,5 @@
 convenience
-evalaluateOnServer: anExpression
+evaluateOnServer: anExpression
 	|rsrStringEvaluationService|
 	rsrStringEvaluationService := RsrStringEvaluationService new.
-	^rsrStringEvaluationService evalaluateOnServer: anExpression.
+	^rsrStringEvaluationService evaluateOnServer: anExpression.

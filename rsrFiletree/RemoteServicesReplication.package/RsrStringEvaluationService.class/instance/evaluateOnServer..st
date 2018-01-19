@@ -1,4 +1,4 @@
 convenience
-evalaluateOnServer: aCommand
+evaluateOnServer: aCommand
 	stringToExecute := aCommand.
 	^self send.
