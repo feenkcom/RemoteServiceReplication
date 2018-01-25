@@ -1,7 +1,6 @@
 initialization
 testHappyPathForInstanceCreation
-	|cot results|
-	cot := CustomerObject new.
+	|results|
 	
 	results := RsrStringEvaluationService evaluateOnServer: 'CustomerObject new'.
 

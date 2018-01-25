@@ -1,8 +1,7 @@
 initialization
 testUnHappyPathForInstanceCreation
-	|cot results|
-	cot := CustomerObject new.
-	
+	|results|
+		
 	results := RsrStringEvaluationService evaluateOnServer: 'AClassThatDoesntExist new'.
 
 	"Need some better assertion here."
