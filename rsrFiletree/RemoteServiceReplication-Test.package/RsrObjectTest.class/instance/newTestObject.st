@@ -1,0 +1,4 @@
+accessing
+newTestObject
+
+	^RsrObject new

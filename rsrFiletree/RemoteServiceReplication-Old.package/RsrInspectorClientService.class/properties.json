@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "AaronBlakeman 1/5/2018 15:48",
+	"super" : "RsrInspectorService",
+	"category" : "RemoteServiceReplication-Old-RemoteServiceReplication-Old",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RsrInspectorClientService",
+	"type" : "normal"
+}

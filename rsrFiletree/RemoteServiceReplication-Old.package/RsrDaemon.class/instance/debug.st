@@ -1,0 +1,3 @@
+definition
+debug
+	^debug

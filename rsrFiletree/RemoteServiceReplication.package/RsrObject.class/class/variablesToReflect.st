@@ -1,0 +1,4 @@
+accessing
+variablesToReflect
+
+	^self allInstVarNames

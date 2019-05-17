@@ -1,0 +1,1 @@
+I represent a class of Objects that know offer Rsr Services.

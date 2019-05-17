@@ -1,0 +1,1 @@
+I represent an RsrInspector service that would exist on the client.

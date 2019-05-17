@@ -1,0 +1,4 @@
+*RemoteServiceReplication
+rsrIsDataObject
+
+	^true

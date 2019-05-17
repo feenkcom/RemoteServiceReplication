@@ -1,0 +1,4 @@
+processing
+processDataObject: aDataObject
+
+	^self

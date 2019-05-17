@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrService",
+	"category" : "RemoteServiceReplication-Test",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"positiveSmallInteger",
+		"negativeSmallInteger",
+		"integerZero",
+		"string"
+	],
+	"name" : "RsrServiceAbstractAllDataObjects",
+	"type" : "normal"
+}

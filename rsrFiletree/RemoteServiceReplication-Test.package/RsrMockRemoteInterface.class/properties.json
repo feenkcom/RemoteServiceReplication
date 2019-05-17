@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrRemoteInterface",
+	"category" : "RemoteServiceReplication-Test",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"lastMessage",
+		"lastReceiver"
+	],
+	"name" : "RsrMockRemoteInterface",
+	"type" : "normal"
+}

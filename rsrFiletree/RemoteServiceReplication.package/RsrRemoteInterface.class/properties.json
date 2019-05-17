@@ -1,0 +1,16 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Public",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"rsrForwarderClass",
+		"currentTransactionId",
+		"increment",
+		"transactionSpigot"
+	],
+	"name" : "RsrRemoteInterface",
+	"type" : "normal"
+}

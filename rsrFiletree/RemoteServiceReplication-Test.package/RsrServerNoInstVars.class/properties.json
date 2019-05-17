@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrServiceAbstractNoInstVars",
+	"category" : "RemoteServiceReplication-Test",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RsrServerNoInstVars",
+	"type" : "normal"
+}

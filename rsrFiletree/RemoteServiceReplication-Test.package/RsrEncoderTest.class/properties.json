@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrTestCase",
+	"category" : "RemoteServiceReplication-Test",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"registry"
+	],
+	"name" : "RsrEncoderTest",
+	"type" : "normal"
+}

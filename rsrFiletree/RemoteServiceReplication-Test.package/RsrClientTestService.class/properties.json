@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrAbstractTestService",
+	"category" : "RemoteServiceReplication-Test",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RsrClientTestService",
+	"type" : "normal"
+}
