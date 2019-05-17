@@ -1,0 +1,4 @@
+accessing
+newTestRemoteInterface
+
+	^RsrMockRemoteInterface new

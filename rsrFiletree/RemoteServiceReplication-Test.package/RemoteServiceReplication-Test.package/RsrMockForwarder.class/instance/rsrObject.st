@@ -1,0 +1,4 @@
+accessing
+rsrObject
+
+	^rsrObject

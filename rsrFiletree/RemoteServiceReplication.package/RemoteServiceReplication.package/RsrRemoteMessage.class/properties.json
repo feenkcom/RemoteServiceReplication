@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Services",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"receiver",
+		"selector",
+		"arguments",
+		"id",
+		"transactionId"
+	],
+	"name" : "RsrRemoteMessage",
+	"type" : "normal"
+}

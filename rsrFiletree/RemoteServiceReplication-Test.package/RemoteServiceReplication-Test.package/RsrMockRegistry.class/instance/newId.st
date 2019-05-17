@@ -1,0 +1,4 @@
+accessing
+newId
+
+	^idSpigot next

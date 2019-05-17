@@ -1,0 +1,15 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Base",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"rsrId",
+		"rsrRemoteInterface",
+		"rsrIsDirty"
+	],
+	"name" : "RsrObject",
+	"type" : "normal"
+}

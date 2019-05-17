@@ -1,0 +1,15 @@
+{
+	"instance" : {
+		"isService:" : "KurtKilpela 5/17/2019 15:53",
+		"serviceType" : "KurtKilpela 5/17/2019 15:48",
+		"writeInteger:onto:" : "KurtKilpela 5/17/2019 15:47",
+		"encodeService:on:" : "KurtKilpela 5/17/2019 15:41",
+		"immediateOID" : "KurtKilpela 5/17/2019 16:02",
+		"encode:on:" : "KurtKilpela 5/17/2019 15:34",
+		"writeServiceTypeOnto:" : "KurtKilpela 5/17/2019 15:41",
+		"symbolType" : "KurtKilpela 5/17/2019 16:02",
+		"encode:" : "KurtKilpela 5/17/2019 15:54",
+		"writeSymbol:onto:" : "KurtKilpela 5/17/2019 16:02"
+	},
+	"class" : { }
+}

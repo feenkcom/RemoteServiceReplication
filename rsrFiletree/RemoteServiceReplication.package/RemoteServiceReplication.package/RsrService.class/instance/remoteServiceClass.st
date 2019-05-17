@@ -1,0 +1,4 @@
+accessing
+remoteServiceClass
+
+	^self class

@@ -1,0 +1,1 @@
+An abstract test class which contains utility methods

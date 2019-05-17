@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Utilities",
+	"classinstvars" : [
+		"uniqueInstance",
+		"objectOffset"
+	],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"map",
+		"storage"
+	],
+	"name" : "RsrRegistry",
+	"type" : "normal"
+}

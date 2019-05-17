@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "ProtoObject",
+	"category" : "RemoteServiceReplication-Services",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"rsrObject"
+	],
+	"name" : "RsrForwarder",
+	"type" : "normal"
+}
