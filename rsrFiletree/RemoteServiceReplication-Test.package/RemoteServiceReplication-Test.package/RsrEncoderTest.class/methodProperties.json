@@ -1,9 +1,11 @@
 {
 	"instance" : {
-		"register:" : "KurtKilpela 5/17/2019 14:28",
 		"encoder" : "KurtKilpela 5/17/2019 15:00",
+		"register:" : "KurtKilpela 5/17/2019 14:28",
+		"tearDown" : "KurtKilpela 5/17/2019 16:46",
 		"setUp" : "KurtKilpela 5/17/2019 14:23",
-		"testServiceNoInstVars" : "KurtKilpela 5/17/2019 16:04"
+		"testServiceNoInstVars" : "KurtKilpela 5/17/2019 16:04",
+		"testServiceReferenceLocalService" : "KurtKilpela 5/17/2019 17:01"
 	},
 	"class" : { }
 }

@@ -1,4 +1,6 @@
 {
-	"instance" : { },
+	"instance" : {
+		"remoteServiceClass" : "KurtKilpela 5/17/2019 16:41"
+	},
 	"class" : { }
 }

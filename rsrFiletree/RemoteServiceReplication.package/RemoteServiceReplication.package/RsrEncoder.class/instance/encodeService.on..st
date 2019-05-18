@@ -12,4 +12,7 @@ on: aStream
 		onto: aStream.
 	self
 		writeSymbol: aService remoteServiceName
-		onto: aStream
+		onto: aStream.
+	self
+		reflectedVariablesOf: aService
+		do: [:each | self encodeReferenceOf: each onto: aStream]
