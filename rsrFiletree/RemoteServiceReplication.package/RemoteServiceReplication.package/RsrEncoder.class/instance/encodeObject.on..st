@@ -1,5 +1,5 @@
 private-encoding
-encode: anObject
+encodeObject: anObject
 on: aStream
 
 	(self isService: anObject)

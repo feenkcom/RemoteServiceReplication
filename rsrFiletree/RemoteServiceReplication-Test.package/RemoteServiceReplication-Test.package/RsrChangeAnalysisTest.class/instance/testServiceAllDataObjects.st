@@ -12,7 +12,7 @@ testServiceAllDataObjects
 		encoder: RsrMockEncoder new.
 	analysis perform.
 	expected := OrderedCollection
-		with: (RsrEncodedObject object: client encoding: ByteArray new).
+		with: (RsrRetainObject object: client encoding: ByteArray new).
 	self
 		assert: analysis encodings
 		equals: expected.

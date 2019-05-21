@@ -1,6 +1,6 @@
 {
 	"commentStamp" : "",
-	"super" : "RsrTestCase",
+	"super" : "RsrCodecTest",
 	"category" : "RemoteServiceReplication-Test-TestCases",
 	"classinstvars" : [ ],
 	"pools" : [ ],

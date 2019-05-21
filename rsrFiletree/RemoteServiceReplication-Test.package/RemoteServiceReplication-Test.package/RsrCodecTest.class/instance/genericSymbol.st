@@ -1,0 +1,4 @@
+running-symbol
+genericSymbol
+
+	^#genericSymbol

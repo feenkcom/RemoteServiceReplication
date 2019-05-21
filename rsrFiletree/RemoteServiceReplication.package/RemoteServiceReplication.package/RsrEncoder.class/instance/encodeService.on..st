@@ -6,9 +6,16 @@ on: aStream
 	"the OID for the object"
 	"the name of the remote service to create"
 	"Write the object slots"
-	self writeServiceTypeOnto: aStream.
+	| reflectedVariables |
+	reflectedVariables := self reflectedVariableNamesOf: aService.
+	self
+		writeInteger: self serviceType
+		onto: aStream.
 	self
 		writeInteger: aService rsrId
+		onto: aStream.
+	self
+		writeInteger: reflectedVariables size
 		onto: aStream.
 	self
 		writeSymbol: aService remoteServiceName

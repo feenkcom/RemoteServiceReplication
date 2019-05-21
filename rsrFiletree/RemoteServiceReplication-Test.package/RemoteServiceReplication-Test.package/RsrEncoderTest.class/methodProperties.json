@@ -1,11 +1,13 @@
 {
 	"instance" : {
+		"testSymbol" : "KurtKilpela 5/20/2019 10:18",
 		"encoder" : "KurtKilpela 5/17/2019 15:00",
 		"register:" : "KurtKilpela 5/17/2019 14:28",
 		"tearDown" : "KurtKilpela 5/17/2019 16:46",
 		"setUp" : "KurtKilpela 5/17/2019 14:23",
-		"testServiceNoInstVars" : "KurtKilpela 5/17/2019 16:04",
-		"testServiceReferenceLocalService" : "KurtKilpela 5/17/2019 17:01"
+		"testServiceNoInstVars" : "KurtKilpela 5/21/2019 12:02",
+		"testServiceReferenceService" : "KurtKilpela 5/21/2019 13:29",
+		"testEncodeRetainObject" : "KurtKilpela 5/21/2019 13:19"
 	},
 	"class" : { }
 }

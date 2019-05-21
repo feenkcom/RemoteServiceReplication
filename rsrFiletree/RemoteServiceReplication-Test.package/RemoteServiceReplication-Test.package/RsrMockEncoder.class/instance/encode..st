@@ -1,6 +1,6 @@
 encoding
 encode: anObject
 
-	^RsrEncodedObject
+	^RsrRetainObject
 		object: anObject
 		encoding: ByteArray new

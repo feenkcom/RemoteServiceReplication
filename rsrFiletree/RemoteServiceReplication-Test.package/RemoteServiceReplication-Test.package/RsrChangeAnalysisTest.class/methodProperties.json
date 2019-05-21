@@ -1,9 +1,9 @@
 {
 	"instance" : {
-		"testServiceAllDataObjects" : "KurtKilpela 5/17/2019 14:25",
-		"testServiceWithCycle" : "KurtKilpela 5/17/2019 14:25",
-		"testServiceReferencingAnotherService" : "KurtKilpela 5/17/2019 14:25",
-		"testServiceNoInstVars" : "KurtKilpela 5/17/2019 14:25"
+		"testServiceAllDataObjects" : "KurtKilpela 5/20/2019 15:06",
+		"testServiceWithCycle" : "KurtKilpela 5/20/2019 08:44",
+		"testServiceReferencingAnotherService" : "KurtKilpela 5/20/2019 15:06",
+		"testServiceNoInstVars" : "KurtKilpela 5/20/2019 15:06"
 	},
 	"class" : { }
 }

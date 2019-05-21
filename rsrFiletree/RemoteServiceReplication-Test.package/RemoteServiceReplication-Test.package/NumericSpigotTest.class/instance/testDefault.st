@@ -4,7 +4,7 @@ testDefault
 	| spigot |
 	spigot := RsrNumericSpigot new.
 	self
-		assert: spigot current
+		assert: spigot next
 		equals: 0.
 	self
 		assert: spigot step

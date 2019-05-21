@@ -1,10 +1,10 @@
 decoding
 decodeService: aStream
-ofLength: anInteger
 
-	| termination oid serviceName instance |
-	termination := aStream position + anInteger.
+	| oid instVarCount serviceName instance |
+	self nextInteger: aStream. "Object Type"
 	oid := self nextInteger: aStream.
+	instVarCount := self nextInteger: aStream.
 	serviceName := self decodeObjectReference: aStream.
 	instance := registry
 		at: oid
@@ -12,10 +12,10 @@ ofLength: anInteger
 			[(self lookupClass: serviceName)
 				rsrId: oid
 				rsrRemoteInterface: self remoteInterface].
+	(self reflectedVariableNamesOf: instance) size = instVarCount
+		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	self
 		reflectedVariableNamesOf: instance
 		do: [:name | instance instVarNamed: name put: (self decodeObjectReference: aStream)].
-	termination = aStream position
-		ifFalse: [self error: 'Invalid object encoding encountered'].
 	registry addRemote: instance.
-	^RsrRetainObject object: instance
+	^instance

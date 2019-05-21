@@ -1,15 +1,17 @@
 {
 	"instance" : {
+		"decodeObject:" : "KurtKilpela 5/21/2019 13:39",
 		"registry:" : "KurtKilpela 5/20/2019 13:00",
 		"remoteInterface" : "KurtKilpela 5/20/2019 15:39",
 		"nextInteger:" : "KurtKilpela 5/20/2019 11:52",
 		"decodeImmediateObject:" : "KurtKilpela 5/20/2019 09:56",
-		"decodeObjectReference:" : "KurtKilpela 5/20/2019 13:02",
 		"decodeSymbol:" : "KurtKilpela 5/20/2019 09:57",
+		"decodeObjectReference:" : "KurtKilpela 5/20/2019 13:02",
 		"lookupClass:" : "KurtKilpela 5/20/2019 12:07",
-		"decode:" : "KurtKilpela 5/21/2019 08:50",
+		"decode:" : "KurtKilpela 5/21/2019 13:42",
 		"decodeString:" : "KurtKilpela 5/20/2019 09:58",
-		"decodeService:ofLength:" : "KurtKilpela 5/21/2019 10:50"
+		"decodeCommand:" : "KurtKilpela 5/21/2019 13:42",
+		"decodeService:" : "KurtKilpela 5/21/2019 13:40"
 	},
 	"class" : {
 		"registry:" : "KurtKilpela 5/20/2019 13:01"

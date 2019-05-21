@@ -1,4 +1,4 @@
 executing
 sendUsing: aCommandWriter
 
-	aCommandWriter write: self asBytes
+	aCommandWriter write: self encoding

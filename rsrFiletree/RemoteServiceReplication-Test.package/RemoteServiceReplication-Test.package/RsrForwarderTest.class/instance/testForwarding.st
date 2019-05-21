@@ -9,7 +9,8 @@ testForwarding
 		rsrId: id;
 		rsrRemoteInterface: remoteInterface.
 	forwarder := rsrObject remoteSelf.
-	message := RsrRemoteMessage
+	message := RsrSendMessage
+		transaction: 1
 		receiver: rsrObject
 		selector: #arg1:arg2:
 		arguments: #(15 42).

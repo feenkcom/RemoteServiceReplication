@@ -1,5 +1,6 @@
 running
 testServiceWithCycle
+	"Cycles are disallowed for our POC. Perhaps they will get added later?"
 
 	| rootClient referencedClient registry analysis expected |
 	rootClient := RsrClientReferenceService new.
@@ -10,8 +11,10 @@ testServiceWithCycle
 		roots: (Array with: rootClient)
 		registry: registry
 		encoder: RsrMockEncoder new.
-	analysis perform.
-	expected := OrderedCollection
+	self
+		should: [analysis perform]
+		raise: RsrCycleDetected.
+	"expected := OrderedCollection
 		with: (RsrEncodedObject object: referencedClient encoding: ByteArray new)
 		with: (RsrEncodedObject object: rootClient encoding: ByteArray new).
 	self
@@ -19,4 +22,4 @@ testServiceWithCycle
 		equals: expected.
 	self
 		assert: rootClient isMirrored;
-		assert: referencedClient isMirrored
+		assert: referencedClient isMirrored"
