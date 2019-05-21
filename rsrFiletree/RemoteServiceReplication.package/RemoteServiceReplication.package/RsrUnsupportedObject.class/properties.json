@@ -1,6 +1,6 @@
 {
 	"commentStamp" : "",
-	"super" : "Error",
+	"super" : "RsrError",
 	"category" : "RemoteServiceReplication-Exceptions",
 	"classinstvars" : [ ],
 	"pools" : [ ],

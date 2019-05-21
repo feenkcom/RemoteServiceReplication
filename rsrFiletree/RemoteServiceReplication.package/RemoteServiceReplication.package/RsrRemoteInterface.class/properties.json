@@ -6,10 +6,7 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"rsrForwarderClass",
-		"currentTransactionId",
-		"increment",
-		"transactionSpigot"
+		"connection"
 	],
 	"name" : "RsrRemoteInterface",
 	"type" : "normal"

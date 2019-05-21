@@ -1,4 +1,10 @@
 {
-	"instance" : { },
+	"instance" : {
+		"symbolType" : "KurtKilpela 5/20/2019 11:44",
+		"reflectedVariableNamesOf:do:" : "KurtKilpela 5/20/2019 12:52",
+		"serviceType" : "KurtKilpela 5/20/2019 11:44",
+		"sizeOfInteger" : "KurtKilpela 5/20/2019 11:52",
+		"retainObjectCommand" : "KurtKilpela 5/21/2019 08:40"
+	},
 	"class" : { }
 }

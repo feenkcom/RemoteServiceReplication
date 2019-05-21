@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Utilities",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"firstSocket",
+		"secondSocket"
+	],
+	"name" : "RsrSocketPair",
+	"type" : "normal"
+}

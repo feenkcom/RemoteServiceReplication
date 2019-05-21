@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Test-Mocks",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"objects",
+		"idSpigot"
+	],
+	"name" : "RsrMockRegistry",
+	"type" : "normal"
+}

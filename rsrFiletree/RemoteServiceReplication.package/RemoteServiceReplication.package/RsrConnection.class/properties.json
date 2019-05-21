@@ -1,0 +1,19 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Communications",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"forwarderClass",
+		"transactionSpigot",
+		"commandWriter",
+		"commandReader",
+		"registry",
+		"retainedObjects",
+		"socket"
+	],
+	"name" : "RsrConnection",
+	"type" : "normal"
+}

@@ -1,4 +1,4 @@
 private-accessing
 newTransactionId
 
-	^transactionSpigot next
+	^connection transactionSpigot next

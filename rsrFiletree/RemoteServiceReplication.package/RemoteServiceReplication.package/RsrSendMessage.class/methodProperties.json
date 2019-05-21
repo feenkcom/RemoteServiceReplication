@@ -1,0 +1,21 @@
+{
+	"instance" : {
+		"receiver" : "KurtKilpela 5/20/2019 15:17",
+		"=" : "KurtKilpela 5/20/2019 15:51",
+		"arguments" : "KurtKilpela 5/20/2019 15:17",
+		"arguments:" : "KurtKilpela 5/20/2019 15:17",
+		"executeFor:" : "KurtKilpela 5/21/2019 09:14",
+		"selector" : "KurtKilpela 5/20/2019 15:17",
+		"transaction" : "KurtKilpela 5/20/2019 15:19",
+		"selector:" : "KurtKilpela 5/20/2019 15:17",
+		"hash" : "KurtKilpela 5/20/2019 15:52",
+		"receiver:" : "KurtKilpela 5/20/2019 15:17",
+		"roots" : "KurtKilpela 5/20/2019 15:18",
+		"sendOver:" : "KurtKilpela 5/21/2019 10:06",
+		"sendUsing:" : "KurtKilpela 5/21/2019 10:07",
+		"transaction:" : "KurtKilpela 5/20/2019 15:19"
+	},
+	"class" : {
+		"transaction:receiver:selector:arguments:" : "KurtKilpela 5/20/2019 15:19"
+	}
+}

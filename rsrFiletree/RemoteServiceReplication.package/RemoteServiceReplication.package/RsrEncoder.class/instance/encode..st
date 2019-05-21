@@ -8,6 +8,6 @@ encode: anObject
 			self
 				encode: anObject
 				on: stream].
-	^RsrEncodedObject
+	^RsrRetainObject
 		object: anObject
 		encoding: encoding

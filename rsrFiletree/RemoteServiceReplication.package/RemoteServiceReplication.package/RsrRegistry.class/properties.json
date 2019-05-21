@@ -10,7 +10,8 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"map",
-		"storage"
+		"storage",
+		"oidSpigot"
 	],
 	"name" : "RsrRegistry",
 	"type" : "normal"

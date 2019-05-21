@@ -2,16 +2,14 @@
 	"instance" : {
 		"isService:" : "KurtKilpela 5/17/2019 15:53",
 		"encodeReferenceOf:onto:" : "KurtKilpela 5/17/2019 16:54",
-		"serviceType" : "KurtKilpela 5/17/2019 15:48",
-		"writeInteger:onto:" : "KurtKilpela 5/17/2019 15:47",
+		"writeInteger:onto:" : "KurtKilpela 5/20/2019 11:52",
 		"encodeService:on:" : "KurtKilpela 5/17/2019 16:53",
 		"immediateOID" : "KurtKilpela 5/17/2019 16:02",
 		"isRsrObject:" : "KurtKilpela 5/17/2019 16:55",
 		"encode:on:" : "KurtKilpela 5/17/2019 15:34",
 		"writeServiceTypeOnto:" : "KurtKilpela 5/17/2019 15:41",
 		"reflectedVariablesOf:do:" : "KurtKilpela 5/17/2019 16:52",
-		"symbolType" : "KurtKilpela 5/17/2019 16:02",
-		"encode:" : "KurtKilpela 5/17/2019 15:54",
+		"encode:" : "KurtKilpela 5/20/2019 15:06",
 		"writeSymbol:onto:" : "KurtKilpela 5/17/2019 16:02"
 	},
 	"class" : { }

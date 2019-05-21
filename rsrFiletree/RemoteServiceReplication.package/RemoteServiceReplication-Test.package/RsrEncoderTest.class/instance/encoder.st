@@ -1,0 +1,4 @@
+accessing
+encoder
+
+	^RsrEncoder new

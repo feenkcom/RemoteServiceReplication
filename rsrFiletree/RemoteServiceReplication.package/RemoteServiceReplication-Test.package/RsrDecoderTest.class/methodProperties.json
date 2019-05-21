@@ -1,0 +1,12 @@
+{
+	"instance" : {
+		"testSymbol" : "KurtKilpela 5/20/2019 10:09",
+		"testServiceDecodeIdentity" : "KurtKilpela 5/20/2019 13:15",
+		"testServiceNoInstVars" : "KurtKilpela 5/20/2019 12:10",
+		"decode:" : "KurtKilpela 5/21/2019 10:52",
+		"assertReference:decodesTo:" : "KurtKilpela 5/20/2019 10:09",
+		"testServiceReferenceService" : "KurtKilpela 5/20/2019 13:07",
+		"decoder" : "KurtKilpela 5/20/2019 13:04"
+	},
+	"class" : { }
+}

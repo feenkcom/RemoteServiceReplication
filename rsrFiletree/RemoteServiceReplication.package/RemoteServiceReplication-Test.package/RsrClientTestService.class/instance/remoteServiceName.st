@@ -1,0 +1,4 @@
+accessing
+remoteServiceName
+
+	^RsrServerTestService name

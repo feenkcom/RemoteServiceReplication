@@ -1,0 +1,4 @@
+commands
+flush
+
+	stream flush

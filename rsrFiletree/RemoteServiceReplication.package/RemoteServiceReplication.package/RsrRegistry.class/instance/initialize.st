@@ -3,4 +3,4 @@ initialize
 	
 	super initialize.
 	map := Dictionary new.
-	storage := Set new
+	storage := IdentitySet new

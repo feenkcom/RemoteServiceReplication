@@ -1,4 +1,4 @@
 instance creation
 new
 
-	^self rsrForwarderClass: self rsrDefaultForwarderClass
+	^self error: 'Use #connection: for creation'

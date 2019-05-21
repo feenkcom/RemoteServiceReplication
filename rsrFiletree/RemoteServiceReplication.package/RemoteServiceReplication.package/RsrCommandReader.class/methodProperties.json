@@ -1,0 +1,16 @@
+{
+	"instance" : {
+		"stop" : "KurtKilpela 5/20/2019 13:56",
+		"stream:" : "KurtKilpela 5/20/2019 13:49",
+		"connection" : "KurtKilpela 5/21/2019 09:08",
+		"decoder:" : "KurtKilpela 5/20/2019 13:49",
+		"runLoop" : "KurtKilpela 5/21/2019 10:46",
+		"nextCommand" : "KurtKilpela 5/21/2019 10:52",
+		"readingPriority" : "KurtKilpela 5/20/2019 13:54",
+		"start" : "KurtKilpela 5/21/2019 10:47",
+		"connection:" : "KurtKilpela 5/21/2019 09:07"
+	},
+	"class" : {
+		"stream:decoder:connection:" : "KurtKilpela 5/21/2019 09:07"
+	}
+}
