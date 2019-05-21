@@ -1,0 +1,4 @@
+accessing
+writingPriority
+
+	^Processor lowIOPriority

@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrCodec",
+	"category" : "RemoteServiceReplication-Coordination",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"registry"
+	],
+	"name" : "RsrDecoder",
+	"type" : "normal"
+}

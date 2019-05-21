@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrCommand",
+	"category" : "RemoteServiceReplication-Communications",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"transaction",
+		"response"
+	],
+	"name" : "RsrDeliverResponse",
+	"type" : "normal"
+}

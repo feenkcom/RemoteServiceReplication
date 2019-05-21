@@ -1,6 +1,7 @@
 {
 	"instance" : {
-		"tearDown" : "KurtKilpela 5/21/2019 09:55",
+		"tearDown" : "KurtKilpela 5/21/2019 15:58",
+		"testSendMessage" : "KurtKilpela 5/21/2019 15:45",
 		"setUp" : "KurtKilpela 5/21/2019 10:25",
 		"testTransferService" : "KurtKilpela 5/21/2019 13:05"
 	},

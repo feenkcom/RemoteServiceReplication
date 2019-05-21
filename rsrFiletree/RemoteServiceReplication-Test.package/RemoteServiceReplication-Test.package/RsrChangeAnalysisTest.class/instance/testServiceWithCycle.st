@@ -7,7 +7,7 @@ testServiceWithCycle
 	referencedClient := RsrClientReferenceService service: rootClient.
 	rootClient service: referencedClient.
 	registry := RsrMockRegistry new.
-	analysis := RsrChangeAnalysis
+	analysis := RsrRetainAnalysis
 		roots: (Array with: rootClient)
 		registry: registry
 		encoder: RsrMockEncoder new.

@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrError",
+	"category" : "RemoteServiceReplication-Exceptions",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RsrUnsupportedObject",
+	"type" : "normal"
+}

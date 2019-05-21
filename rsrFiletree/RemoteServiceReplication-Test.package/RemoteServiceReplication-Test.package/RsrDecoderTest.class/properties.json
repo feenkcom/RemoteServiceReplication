@@ -6,7 +6,8 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"decoder"
+		"decoder",
+		"registry"
 	],
 	"name" : "RsrDecoderTest",
 	"type" : "normal"

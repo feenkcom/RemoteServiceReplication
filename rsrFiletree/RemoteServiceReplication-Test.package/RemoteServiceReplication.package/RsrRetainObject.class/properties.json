@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrCommand",
+	"category" : "RemoteServiceReplication-Communications",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"object"
+	],
+	"name" : "RsrRetainObject",
+	"type" : "normal"
+}

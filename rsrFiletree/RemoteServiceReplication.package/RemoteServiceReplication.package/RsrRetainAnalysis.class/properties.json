@@ -1,0 +1,17 @@
+{
+	"commentStamp" : "",
+	"super" : "Object",
+	"category" : "RemoteServiceReplication-Coordination",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"roots",
+		"registry",
+		"encoder",
+		"retainCommands",
+		"inFlight"
+	],
+	"name" : "RsrRetainAnalysis",
+	"type" : "normal"
+}

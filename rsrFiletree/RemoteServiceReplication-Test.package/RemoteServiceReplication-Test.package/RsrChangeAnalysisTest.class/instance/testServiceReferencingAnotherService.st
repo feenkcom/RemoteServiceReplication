@@ -7,7 +7,7 @@ testServiceReferencingAnotherService
 	referencedService := RsrClientNoInstVars new.
 	client := RsrClientReferenceService service: referencedService.
 	registry := RsrMockRegistry new.
-	analysis := RsrChangeAnalysis
+	analysis := RsrRetainAnalysis
 		roots: (Array with: client)
 		registry: registry
 		encoder: RsrMockEncoder new.
@@ -16,7 +16,7 @@ testServiceReferencingAnotherService
 		with: (RsrRetainObject object: referencedService encoding: ByteArray new)
 		with: (RsrRetainObject object: client encoding: ByteArray new).
 	self
-		assert: analysis encodings
+		assert: analysis retainCommands
 		equals: expected.
 	self
 		assert: client isMirrored;

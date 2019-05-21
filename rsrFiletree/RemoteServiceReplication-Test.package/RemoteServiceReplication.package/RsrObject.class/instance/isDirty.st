@@ -1,0 +1,4 @@
+public-testing
+isDirty
+
+	^rsrIsDirty

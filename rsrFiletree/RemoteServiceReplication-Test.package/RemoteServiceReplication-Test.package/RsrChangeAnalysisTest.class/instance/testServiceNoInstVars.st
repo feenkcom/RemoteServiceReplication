@@ -4,7 +4,7 @@ testServiceNoInstVars
 	| client registry analysis expected |
 	client := RsrClientNoInstVars new.
 	registry := RsrMockRegistry new.
-	analysis := RsrChangeAnalysis
+	analysis := RsrRetainAnalysis
 		roots: (Array with: client)
 		registry: registry
 		encoder: RsrMockEncoder new.
@@ -12,6 +12,6 @@ testServiceNoInstVars
 	expected := OrderedCollection
 		with: (RsrRetainObject object: client encoding: ByteArray new).
 	self
-		assert: analysis encodings
+		assert: analysis retainCommands
 		equals: expected.
 	self assert: client isMirrored

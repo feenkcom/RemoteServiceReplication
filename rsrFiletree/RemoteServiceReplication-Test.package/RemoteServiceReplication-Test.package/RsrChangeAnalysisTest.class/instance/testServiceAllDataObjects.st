@@ -6,7 +6,7 @@ testServiceAllDataObjects
 	| client registry analysis expected |
 	client := RsrClientAllDataObjects new.
 	registry := RsrMockRegistry new.
-	analysis := RsrChangeAnalysis
+	analysis := RsrRetainAnalysis
 		roots: (Array with: client)
 		registry: registry
 		encoder: RsrMockEncoder new.
@@ -14,6 +14,6 @@ testServiceAllDataObjects
 	expected := OrderedCollection
 		with: (RsrRetainObject object: client encoding: ByteArray new).
 	self
-		assert: analysis encodings
+		assert: analysis retainCommands
 		equals: expected.
 	self assert: client isMirrored
