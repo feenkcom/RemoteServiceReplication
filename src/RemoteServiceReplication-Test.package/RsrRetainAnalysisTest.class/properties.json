@@ -6,6 +6,6 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "RsrChangeAnalysisTest",
+	"name" : "RsrRetainAnalysisTest",
 	"type" : "normal"
 }

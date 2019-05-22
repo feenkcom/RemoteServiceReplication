@@ -8,5 +8,6 @@ decodeCommand: aStream
 		ifTrue: [^RsrRetainObject object: (self decodeObject: aStream)].
 	command == self sendMessageCommand
 		ifTrue: [^self decodeSendMessage: aStream].
-			
+	command == self deliverResponseCommand
+		ifTrue: [^self decodeDeliverResponse: aStream].
 	self error: 'Invalid message'

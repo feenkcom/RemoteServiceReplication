@@ -1,4 +1,4 @@
-private-encoding
+private-writing
 writeImmediate: anImmediate
 onto: aStream
 
@@ -6,5 +6,20 @@ onto: aStream
 		ifTrue:
 			[^self
 				writeSymbol: anImmediate
+				onto: aStream].
+	anImmediate isString
+		ifTrue:
+			[^self
+				writeString: anImmediate
+				onto: aStream].
+	anImmediate isInteger
+		ifTrue:
+			[^self
+				writeImmediateInteger: anImmediate
+				onto: aStream].
+	anImmediate isCharacter
+		ifTrue:
+			[^self
+				writeCharacter: anImmediate
 				onto: aStream].
 	self error: 'Unsupported Immediate'

@@ -1,6 +1,8 @@
 private-forwarding
 doesNotUnderstand: aMessage
 
-	^rsrObject rsrRemoteInterface
+	| promise |
+	promise := rsrObject rsrRemoteInterface
 		rsrSendMessage: aMessage
-		to: rsrObject
+		to: rsrObject.
+	^promise value

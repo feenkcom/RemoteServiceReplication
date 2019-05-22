@@ -7,7 +7,8 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"transaction",
-		"response"
+		"response",
+		"retainList"
 	],
 	"name" : "RsrDeliverResponse",
 	"type" : "normal"

@@ -1,0 +1,4 @@
+testing-methods
+returnTestSymbol
+
+	^#testSymbol

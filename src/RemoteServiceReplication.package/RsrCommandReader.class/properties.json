@@ -9,7 +9,8 @@
 		"stream",
 		"decoder",
 		"process",
-		"connection"
+		"connection",
+		"commands"
 	],
 	"name" : "RsrCommandReader",
 	"type" : "normal"

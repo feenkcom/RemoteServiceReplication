@@ -1,4 +1,4 @@
 encoding
 encodeUsing: anRsrEncoder
 
-	self notYetImplemented
+	encoding := anRsrEncoder encodeDeliverResponse: self

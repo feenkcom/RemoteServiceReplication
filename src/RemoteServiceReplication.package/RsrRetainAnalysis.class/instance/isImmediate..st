@@ -1,4 +1,4 @@
 testing
 isImmediate: anObject
 
-	^anObject isSymbol
+	^encoder isImmediate: anObject

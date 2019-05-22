@@ -1,0 +1,10 @@
+{
+	"instance" : {
+		"value" : "KurtKilpela 5/22/2019 10:20",
+		"waitForFulfillment" : "KurtKilpela 5/22/2019 10:17",
+		"error:" : "KurtKilpela 5/22/2019 10:18",
+		"initialize" : "KurtKilpela 5/22/2019 10:17",
+		"fulfill:" : "KurtKilpela 5/22/2019 10:18"
+	},
+	"class" : { }
+}

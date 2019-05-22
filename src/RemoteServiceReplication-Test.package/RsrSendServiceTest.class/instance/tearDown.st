@@ -1,6 +1,7 @@
 initialization
 tearDown
 
-	socketPair close.
+	connectionA close.
+	connectionB close.
 	socketPair := connectionA := connectionB := nil.
 	super tearDown

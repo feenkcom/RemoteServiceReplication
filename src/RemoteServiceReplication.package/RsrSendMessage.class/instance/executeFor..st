@@ -5,7 +5,7 @@ executeFor: aConnection
 	result := receiver
 		perform: selector
 		withArguments: arguments.
-	"response := RsrDeliverResponse
+	response := RsrDeliverResponse
 		transaction: transaction
-		result: result.
-	response sendOver: aConnection"
+		response: result.
+	response sendOver: aConnection

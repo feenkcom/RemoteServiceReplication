@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "RsrCodec",
-	"category" : "RemoteServiceReplication-Coordination",
+	"category" : "RemoteServiceReplication-Communications",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],

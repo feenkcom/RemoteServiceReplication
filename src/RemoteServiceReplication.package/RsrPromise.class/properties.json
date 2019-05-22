@@ -5,7 +5,11 @@
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
-	"instvars" : [ ],
-	"name" : "SrsPromise",
+	"instvars" : [
+		"mutex",
+		"value",
+		"error"
+	],
+	"name" : "RsrPromise",
 	"type" : "normal"
 }

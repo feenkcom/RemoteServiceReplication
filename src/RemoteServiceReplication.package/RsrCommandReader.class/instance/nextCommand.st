@@ -3,4 +3,5 @@ nextCommand
 
 	| command |
 	command := decoder decode: stream.
-	^command
+	commands := commands ifNil: [OrderedCollection new].
+	^commands add: command

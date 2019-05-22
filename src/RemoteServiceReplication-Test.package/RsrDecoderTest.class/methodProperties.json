@@ -1,14 +1,15 @@
 {
 	"instance" : {
-		"testServiceReferenceService" : "KurtKilpela 5/20/2019 13:07",
-		"testSymbol" : "KurtKilpela 5/20/2019 10:09",
 		"testDecodeRetainNewObject" : "KurtKilpela 5/21/2019 14:29",
 		"testServiceDecodeIdentity" : "KurtKilpela 5/20/2019 13:15",
-		"decode:" : "KurtKilpela 5/21/2019 13:39",
-		"assertReference:decodesTo:" : "KurtKilpela 5/20/2019 10:09",
+		"testServiceReferenceService" : "KurtKilpela 5/22/2019 08:42",
+		"decoder" : "KurtKilpela 5/21/2019 14:29",
+		"testDeliverResponse" : "KurtKilpela 5/22/2019 09:46",
+		"testSymbol" : "KurtKilpela 5/20/2019 10:09",
 		"testServiceNoInstVars" : "KurtKilpela 5/20/2019 12:10",
-		"testDecodeSendMessage" : "KurtKilpela 5/21/2019 14:44",
-		"decoder" : "KurtKilpela 5/21/2019 14:29"
+		"assertReference:decodesTo:" : "KurtKilpela 5/20/2019 10:09",
+		"decode:" : "KurtKilpela 5/21/2019 13:39",
+		"testDecodeSendMessage" : "KurtKilpela 5/21/2019 14:44"
 	},
 	"class" : { }
 }

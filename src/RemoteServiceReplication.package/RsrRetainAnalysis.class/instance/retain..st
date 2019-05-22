@@ -1,4 +1,7 @@
 actions
 retain: anRsrObject
 
-	self retainCommands add: (RsrRetainObject object: anRsrObject encoding: (encoder encodeObject: anRsrObject))
+	| retainCommand |
+	retainCommand := RsrRetainObject object: anRsrObject.
+	retainCommand encodeUsing: encoder.
+	self retainCommands add: retainCommand

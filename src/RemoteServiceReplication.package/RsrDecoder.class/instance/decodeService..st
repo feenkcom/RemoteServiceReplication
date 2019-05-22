@@ -2,7 +2,6 @@ decoding
 decodeService: aStream
 
 	| oid instVarCount serviceName instance |
-	self nextInteger: aStream. "Object Type"
 	oid := self nextInteger: aStream.
 	instVarCount := self nextInteger: aStream.
 	serviceName := self decodeObjectReference: aStream.

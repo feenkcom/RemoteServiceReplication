@@ -1,7 +1,7 @@
 running
 testServiceReferenceService
 
-	| rootService referencedService encodedObject expectedEncoding |
+	| rootService referencedService |
 	referencedService := self decode: self referencedServiceEncoding.
 	self
 		assert: referencedService class

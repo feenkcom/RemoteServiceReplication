@@ -3,8 +3,7 @@ executeFor: aConnection
 
 	| promise |
 	promise := aConnection promises
-		at: transaction
+		removeKey: transaction
 		ifAbsent:
-			[self todo: 'What should really happen if an invalid response is received?'.
-			^nil].
+			[^self error: 'Handle unknown transaction'].
 	promise fulfill: response

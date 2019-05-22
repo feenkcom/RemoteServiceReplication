@@ -13,5 +13,4 @@ to: aService
 		receiver: aService
 		selector: aMessage selector
 		arguments: aMessage arguments.
-	dispatchCommand encodeUsing: connection encoder.
 	^dispatchCommand sendOver: connection

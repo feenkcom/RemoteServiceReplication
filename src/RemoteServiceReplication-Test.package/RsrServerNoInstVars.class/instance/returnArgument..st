@@ -1,0 +1,4 @@
+accessing
+returnArgument: anObject
+
+	^anObject

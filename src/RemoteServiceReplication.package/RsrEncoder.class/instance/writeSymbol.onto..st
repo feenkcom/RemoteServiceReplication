@@ -5,9 +5,7 @@ onto: aStream
 	"write Symbol type"
 	"write length of utf-8 encoded string"
 	"write utf-8 data"
-	
-	| utf8Bytes |
-	utf8Bytes := aSymbol utf8Encoded.
+
 	self
 		writeInteger: self immediateOID
 		onto: aStream.
@@ -15,6 +13,5 @@ onto: aStream
 		writeInteger: self symbolType
 		onto: aStream.
 	self
-		writeInteger: utf8Bytes size
-		onto: aStream.
-	aStream nextPutAll: utf8Bytes
+		writeStringBody: aSymbol
+		onto: aStream

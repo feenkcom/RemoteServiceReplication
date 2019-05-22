@@ -12,7 +12,8 @@
 		"commandReader",
 		"registry",
 		"retainedObjects",
-		"socket"
+		"socket",
+		"promises"
 	],
 	"name" : "RsrConnection",
 	"type" : "normal"
