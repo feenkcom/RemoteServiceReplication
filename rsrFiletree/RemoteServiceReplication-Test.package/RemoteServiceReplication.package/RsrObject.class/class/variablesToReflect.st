@@ -1,4 +1,0 @@
-accessing
-variablesToReflect
-
-	^self allInstVarNames

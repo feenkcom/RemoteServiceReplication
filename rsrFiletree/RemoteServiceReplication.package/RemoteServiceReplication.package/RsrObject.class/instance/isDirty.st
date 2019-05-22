@@ -1,4 +1,0 @@
-public-testing
-isDirty
-
-	^rsrIsDirty

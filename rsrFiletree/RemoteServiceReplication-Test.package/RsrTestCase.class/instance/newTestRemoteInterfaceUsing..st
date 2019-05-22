@@ -1,4 +1,0 @@
-accessing
-newTestRemoteInterfaceUsing: aForwarderClass
-
-	^RsrMockRemoteInterface rsrForwarderClass: aForwarderClass

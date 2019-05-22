@@ -1,4 +1,0 @@
-accessing
-remoteServiceClass
-
-	^self class

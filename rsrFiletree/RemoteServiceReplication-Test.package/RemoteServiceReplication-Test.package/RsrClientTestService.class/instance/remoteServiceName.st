@@ -1,4 +1,0 @@
-accessing
-remoteServiceName
-
-	^RsrServerTestService name

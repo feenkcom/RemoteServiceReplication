@@ -1,4 +1,0 @@
-accessing
-rsrObject
-
-	^rsrObject

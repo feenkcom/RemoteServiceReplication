@@ -1,4 +1,0 @@
-private-accessing
-rsrId
-
-	^rsrId

@@ -1,4 +1,0 @@
-private-accessing
-rsrForwarderClass: anRsrForwarderClass
-
-	connection forwarderClass: anRsrForwarderClass

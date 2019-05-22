@@ -1,4 +1,0 @@
-accessing
-rsrDefaultForwarderClass
-
-	^RsrTestForwarder
