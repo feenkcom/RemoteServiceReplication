@@ -1,17 +1,10 @@
 {
 	"instance" : {
-		"write:" : "KurtKilpela 5/21/2019 10:02",
-		"stop" : "KurtKilpela 5/20/2019 13:59",
-		"dumpStack" : "KurtKilpela 5/22/2019 11:32",
-		"flush" : "KurtKilpela 5/21/2019 10:49",
-		"start" : "KurtKilpela 5/20/2019 13:58",
-		"initialize" : "KurtKilpela 5/21/2019 10:39",
-		"enqueue:" : "KurtKilpela 5/21/2019 10:00",
-		"writingPriority" : "KurtKilpela 5/20/2019 13:59",
-		"runLoop" : "KurtKilpela 5/22/2019 11:31",
-		"stream:" : "KurtKilpela 5/20/2019 13:40"
+		"write:" : "KurtKilpela 5/23/2019 12:18",
+		"flush" : "KurtKilpela 5/23/2019 12:12",
+		"initialize" : "KurtKilpela 5/23/2019 11:50",
+		"enqueue:" : "KurtKilpela 5/23/2019 11:50",
+		"executeCycle" : "KurtKilpela 5/23/2019 12:18"
 	},
-	"class" : {
-		"on:" : "KurtKilpela 5/20/2019 13:40"
-	}
+	"class" : { }
 }

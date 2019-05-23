@@ -6,16 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"forwarderClass",
-		"transactionSpigot",
-		"commandWriter",
-		"commandReader",
-		"registry",
-		"retainedObjects",
-		"socket",
-		"stream",
-		"promises"
+		"process",
+		"connection"
 	],
-	"name" : "RsrConnection",
+	"name" : "RsrCommandProcessor",
 	"type" : "normal"
 }

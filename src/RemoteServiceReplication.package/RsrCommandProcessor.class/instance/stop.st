@@ -1,6 +1,6 @@
 commands
 stop
 
+	self stream close.
 	process terminate.
-	stream close.
 	process := nil

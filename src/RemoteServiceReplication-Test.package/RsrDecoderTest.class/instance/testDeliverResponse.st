@@ -10,7 +10,7 @@ testDeliverResponse
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"
 		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"
-	command := self decoder decode: encoding readStream.
+	command := self decoder decodeCommand: encoding readStream.
 	self
 		assert: command class
 		equals: RsrDeliverResponse.

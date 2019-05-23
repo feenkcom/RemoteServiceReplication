@@ -1,18 +1,21 @@
 {
 	"instance" : {
-		"isImmediate:" : "KurtKilpela 5/22/2019 13:47",
+		"isImmediate:" : "KurtKilpela 5/22/2019 16:49",
+		"sendMessageCommand" : "KurtKilpela 5/21/2019 14:42",
+		"trueType" : "KurtKilpela 5/22/2019 16:52",
 		"positiveIntegerType" : "KurtKilpela 5/22/2019 13:22",
 		"serviceType" : "KurtKilpela 5/20/2019 11:44",
 		"reflectedVariableNamesOf:do:" : "KurtKilpela 5/20/2019 12:52",
 		"characterType" : "KurtKilpela 5/22/2019 13:41",
-		"stringType" : "KurtKilpela 5/22/2019 12:59",
+		"falseType" : "KurtKilpela 5/22/2019 16:52",
 		"negativeIntegerType" : "KurtKilpela 5/22/2019 13:29",
+		"stringType" : "KurtKilpela 5/22/2019 12:59",
 		"sizeOfInteger" : "KurtKilpela 5/20/2019 11:52",
 		"retainObjectCommand" : "KurtKilpela 5/21/2019 08:40",
 		"symbolType" : "KurtKilpela 5/20/2019 11:44",
 		"reflectedVariableNamesOf:" : "KurtKilpela 5/21/2019 13:34",
 		"deliverResponseCommand" : "KurtKilpela 5/22/2019 09:40",
-		"sendMessageCommand" : "KurtKilpela 5/21/2019 14:42"
+		"nilType" : "KurtKilpela 5/22/2019 16:52"
 	},
 	"class" : { }
 }

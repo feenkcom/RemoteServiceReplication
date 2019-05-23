@@ -1,4 +1,4 @@
-commands
+writing
 write: aByteArray
 
-	stream nextPutAll: aByteArray
+	self stream nextPutAll: aByteArray

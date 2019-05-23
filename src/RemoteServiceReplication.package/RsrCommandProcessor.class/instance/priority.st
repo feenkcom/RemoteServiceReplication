@@ -1,4 +1,4 @@
-accessing
-writingPriority
+commands
+priority
 
 	^Processor lowIOPriority

@@ -1,6 +1,6 @@
 private-encoding
 encodeObject: anObject
-on: aStream
+onto: aStream
 
 	(self isService: anObject)
 		ifTrue: [^self encodeService: anObject on: aStream].

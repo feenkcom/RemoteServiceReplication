@@ -1,13 +1,9 @@
 lifecycle
 start
 
-	| stream |
 	stream := SocketStream on: socket.
 	stream binary.
-	commandReader := RsrCommandReader
-		stream: stream
-		decoder: self decoder
-		connection: self.
-	commandWriter := RsrCommandWriter on: stream.
+	commandReader := RsrCommandReader on: self.
+	commandWriter := RsrCommandWriter on: self.
 	commandReader start.
 	commandWriter start.

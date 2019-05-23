@@ -1,4 +1,0 @@
-accessing
-readingPriority
-
-	^Processor lowIOPriority

@@ -13,4 +13,10 @@ decodeImmediateObject: aStream
 		ifTrue: [^self decodeNegativeInteger: aStream].
 	type = self characterType
 		ifTrue: [^self decodeCharacter: aStream].
+	type = self nilType
+		ifTrue: [^nil].
+	type = self trueType
+		ifTrue: [^true].
+	type = self falseType
+		ifTrue: [^false].
 	self error: 'Invalid immediate type specified'

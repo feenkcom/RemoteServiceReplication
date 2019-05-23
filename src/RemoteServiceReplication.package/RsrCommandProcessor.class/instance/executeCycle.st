@@ -1,0 +1,4 @@
+accessing
+executeCycle
+
+	self subclassResponsibility

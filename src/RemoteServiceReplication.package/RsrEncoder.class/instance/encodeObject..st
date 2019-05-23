@@ -6,4 +6,4 @@ encodeObject: anObject
 			[:stream |
 			self
 				encodeObject: anObject
-				on: stream]
+				onto: stream]

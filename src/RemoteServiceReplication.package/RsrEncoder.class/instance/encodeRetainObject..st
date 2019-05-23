@@ -9,4 +9,4 @@ encodeRetainObject: aRetainObject
 				onto: stream.
 			self
 				encodeObject: aRetainObject object
-				on: stream]
+				onto: stream]

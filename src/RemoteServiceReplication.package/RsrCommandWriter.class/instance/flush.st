@@ -1,4 +1,4 @@
 commands
 flush
 
-	stream flush
+	self stream flush

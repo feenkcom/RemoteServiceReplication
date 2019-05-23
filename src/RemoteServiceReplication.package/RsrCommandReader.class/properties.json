@@ -1,15 +1,12 @@
 {
 	"commentStamp" : "",
-	"super" : "Object",
+	"super" : "RsrCommandProcessor",
 	"category" : "RemoteServiceReplication-Communications",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"stream",
 		"decoder",
-		"process",
-		"connection",
 		"commands"
 	],
 	"name" : "RsrCommandReader",

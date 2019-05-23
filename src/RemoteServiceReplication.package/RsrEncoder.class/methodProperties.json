@@ -1,26 +1,28 @@
 {
 	"instance" : {
-		"writeImmediate:onto:" : "KurtKilpela 5/22/2019 13:49",
+		"writeImmediate:onto:" : "KurtKilpela 5/22/2019 16:50",
 		"writeStringBody:onto:" : "KurtKilpela 5/22/2019 12:58",
-		"encodeObject:" : "KurtKilpela 5/21/2019 12:01",
+		"encodeObject:" : "KurtKilpela 5/23/2019 11:39",
 		"writeInteger:onto:" : "KurtKilpela 5/20/2019 11:52",
 		"isService:" : "KurtKilpela 5/17/2019 15:53",
-		"encodeRetainObject:" : "KurtKilpela 5/21/2019 15:44",
+		"encodeRetainObject:" : "KurtKilpela 5/23/2019 11:39",
+		"encodeObject:onto:" : "KurtKilpela 5/23/2019 11:39",
 		"sendMessageIdentifier" : "KurtKilpela 5/21/2019 13:55",
-		"encodeCommand:" : "KurtKilpela 5/21/2019 11:46",
 		"writeImmediateInteger:onto:" : "KurtKilpela 5/22/2019 13:23",
 		"writeSymbol:onto:" : "KurtKilpela 5/22/2019 12:57",
 		"isRsrObject:" : "KurtKilpela 5/17/2019 16:55",
+		"writeFalseOnto:" : "KurtKilpela 5/22/2019 16:53",
 		"reflectedVariablesOf:do:" : "KurtKilpela 5/21/2019 13:25",
 		"encodeReferenceOf:onto:" : "KurtKilpela 5/21/2019 14:11",
 		"retainObjectIdentifier" : "KurtKilpela 5/21/2019 13:22",
 		"encodeService:on:" : "KurtKilpela 5/21/2019 13:26",
 		"encodeSendMessage:" : "KurtKilpela 5/21/2019 14:13",
-		"encodeObject:on:" : "KurtKilpela 5/21/2019 11:41",
 		"immediateOID" : "KurtKilpela 5/17/2019 16:02",
-		"encodeDeliverResponse:" : "KurtKilpela 5/22/2019 09:41",
+		"encodeDeliverResponse:" : "KurtKilpela 5/23/2019 11:35",
+		"writeTrueOnto:" : "KurtKilpela 5/22/2019 16:53",
 		"writeString:onto:" : "KurtKilpela 5/22/2019 12:59",
-		"writeCharacter:onto:" : "KurtKilpela 5/22/2019 13:43"
+		"writeCharacter:onto:" : "KurtKilpela 5/22/2019 13:43",
+		"writeNilOnto:" : "KurtKilpela 5/22/2019 16:53"
 	},
 	"class" : { }
 }

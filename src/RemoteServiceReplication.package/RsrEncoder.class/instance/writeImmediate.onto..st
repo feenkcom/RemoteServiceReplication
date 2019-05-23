@@ -22,4 +22,13 @@ onto: aStream
 			[^self
 				writeCharacter: anImmediate
 				onto: aStream].
+	anImmediate == nil
+		ifTrue:
+			[^self writeNilOnto: aStream].
+	anImmediate == true
+		ifTrue:
+			[^self writeTrueOnto: aStream].
+	anImmediate == false
+		ifTrue:
+			[^self writeFalseOnto: aStream].
 	self error: 'Unsupported Immediate'
