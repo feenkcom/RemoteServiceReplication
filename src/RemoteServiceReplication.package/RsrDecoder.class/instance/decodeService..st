@@ -2,8 +2,8 @@ decoding
 decodeService: aStream
 
 	| oid instVarCount serviceName instance |
-	oid := self nextInteger: aStream.
-	instVarCount := self nextInteger: aStream.
+	oid := self decodeControlWord: aStream.
+	instVarCount := self decodeControlWord: aStream.
 	serviceName := self decodeObjectReference: aStream.
 	instance := registry
 		at: oid

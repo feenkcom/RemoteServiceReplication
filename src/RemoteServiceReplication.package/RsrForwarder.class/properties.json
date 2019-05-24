@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "ProtoObject",
-	"category" : "RemoteServiceReplication-Services",
+	"category" : "RemoteServiceReplication-Utilities",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],

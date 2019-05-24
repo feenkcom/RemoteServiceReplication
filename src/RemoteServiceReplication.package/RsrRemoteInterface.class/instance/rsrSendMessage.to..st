@@ -8,6 +8,8 @@ to: aService
 "Coorination window closed"
 	"Return Promise"
 	| dispatchCommand |
+	connection isOpen
+		ifFalse: [self error: 'Connection is not open'].
 	dispatchCommand := RsrSendMessage
 		transaction: self newTransactionId
 		receiver: aService

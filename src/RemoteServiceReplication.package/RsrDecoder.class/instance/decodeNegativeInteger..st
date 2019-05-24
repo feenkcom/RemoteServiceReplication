@@ -1,4 +1,4 @@
 decoding
 decodeNegativeInteger: aStream
 
-	^(self decodeInteger: aStream) negated
+	^(self decodeImmediateInteger: aStream) negated

@@ -1,10 +1,10 @@
 {
 	"instance" : {
-		"close" : "KurtKilpela 5/22/2019 10:04",
+		"close" : "KurtKilpela 5/24/2019 09:39",
 		"decoder" : "KurtKilpela 5/21/2019 10:22",
 		"initialize" : "KurtKilpela 5/22/2019 11:11",
 		"transactionSpigot" : "KurtKilpela 5/20/2019 14:57",
-		"stream" : "KurtKilpela 5/23/2019 12:02",
+		"stream" : "KurtKilpela 5/24/2019 08:42",
 		"forwarderClass" : "KurtKilpela 5/21/2019 10:16",
 		"promises" : "KurtKilpela 5/22/2019 11:12",
 		"oidSpigot:" : "KurtKilpela 5/21/2019 10:12",
@@ -20,7 +20,8 @@
 		"transactionSpigot:" : "KurtKilpela 5/20/2019 14:57",
 		"remoteInterface" : "KurtKilpela 5/21/2019 14:51",
 		"retainedObjects:" : "KurtKilpela 5/21/2019 09:06",
-		"start" : "KurtKilpela 5/23/2019 12:05",
+		"isOpen" : "KurtKilpela 5/23/2019 16:53",
+		"start" : "KurtKilpela 5/23/2019 14:52",
 		"socket:" : "KurtKilpela 5/21/2019 10:19"
 	},
 	"class" : {

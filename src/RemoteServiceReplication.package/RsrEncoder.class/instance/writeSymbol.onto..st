@@ -7,10 +7,10 @@ onto: aStream
 	"write utf-8 data"
 
 	self
-		writeInteger: self immediateOID
+		writeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeInteger: self symbolType
+		writeControlWord: self symbolType
 		onto: aStream.
 	self
 		writeStringBody: aSymbol

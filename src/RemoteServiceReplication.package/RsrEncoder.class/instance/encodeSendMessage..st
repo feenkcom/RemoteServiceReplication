@@ -5,13 +5,13 @@ encodeSendMessage: aSendMessage
 		streamContents:
 			[:stream |
 			self
-				writeInteger: self sendMessageIdentifier
+				writeControlWord: self sendMessageIdentifier
 				onto: stream.
 			self
-				writeInteger: aSendMessage transaction
+				writeControlWord: aSendMessage transaction
 				onto: stream.
 			self
-				writeInteger: aSendMessage arguments size
+				writeControlWord: aSendMessage arguments size
 				onto: stream.
 			self
 				encodeReferenceOf: aSendMessage receiver

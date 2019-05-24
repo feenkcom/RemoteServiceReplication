@@ -1,0 +1,4 @@
+running
+testControlInteger
+
+	^super testControlInteger

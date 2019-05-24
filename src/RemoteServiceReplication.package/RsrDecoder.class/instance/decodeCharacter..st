@@ -2,5 +2,5 @@ decoding
 decodeCharacter: aStream
 
 	| codePoint |
-	codePoint := self nextInteger: aStream.
+	codePoint := self decodeControlWord: aStream.
 	^Character codePoint: codePoint

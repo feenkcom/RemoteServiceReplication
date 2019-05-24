@@ -1,6 +1,8 @@
 accessing
 runLoop
 
-	[true]
+	[isRunning]
 		whileTrue:
-			[self executeCycle]
+			[[self executeCycle]
+				on: Error
+				do: [:ex | self stop]]

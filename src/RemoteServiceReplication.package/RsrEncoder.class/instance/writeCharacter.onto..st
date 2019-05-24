@@ -3,11 +3,11 @@ writeCharacter: aCharacter
 onto: aStream
 
 	self
-		writeInteger: self immediateOID
+		writeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeInteger: self characterType
+		writeControlWord: self characterType
 		onto: aStream.
 	self
-		writeInteger: aCharacter codePoint
+		writeControlWord: aCharacter codePoint
 		onto: aStream

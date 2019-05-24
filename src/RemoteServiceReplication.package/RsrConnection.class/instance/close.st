@@ -1,6 +1,8 @@
 lifecycle
 close
 
+	self isOpen
+		ifFalse: [^self].
 	commandReader stop.
 	commandWriter stop.
-	commandReader := commandWriter := socket := nil
+	self promises do: [:each | each error: (RsrConnectionClosed new)]

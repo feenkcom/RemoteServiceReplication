@@ -4,5 +4,4 @@ SystemOrganization addCategory: #'RemoteServiceReplication-Communications'!
 SystemOrganization addCategory: #'RemoteServiceReplication-Exceptions'!
 SystemOrganization addCategory: #'RemoteServiceReplication-Manifest'!
 SystemOrganization addCategory: #'RemoteServiceReplication-Public'!
-SystemOrganization addCategory: #'RemoteServiceReplication-Services'!
 SystemOrganization addCategory: #'RemoteServiceReplication-Utilities'!

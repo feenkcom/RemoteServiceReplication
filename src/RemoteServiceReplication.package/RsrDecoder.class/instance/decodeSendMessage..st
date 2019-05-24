@@ -2,9 +2,9 @@ decoding
 decodeSendMessage: aStream
 
 	| transaction argCount receiverOID receiver selector arguments |
-	transaction := self nextInteger: aStream.
-	argCount := self nextInteger: aStream.
-	receiverOID := self nextInteger: aStream.
+	transaction := self decodeControlWord: aStream.
+	argCount := self decodeControlWord: aStream.
+	receiverOID := self decodeControlWord: aStream.
 	receiver := registry at: receiverOID ifAbsent: [^self signalUnknownOID].
 	selector := self decodeObjectReference: aStream.
 	arguments := (1 to: argCount) collect: [:each | self decodeObjectReference: aStream].

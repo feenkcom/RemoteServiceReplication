@@ -1,12 +1,12 @@
 {
 	"instance" : {
-		"testReturnArgument" : "KurtKilpela 5/22/2019 16:48",
+		"testReturnArgument" : "KurtKilpela 5/23/2019 15:34",
 		"tearDown" : "KurtKilpela 5/22/2019 10:05",
 		"setUp" : "KurtKilpela 5/21/2019 10:25",
 		"testSendSignal" : "KurtKilpela 5/22/2019 11:36",
 		"testTransferService" : "KurtKilpela 5/22/2019 10:02",
 		"testReturnSymbol" : "KurtKilpela 5/22/2019 11:40",
-		"defaultTimeLimit" : "KurtKilpela 5/23/2019 12:17"
+		"defaultTimeLimit" : "KurtKilpela 5/24/2019 09:44"
 	},
 	"class" : { }
 }

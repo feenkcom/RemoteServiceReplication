@@ -1,22 +1,24 @@
 {
 	"instance" : {
-		"decodeObject:" : "KurtKilpela 5/22/2019 09:24",
+		"decodeObject:" : "KurtKilpela 5/23/2019 16:50",
+		"decodeDeliverResponse:" : "KurtKilpela 5/23/2019 16:50",
 		"lookupClass:" : "KurtKilpela 5/20/2019 12:07",
-		"decodeCharacter:" : "KurtKilpela 5/22/2019 13:46",
-		"registry:" : "KurtKilpela 5/20/2019 13:00",
-		"nextInteger:" : "KurtKilpela 5/20/2019 11:52",
-		"remoteInterface" : "KurtKilpela 5/20/2019 15:39",
+		"decodeService:" : "KurtKilpela 5/23/2019 16:50",
+		"decodeControlWord:" : "KurtKilpela 5/24/2019 09:30",
+		"decodeString:" : "KurtKilpela 5/23/2019 16:50",
 		"signalUnknownOID" : "KurtKilpela 5/21/2019 14:42",
-		"decodeImmediateObject:" : "KurtKilpela 5/22/2019 16:55",
-		"decodeDeliverResponse:" : "KurtKilpela 5/22/2019 09:50",
-		"decodeObjectReference:" : "KurtKilpela 5/21/2019 14:42",
-		"decodeNegativeInteger:" : "KurtKilpela 5/22/2019 13:22",
-		"decodeSendMessage:" : "KurtKilpela 5/21/2019 14:45",
-		"decodeInteger:" : "KurtKilpela 5/22/2019 13:21",
-		"decodeCommand:" : "KurtKilpela 5/22/2019 09:50",
-		"decodeString:" : "KurtKilpela 5/20/2019 09:58",
+		"decodeInteger:" : "KurtKilpela 5/24/2019 09:24",
+		"decodeCharacter:" : "KurtKilpela 5/23/2019 16:50",
+		"decodeSendMessage:" : "KurtKilpela 5/23/2019 16:50",
+		"registry:" : "KurtKilpela 5/20/2019 13:00",
+		"decodeCommand:" : "KurtKilpela 5/23/2019 16:50",
 		"decodeSymbol:" : "KurtKilpela 5/20/2019 09:57",
-		"decodeService:" : "KurtKilpela 5/22/2019 09:24"
+		"nextInteger:" : "KurtKilpela 5/23/2019 16:43",
+		"decodeNegativeInteger:" : "KurtKilpela 5/23/2019 16:43",
+		"remoteInterface" : "KurtKilpela 5/20/2019 15:39",
+		"decodeObjectReference:" : "KurtKilpela 5/23/2019 16:50",
+		"decodeImmediateObject:" : "KurtKilpela 5/24/2019 09:23",
+		"decodeImmediateInteger:" : "KurtKilpela 5/24/2019 09:23"
 	},
 	"class" : {
 		"registry:" : "KurtKilpela 5/20/2019 13:01"

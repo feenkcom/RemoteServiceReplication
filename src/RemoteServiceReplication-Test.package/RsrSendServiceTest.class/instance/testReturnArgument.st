@@ -1,7 +1,7 @@
 running
 testReturnArgument
 
-	| service remoteService literals objects arguments |
+	| service remoteService literals arguments |
 	service := RsrClientNoInstVars new.
 	connectionA registry addLocal: service.
 	service rsrRemoteInterface: connectionA remoteInterface.

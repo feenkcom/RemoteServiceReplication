@@ -5,10 +5,10 @@ encodeDeliverResponse: aDeliverResponse
 		streamContents:
 			[:stream |
 			self
-				writeInteger: self deliverResponseCommand
+				writeControlWord: self deliverResponseCommand
 				onto: stream.
 			self
-				writeInteger: aDeliverResponse transaction
+				writeControlWord: aDeliverResponse transaction
 				onto: stream.
 			self
 				encodeReferenceOf: aDeliverResponse response

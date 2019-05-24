@@ -3,10 +3,10 @@ writeString: aString
 onto: aStream
 
 	self
-		writeInteger: self immediateOID
+		writeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeInteger: self stringType
+		writeControlWord: self stringType
 		onto: aStream.
 	self
 		writeStringBody: aString

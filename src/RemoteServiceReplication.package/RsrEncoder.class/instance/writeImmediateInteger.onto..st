@@ -8,12 +8,12 @@ onto: aStream
 		ifFalse: [self negativeIntegerType].
 	bytes := anInteger asByteArray.
 	self
-		writeInteger: self immediateOID
+		writeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeInteger: immediateType
+		writeControlWord: immediateType
 		onto: aStream.
 	self
-		writeInteger: bytes size
+		writeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes

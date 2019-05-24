@@ -2,8 +2,8 @@ private-writing
 writeFalseOnto: aStream
 
 	self
-		writeInteger: self immediateOID
+		writeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeInteger: self falseType
+		writeControlWord: self falseType
 		onto: aStream

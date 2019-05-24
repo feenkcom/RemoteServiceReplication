@@ -2,8 +2,8 @@ private-writing
 writeNilOnto: aStream
 
 	self
-		writeInteger: self immediateOID
+		writeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeInteger: self nilType
+		writeControlWord: self nilType
 		onto: aStream

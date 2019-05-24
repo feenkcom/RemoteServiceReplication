@@ -5,6 +5,6 @@ onto: aStream
 	| bytes |
 	bytes := aString utf8Encoded.
 	self
-		writeInteger: bytes size
+		writeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes
