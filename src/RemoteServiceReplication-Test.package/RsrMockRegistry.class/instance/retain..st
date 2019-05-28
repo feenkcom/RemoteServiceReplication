@@ -1,5 +1,5 @@
 adding
-add: anRsrObject
+retain: anRsrObject
 
 	anRsrObject
 		rsrId: self newId;

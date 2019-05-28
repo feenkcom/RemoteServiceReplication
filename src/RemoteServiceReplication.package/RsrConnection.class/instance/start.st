@@ -7,3 +7,4 @@ start
 	commandWriter := RsrCommandWriter on: self.
 	commandReader start.
 	commandWriter start.
+	registry remember: serviceRegistry

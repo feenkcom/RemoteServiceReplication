@@ -3,5 +3,5 @@ tearDown
 
 	connectionA close.
 	connectionB close.
-	socketPair := connectionA := connectionB := nil.
+	connectionA := connectionB := nil.
 	super tearDown

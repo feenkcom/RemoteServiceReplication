@@ -1,0 +1,14 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrTestCase",
+	"category" : "RemoteServiceReplication-Test-TestCases",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"connectionA",
+		"connectionB"
+	],
+	"name" : "RsrSystemTestCase",
+	"type" : "normal"
+}

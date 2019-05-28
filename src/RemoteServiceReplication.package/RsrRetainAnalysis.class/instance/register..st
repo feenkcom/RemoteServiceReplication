@@ -1,4 +1,4 @@
 actions
 register: anRsrObject
 
-	registry add: anRsrObject
+	registry retain: anRsrObject

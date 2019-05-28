@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrService",
+	"category" : "RemoteServiceReplication-Public",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RsrAbstractServiceRegistry",
+	"type" : "normal"
+}

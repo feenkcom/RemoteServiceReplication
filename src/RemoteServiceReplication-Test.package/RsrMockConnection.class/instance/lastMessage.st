@@ -1,4 +1,5 @@
 accessing
 lastMessage
 
-	^lastMessage
+	^[lastMessage]
+		ensure: [lastMessage := nil]

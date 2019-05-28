@@ -22,6 +22,7 @@
 		"writeString:onto:" : "KurtKilpela 5/23/2019 16:49",
 		"writeControlWord:onto:" : "KurtKilpela 5/24/2019 09:33",
 		"writeCharacter:onto:" : "KurtKilpela 5/23/2019 16:49",
+		"encodeReleaseObjects:" : "KurtKilpela 5/28/2019 13:06",
 		"writeNilOnto:" : "KurtKilpela 5/23/2019 16:49"
 	},
 	"class" : { }

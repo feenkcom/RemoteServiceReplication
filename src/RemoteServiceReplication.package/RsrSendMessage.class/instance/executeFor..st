@@ -8,4 +8,5 @@ executeFor: aConnection
 	response := RsrDeliverResponse
 		transaction: transaction
 		response: result.
-	response sendOver: aConnection
+	response sendOver: aConnection.
+	aConnection objectCache reset

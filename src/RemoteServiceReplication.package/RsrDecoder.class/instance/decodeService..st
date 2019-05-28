@@ -8,9 +8,11 @@ decodeService: aStream
 	instance := registry
 		at: oid
 		ifAbsent:
-			[(self lookupClass: serviceName)
+			[((self lookupClass: serviceName)
 				rsrId: oid
-				rsrConnection: self connection].
+				rsrConnection: self connection)
+					markForFinalization;
+					yourself].
 	(self reflectedVariableNamesOf: instance) size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	self

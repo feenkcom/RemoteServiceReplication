@@ -1,4 +1,4 @@
 executing
 executeFor: aConnection
 
-	aConnection retainedObjects add: object
+	aConnection objectCache add: object

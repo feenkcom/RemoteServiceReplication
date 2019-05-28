@@ -6,4 +6,6 @@ executeFor: aConnection
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	promise fulfill: response
+	promise fulfill: response.
+	aConnection objectCache reset
+	

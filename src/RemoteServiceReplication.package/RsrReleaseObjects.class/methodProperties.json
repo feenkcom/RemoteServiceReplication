@@ -1,6 +1,11 @@
 {
 	"instance" : {
-		"executeFor:" : "KurtKilpela 5/21/2019 09:19"
+		"encodeUsing:" : "KurtKilpela 5/28/2019 12:58",
+		"executeFor:" : "KurtKilpela 5/28/2019 13:24",
+		"oids" : "KurtKilpela 5/28/2019 12:59",
+		"oids:" : "KurtKilpela 5/28/2019 12:59"
 	},
-	"class" : { }
+	"class" : {
+		"oids:" : "KurtKilpela 5/28/2019 12:58"
+	}
 }

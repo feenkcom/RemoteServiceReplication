@@ -1,4 +1,4 @@
 commands
 enqueue: aCommand
 
-	queue nextPut: aCommand
+	isRunning ifTrue: [queue nextPut: aCommand]

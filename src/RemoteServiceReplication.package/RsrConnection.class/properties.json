@@ -11,10 +11,11 @@
 		"commandWriter",
 		"commandReader",
 		"registry",
-		"retainedObjects",
+		"objectCache",
 		"socket",
 		"stream",
-		"promises"
+		"promises",
+		"serviceRegistry"
 	],
 	"name" : "RsrConnection",
 	"type" : "normal"

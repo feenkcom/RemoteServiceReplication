@@ -1,4 +1,0 @@
-accessing
-lastReceiver
-
-	^lastReceiver

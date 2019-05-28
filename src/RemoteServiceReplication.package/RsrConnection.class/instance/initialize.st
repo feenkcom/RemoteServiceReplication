@@ -3,5 +3,8 @@ initialize
 
 	super initialize.
 	transactionSpigot := RsrNumericSpigot naturals.
-	retainedObjects := IdentitySet new.
-	promises := Dictionary new
+	objectCache := RsrObjectCache new.
+	promises := Dictionary new.
+	serviceRegistry := RsrServiceRegistry
+		rsrId: 1
+		rsrConnection: self

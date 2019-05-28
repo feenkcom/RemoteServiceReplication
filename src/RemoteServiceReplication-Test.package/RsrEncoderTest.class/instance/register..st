@@ -1,4 +1,4 @@
 registration
 register: aService
 
-	registry add: aService
+	registry retain: aService

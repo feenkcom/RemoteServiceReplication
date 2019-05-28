@@ -10,4 +10,6 @@ decodeCommand: aStream
 		ifTrue: [^self decodeSendMessage: aStream].
 	command == self deliverResponseCommand
 		ifTrue: [^self decodeDeliverResponse: aStream].
+	command == self releaseObjectsCommand
+		ifTrue: [^self decodeReleaseObjects: aStream].
 	self error: 'Invalid message'
