@@ -8,4 +8,4 @@ testInitialization
 		isMirrored: false
 		isDirty: true
 		id: nil
-		remoteInterface: nil
+		connection: nil

@@ -1,0 +1,4 @@
+accessing
+connection
+
+	^RsrMockConnection new

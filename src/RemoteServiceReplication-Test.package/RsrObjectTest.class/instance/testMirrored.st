@@ -1,16 +1,16 @@
 running
 testMirrored
 
-	| anObject id remoteInterface |
+	| anObject id connection |
 	anObject := RsrObject new.
 	id := self newId.
-	remoteInterface := self newTestRemoteInterface.
+	connection := self newTestConnection.
 	anObject
 		rsrId: id;
-		rsrRemoteInterface: remoteInterface.
+		rsrConnection: connection.
 	self
 		assertObject: anObject
 		isMirrored: true
 		isDirty: true
 		id: id
-		remoteInterface: remoteInterface
+		connection: connection

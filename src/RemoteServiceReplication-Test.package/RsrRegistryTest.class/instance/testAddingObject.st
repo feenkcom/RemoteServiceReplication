@@ -2,7 +2,7 @@ tests
 testAddingObject
 
 	| object registry |
-	registry := RsrRegistry new.
+	registry := RsrRegistry oidSpigot: RsrNumericSpigot naturals.
 	object := RsrClientNoInstVars new.
-	registry add: object.
+	registry retain: object.
 	self assert: (registry includes: object)

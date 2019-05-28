@@ -3,5 +3,5 @@ add: anRsrObject
 
 	anRsrObject
 		rsrId: self newId;
-		rsrRemoteInterface: self remoteInterface.
+		rsrConnection: self connection.
 	self objects add: anRsrObject

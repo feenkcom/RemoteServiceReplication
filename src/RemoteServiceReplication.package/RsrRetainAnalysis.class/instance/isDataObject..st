@@ -1,4 +1,9 @@
 processing
 isDataObject: anObject
 
-	^anObject rsrIsDataObject
+	^anObject == true
+		or: [anObject == false
+			or: [anObject == nil
+				or: [anObject isString
+					or: [anObject isSymbol
+						or: [anObject isInteger]]]]]

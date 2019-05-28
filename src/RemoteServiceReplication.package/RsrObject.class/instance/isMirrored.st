@@ -1,4 +1,4 @@
 public-testing
 isMirrored
 
-	^self rsrId ~~ nil
+	^rsrConnection ~~ nil

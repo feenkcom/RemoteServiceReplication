@@ -6,8 +6,7 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"decoder",
-		"commands"
+		"decoder"
 	],
 	"name" : "RsrCommandReader",
 	"type" : "normal"

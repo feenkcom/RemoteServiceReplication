@@ -3,12 +3,12 @@ testReturnSymbol
 
 	| service remoteService |
 	service := RsrClientNoInstVars new.
-	connectionA registry addLocal: service.
-	service rsrRemoteInterface: connectionA remoteInterface.
+	connectionA registry retain: service.
+	service rsrConnection: connectionA.
 	remoteService := RsrServerNoInstVars
 		rsrId: service rsrId
-		rsrRemoteInterface: connectionB remoteInterface.
-	connectionB registry addRemote: remoteService.
+		rsrConnection: connectionB.
+	connectionB registry remember: remoteService.
 	self
 		assert: service sendReturnTestSymbol
 		equals: #testSymbol

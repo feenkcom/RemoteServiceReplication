@@ -3,11 +3,11 @@ testTransferService
 
 	| service command remoteService |
 	service := RsrClientNoInstVars new.
-	connectionA registry addLocal: service.
+	connectionA registry retain: service.
 	command := RsrRetainObject object: service.
 	command
 		encodeUsing: connectionA encoder;
-		sendUsing: connectionA commandWriter.
+		writeUsing: connectionA commandWriter.
 	connectionA commandWriter flush.
 	(Delay forSeconds: 1) wait.
 	remoteService := connectionB registry at: service rsrId.

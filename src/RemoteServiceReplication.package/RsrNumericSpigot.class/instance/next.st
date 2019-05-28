@@ -1,4 +1,7 @@
 accessing
 next
 
-	^[current] ensure: [current := current + step]
+	| result |
+	result := current.
+	current := current + step.
+	^result

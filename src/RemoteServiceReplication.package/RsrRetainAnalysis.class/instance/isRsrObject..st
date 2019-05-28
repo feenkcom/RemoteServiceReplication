@@ -1,4 +1,4 @@
 processing
 isRsrObject: anObject
 
-	^anObject rsrIsRsrObject
+	^anObject isKindOf: RsrObject

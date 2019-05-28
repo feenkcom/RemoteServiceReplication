@@ -1,7 +1,11 @@
 {
 	"instance" : {
-		"forwarderClass:" : "KurtKilpela 5/20/2019 15:44",
-		"forwarderClass" : "KurtKilpela 5/20/2019 15:44"
+		"rsrSendMessage:to:" : "KurtKilpela 5/28/2019 09:14",
+		"forwarderClass" : "KurtKilpela 5/20/2019 15:44",
+		"rsrForwarderClass" : "KurtKilpela 5/28/2019 09:10",
+		"lastMessage" : "KurtKilpela 5/28/2019 09:15",
+		"lastReceiver" : "KurtKilpela 5/28/2019 09:15",
+		"forwarderClass:" : "KurtKilpela 5/20/2019 15:44"
 	},
 	"class" : {
 		"forwarderClass:" : "KurtKilpela 5/20/2019 15:43"

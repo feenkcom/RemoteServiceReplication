@@ -1,7 +1,9 @@
 {
 	"instance" : {
-		"testWeakness" : "KurtKilpela 5/17/2019 11:49",
-		"testAddingObject" : "KurtKilpela 5/17/2019 11:49"
+		"testRetain" : "KurtKilpela 5/28/2019 09:25",
+		"testAddingObject" : "KurtKilpela 5/24/2019 14:21",
+		"maximumReclamation" : "KurtKilpela 5/24/2019 14:31",
+		"testRemember" : "KurtKilpela 5/28/2019 09:25"
 	},
 	"class" : { }
 }

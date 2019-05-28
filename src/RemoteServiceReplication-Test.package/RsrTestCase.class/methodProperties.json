@@ -1,9 +1,10 @@
 {
 	"instance" : {
-		"assertObject:isMirrored:isDirty:id:remoteInterface:" : "KurtKilpela 5/14/2019 11:59",
+		"assertObject:isMirrored:isDirty:id:connection:" : "KurtKilpela 5/28/2019 09:39",
+		"newTestConnection" : "KurtKilpela 5/28/2019 09:35",
 		"newId" : "KurtKilpela 5/14/2019 10:28",
-		"newTestRemoteInterface" : "KurtKilpela 5/17/2019 13:21",
-		"newTestRemoteInterfaceUsing:" : "KurtKilpela 5/20/2019 15:43"
+		"newTestConnectionUsing:" : "KurtKilpela 5/28/2019 09:35",
+		"defaultTimeLimit" : "KurtKilpela 5/24/2019 14:40"
 	},
 	"class" : { }
 }

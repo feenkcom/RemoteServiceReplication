@@ -4,9 +4,9 @@ testDecodeSendMessage
 	| service encoding command |
 	service := RsrServerNoInstVars
 		rsrId: 1
-		rsrRemoteInterface: RsrMockRemoteInterface new.
+		rsrConnection: RsrMockConnection new.
 	self decoder.
-	registry addRemote: service.
+	registry remember: service.
 	encoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"
 		#[0 0 0 0 0 0 0 1], "Transaction ID"

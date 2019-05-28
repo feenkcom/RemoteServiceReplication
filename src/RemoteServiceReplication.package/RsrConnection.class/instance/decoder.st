@@ -1,4 +1,4 @@
 accessing
 decoder
 
-	^RsrDecoder registry: registry
+	^RsrDecoder registry: registry connection: self

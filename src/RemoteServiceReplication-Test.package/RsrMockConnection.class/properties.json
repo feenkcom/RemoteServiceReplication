@@ -6,7 +6,9 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"forwarderClass"
+		"forwarderClass",
+		"lastMessage",
+		"lastReceiver"
 	],
 	"name" : "RsrMockConnection",
 	"type" : "normal"

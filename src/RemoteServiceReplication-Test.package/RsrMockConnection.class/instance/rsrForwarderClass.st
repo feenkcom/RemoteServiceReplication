@@ -1,0 +1,4 @@
+accessing
+rsrForwarderClass
+
+	^self forwarderClass

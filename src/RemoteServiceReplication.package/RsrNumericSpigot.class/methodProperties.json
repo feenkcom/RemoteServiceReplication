@@ -2,14 +2,14 @@
 	"instance" : {
 		"step:" : "KurtKilpela 5/14/2019 12:48",
 		"step" : "KurtKilpela 5/14/2019 12:48",
-		"next" : "KurtKilpela 5/14/2019 12:49",
+		"first:" : "KurtKilpela 5/24/2019 14:09",
+		"next" : "KurtKilpela 5/24/2019 14:10",
 		"next:" : "KurtKilpela 5/17/2019 13:05",
-		"negated" : "KurtKilpela 5/21/2019 09:45",
-		"current:" : "KurtKilpela 5/14/2019 12:48"
+		"negated" : "KurtKilpela 5/21/2019 09:45"
 	},
 	"class" : {
 		"new" : "KurtKilpela 5/14/2019 12:50",
 		"naturals" : "KurtKilpela 5/14/2019 12:52",
-		"start:step:" : "KurtKilpela 5/14/2019 12:50"
+		"start:step:" : "KurtKilpela 5/24/2019 14:09"
 	}
 }

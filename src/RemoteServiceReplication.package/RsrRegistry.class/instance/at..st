@@ -1,4 +1,4 @@
 initialization
 at: anOID
 
-	^map at: anOID
+	^mutex critical: [map at: anOID]

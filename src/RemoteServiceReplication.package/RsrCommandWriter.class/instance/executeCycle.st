@@ -1,6 +1,6 @@
 commands
 executeCycle
 
-	queue next sendUsing: self.
+	queue next writeUsing: self.
 	queue isEmpty
 		ifTrue: [self stream flush]

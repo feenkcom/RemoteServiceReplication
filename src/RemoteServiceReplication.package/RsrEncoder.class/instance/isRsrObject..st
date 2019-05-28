@@ -1,4 +1,4 @@
 private-testing
 isRsrObject: anObject
 
-	^anObject rsrIsRsrObject
+	^anObject isKindOf: RsrObject

@@ -1,4 +1,0 @@
-*RemoteServiceReplication
-rsrIsDataObject
-
-	^false

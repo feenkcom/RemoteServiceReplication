@@ -3,6 +3,6 @@ start: aNumber
 step: anIncrement
 
 	^super new
-		current: aNumber;
+		first: aNumber;
 		step: anIncrement;
 		yourself

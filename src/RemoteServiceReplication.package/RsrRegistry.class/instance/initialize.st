@@ -1,6 +1,7 @@
 initialization
 initialize
-	
+
 	super initialize.
-	map := Dictionary new.
-	storage := IdentitySet new
+	map := WeakValueDictionary new.
+	storage := IdentitySet new.
+	mutex := Semaphore forMutualExclusion

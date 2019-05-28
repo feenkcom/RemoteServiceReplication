@@ -1,4 +1,4 @@
 initialization
 includes: anRsrObject
 
-	^map includesKey: anRsrObject rsrId
+	^mutex critical: [map includesKey: anRsrObject rsrId]

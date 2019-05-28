@@ -9,6 +9,7 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
+		"mutex",
 		"map",
 		"storage",
 		"oidSpigot"
