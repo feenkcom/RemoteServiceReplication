@@ -8,5 +8,7 @@
 		"newTestConnectionUsing:" : "KurtKilpela 5/28/2019 09:35",
 		"finalizationRegistry" : "KurtKilpela 5/28/2019 12:07"
 	},
-	"class" : { }
+	"class" : {
+		"isAbstract" : "KurtKilpela 5/29/2019 13:49"
+	}
 }

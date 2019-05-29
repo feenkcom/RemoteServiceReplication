@@ -1,4 +1,0 @@
-running
-testControlInteger
-
-	^super testControlInteger

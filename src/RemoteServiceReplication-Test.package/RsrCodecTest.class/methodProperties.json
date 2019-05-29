@@ -5,8 +5,10 @@
 		"rootServiceEncoding" : "KurtKilpela 5/21/2019 13:28",
 		"genericSymbolEncoding" : "KurtKilpela 5/20/2019 10:04",
 		"referencedServiceEncoding" : "KurtKilpela 5/21/2019 13:28",
-		"assertControlInteger:encoding:" : "KurtKilpela 5/23/2019 16:25",
+		"assertControlInteger:encoding:" : "KurtKilpela 5/29/2019 13:49",
 		"serviceNoInstVarsEncoding" : "KurtKilpela 5/21/2019 13:27"
 	},
-	"class" : { }
+	"class" : {
+		"isAbstract" : "KurtKilpela 5/29/2019 13:47"
+	}
 }
