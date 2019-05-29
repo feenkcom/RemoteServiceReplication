@@ -1,3 +1,4 @@
 accessing
 registry
-	^ registry
+
+	^registry

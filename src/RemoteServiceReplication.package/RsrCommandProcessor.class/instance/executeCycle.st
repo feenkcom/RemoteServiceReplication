@@ -1,4 +1,4 @@
-accessing
+running
 executeCycle
 
 	self subclassResponsibility

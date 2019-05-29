@@ -1,6 +1,6 @@
-accessing
+running
 log: anException
 
 	Transcript
-		show: anException printString;
+		show: anException messageText;
 		cr

@@ -1,13 +1,13 @@
 # Remote Service Replication
 
-To provide a means of bridging to disparate Smalltalk environments together, allowing one image to define the UI and another to hold the domain objects.
+To provide a means of bridging two disparate Smalltalk environments together, allowing one image to define the UI and another to hold the domain objects.
 
 ## High-level Operations
 
 * Send message to service partner
 * Replicate changes to service objects (and their object graphs? and their collections?)
 
-## Requirements of Environment
+## Requirements of Smalltalk Environment
 
 * Object Finalization
 * Weak value collections
@@ -34,26 +34,26 @@ To provide a means of bridging to disparate Smalltalk environments together, all
 
 ## Low-level Message Types:
 
-* #Object
-* #Message
-* #Reply
-* #GarbageID -> #Release
+* #RetainObject
+* #SendMessage
+* #DeliverResponse
+* #ReleaseObjects
 
-### Object Type
+### RetainObject
 
-Contains an Object ID and encoded references to other objects. How are the objects here released? The local object must be strongly referenced since a message may come at a later time. Once a message obtains an object, do we stop referencing that object? If so, does the remote have to transfer the object every time it wishes to reference the object? Do we swap it to a weak reference? If so, we need to deal with synchronizing the retention state with the remote side. During finalization we need to save the object until such a time that the remote acks the release of the object.
+The message is sent when an object is detected as dirty while processing a SendMessage or DeliverResponse message. The object should be strongly held only until consumed by a SendMessage or DeliverResponse message.
 
-### Message Type
+### SendMessage
 
-Contains a transaction ID, a selector and references to objects that will serve as arguments.
+For all intents and purposes, a MessageSend object that should be performed. The result is returned via a DeliverResponse message. Should an error occur, this should be return via a DeliverException.
 
-### Reply Type
+### DeliverResponse
 
 Contains a transaction ID and a reference to the object that should serve as a response.
 
-### Release Type
+### ReleaseObjects
 
-Contains (a) reference(s) to objects which are no longer strongly referenced.
+Contains (a) reference(s) to objects which are no longer mirrored remotely.
 
 ## Object Lifetimes
 
@@ -118,36 +118,16 @@ RsrService provides the abstraction for creating services. In addition to provid
 
 ## Open Questions
 
-* How are service objects 'registered' with the system? By virtue of their appearance in the environment? They must be held onto by something.
 * How should mirrors be initialized in the new environment? For instance, if a client is created and then mirrored into a bridged environment, initialization may be required to connect to the correct domain objects.
-* Do all objects going to the remote environment require an object identifier? If not, how do you map the #remoteSend: message to the objects in the graph?
+* How do we handle this case? ObjectA originates in EnvironmentA. EnvironmentB has a mirror of ObjectA. Object is not dirty. EnvironmentA sends a message to ObjectA's remoteSelf. Meanwhile, ObjectA is garbage collected and a ReleaseObjects message is sent from EnvironmentB to EnvironmentA. ObjectA no longer exists and cannot be looked up. EnvironmentA cannot handle this case in any reasonable way without a two-phase release it seems.
 
-
-* How are instance variables mapped? To indices or to names?
-
-
-
-
-
-
-Forwarders are not in play. There is a proxy called 'forwarder' that can be used to 'remoteSelf doIt' when in a service.
-
-Sending all dirty objects could result in a bad state remotely if thread2 is in the process of updating while thread1 sends a message. Think GUI which is a valid reader of a data structure locally while the remote side does mutations.
-
-RsrPromise is a thing.
-
-Only RsrObject and data types will be transferred. Others cause an exception to be signalled.
-
-Forking a process for each request may not be valid as it could result in an inconsistent data structure. Think a collaborating group of services entering critical code paths all at once.
-
+Forking a process for each request may not be valid as it could result in an inconsistent data structure. Think a collaborating group of services entering critical code paths all at once. Create dispatcher to resolve this.
 
 ## Things to do
 
 * Test forwarder
 * Test dirty objects
 * Test RsrObject
-
-## Object Encodings
 
 ## Test Cases
 
@@ -210,17 +190,17 @@ Expectation:
 ### RsrService Layout
 
 ```protocol
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                             Length                                                            |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                              Type                                                             |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                              OID                                                              |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                          Service Name                                                         |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                        Object Reference                                                       |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                             Length                                            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                              Type                                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                              OID                                              |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                          Service Name                                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                        Object Reference                                       |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
 #### Length
@@ -257,3 +237,26 @@ Symbols and Strings are encoded in the same format. They only differ in the valu
 | Length			| Number of UTF-8 encoded bytes	|
 | Data				| String encoded using UTF-8	|
 
+## Command Identifiers
+
+| Command			| Identifier	|
+|---				|---			|
+| RetainObject		| 0				|
+| SendMessage		| 1				|
+| DeliverResponse	| 2				|
+| ReleaseObjects	| 3				|
+
+## Object Type Identifiers
+
+| Object			| Identifier	|
+|---				|---			|
+| RsrService		| 0				|
+| Symbol			| 1				|
+| String			| 2				|
+| Positive Integer	| 3				|
+| Negative Integer	| 4				|
+| Character			| 5				|
+| nil				| 6				|
+| true				| 7				|
+| false				| 8				|
+| RsrArray			| 9				|

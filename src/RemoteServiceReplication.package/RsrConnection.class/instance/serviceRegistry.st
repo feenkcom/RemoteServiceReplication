@@ -1,4 +1,4 @@
-lifecycle
+accessing
 serviceRegistry
 
 	^serviceRegistry

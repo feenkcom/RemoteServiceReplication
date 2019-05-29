@@ -1,0 +1,13 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrCommandProcessor",
+	"category" : "RemoteServiceReplication-Communications",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [
+		"queue"
+	],
+	"name" : "RsrCommandDispatcher",
+	"type" : "normal"
+}
