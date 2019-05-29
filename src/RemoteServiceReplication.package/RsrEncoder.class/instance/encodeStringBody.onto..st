@@ -1,4 +1,4 @@
-private-writing
+private-encoding
 encodeStringBody: aString
 onto: aStream
 

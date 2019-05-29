@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RsrCollection",
+	"category" : "RemoteServiceReplication-Public",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RsrArray",
+	"type" : "variable"
+}

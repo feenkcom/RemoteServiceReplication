@@ -1,4 +1,4 @@
-public-registration
+public-accessing
 at: aNameString
 put: aService
 

@@ -1,15 +1,17 @@
 {
 	"instance" : {
 		"encodeImmediateInteger:onto:" : "KurtKilpela 5/29/2019 08:49",
+		"encodeArray:on:" : "KurtKilpela 5/29/2019 09:52",
 		"encodeCharacter:onto:" : "KurtKilpela 5/29/2019 08:49",
 		"encodeNilOnto:" : "KurtKilpela 5/29/2019 08:49",
 		"encodeObject:" : "KurtKilpela 5/23/2019 11:39",
 		"encodeImmediate:onto:" : "KurtKilpela 5/29/2019 08:49",
 		"encodeStringBody:onto:" : "KurtKilpela 5/29/2019 08:49",
 		"encodeString:onto:" : "KurtKilpela 5/29/2019 08:49",
+		"isArray:" : "KurtKilpela 5/29/2019 09:49",
 		"isService:" : "KurtKilpela 5/17/2019 15:53",
 		"encodeRetainObject:" : "KurtKilpela 5/29/2019 08:49",
-		"encodeObject:onto:" : "KurtKilpela 5/23/2019 11:39",
+		"encodeObject:onto:" : "KurtKilpela 5/29/2019 09:50",
 		"sendMessageIdentifier" : "KurtKilpela 5/21/2019 13:55",
 		"isRsrObject:" : "KurtKilpela 5/24/2019 13:59",
 		"encodeFalseOnto:" : "KurtKilpela 5/29/2019 08:49",

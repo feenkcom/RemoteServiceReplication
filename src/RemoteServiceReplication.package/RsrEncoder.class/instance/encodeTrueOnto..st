@@ -1,4 +1,4 @@
-private-writing
+private-encoding
 encodeTrueOnto: aStream
 
 	self

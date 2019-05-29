@@ -1,4 +1,4 @@
-private-writing
+private-encoding
 encodeSymbol: aSymbol
 onto: aStream
 

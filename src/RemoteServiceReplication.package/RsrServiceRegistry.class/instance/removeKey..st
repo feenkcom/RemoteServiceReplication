@@ -1,4 +1,4 @@
-public-registration
+public-accessing
 removeKey: aServiceName
 
 	self deregisterName: aServiceName.
