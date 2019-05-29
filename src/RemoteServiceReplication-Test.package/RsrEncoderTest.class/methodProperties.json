@@ -1,17 +1,17 @@
 {
 	"instance" : {
-		"testEncodeSendMessage" : "KurtKilpela 5/21/2019 14:09",
 		"testReleaseObjects" : "KurtKilpela 5/28/2019 13:03",
 		"tearDown" : "KurtKilpela 5/17/2019 16:46",
+		"testRetainObject" : "KurtKilpela 5/29/2019 08:53",
 		"testServiceReferenceService" : "KurtKilpela 5/21/2019 13:29",
-		"assertControlInteger:encoding:" : "KurtKilpela 5/23/2019 16:49",
-		"testSymbol" : "KurtKilpela 5/20/2019 10:18",
+		"testDeliverResponse" : "KurtKilpela 5/29/2019 08:53",
+		"assertControlInteger:encoding:" : "KurtKilpela 5/29/2019 08:49",
+		"testSymbol" : "KurtKilpela 5/29/2019 08:47",
 		"testServiceNoInstVars" : "KurtKilpela 5/21/2019 12:02",
 		"encoder" : "KurtKilpela 5/17/2019 15:00",
-		"testEncodeRetainObject" : "KurtKilpela 5/21/2019 13:19",
 		"testControlInteger" : "KurtKilpela 5/23/2019 16:43",
 		"register:" : "KurtKilpela 5/28/2019 11:08",
-		"testEncodeDeliverResponse" : "KurtKilpela 5/22/2019 09:47",
+		"testSendMessage" : "KurtKilpela 5/29/2019 08:54",
 		"setUp" : "KurtKilpela 5/17/2019 14:23"
 	},
 	"class" : { }

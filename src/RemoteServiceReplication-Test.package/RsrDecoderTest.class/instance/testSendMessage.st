@@ -1,5 +1,5 @@
 running
-testDecodeSendMessage
+testSendMessage
 
 	| service encoding command |
 	service := RsrServerNoInstVars

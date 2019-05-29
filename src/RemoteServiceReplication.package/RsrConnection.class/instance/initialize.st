@@ -2,6 +2,7 @@ initialization
 initialize
 
 	super initialize.
+	isOpen := false.
 	transactionSpigot := RsrNumericSpigot naturals.
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.

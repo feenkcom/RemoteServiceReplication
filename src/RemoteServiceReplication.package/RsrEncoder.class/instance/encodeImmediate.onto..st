@@ -1,34 +1,34 @@
 private-writing
-writeImmediate: anImmediate
+encodeImmediate: anImmediate
 onto: aStream
 
 	anImmediate isSymbol
 		ifTrue:
 			[^self
-				writeSymbol: anImmediate
+				encodeSymbol: anImmediate
 				onto: aStream].
 	anImmediate isString
 		ifTrue:
 			[^self
-				writeString: anImmediate
+				encodeString: anImmediate
 				onto: aStream].
 	anImmediate isInteger
 		ifTrue:
 			[^self
-				writeImmediateInteger: anImmediate
+				encodeImmediateInteger: anImmediate
 				onto: aStream].
 	anImmediate isCharacter
 		ifTrue:
 			[^self
-				writeCharacter: anImmediate
+				encodeCharacter: anImmediate
 				onto: aStream].
 	anImmediate == nil
 		ifTrue:
-			[^self writeNilOnto: aStream].
+			[^self encodeNilOnto: aStream].
 	anImmediate == true
 		ifTrue:
-			[^self writeTrueOnto: aStream].
+			[^self encodeTrueOnto: aStream].
 	anImmediate == false
 		ifTrue:
-			[^self writeFalseOnto: aStream].
+			[^self encodeFalseOnto: aStream].
 	self error: 'Unsupported Immediate'

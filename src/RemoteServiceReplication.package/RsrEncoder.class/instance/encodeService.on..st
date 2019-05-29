@@ -9,16 +9,16 @@ on: aStream
 	| reflectedVariables |
 	reflectedVariables := self reflectedVariableNamesOf: aService.
 	self
-		writeControlWord: self serviceType
+		encodeControlWord: self serviceType
 		onto: aStream.
 	self
-		writeControlWord: aService rsrId
+		encodeControlWord: aService rsrId
 		onto: aStream.
 	self
-		writeControlWord: reflectedVariables size
+		encodeControlWord: reflectedVariables size
 		onto: aStream.
 	self
-		writeSymbol: aService remoteServiceName
+		encodeSymbol: aService remoteServiceName
 		onto: aStream.
 	self
 		reflectedVariablesOf: aService

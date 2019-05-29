@@ -2,9 +2,9 @@
 	"instance" : {
 		"socket:" : "KurtKilpela 5/21/2019 10:19",
 		"rsrSendMessage:to:" : "KurtKilpela 5/28/2019 08:42",
-		"close" : "KurtKilpela 5/28/2019 16:14",
+		"close" : "KurtKilpela 5/29/2019 08:57",
 		"decoder" : "KurtKilpela 5/28/2019 09:07",
-		"initialize" : "KurtKilpela 5/28/2019 16:11",
+		"initialize" : "KurtKilpela 5/29/2019 09:01",
 		"rsrForwarderClass" : "KurtKilpela 5/28/2019 08:41",
 		"stream" : "KurtKilpela 5/24/2019 08:42",
 		"forwarderClass" : "KurtKilpela 5/21/2019 10:16",
@@ -23,8 +23,8 @@
 		"encoder" : "KurtKilpela 5/21/2019 10:23",
 		"releaseOid:" : "KurtKilpela 5/28/2019 14:32",
 		"transactionSpigot:" : "KurtKilpela 5/20/2019 14:57",
-		"isOpen" : "KurtKilpela 5/23/2019 16:53",
-		"start" : "KurtKilpela 5/28/2019 10:20",
+		"isOpen" : "KurtKilpela 5/29/2019 08:57",
+		"start" : "KurtKilpela 5/29/2019 08:57",
 		"serviceRegistry" : "KurtKilpela 5/28/2019 10:19"
 	},
 	"class" : {

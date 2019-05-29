@@ -3,7 +3,7 @@ encodeReferenceOf: anObject
 onto: aStream
 
 	(self isRsrObject: anObject)
-		ifTrue: [^self writeControlWord: anObject rsrId onto: aStream].
+		ifTrue: [^self encodeControlWord: anObject rsrId onto: aStream].
 	(self isImmediate: anObject)
-		ifTrue: [^self writeImmediate: anObject onto: aStream].
+		ifTrue: [^self encodeImmediate: anObject onto: aStream].
 	self error: 'Unsupported type'

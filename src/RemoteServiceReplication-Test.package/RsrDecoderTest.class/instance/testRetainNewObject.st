@@ -1,5 +1,5 @@
 running
-testDecodeRetainNewObject
+testRetainNewObject
 
 	| encoding command |
 	encoding :=

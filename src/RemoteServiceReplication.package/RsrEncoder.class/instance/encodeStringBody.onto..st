@@ -1,10 +1,10 @@
 private-writing
-writeStringBody: aString
+encodeStringBody: aString
 onto: aStream
 
 	| bytes |
 	bytes := aString utf8Encoded.
 	self
-		writeControlWord: bytes size
+		encodeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes

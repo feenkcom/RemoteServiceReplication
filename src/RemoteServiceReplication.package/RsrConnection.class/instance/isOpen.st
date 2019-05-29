@@ -1,4 +1,4 @@
 accessing
 isOpen
 
-	^socket isConnected
+	^isOpen

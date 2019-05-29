@@ -1,7 +1,7 @@
 decoding
 decodeControlWord: aStream
 
-	| bytes unsignedResult result |
+	| bytes unsignedResult |
 	bytes := aStream next: self sizeOfInteger.
 	unsignedResult := bytes asInteger.
 	^unsignedResult > self controlWordMax

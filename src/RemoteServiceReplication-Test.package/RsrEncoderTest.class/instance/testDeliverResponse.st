@@ -1,5 +1,5 @@
 running-immediates
-testEncodeDeliverResponse
+testDeliverResponse
 
 	| response command expectedEncoding |
 	response := #responseSymbol.

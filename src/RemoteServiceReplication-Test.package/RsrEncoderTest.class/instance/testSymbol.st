@@ -6,7 +6,7 @@ testSymbol
 		streamContents:
 			[:stream |
 			self encoder
-				writeSymbol: self genericSymbol
+				encodeSymbol: self genericSymbol
 				onto: stream].
 	self
 		assert: actual

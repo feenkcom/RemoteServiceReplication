@@ -1,6 +1,8 @@
 lifecycle
 start
 
+	(isOpen := socket isConnected)
+		ifFalse: [^RsrConnectionClosed signal].
 	stream := RsrStream on: (SocketStream on: socket).
 	stream binary.
 	commandReader := RsrCommandReader on: self.

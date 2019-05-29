@@ -1,5 +1,5 @@
 private-writing
-writeImmediateInteger: anInteger
+encodeImmediateInteger: anInteger
 onto: aStream
 
 	| bytes immediateType |
@@ -8,12 +8,12 @@ onto: aStream
 		ifFalse: [self negativeIntegerType].
 	bytes := anInteger asByteArray.
 	self
-		writeControlWord: self immediateOID
+		encodeControlWord: self immediateOID
 		onto: aStream.
 	self
-		writeControlWord: immediateType
+		encodeControlWord: immediateType
 		onto: aStream.
 	self
-		writeControlWord: bytes size
+		encodeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes

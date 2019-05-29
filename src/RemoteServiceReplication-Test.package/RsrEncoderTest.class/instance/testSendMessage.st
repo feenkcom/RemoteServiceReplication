@@ -1,5 +1,5 @@
 running-immediates
-testEncodeSendMessage
+testSendMessage
 
 	| service command expectedEncoding |
 	service := RsrClientNoInstVars new.

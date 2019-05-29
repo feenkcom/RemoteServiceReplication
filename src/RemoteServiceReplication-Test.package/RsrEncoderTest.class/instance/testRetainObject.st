@@ -1,5 +1,5 @@
 running-immediates
-testEncodeRetainObject
+testRetainObject
 
 	| service command expectedEncoding |
 	service := RsrClientNoInstVars new.

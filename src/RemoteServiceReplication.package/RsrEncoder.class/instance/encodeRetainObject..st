@@ -5,7 +5,7 @@ encodeRetainObject: aRetainObject
 		streamContents:
 			[:stream |
 			self
-				writeControlWord: self retainObjectIdentifier
+				encodeControlWord: self retainObjectIdentifier
 				onto: stream.
 			self
 				encodeObject: aRetainObject object

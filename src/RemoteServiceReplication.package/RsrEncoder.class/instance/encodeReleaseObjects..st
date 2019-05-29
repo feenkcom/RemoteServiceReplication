@@ -5,14 +5,14 @@ encodeReleaseObjects: aReleaseObject
 		streamContents:
 			[:stream |
 			self
-				writeControlWord: self releaseObjectsCommand
+				encodeControlWord: self releaseObjectsCommand
 				onto: stream.
 			self
-				writeControlWord: aReleaseObject oids size
+				encodeControlWord: aReleaseObject oids size
 				onto: stream.
 			aReleaseObject oids
 				do:
 					[:oid |
 					self
-						writeControlWord: oid
+						encodeControlWord: oid
 						onto: stream]]

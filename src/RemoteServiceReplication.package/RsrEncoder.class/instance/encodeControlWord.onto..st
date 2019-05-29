@@ -1,5 +1,5 @@
 private-writing
-writeControlWord: anInteger
+encodeControlWord: anInteger
 onto: aStream
 
 	| encodedBytes |
