@@ -41,7 +41,7 @@ To provide a means of bridging to disparate Smalltalk environments together, all
 
 ### Object Type
 
-Contains an Object ID and encoded references to other objects. How are the objects here released? The local object must be strongly referenced since a message may come at a later time. Once a message obtains an object, do we stop referencing that object? If so, does the remote have to transfer the object everytime it wishes to reference the object? Do we swap it to a weak reference? If so, we need to deal with syncronizing the retention state with the remote side. During finalization we need to save the object until such a time that the remote acks the release of the object.
+Contains an Object ID and encoded references to other objects. How are the objects here released? The local object must be strongly referenced since a message may come at a later time. Once a message obtains an object, do we stop referencing that object? If so, does the remote have to transfer the object every time it wishes to reference the object? Do we swap it to a weak reference? If so, we need to deal with synchronizing the retention state with the remote side. During finalization we need to save the object until such a time that the remote acks the release of the object.
 
 ### Message Type
 
@@ -74,13 +74,13 @@ The framework will serialize and transfer objects in three separate ways.
 
 ### Mirroring
 
-Classes that inherit from RsrObject will mirror when sent to a bridged environment. Changes to a mirrored object will result in the change propogating to the bridged environment during a coordination window.
+Classes that inherit from RsrObject will mirror when sent to a bridged environment. Changes to a mirrored object will result in the change propagating to the bridged environment during a coordination window.
 
 How do I define the parts of me that should be reflected and the parts that lack reflection?
 
 ### By Value
 
-Immutable primitive objects will be transfered by value from one environment to the other.
+Immutable primitive objects will be transferred by value from one environment to the other.
 
 ## RsrService
 
@@ -90,7 +90,7 @@ Under the covers, the thread making the call will wait on a Promise object. The 
 
 ## Coordination Windows
 
-Changes to mirrored objects propogate to the remote environment during a coordination window. A window opens just before a message or a response are sent. 
+Changes to mirrored objects propagate to the remote environment during a coordination window. A window opens just before a message or a response are sent. 
 
 What happens if a conflicting change is detected during a coordination window? i.e. each paired service is has changed the inst var #foo between synchronization windows? Such a conflict is considered an application bug.
 
@@ -123,7 +123,7 @@ RsrService provides the abstraction for creating services. In addition to provid
 * Do all objects going to the remote environment require an object identifier? If not, how do you map the #remoteSend: message to the objects in the graph?
 
 
-* How are instance variables mapped? To indeces or to names?
+* How are instance variables mapped? To indices or to names?
 
 
 
@@ -136,7 +136,7 @@ Sending all dirty objects could result in a bad state remotely if thread2 is in 
 
 RsrPromise is a thing.
 
-Only RsrObject and data types will be transfered. Others cause an exception to be signalled.
+Only RsrObject and data types will be transferred. Others cause an exception to be signalled.
 
 Forking a process for each request may not be valid as it could result in an inconsistent data structure. Think a collaborating group of services entering critical code paths all at once.
 
@@ -172,10 +172,10 @@ Forking a process for each request may not be valid as it could result in an inc
 	f. #perform: family
 	g. Sending each RsrObjects
 		1. Already mirrored
-		2. Currently unmirrored
+		2. Currently un-mirrored
 	h. Returning each RsrObject
 		1. Already mirrored
-		2. Currenlty unmirrored
+		2. Currently un-mirrored
 	i. Dirty objects outside of current object graph are not sent
 4. Encoding
 	a. Encode only variables which exist between RsrService and concrete instance class.
@@ -183,17 +183,17 @@ Forking a process for each request may not be valid as it could result in an inc
 	c. A 'dirty' object is encoded.
 	d. 'Dirty' objects referenced from a 'clean' object are encoded.
 5. Concurrent message sends
-	a. Disjointed Services w/o shared subgraph
-	b. Services w/ shared subgraph which is dirty
+	a. Disjointed Services w/o shared sub-graph
+	b. Services w/ shared sub-graph which is dirty
 6. Mirroring Objects
 	a. Already mirror for current connection
 	b. Already mirror for other connection (Exception?)
-	c. Unmirrored object
+	c. Un-mirrored object
 7. Client Service turns into Server Service
 
 RsrStateCoordinator seems to have two phases.
 	1. Discovery of dirty and newly mirrored objects + encoding individual object
-	2. Calulate length + write object on wire
+	2. Calculate length + write object on wire
 
 What is a good name for the dirty + new discovery phase?
 	ChangeAnalysis? DirtyCalculator?
@@ -243,7 +243,7 @@ A series of zero or more object references. May hold an OID referencing another 
 
 ## Data Object Encoding
 
-Data Objects are not treated as objects in their own rights. They are always encoded as immediates and encoded in-line in another object. An object reference of 0 is used to denote the start of a data object. The object immediately follows.
+Data Objects are not treated as objects in their own rights. They are always encoded as immediate values and encoded in-line in another object. An object reference of 0 is used to denote the start of a data object. The object immediately follows.
 
 ## Symbol/String Encoding
 
