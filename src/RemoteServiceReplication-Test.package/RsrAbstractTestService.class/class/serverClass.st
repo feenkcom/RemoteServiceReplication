@@ -1,0 +1,4 @@
+accessing
+serverClass
+
+	^RsrServerTestService

@@ -1,4 +1,0 @@
-RSR-accessing
-remoteServiceClass
-
-	^RIInspectorClient

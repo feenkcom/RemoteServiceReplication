@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "RIAbstractInspector",
-	"category" : "RemoteServiceReplication-Examples",
+	"category" : "RemoteServiceReplication-Examples-Inspector",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],

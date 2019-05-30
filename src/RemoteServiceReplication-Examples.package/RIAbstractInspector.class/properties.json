@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "RsrService",
-	"category" : "RemoteServiceReplication-Examples",
+	"category" : "RemoteServiceReplication-Examples-Inspector",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],
