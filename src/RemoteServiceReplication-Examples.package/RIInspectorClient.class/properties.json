@@ -1,0 +1,11 @@
+{
+	"commentStamp" : "",
+	"super" : "RIAbstractInspector",
+	"category" : "RemoteServiceReplication-Examples",
+	"classinstvars" : [ ],
+	"pools" : [ ],
+	"classvars" : [ ],
+	"instvars" : [ ],
+	"name" : "RIInspectorClient",
+	"type" : "normal"
+}
