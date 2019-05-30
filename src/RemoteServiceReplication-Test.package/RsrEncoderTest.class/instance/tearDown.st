@@ -1,5 +1,5 @@
 running
 tearDown
 
-	registry := nil.
+	registry := connection := nil.
 	super setUp

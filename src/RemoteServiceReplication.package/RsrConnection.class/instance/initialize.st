@@ -7,6 +7,8 @@ initialize
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.
+	registry := RsrRegistry new.
 	serviceRegistry := RsrServiceRegistry
 		rsrId: 1
-		rsrConnection: self
+		rsrConnection: self.
+	registry retain: serviceRegistry

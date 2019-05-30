@@ -1,0 +1,4 @@
+accesing
+serviceRegistryB
+
+	^connectionB serviceRegistry

@@ -3,11 +3,9 @@ testSendSetMarker
 
 	| service remoteService |
 	service := RsrClientNoInstVars new.
-	connectionA registry retain: service.
-	service rsrConnection: connectionA.
-	remoteService := RsrServerNoInstVars
-		rsrId: service rsrId
-		rsrConnection: connectionB.
-	connectionB registry remember: remoteService.
+	self serviceRegistryA
+		at: 'TestService'
+		put: service.
+	remoteService := self serviceRegistryB at: 'TestService'.
 	service sendSetMarker.
 	self assert: remoteService marker

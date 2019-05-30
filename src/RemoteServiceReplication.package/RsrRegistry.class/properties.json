@@ -11,8 +11,7 @@
 	"instvars" : [
 		"mutex",
 		"map",
-		"storage",
-		"oidSpigot"
+		"storage"
 	],
 	"name" : "RsrRegistry",
 	"type" : "normal"

@@ -1,4 +1,4 @@
 accessing
 registry
 
-	^registry ifNil: [registry := RsrRegistry oidSpigot: (RsrNumericSpigot naturals)]
+	^registry ifNil: [registry := RsrRegistry new]

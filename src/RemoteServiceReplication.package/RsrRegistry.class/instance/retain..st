@@ -4,5 +4,7 @@ retain: anRsrObject
 
 	mutex
 		critical:
-			[self primRegister: anRsrObject.
+			[map
+				at: anRsrObject rsrId
+				put: anRsrObject.
 			storage add: anRsrObject]

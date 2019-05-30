@@ -4,10 +4,10 @@ testRetain
 	| id object registry marker |
 	id := 1.
 	marker := Object new.
-	object := RsrObject
+	object := RsrServerNoInstVars
 		rsrId: id
 		rsrConnection: RsrMockConnection new.
-	registry := RsrRegistry oidSpigot: RsrNumericSpigot naturals.
+	registry := RsrRegistry new.
 	registry retain: object.
 	object := nil.
 	self maximumReclamation.
@@ -17,7 +17,7 @@ testRetain
 		equals: marker.
 	self
 		assert: object class
-		equals: RsrObject.
+		equals: RsrServerNoInstVars.
 	self
 		assert: object rsrId
 		equals: id

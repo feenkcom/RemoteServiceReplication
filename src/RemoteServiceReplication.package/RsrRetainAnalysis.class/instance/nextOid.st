@@ -1,4 +1,4 @@
 accessing
 nextOid
 
-	^self registry oidSpigot next
+	^self connection oidSpigot next

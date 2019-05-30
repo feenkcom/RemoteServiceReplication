@@ -1,14 +1,14 @@
 tests
-testRemember
+testRegister
 
 	| id object registry marker |
 	id := 1.
 	marker := Object new.
-	object := RsrObject
+	object := RsrClientNoInstVars
 		rsrId: id
 		rsrConnection: RsrMockConnection new.
-	registry := RsrRegistry oidSpigot: RsrNumericSpigot naturals.
-	registry remember: object.
+	registry := RsrRegistry new.
+	registry register: object.
 	self maximumReclamation.
 	self
 		assert: (registry at: id ifAbsent: [marker])

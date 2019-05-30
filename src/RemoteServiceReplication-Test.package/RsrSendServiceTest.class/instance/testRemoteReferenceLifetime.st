@@ -3,6 +3,7 @@ testRemoteReferenceLifetime
 
 	| name valueServiceLocal valueServiceRemote serviceLocal serviceRemote id marker actual |
 	name := 'ValueService'.
+	Transcript.
 	serviceLocal := RsrClientNoInstVars new.
 	valueServiceLocal := RsrValueHolderService value: serviceLocal.
 	connectionA serviceRegistry
@@ -17,7 +18,8 @@ testRemoteReferenceLifetime
 	serviceLocal := serviceRemote := nil.
 	valueServiceRemote value: nil.
 	self maximumReclamation.
-	(Delay forMilliseconds: 200) wait.
+	(Delay forSeconds: 2) wait.
+	Smalltalk at: #KeepItAlive put: (Array with: connectionA with: connectionB).
 	marker := Object new.
 	actual := connectionA registry at: id ifAbsent: [marker].
 	self

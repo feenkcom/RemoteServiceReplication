@@ -18,7 +18,8 @@
 		"promises",
 		"serviceRegistry",
 		"dispatcher",
-		"reaper"
+		"reaper",
+		"oidSpigot"
 	],
 	"name" : "RsrConnection",
 	"type" : "normal"

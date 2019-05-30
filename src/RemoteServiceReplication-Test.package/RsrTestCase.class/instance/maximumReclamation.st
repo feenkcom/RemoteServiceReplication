@@ -9,8 +9,7 @@ maximumReclamation
 		to: [sema signal]
 		with: nil.
 	obj := nil.
-	Smalltalk
-		garbageCollect;
-		garbageCollect.
+	Smalltalk garbageCollect.
+	Processor yield.
 	self deny: (sema waitTimeoutMSecs: 100).
 	

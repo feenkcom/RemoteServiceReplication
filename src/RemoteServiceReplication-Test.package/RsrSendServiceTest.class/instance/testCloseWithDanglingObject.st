@@ -8,9 +8,11 @@ testCloseWithDanglingObject
 
 	| service command |
 	self maximumReclamation.
-	self assert: RsrServerNoInstVars allInstances isEmpty.
-	service := RsrClientNoInstVars new.
-	connectionA registry retain: service.
+	self assert: RsrClientNoInstVars allInstances isEmpty.
+	service := RsrServerNoInstVars new.
+	service
+		rsrId: 2;
+		rsrConnection: connectionA.
 	command := RsrRetainObject object: service.
 	command
 		encodeUsing: connectionA encoder;
@@ -21,4 +23,4 @@ testCloseWithDanglingObject
 	connectionB close.
 	service := command := nil.
 	self maximumReclamation.
-	self assert: RsrServerNoInstVars allInstances isEmpty
+	self assert: RsrClientNoInstVars allInstances isEmpty

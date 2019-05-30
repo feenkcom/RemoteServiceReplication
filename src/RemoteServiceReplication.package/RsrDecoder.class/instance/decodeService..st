@@ -11,9 +11,8 @@ decodeService: aStream
 			[((self lookupClass: serviceName)
 				rsrId: oid
 				rsrConnection: self connection)
-					markForFinalization;
 					yourself].
-	self registry remember: instance.
+	instance registerWith: self registry.
 	(self reflectedVariableNamesOf: instance) size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	self

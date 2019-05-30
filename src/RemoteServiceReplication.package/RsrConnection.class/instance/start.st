@@ -5,7 +5,7 @@ start
 		ifFalse: [^RsrConnectionClosed signal].
 	stream := RsrStream on: (SocketStream on: socket).
 	stream binary.
-	registry remember: serviceRegistry.
+	serviceRegistry registerWith: registry.
 	dispatcher := RsrCommandDispatcher on: self.
 	commandReader := RsrCommandReader on: self.
 	commandWriter := RsrCommandWriter on: self.

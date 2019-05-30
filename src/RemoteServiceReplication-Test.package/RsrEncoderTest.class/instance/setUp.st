@@ -2,4 +2,5 @@ running
 setUp
 
 	super setUp.
-	registry := RsrMockRegistry new
+	registry := RsrMockRegistry new.
+	connection := RsrMockConnection new
