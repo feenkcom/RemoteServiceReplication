@@ -19,6 +19,6 @@ testCloseWithDanglingObject
 	(Delay forSeconds: 1) wait.
 	connectionA close.
 	connectionB close.
-	service := command := connectionB := connectionA := nil.
+	service := command := nil.
 	self maximumReclamation.
 	self assert: RsrServerNoInstVars allInstances isEmpty

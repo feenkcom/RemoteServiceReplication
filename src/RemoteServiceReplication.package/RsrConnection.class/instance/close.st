@@ -6,5 +6,5 @@ close
 	isOpen := false.
 	commandReader stop.
 	commandWriter stop.
-	self promises do: [ :each | each error: RsrConnectionClosed new ].
-	"self cleanup"
+	self promises do: [:each | each error: RsrConnectionClosed new].
+	objectCache reset
