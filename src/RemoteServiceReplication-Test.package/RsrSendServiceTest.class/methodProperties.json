@@ -1,12 +1,12 @@
 {
 	"instance" : {
-		"testCloseWithDanglingObject" : "KurtKilpela 5/28/2019 15:37",
+		"testCloseWithDanglingObject" : "KurtKilpela 5/30/2019 10:20",
 		"testRemoteReferenceLifetime" : "KurtKilpela 5/28/2019 13:27",
 		"testReturnArgument" : "KurtKilpela 5/28/2019 09:26",
 		"testSendSetMarker" : "KurtKilpela 5/28/2019 09:29",
 		"testTransferService" : "KurtKilpela 5/24/2019 14:42",
 		"testReturnSymbol" : "KurtKilpela 5/28/2019 09:28",
-		"testCloseWithRegisteredService" : "KurtKilpela 5/28/2019 16:05"
+		"testCloseWithRegisteredService" : "KurtKilpela 5/30/2019 11:11"
 	},
 	"class" : { }
 }

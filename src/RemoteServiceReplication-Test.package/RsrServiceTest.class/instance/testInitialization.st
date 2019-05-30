@@ -6,6 +6,5 @@ testInitialization
 	self
 		assertObject: service
 		isMirrored: false
-		isDirty: true
 		id: nil
 		connection: nil.

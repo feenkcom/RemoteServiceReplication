@@ -3,6 +3,7 @@ initialize
 
 	super initialize.
 	isOpen := false.
+	reaper := RsrObjectReaper connection: self.
 	transactionSpigot := RsrNumericSpigot naturals.
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.

@@ -11,7 +11,6 @@ testMirrored
 	self
 		assertObject: service
 		isMirrored: true
-		isDirty: true
 		id: id
 		connection: connection.
 	self

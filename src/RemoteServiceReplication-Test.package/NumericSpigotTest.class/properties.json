@@ -1,7 +1,7 @@
 {
 	"commentStamp" : "",
 	"super" : "TestCase",
-	"category" : "RemoteServiceReplication-Test-Utilities",
+	"category" : "RemoteServiceReplication-Test-TestCases",
 	"classinstvars" : [ ],
 	"pools" : [ ],
 	"classvars" : [ ],

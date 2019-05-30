@@ -6,9 +6,8 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [
-		"rsrId",
-		"rsrConnection"
+		"weakStorage"
 	],
-	"name" : "RsrObject",
+	"name" : "RsrObjectReaper",
 	"type" : "normal"
 }

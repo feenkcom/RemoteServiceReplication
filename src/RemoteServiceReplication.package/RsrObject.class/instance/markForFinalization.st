@@ -2,6 +2,6 @@ private-finalization
 markForFinalization
 
 	self
-		toFinalizeSend: #releaseOid:
-		to: self rsrConnection
+		toFinalizeSend: #reap:
+		to: self rsrConnection reaper
 		with: self rsrId

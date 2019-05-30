@@ -1,4 +1,0 @@
-accessing
-newTestObject
-
-	^RsrObject new

@@ -17,7 +17,8 @@
 		"stream",
 		"promises",
 		"serviceRegistry",
-		"dispatcher"
+		"dispatcher",
+		"reaper"
 	],
 	"name" : "RsrConnection",
 	"type" : "normal"

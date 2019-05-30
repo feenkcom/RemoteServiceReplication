@@ -6,7 +6,7 @@ testCloseWithRegisteredService
 	the object is stored in memory long enough to process the upcoming message.
 	Test to ensure the object is freed on the connection close."
 
-	| service command |
+	| service |
 	self maximumReclamation.
 	self assert: RsrServerNoInstVars allInstances isEmpty.
 	service := RsrClientNoInstVars new.
@@ -15,7 +15,6 @@ testCloseWithRegisteredService
 		put: service.
 	connectionA close.
 	connectionB close.
-	service := nil.
-	command := nil.
+	service := connectionA := connectionB := nil.
 	self maximumReclamation.
 	self assert: RsrServerNoInstVars allInstances isEmpty

@@ -11,6 +11,5 @@ testMirrored
 	self
 		assertObject: anObject
 		isMirrored: true
-		isDirty: true
 		id: id
 		connection: connection
