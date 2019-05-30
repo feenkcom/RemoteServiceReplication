@@ -5,7 +5,7 @@ testRemoteReferenceLifetime
 	name := 'ValueService'.
 	Transcript.
 	serviceLocal := RsrClientNoInstVars new.
-	valueServiceLocal := RsrValueHolderService value: serviceLocal.
+	valueServiceLocal := RsrValueHolderClient value: serviceLocal.
 	connectionA serviceRegistry
 		at: name
 		put: valueServiceLocal.

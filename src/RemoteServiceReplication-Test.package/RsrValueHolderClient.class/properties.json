@@ -6,6 +6,6 @@
 	"pools" : [ ],
 	"classvars" : [ ],
 	"instvars" : [ ],
-	"name" : "RsrValueHolderService",
+	"name" : "RsrValueHolderClient",
 	"type" : "normal"
 }

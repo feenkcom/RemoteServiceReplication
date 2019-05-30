@@ -1,4 +1,4 @@
 accessing
 clientClass
 
-	^RsrValueHolderService
+	^RsrValueHolderClient
