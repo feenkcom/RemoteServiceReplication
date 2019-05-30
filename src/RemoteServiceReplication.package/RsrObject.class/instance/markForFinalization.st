@@ -1,7 +1,4 @@
-private-finalization
+private-lifecycle
 markForFinalization
 
-	self
-		toFinalizeSend: #reap:
-		to: self rsrConnection reaper
-		with: self rsrId
+	self deprecated: 'Only to be sent to services'

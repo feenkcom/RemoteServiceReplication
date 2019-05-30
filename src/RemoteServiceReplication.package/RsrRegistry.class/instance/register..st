@@ -1,6 +1,10 @@
 initialization
-remember: anRsrObject
+register: anRsrObject
 	"Keep a weak reference to the provided object.
 	The simple #add: may be an better interface."
 
-	^self register: anRsrObject
+	mutex
+		critical:
+			[map
+				at: anRsrObject rsrId
+				put: anRsrObject]

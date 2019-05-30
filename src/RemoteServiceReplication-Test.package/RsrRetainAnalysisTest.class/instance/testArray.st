@@ -9,8 +9,7 @@ testArray
 	registry := RsrMockRegistry new.
 	analysis := RsrRetainAnalysis
 		roots: (Array with: array)
-		registry: registry
-		encoder: RsrMockEncoder new.
+		connection: RsrMockConnection new.
 	analysis perform.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: service encoding: ByteArray new)

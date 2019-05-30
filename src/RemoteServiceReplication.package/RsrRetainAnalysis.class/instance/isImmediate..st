@@ -1,4 +1,4 @@
 testing
 isImmediate: anObject
 
-	^encoder isImmediate: anObject
+	^self encoder isImmediate: anObject

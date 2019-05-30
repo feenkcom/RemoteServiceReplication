@@ -1,0 +1,4 @@
+accessing
+encoder
+
+	^RsrMockEncoder new

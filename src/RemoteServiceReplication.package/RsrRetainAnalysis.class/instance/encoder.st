@@ -1,4 +1,4 @@
 accessing
 encoder
 
-	^encoder
+	^self connection encoder

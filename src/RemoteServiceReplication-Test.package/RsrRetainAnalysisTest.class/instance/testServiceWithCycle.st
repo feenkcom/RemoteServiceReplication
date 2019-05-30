@@ -9,8 +9,7 @@ testServiceWithCycle
 	registry := RsrMockRegistry new.
 	analysis := RsrRetainAnalysis
 		roots: (Array with: rootClient)
-		registry: registry
-		encoder: RsrMockEncoder new.
+		connection: RsrMockConnection new.
 	self
 		should: [analysis perform]
 		raise: RsrCycleDetected

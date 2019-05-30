@@ -4,10 +4,5 @@ retain: anRsrObject
 
 	mutex
 		critical:
-			[(storage includes: anRsrObject)
-				ifTrue: [^self].
-			anRsrObject rsrId: oidSpigot next.
-			map
-				at: anRsrObject rsrId
-				put: anRsrObject.
+			[self primRegister: anRsrObject.
 			storage add: anRsrObject]

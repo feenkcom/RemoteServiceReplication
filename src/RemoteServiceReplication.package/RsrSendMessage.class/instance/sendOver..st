@@ -4,8 +4,7 @@ sendOver: aConnection
 	| analysis promise |
 	analysis := RsrRetainAnalysis
 		roots: self roots
-		registry: aConnection registry
-		encoder: aConnection encoder.
+		connection: aConnection.
 	analysis perform.
 	retainList := analysis retainCommands.
 	self encodeUsing: aConnection encoder.

@@ -2,4 +2,8 @@ actions
 ensureRegistered: anRsrObject
 
 	anRsrObject isMirrored
-		ifFalse: [registry retain: anRsrObject]
+		ifFalse:
+			[anRsrObject
+				rsrId: self nextOid;
+				rsrConnection: self connection.
+			anRsrObject registerWith: self registry]

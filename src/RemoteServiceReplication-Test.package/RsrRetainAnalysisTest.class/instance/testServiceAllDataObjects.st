@@ -8,8 +8,7 @@ testServiceAllDataObjects
 	registry := RsrMockRegistry new.
 	analysis := RsrRetainAnalysis
 		roots: (Array with: client)
-		registry: registry
-		encoder: RsrMockEncoder new.
+		connection: RsrMockConnection new.
 	analysis perform.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: client encoding: ByteArray new).

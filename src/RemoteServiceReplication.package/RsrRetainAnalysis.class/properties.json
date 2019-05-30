@@ -7,10 +7,9 @@
 	"classvars" : [ ],
 	"instvars" : [
 		"roots",
-		"registry",
-		"encoder",
 		"retainCommands",
-		"inFlight"
+		"inFlight",
+		"connection"
 	],
 	"name" : "RsrRetainAnalysis",
 	"type" : "normal"

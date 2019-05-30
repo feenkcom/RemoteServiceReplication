@@ -1,4 +1,4 @@
 accessing
 registry
 
-	^registry
+	^connection registry

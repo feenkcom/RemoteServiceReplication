@@ -4,8 +4,7 @@ sendOver: aConnection
 	| analysis |
 	analysis := RsrRetainAnalysis
 		roots: (Array with: response)
-		registry: aConnection registry
-		encoder: aConnection encoder.
+		connection: aConnection.
 	analysis perform.
 	retainList := analysis retainCommands.
 	self encodeUsing: aConnection encoder.
