@@ -1,4 +1,4 @@
 accessing
 oidSpigot
 
-	^idSpigot ifNil: [idSpigot := RsrNumericSpigot naturals]
+	^idSpigot ifNil: [idSpigot := RsrThreadSafeNumericSpigot naturals]

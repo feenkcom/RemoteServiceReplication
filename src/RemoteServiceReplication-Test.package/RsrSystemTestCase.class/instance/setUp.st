@@ -6,11 +6,11 @@ setUp
 	socketPair := RsrSocketPair new.
 	connectionA := RsrConnection
 		socket: socketPair firstSocket
-		transactionSpigot: RsrNumericSpigot naturals
-		oidSpigot: (RsrNumericSpigot start: 2 step: 1).
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1).
 	connectionB := RsrConnection
 		socket: socketPair secondSocket
-		transactionSpigot: RsrNumericSpigot naturals negated
-		oidSpigot: RsrNumericSpigot naturals negated.
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
+		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	connectionA start.
 	connectionB start.
