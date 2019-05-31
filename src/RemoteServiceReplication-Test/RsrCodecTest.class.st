@@ -83,6 +83,14 @@ RsrCodecTest >> testArray [
 		#[0 0 0 0 0 0 0 6].
 	self
 		verifyImmediate: array
+		encoding: encoding.
+	array := Array new.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 9], "Array type"
+		#[0 0 0 0 0 0 0 0].
+	self
+		verifyImmediate: array
 		encoding: encoding
 ]
 
