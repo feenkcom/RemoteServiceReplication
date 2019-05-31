@@ -9,10 +9,10 @@ RsrEncoder >> encodeArray: anArray
 on: aStream [
 
 	self
-		encodeControlWord: self arrayType
+		encodeControlWord: self immediateOID
 		onto: aStream.
 	self
-		encodeControlWord: anArray rsrId
+		encodeControlWord: self arrayType
 		onto: aStream.
 	self
 		encodeControlWord: anArray size
@@ -117,6 +117,8 @@ onto: aStream [
 	anImmediate == false
 		ifTrue:
 			[^self encodeFalseOnto: aStream].
+	anImmediate isArray
+		ifTrue: [^self encodeArray: anImmediate on: aStream].
 	self error: 'Unsupported Immediate'
 ]
 
@@ -169,8 +171,6 @@ onto: aStream [
 
 	(self isService: anObject)
 		ifTrue: [^self encodeService: anObject on: aStream].
-	(self isArray: anObject)
-		ifTrue: [^self encodeArray: anObject on: aStream].
 	self error: 'Unable to encode: ', anObject printString
 ]
 
@@ -337,7 +337,7 @@ RsrEncoder >> immediateOID [
 { #category : #'private-testing' }
 RsrEncoder >> isArray: anObject [
 
-	^anObject isKindOf: RsrArray
+	^anObject class == Array
 ]
 
 { #category : #'private-testing' }

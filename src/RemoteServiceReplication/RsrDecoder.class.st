@@ -33,17 +33,9 @@ RsrDecoder >> connection: aConnection [
 { #category : #decoding }
 RsrDecoder >> decodeArray: aStream [
 
-	| oid size array |
-	oid := self decodeControlWord: aStream.
+	| size array |
 	size := self decodeControlWord: aStream.
-	array := registry
-		at: oid
-		ifAbsent:
-			[(RsrArray new: size)
-				rsrId: oid;
-				rsrConnection: self connection;
-				yourself].
-	array registerWith: self registry.
+	array := Array new: size.
 	1 to: size do: [:i | array at: i put: (self decodeObjectReference: aStream)].
 	^array
 ]
@@ -128,6 +120,8 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		ifTrue: [^true].
 	type = self falseType
 		ifTrue: [^false].
+	type = self arrayType
+		ifTrue: [^self decodeArray: aStream].
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 

@@ -74,12 +74,6 @@ RsrRetainAnalysis >> isImmediate: anObject [
 	^self encoder isImmediate: anObject
 ]
 
-{ #category : #testing }
-RsrRetainAnalysis >> isRsrCollection: anObject [
-
-	^anObject isKindOf: RsrCollection
-]
-
 { #category : #processing }
 RsrRetainAnalysis >> isRsrObject: anObject [
 
@@ -103,8 +97,6 @@ RsrRetainAnalysis >> process: anObject [
 
 	(self isDataObject: anObject)
 		ifTrue: [^self processDataObject: anObject].
-	(self isRsrCollection: anObject)
-		ifTrue: [^self processRsrCollection: anObject].
 	(self isRsrObject: anObject)
 		ifTrue: [^self processRsrObject: anObject].
 	(self isImmediate: anObject)
@@ -116,14 +108,6 @@ RsrRetainAnalysis >> process: anObject [
 RsrRetainAnalysis >> processDataObject: aDataObject [
 
 	^self
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> processRsrCollection: aCollection [
-
-	self
-		processing: aCollection
-		during: [aCollection do: [:each | self process: each]]
 ]
 
 { #category : #processing }

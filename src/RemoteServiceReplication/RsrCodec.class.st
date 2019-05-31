@@ -47,7 +47,8 @@ RsrCodec >> isImmediate: anObject [
 		or: [anObject isString
 			or: [anObject isInteger
 				or: [anObject isCharacter
-					or: [#(nil true false) includes: anObject]]]]
+					or: [anObject isArray
+						or: [#(nil true false) includes: anObject]]]]]
 ]
 
 { #category : #'private-accessing' }

@@ -10,13 +10,6 @@ RsrCodecTest class >> isAbstract [
 	^self == RsrCodecTest
 ]
 
-{ #category : #'running-immediates' }
-RsrCodecTest >> assertControlInteger: anInteger
-encoding: bytes [
-
-	self subclassResponsibility
-]
-
 { #category : #'running-symbol' }
 RsrCodecTest >> genericSymbol [
 
@@ -70,21 +63,67 @@ RsrCodecTest >> serviceNoInstVarsEncoding [
 ]
 
 { #category : #'running-immediates' }
-RsrCodecTest >> testControlInteger [
+RsrCodecTest >> testArray [
+
+	| array encoding |
+	array := Array
+		with: self genericSymbol
+		with: 5
+		with: nil.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate Object OID"
+		#[0 0 0 0 0 0 0 9], "Array type"
+		#[0 0 0 0 0 0 0 3], "3 elements"
+		self genericSymbolEncoding, "Generic Symbol"
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 3], "Positive Integer"
+		#[0 0 0 0 0 0 0 1], "num bytes"
+		#[5], "5"
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 6].
+	self
+		verifyImmediate: array
+		encoding: encoding
+]
+
+{ #category : #'running-control words' }
+RsrCodecTest >> testControlWord [
 	
 	self
-		assertControlInteger: 0
+		verifyControlWord: 0
 		encoding: #[0 0 0 0 0 0 0 0].
 	self
-		assertControlInteger: 1
+		verifyControlWord: 1
 		encoding: #[0 0 0 0 0 0 0 1].
 	self
-		assertControlInteger: -1
+		verifyControlWord: -1
 		encoding: #[255 255 255 255 255 255 255 255].
 	self
-		assertControlInteger: (2 raisedTo: 63) - 1
+		verifyControlWord: (2 raisedTo: 63) - 1
 		encoding: #[127 255 255 255 255 255 255 255].
 	self
-		assertControlInteger: (2 raisedTo: 63) negated
+		verifyControlWord: (2 raisedTo: 63) negated
 		encoding: #[128 0 0 0 0 0 0 0]
+]
+
+{ #category : #'running-symbol' }
+RsrCodecTest >> testSymbol [
+
+	self
+		verifyImmediate: self genericSymbol
+		encoding: self genericSymbolEncoding
+]
+
+{ #category : #asserting }
+RsrCodecTest >> verifyControlWord: anInteger
+encoding: bytes [
+
+	self subclassResponsibility
+]
+
+{ #category : #asserting }
+RsrCodecTest >> verifyImmediate: anImmediateObject
+encoding: encoding [
+
+	self subclassResponsibility
 ]
