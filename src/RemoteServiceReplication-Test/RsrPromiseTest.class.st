@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrPromiseTest,
-	#superclass : #TestCase,
+	#superclass : #RsrTestCase,
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 

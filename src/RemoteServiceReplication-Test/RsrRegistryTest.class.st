@@ -3,7 +3,7 @@ I represent tests for the RsrRegistry.
 "
 Class {
 	#name : #RsrRegistryTest,
-	#superclass : #TestCase,
+	#superclass : #RsrTestCase,
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
