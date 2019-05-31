@@ -169,6 +169,11 @@ onto: aStream [
 			[^self
 				encodeByteArray: anImmediate
 				on: aStream].
+	anImmediate class == Set
+		ifTrue:
+			[^self
+				encodeSet: anImmediate
+				on: aStream].
 	self error: 'Unsupported Immediate'
 ]
 
@@ -323,6 +328,27 @@ on: aStream [
 	self
 		reflectedVariablesOf: aService
 		do: [:each | self encodeReferenceOf: each onto: aStream]
+]
+
+{ #category : #'private-encoding' }
+RsrEncoder >> encodeSet: aSet
+on: aStream [
+
+	self
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	self
+		encodeControlWord: self setType
+		onto: aStream.
+	self
+		encodeControlWord: aSet size
+		onto: aStream.
+	aSet
+		do:
+			[:each |
+			self
+				encodeReferenceOf: each
+				onto: aStream]
 ]
 
 { #category : #'private-encoding' }

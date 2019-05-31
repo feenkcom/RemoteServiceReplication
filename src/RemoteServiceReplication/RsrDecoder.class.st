@@ -150,6 +150,8 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		ifTrue: [^self decodeDictionary: aStream].
 	type = self byteArrayType
 		ifTrue: [^self decodeByteArray: aStream].
+	type = self setType
+		ifTrue: [^self decodeSet: aStream].
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 
@@ -242,6 +244,16 @@ RsrDecoder >> decodeService: aStream [
 		reflectedVariableNamesOf: instance
 		do: [:name | instance instVarNamed: name put: (self decodeObjectReference: aStream)].
 	^instance
+]
+
+{ #category : #decoding }
+RsrDecoder >> decodeSet: aStream [
+
+	| size set |
+	size := self decodeControlWord: aStream.
+	set := Set new: size.
+	size timesRepeat: [set add: (self decodeObjectReference: aStream)].
+	^set
 ]
 
 { #category : #decoding }

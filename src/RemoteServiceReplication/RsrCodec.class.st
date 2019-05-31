@@ -59,7 +59,7 @@ RsrCodec >> isImmediate: anObject [
 		or: [anObject isString
 			or: [anObject isInteger
 				or: [anObject isCharacter
-					or: [({Array. Dictionary. ByteArray.} includes: anObject class)
+					or: [({Array. Dictionary. ByteArray. Set.} includes: anObject class)
 						or: [#(nil true false) includes: anObject]]]]]
 ]
 
@@ -119,6 +119,12 @@ RsrCodec >> sendMessageCommand [
 RsrCodec >> serviceType [
 
 	^0
+]
+
+{ #category : #'private-accessing' }
+RsrCodec >> setType [
+
+	^11
 ]
 
 { #category : #'private-accessing' }

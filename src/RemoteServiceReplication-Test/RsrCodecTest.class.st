@@ -173,6 +173,34 @@ RsrCodecTest >> testDictionary [
 		encoding: encoding
 ]
 
+{ #category : #'running-immediates' }
+RsrCodecTest >> testSet [
+
+	| set encoding |
+	set := Set new.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "OID"
+		#[0 0 0 0 0 0 0 11], "Set"
+		#[0 0 0 0 0 0 0 0]. "0 elements"
+	self
+		verifyImmediate: set
+		encoding: encoding.
+	set := Set
+		with: true
+		with: nil.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "OID"
+		#[0 0 0 0 0 0 0 11], "Set"
+		#[0 0 0 0 0 0 0 2], "2 elements"
+		#[0 0 0 0 0 0 0 0], "true"
+		#[0 0 0 0 0 0 0 7],
+		#[0 0 0 0 0 0 0 0], "nil"
+		#[0 0 0 0 0 0 0 6].
+	self
+		verifyImmediate: set
+		encoding: encoding
+]
+
 { #category : #'running-symbol' }
 RsrCodecTest >> testSymbol [
 
