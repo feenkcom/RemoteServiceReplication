@@ -1,4 +1,0 @@
-accessing
-registry
-
-	^connection registry

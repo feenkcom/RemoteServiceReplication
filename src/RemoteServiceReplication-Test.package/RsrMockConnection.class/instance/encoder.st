@@ -1,4 +1,0 @@
-accessing
-encoder
-
-	^RsrMockEncoder new

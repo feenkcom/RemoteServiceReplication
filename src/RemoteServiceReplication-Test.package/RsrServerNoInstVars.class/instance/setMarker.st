@@ -1,4 +1,0 @@
-accessing
-setMarker
-
-	marker := true

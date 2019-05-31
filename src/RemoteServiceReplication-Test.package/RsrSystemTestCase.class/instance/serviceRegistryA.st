@@ -1,4 +1,0 @@
-accesing
-serviceRegistryA
-
-	^connectionA serviceRegistry

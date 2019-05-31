@@ -1,4 +1,0 @@
-utilities
-maximumReclamation
-
-	Smalltalk garbageCollect

@@ -1,4 +1,0 @@
-accessing
-rsrForwarderClass
-
-	^self forwarderClass

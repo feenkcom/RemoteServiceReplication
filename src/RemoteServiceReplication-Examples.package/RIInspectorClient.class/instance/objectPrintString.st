@@ -1,4 +1,0 @@
-inspection protocol
-objectPrintString
-
-	^remoteSelf objectPrintString

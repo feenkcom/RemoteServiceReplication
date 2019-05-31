@@ -1,4 +1,0 @@
-accessing
-newTestConnection
-
-	^RsrMockConnection new

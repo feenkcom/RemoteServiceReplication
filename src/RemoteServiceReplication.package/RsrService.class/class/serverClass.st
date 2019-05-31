@@ -1,4 +1,0 @@
-accessing
-serverClass
-
-	self subclassResponsibility

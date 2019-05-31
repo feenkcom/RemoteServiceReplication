@@ -1,4 +1,0 @@
-running
-executeCycle
-
-	self subclassResponsibility

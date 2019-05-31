@@ -1,4 +1,0 @@
-accessing
-returnArgument: anObject
-
-	^anObject
