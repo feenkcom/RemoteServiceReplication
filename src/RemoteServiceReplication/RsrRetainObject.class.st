@@ -61,5 +61,12 @@ RsrRetainObject >> object [
 
 { #category : #accessing }
 RsrRetainObject >> object: anObject [
+
 	object := anObject
+]
+
+{ #category : #executing }
+RsrRetainObject >> writeUsing: aCommandWriter [
+
+	super writeUsing: aCommandWriter
 ]

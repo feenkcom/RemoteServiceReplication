@@ -29,7 +29,7 @@ RsrSystemTestCase >> serviceRegistryB [
 { #category : #initialization }
 RsrSystemTestCase >> setUp [
 
-	| socketPair |
+	| socketPair semaphore |
 	super setUp.
 	socketPair := RsrSocketPair new.
 	connectionA := RsrConnection
@@ -40,8 +40,12 @@ RsrSystemTestCase >> setUp [
 		socket: socketPair secondSocket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
-	connectionA start.
-	connectionB start.
+	semaphore := Semaphore new.
+	[connectionA start.
+	semaphore signal] fork.
+	[connectionB start.
+	semaphore signal] fork.
+	semaphore wait; wait
 ]
 
 { #category : #initialization }

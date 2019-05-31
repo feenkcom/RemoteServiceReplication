@@ -16,7 +16,8 @@ Class {
 		'dispatcher',
 		'reaper',
 		'oidSpigot',
-		'serviceFactory'
+		'serviceFactory',
+		'sharedNamespace'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
@@ -47,6 +48,7 @@ RsrConnection >> close [
 	isOpen := false.
 	commandReader stop.
 	commandWriter stop.
+	dispatcher stop.
 	self promises do: [:each | each error: RsrConnectionClosed new].
 	objectCache reset
 ]
@@ -121,6 +123,7 @@ RsrConnection >> initialize [
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.
 	registry := RsrRegistry new.
+	sharedNamespace := RsrSharedNamespace new.
 ]
 
 { #category : #accessing }
@@ -227,6 +230,12 @@ RsrConnection >> serviceRegistry [
 ]
 
 { #category : #accessing }
+RsrConnection >> sharedNamespace [
+
+	^sharedNamespace
+]
+
+{ #category : #accessing }
 RsrConnection >> socket: aSocket [
 
 	socket := aSocket
@@ -249,6 +258,7 @@ RsrConnection >> start [
 		rsrId: self oidSpigot next
 		rsrConnection: self.
 	serviceFactory registerWith: registry.
+	sharedNamespace client: (self serviceFor: #RsrSharedNamespaceClient).
 	serviceRegistry := RsrServiceRegistry
 		rsrId: 1
 		rsrConnection: self.

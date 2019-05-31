@@ -37,7 +37,6 @@ RsrSendServiceTest >> testRemoteReferenceLifetime [
 
 	| name valueServiceLocal valueServiceRemote serviceLocal serviceRemote id marker actual |
 	name := 'ValueService'.
-	Transcript.
 	serviceLocal := RsrClientNoInstVars new.
 	valueServiceLocal := RsrValueHolderClient value: serviceLocal.
 	connectionA serviceRegistry
