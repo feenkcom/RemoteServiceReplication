@@ -12,7 +12,6 @@ Class {
 		'socket',
 		'stream',
 		'promises',
-		'serviceRegistry',
 		'dispatcher',
 		'reaper',
 		'oidSpigot',
@@ -224,12 +223,6 @@ RsrConnection >> serviceFor: aResponsibility [
 ]
 
 { #category : #accessing }
-RsrConnection >> serviceRegistry [
-
-	^serviceRegistry
-]
-
-{ #category : #accessing }
 RsrConnection >> sharedNamespace [
 
 	^sharedNamespace
@@ -258,11 +251,7 @@ RsrConnection >> start [
 		rsrId: self oidSpigot next
 		rsrConnection: self.
 	serviceFactory registerWith: registry.
-	sharedNamespace client: (self serviceFor: #RsrSharedNamespaceClient).
-	serviceRegistry := RsrServiceRegistry
-		rsrId: 1
-		rsrConnection: self.
-	serviceRegistry registerWith: registry.
+	sharedNamespace client: (self serviceFor: #RsrSharedNamespaceClient)
 ]
 
 { #category : #accessing }

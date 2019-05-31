@@ -14,18 +14,6 @@ RsrSystemTestCase class >> isAbstract [
 	^self == RsrSystemTestCase
 ]
 
-{ #category : #accesing }
-RsrSystemTestCase >> serviceRegistryA [
-
-	^connectionA serviceRegistry
-]
-
-{ #category : #accesing }
-RsrSystemTestCase >> serviceRegistryB [
-
-	^connectionB serviceRegistry
-]
-
 { #category : #initialization }
 RsrSystemTestCase >> setUp [
 
@@ -46,6 +34,18 @@ RsrSystemTestCase >> setUp [
 	[connectionB start.
 	semaphore signal] fork.
 	semaphore wait; wait
+]
+
+{ #category : #accesing }
+RsrSystemTestCase >> sharedNamespaceA [
+
+	^connectionA sharedNamespace
+]
+
+{ #category : #accesing }
+RsrSystemTestCase >> sharedNamespaceB [
+
+	^connectionB sharedNamespace
 ]
 
 { #category : #initialization }

@@ -26,8 +26,8 @@ ifAbsent: aBlock [
 RsrSharedNamespace >> at: aKey
 put: aValue [
 
-	map
-		at: aKey
+	self
+		primAt: aKey
 		put: aValue.
 	client
 		at: aKey
@@ -44,6 +44,13 @@ RsrSharedNamespace >> client: anObject [
 	client := anObject
 ]
 
+{ #category : #initialize }
+RsrSharedNamespace >> initialize [
+
+	super initialize.
+	map := Dictionary new
+]
+
 { #category : #accessing }
 RsrSharedNamespace >> map [
 	^ map
@@ -58,7 +65,7 @@ RsrSharedNamespace >> map: anObject [
 RsrSharedNamespace >> primAt: aKey
 put: aValue [
 
-	map
+	^map
 		at: aKey
 		put: aValue
 ]
@@ -66,14 +73,14 @@ put: aValue [
 { #category : #'private-accessing' }
 RsrSharedNamespace >> primRemoveKey: aKey [
 
-	map removeKey: aKey
+	^map removeKey: aKey
 ]
 
 { #category : #adding }
 RsrSharedNamespace >> removeKey: aKey [
 
-	map removeKey: aKey.
-	client removeKey: aKey
+	^[self primRemoveKey: aKey]
+		ensure: [client removeKey: aKey]
 ]
 
 { #category : #accessing }

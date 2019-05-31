@@ -14,14 +14,14 @@ RsrServiceRegistryTest >> testCloseWithDanglingObjectInRegistry [
 	name := 'TestService'.
 	service := RsrClientNoInstVars new.
 	marker := Object new.
-	connectionA serviceRegistry
+	self sharedNamespaceA
 		at: name
 		put: service.
-	actual := connectionA serviceRegistry at: name.
+	actual := self sharedNamespaceA at: name.
 	self
 		assert: actual
 		identicalTo: actual.
-	actual := connectionB serviceRegistry at: name.
+	actual := self sharedNamespaceB at: name.
 	self
 		assert: actual class
 		equals: RsrServerNoInstVars.
@@ -37,25 +37,25 @@ RsrServiceRegistryTest >> testRegistration [
 	name := 'TestService'.
 	service := RsrClientNoInstVars new.
 	marker := Object new.
-	connectionA serviceRegistry
+	self sharedNamespaceA
 		at: name
 		put: service.
-	actual := connectionA serviceRegistry at: name.
+	actual := self sharedNamespaceA at: name.
 	self
 		assert: actual
 		identicalTo: actual.
-	actual := connectionB serviceRegistry at: name.
+	actual := self sharedNamespaceB at: name.
 	self
 		assert: actual class
 		equals: RsrServerNoInstVars.
 	self
 		assert: actual rsrId
 		equals: service rsrId.
-	connectionB serviceRegistry removeKey: name.
+	self sharedNamespaceB removeKey: name.
 	self
-		assert: (connectionA serviceRegistry at: name ifAbsent:[marker])
+		assert: (self sharedNamespaceA at: name ifAbsent:[marker])
 		identicalTo: marker.
 	self
-		assert: (connectionB serviceRegistry at: name ifAbsent:[marker])
+		assert: (self sharedNamespaceB at: name ifAbsent:[marker])
 		identicalTo: marker
 ]
