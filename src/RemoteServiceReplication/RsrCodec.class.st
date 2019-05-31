@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrCodec,
 	#superclass : #Object,
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'private-accessing' }

@@ -1,5 +1,5 @@
 Class {
 	#name : #RsrUnsupportedObject,
 	#superclass : #RsrError,
-	#category : 'RemoteServiceReplication-Exceptions'
+	#category : #'RemoteServiceReplication-Exceptions'
 }

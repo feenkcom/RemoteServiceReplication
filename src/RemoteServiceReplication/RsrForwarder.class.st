@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'rsrObject'
 	],
-	#category : 'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Utilities'
 }
 
 { #category : #'instance creation' }

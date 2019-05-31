@@ -5,7 +5,7 @@ Class {
 		'mutex',
 		'services'
 	],
-	#category : 'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public'
 }
 
 { #category : #'public-accessing' }

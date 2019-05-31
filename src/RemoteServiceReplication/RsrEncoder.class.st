@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrEncoder,
 	#superclass : #RsrCodec,
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'private-encoding' }

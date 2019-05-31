@@ -8,7 +8,7 @@ Class {
 		'rsrId',
 		'rsrConnection'
 	],
-	#category : 'RemoteServiceReplication-Base'
+	#category : #'RemoteServiceReplication-Base'
 }
 
 { #category : #'instance creation' }

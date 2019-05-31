@@ -8,7 +8,7 @@ Class {
 		'arguments',
 		'retainList'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

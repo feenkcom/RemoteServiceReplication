@@ -7,7 +7,7 @@ Class {
 		'inFlight',
 		'connection'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

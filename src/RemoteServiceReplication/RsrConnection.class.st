@@ -17,7 +17,7 @@ Class {
 		'reaper',
 		'oidSpigot'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

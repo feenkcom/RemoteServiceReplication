@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'decoder'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #accessing }

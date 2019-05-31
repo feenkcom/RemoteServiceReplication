@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'stream'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }
@@ -33,7 +33,7 @@ RsrStream >> next: aLength [
 	| bytes |
 	bytes := stream next: aLength.
 	bytes size ~~ aLength
-		ifTrue: [ConnectionClosed signal].
+		ifTrue: [RsrConnectionClosed signal].
 	^bytes
 ]
 

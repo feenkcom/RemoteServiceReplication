@@ -4,7 +4,7 @@ I store metadata for this package. These meta data are used by other tools such 
 Class {
 	#name : #ManifestRemoteServiceReplication,
 	#superclass : #PackageManifest,
-	#category : 'RemoteServiceReplication-Manifest'
+	#category : #'RemoteServiceReplication-Manifest'
 }
 
 { #category : #'code-critics' }

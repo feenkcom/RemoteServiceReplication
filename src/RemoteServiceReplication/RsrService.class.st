@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'remoteSelf'
 	],
-	#category : 'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public'
 }
 
 { #category : #accessing }

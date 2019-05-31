@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'oids'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

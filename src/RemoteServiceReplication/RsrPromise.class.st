@@ -6,7 +6,7 @@ Class {
 		'value',
 		'error'
 	],
-	#category : 'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Utilities'
 }
 
 { #category : #fulfillment }

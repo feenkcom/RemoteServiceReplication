@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'queue'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #commands }

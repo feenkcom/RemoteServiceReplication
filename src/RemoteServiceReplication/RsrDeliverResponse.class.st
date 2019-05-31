@@ -6,7 +6,7 @@ Class {
 		'response',
 		'retainList'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrAbstractServiceRegistry,
 	#superclass : #RsrService,
-	#category : 'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public'
 }
 
 { #category : #accessing }

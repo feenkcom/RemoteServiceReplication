@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'storage'
 	],
-	#category : 'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Utilities'
 }
 
 { #category : #'adding/removing' }

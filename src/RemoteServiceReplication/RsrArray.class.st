@@ -2,7 +2,7 @@ Class {
 	#name : #RsrArray,
 	#superclass : #RsrCollection,
 	#type : #variable,
-	#category : 'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public'
 }
 
 { #category : #enumerating }

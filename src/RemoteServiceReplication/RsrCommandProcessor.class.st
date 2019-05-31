@@ -6,7 +6,7 @@ Class {
 		'connection',
 		'isRunning'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

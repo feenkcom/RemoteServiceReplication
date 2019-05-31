@@ -5,7 +5,7 @@ Class {
 		'registry',
 		'connection'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #'instance creation' }

@@ -5,7 +5,7 @@ Class {
 		'current',
 		'step'
 	],
-	#category : 'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Utilities'
 }
 
 { #category : #'instance creation' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'encoding'
 	],
-	#category : 'RemoteServiceReplication-Communications'
+	#category : #'RemoteServiceReplication-Communications'
 }
 
 { #category : #executing }

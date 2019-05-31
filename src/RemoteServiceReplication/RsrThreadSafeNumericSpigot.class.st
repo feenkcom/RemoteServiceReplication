@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'mutex'
 	],
-	#category : 'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Utilities'
 }
 
 { #category : #initialization }
