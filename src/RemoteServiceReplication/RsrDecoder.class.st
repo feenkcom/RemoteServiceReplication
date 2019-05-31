@@ -152,6 +152,8 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		ifTrue: [^self decodeByteArray: aStream].
 	type = self setType
 		ifTrue: [^self decodeSet: aStream].
+	type = self orderedCollectionType
+		ifTrue: [^self decodeOrderedCollection: aStream].
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 
@@ -189,6 +191,16 @@ RsrDecoder >> decodeObjectReference: aStream [
 	oid := self decodeControlWord: aStream.
 	oid = 0 ifTrue: [^self decodeImmediateObject: aStream].
 	^registry at: oid ifAbsent: [self signalUnknownOID]
+]
+
+{ #category : #decoding }
+RsrDecoder >> decodeOrderedCollection: aStream [
+
+	| size oc |
+	size := self decodeControlWord: aStream.
+	oc := OrderedCollection new: size.
+	size timesRepeat: [oc add: (self decodeObjectReference: aStream)].
+	^oc
 ]
 
 { #category : #decoding }

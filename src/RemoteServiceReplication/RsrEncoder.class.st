@@ -174,6 +174,11 @@ onto: aStream [
 			[^self
 				encodeSet: anImmediate
 				on: aStream].
+	anImmediate class == OrderedCollection
+		ifTrue:
+			[^self
+				encodeOrderedCollection: anImmediate
+				on: aStream].
 	self error: 'Unsupported Immediate'
 ]
 
@@ -227,6 +232,27 @@ onto: aStream [
 	(self isService: anObject)
 		ifTrue: [^self encodeService: anObject on: aStream].
 	self error: 'Unable to encode: ', anObject printString
+]
+
+{ #category : #'private-encoding' }
+RsrEncoder >> encodeOrderedCollection: anOrderedCollection
+on: aStream [
+
+	self
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	self
+		encodeControlWord: self orderedCollectionType
+		onto: aStream.
+	self
+		encodeControlWord: anOrderedCollection size
+		onto: aStream.
+	anOrderedCollection
+		do:
+			[:each |
+			self
+				encodeReferenceOf: each
+				onto: aStream]
 ]
 
 { #category : #'private-encoding' }

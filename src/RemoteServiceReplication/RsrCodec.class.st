@@ -59,7 +59,7 @@ RsrCodec >> isImmediate: anObject [
 		or: [anObject isString
 			or: [anObject isInteger
 				or: [anObject isCharacter
-					or: [({Array. Dictionary. ByteArray. Set.} includes: anObject class)
+					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection.} includes: anObject class)
 						or: [#(nil true false) includes: anObject]]]]]
 ]
 
@@ -73,6 +73,12 @@ RsrCodec >> negativeIntegerType [
 RsrCodec >> nilType [
 
 	^6
+]
+
+{ #category : #'private-accessing' }
+RsrCodec >> orderedCollectionType [
+
+	^12
 ]
 
 { #category : #'private-accessing' }

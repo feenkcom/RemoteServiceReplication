@@ -174,6 +174,38 @@ RsrCodecTest >> testDictionary [
 ]
 
 { #category : #'running-immediates' }
+RsrCodecTest >> testOrderedCollection [
+
+	| oc encoding |
+	oc := OrderedCollection new.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 12], "OrderedCollection type"
+		#[0 0 0 0 0 0 0 0].
+	self
+		verifyImmediate: oc
+		encoding: encoding.
+	oc := OrderedCollection
+		with: self genericSymbol
+		with: 5
+		with: nil.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate Object OID"
+		#[0 0 0 0 0 0 0 12], "OrderedCollection type"
+		#[0 0 0 0 0 0 0 3], "3 elements"
+		self genericSymbolEncoding, "Generic Symbol"
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 3], "Positive Integer"
+		#[0 0 0 0 0 0 0 1], "num bytes"
+		#[5], "5"
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 6].
+	self
+		verifyImmediate: oc
+		encoding: encoding
+]
+
+{ #category : #'running-immediates' }
 RsrCodecTest >> testSet [
 
 	| set encoding |
