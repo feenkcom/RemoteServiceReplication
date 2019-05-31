@@ -54,6 +54,16 @@ RsrMessageSendingTest >> testReturnSymbol [
 ]
 
 { #category : #running }
+RsrMessageSendingTest >> testSendInvalidObject [
+
+	| service |
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	self
+		should: [service sendReturnArgument: Object new]
+		raise: RsrUnsupportedObject
+]
+
+{ #category : #running }
 RsrMessageSendingTest >> testSendSetMarker [
 
 	| service remoteService |
