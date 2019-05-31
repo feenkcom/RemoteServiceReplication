@@ -259,4 +259,8 @@ Symbols and Strings are encoded in the same format. They only differ in the valu
 | nil				| 6				|
 | true				| 7				|
 | false				| 8				|
-| RsrArray			| 9				|
+| Array				| 9				|
+| ByteArray			| 10			|
+| Set				| 11			|
+| OrderedCollection	| 12			|
+| Dictionary		| 13			|
