@@ -13,38 +13,10 @@ RsrTestCase class >> isAbstract [
 	^self == RsrTestCase
 ]
 
-{ #category : #asserting }
-RsrTestCase >> assertObject: anObject
-isMirrored: isMirrored
-id: id
-connection: remoteInterface [
-
-	self
-		assert: anObject
-		equals: anObject.
-	self
-		assert: anObject isMirrored
-		equals: isMirrored.
-	self
-		assert: anObject rsrId
-		equals: id.
-	self
-		assert: anObject rsrConnection
-		equals: remoteInterface
-]
-
 { #category : #accessing }
 RsrTestCase >> defaultTimeLimit [
 
 	^5 seconds
-]
-
-{ #category : #asserting }
-RsrTestCase >> hack: aString [
-
-	Transcript
-		show: aString;
-		cr
 ]
 
 { #category : #utilities }
@@ -62,22 +34,4 @@ RsrTestCase >> maximumReclamation [
 	Processor yield.
 	self deny: (sema waitTimeoutMSecs: 100).
 	
-]
-
-{ #category : #accessing }
-RsrTestCase >> newId [
-
-	^1
-]
-
-{ #category : #accessing }
-RsrTestCase >> newTestConnection [
-
-	^RsrMockConnection new
-]
-
-{ #category : #accessing }
-RsrTestCase >> newTestConnectionUsing: aForwarderClass [
-
-	^(RsrMockConnection forwarderClass: aForwarderClass)
 ]

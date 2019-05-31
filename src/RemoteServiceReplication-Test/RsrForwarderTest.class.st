@@ -9,8 +9,8 @@ RsrForwarderTest >> testForwarding [
 
 	| rsrObject id remoteInterface forwarder message |
 	rsrObject := RsrClientTestService new.
-	id := self newId.
-	remoteInterface := self newTestConnectionUsing: RsrForwarder.
+	id := 1.
+	remoteInterface := RsrMockConnection forwarderClass: RsrForwarder.
 	rsrObject
 		rsrId: id;
 		rsrConnection: remoteInterface.
