@@ -7,24 +7,6 @@ Class {
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
-{ #category : #utilities }
-RsrRegistryTest >> maximumReclamation [
-
-	Smalltalk garbageCollect
-]
-
-{ #category : #tests }
-RsrRegistryTest >> testAddingObject [
-
-	| object registry |
-	registry := RsrRegistry new.
-	object := RsrServerNoInstVars
-		rsrId: 1
-		rsrConnection: RsrMockConnection new.
-	registry retain: object.
-	self assert: (registry includes: object)
-]
-
 { #category : #tests }
 RsrRegistryTest >> testRegister [
 

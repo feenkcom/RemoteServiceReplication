@@ -32,6 +32,5 @@ RsrTestCase >> maximumReclamation [
 	obj := nil.
 	Smalltalk garbageCollect.
 	Processor yield.
-	self deny: (sema waitTimeoutMSecs: 100).
-	
+	self deny: (sema waitTimeoutMSecs: 10)
 ]
