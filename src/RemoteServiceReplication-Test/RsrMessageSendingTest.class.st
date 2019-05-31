@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #running }
+RsrMessageSendingTest >> testRemoteError [
+
+	| service |
+	service := connectionA serviceFor: #RsrEvaluationClient.
+	self
+		should: [service evaluate: 'Error signal']
+		raise: Error
+]
+
+{ #category : #running }
 RsrMessageSendingTest >> testReturnArgument [
 
 	| client server arguments |
@@ -37,6 +47,16 @@ RsrMessageSendingTest >> testReturnArgument [
 	self
 		assert: (server sendReturnArgument: server)
 		identicalTo: server
+]
+
+{ #category : #running }
+RsrMessageSendingTest >> testReturnInvalidObject [
+
+	| service |
+	service := connectionA serviceFor: #RsrEvaluationClient.
+	self
+		should: [service evaluate: 'Object new']
+		raise: RsrUnsupportedObject
 ]
 
 { #category : #running }

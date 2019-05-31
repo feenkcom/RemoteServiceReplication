@@ -66,6 +66,9 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 				encodeControlWord: aDeliverResponse transaction
 				onto: stream.
 			self
+				encodeReferenceOf: aDeliverResponse errorName
+				onto: stream.
+			self
 				encodeReferenceOf: aDeliverResponse response
 				onto: stream]
 ]

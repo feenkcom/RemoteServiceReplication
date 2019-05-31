@@ -3,11 +3,23 @@ Class {
 	#superclass : #RsrCommand,
 	#instVars : [
 		'transaction',
+		'errorName',
 		'response',
 		'retainList'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
+
+{ #category : #'instance creation' }
+RsrDeliverResponse class >> transaction: aTransactionId
+error: anException [
+
+	^self new
+		transaction: aTransactionId;
+		errorName: anException class name;
+		response: anException messageText;
+		yourself
+]
 
 { #category : #'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
@@ -26,6 +38,26 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 ]
 
 { #category : #executing }
+RsrDeliverResponse >> error [
+
+	^(Smalltalk at: errorName ifAbsent: [RsrError]) new
+		messageText: response;
+		yourself
+]
+
+{ #category : #executing }
+RsrDeliverResponse >> errorName [
+
+	^errorName
+]
+
+{ #category : #executing }
+RsrDeliverResponse >> errorName: aSymbol [
+
+	errorName := aSymbol
+]
+
+{ #category : #executing }
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| promise |
@@ -33,9 +65,17 @@ RsrDeliverResponse >> executeFor: aConnection [
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	promise fulfill: response.
+	self isError
+		ifTrue: [promise error: self error]
+		ifFalse: [promise fulfill: response].
 	aConnection objectCache reset
 	
+]
+
+{ #category : #encoding }
+RsrDeliverResponse >> isError [
+
+	^errorName notNil
 ]
 
 { #category : #accessing }

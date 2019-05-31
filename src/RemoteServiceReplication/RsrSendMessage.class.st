@@ -45,14 +45,16 @@ RsrSendMessage >> encodeUsing: anEncoder [
 RsrSendMessage >> executeFor: aConnection [
 
 	| result response |
-	result := receiver
+	[result := receiver
 		perform: selector
 		withArguments: arguments.
+	aConnection objectCache reset.
 	response := RsrDeliverResponse
 		transaction: transaction
 		response: result.
-	response sendOver: aConnection.
-	aConnection objectCache reset
+	response sendOver: aConnection]
+		on: Error
+		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex) sendOver: aConnection]
 ]
 
 { #category : #accessing }

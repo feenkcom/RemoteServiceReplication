@@ -87,12 +87,15 @@ RsrDecoder >> decodeControlWord: aStream [
 { #category : #decoding }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
-	| transaction response |
+	| transaction errorName response |
 	transaction := self decodeControlWord: aStream.
+	errorName := self decodeObjectReference: aStream.
 	response := self decodeObjectReference: aStream.
-	^RsrDeliverResponse
-		transaction: transaction
-		response: response
+	^RsrDeliverResponse new
+		transaction: transaction;
+		errorName: errorName;
+		response: response;
+		yourself
 ]
 
 { #category : #decoding }
