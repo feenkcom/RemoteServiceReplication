@@ -43,7 +43,7 @@ oidSpigot: anOidSpigot [
 RsrConnection >> close [
 
 	isOpen
-		ifFalse: [ ^ self ].
+		ifFalse: [^self].
 	isOpen := false.
 	commandReader stop.
 	commandWriter stop.
