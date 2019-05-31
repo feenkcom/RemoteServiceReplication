@@ -20,6 +20,11 @@ RsrTestCase >> defaultTimeLimit [
 ]
 
 { #category : #utilities }
+RsrTestCase >> hack: aString [
+	"Placeholder for things that need to be fixed"
+]
+
+{ #category : #utilities }
 RsrTestCase >> maximumReclamation [
 
 	| obj sema |

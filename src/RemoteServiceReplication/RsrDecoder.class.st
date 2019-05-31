@@ -91,6 +91,22 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 ]
 
 { #category : #decoding }
+RsrDecoder >> decodeDictionary: aStream [
+
+	| size dictionary |
+	size := self decodeControlWord: aStream.
+	dictionary := Dictionary new: size.
+	1
+		to: size
+		do:
+			[:i |
+			dictionary
+				at: (self decodeObjectReference: aStream)
+				put: (self decodeObjectReference: aStream)].
+	^dictionary
+]
+
+{ #category : #decoding }
 RsrDecoder >> decodeImmediateInteger: aStream [
 
 	| length bytes |
@@ -122,6 +138,8 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		ifTrue: [^false].
 	type = self arrayType
 		ifTrue: [^self decodeArray: aStream].
+	type = self dictionaryType
+		ifTrue: [^self decodeDictionary: aStream].
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 

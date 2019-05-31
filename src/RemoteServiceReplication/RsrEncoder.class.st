@@ -74,6 +74,30 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 ]
 
 { #category : #'private-encoding' }
+RsrEncoder >> encodeDictionary: aDictionary
+on: aStream [
+
+	self
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	self
+		encodeControlWord: self dictionaryType
+		onto: aStream.
+	self
+		encodeControlWord: aDictionary size
+		onto: aStream.
+	aDictionary
+		keysAndValuesDo:
+			[:key :value |
+			self
+				encodeReferenceOf: key
+				onto: aStream.
+			self
+				encodeReferenceOf: value
+				onto: aStream]
+]
+
+{ #category : #'private-encoding' }
 RsrEncoder >> encodeFalseOnto: aStream [
 
 	self
@@ -119,6 +143,11 @@ onto: aStream [
 			[^self encodeFalseOnto: aStream].
 	anImmediate isArray
 		ifTrue: [^self encodeArray: anImmediate on: aStream].
+	anImmediate isDictionary
+		ifTrue:
+			[^self
+				encodeDictionary: anImmediate
+				on: aStream].
 	self error: 'Unsupported Immediate'
 ]
 

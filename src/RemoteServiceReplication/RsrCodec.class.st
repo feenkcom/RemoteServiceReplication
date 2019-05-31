@@ -35,6 +35,12 @@ RsrCodec >> deliverResponseCommand [
 ]
 
 { #category : #'private-accessing' }
+RsrCodec >> dictionaryType [
+
+	^13
+]
+
+{ #category : #'private-accessing' }
 RsrCodec >> falseType [
 
 	^8
@@ -47,7 +53,7 @@ RsrCodec >> isImmediate: anObject [
 		or: [anObject isString
 			or: [anObject isInteger
 				or: [anObject isCharacter
-					or: [anObject isArray
+					or: [({Array. Dictionary} includes: anObject class)
 						or: [#(nil true false) includes: anObject]]]]]
 ]
 

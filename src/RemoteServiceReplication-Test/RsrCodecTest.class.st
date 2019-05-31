@@ -114,6 +114,41 @@ RsrCodecTest >> testControlWord [
 		encoding: #[128 0 0 0 0 0 0 0]
 ]
 
+{ #category : #'running-immediates' }
+RsrCodecTest >> testDictionary [
+
+	| dictionary encoding |
+	dictionary := Dictionary new.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate Object OID"
+		#[0 0 0 0 0 0 0 13], "Dictionary type"
+		#[0 0 0 0 0 0 0 0]. "0 associations"
+	self
+		verifyImmediate: dictionary
+		encoding: encoding.
+	dictionary := Dictionary new
+		at: 1 put: self genericSymbol;
+		at: nil put: true;
+		yourself.
+	self hack: 'Order is not guaranteed in a dictionary'.
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate OID"
+		#[0 0 0 0 0 0 0 13], "Dictionary Type"
+		#[0 0 0 0 0 0 0 2], "Two assocs"
+		#[0 0 0 0 0 0 0 0], "nil"
+		#[0 0 0 0 0 0 0 6],
+		#[0 0 0 0 0 0 0 0], "true"
+		#[0 0 0 0 0 0 0 7],
+		#[0 0 0 0 0 0 0 0], "Integer 1"
+		#[0 0 0 0 0 0 0 3],
+		#[0 0 0 0 0 0 0 1],
+		#[1],
+		self genericSymbolEncoding.
+	self
+		verifyImmediate: dictionary
+		encoding: encoding
+]
+
 { #category : #'running-symbol' }
 RsrCodecTest >> testSymbol [
 
