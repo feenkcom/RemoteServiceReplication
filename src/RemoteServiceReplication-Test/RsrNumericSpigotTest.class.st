@@ -1,27 +1,33 @@
 Class {
-	#name : #NumericSpigotTest,
+	#name : #RsrNumericSpigotTest,
 	#superclass : #RsrTestCase,
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
+{ #category : #accessing }
+RsrNumericSpigotTest >> spigotClass [
+
+	^RsrNumericSpigot
+]
+
 { #category : #running }
-NumericSpigotTest >> testDefault [
+RsrNumericSpigotTest >> testDefault [
 
 	| spigot |
-	spigot := RsrNumericSpigot new.
+	spigot := self spigotClass new.
 	self
 		assert: spigot next
 		equals: 0.
 	self
-		assert: spigot step
+		assert: spigot next
 		equals: 1
 ]
 
 { #category : #running }
-NumericSpigotTest >> testFloat [
+RsrNumericSpigotTest >> testFloat [
 
 	| spigot |
-	spigot := RsrNumericSpigot
+	spigot := self spigotClass
 		start: 0
 		step: 0.5.
 	self
@@ -36,10 +42,10 @@ NumericSpigotTest >> testFloat [
 ]
 
 { #category : #running }
-NumericSpigotTest >> testNaturals [
+RsrNumericSpigotTest >> testNaturals [
 
 	| spigot |
-	spigot := RsrNumericSpigot naturals.
+	spigot := self spigotClass naturals.
 	self
 		assert: spigot next
 		equals: 1.
@@ -49,10 +55,10 @@ NumericSpigotTest >> testNaturals [
 ]
 
 { #category : #running }
-NumericSpigotTest >> testNegativeStep [
+RsrNumericSpigotTest >> testNegativeStep [
 
 	| spigot |
-	spigot := RsrNumericSpigot
+	spigot := self spigotClass
 		start: 0
 		step: -1.
 	self
@@ -67,10 +73,10 @@ NumericSpigotTest >> testNegativeStep [
 ]
 
 { #category : #running }
-NumericSpigotTest >> testNext [
+RsrNumericSpigotTest >> testNext [
 
 	| spigot |
-	spigot := RsrNumericSpigot naturals.
+	spigot := self spigotClass naturals.
 	self
 		assert: (Array with: 1 with: 2 with: 3)
 		equals: (spigot next: 3)
