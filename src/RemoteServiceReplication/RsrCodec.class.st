@@ -11,6 +11,12 @@ RsrCodec >> arrayType [
 ]
 
 { #category : #'private-accessing' }
+RsrCodec >> byteArrayType [
+
+	^10
+]
+
+{ #category : #'private-accessing' }
 RsrCodec >> characterType [
 
 	^5
@@ -53,7 +59,7 @@ RsrCodec >> isImmediate: anObject [
 		or: [anObject isString
 			or: [anObject isInteger
 				or: [anObject isCharacter
-					or: [({Array. Dictionary} includes: anObject class)
+					or: [({Array. Dictionary. ByteArray.} includes: anObject class)
 						or: [#(nil true false) includes: anObject]]]]]
 ]
 

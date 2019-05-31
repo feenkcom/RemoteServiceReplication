@@ -26,6 +26,22 @@ on: aStream [
 ]
 
 { #category : #'private-encoding' }
+RsrEncoder >> encodeByteArray: aByteArray
+on: aStream [
+
+	self
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	self
+		encodeControlWord: self byteArrayType
+		onto: aStream.
+	self
+		encodeControlWord: aByteArray size
+		onto: aStream.
+	aStream nextPutAll: aByteArray
+]
+
+{ #category : #'private-encoding' }
 RsrEncoder >> encodeCharacter: aCharacter
 onto: aStream [
 
@@ -147,6 +163,11 @@ onto: aStream [
 		ifTrue:
 			[^self
 				encodeDictionary: anImmediate
+				on: aStream].
+	anImmediate class == ByteArray
+		ifTrue:
+			[^self
+				encodeByteArray: anImmediate
 				on: aStream].
 	self error: 'Unsupported Immediate'
 ]

@@ -94,6 +94,30 @@ RsrCodecTest >> testArray [
 		encoding: encoding
 ]
 
+{ #category : #'running-immediates' }
+RsrCodecTest >> testByteArray [
+
+	| bytes encoding |
+	bytes := #[].
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Immediate Object OID"
+		#[0 0 0 0 0 0 0 10], "ByteArray type"
+		#[0 0 0 0 0 0 0 0], "size"
+		bytes.
+	self
+		verifyImmediate: bytes
+		encoding: encoding.
+	bytes := #[1 2 3 4 5].
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 10],
+		#[0 0 0 0 0 0 0 5],
+		bytes.
+	self
+		verifyImmediate: bytes
+		encoding: encoding
+]
+
 { #category : #'running-control words' }
 RsrCodecTest >> testControlWord [
 	

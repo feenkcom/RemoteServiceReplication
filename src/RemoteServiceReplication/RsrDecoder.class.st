@@ -41,6 +41,14 @@ RsrDecoder >> decodeArray: aStream [
 ]
 
 { #category : #decoding }
+RsrDecoder >> decodeByteArray: aStream [
+
+	| size |
+	size := self decodeControlWord: aStream.
+	^aStream next: size
+]
+
+{ #category : #decoding }
 RsrDecoder >> decodeCharacter: aStream [
 
 	| codePoint |
@@ -140,6 +148,8 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		ifTrue: [^self decodeArray: aStream].
 	type = self dictionaryType
 		ifTrue: [^self decodeDictionary: aStream].
+	type = self byteArrayType
+		ifTrue: [^self decodeByteArray: aStream].
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 
