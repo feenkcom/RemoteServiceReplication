@@ -15,7 +15,8 @@ Class {
 		'serviceRegistry',
 		'dispatcher',
 		'reaper',
-		'oidSpigot'
+		'oidSpigot',
+		'serviceFactory'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
@@ -120,10 +121,6 @@ RsrConnection >> initialize [
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.
 	registry := RsrRegistry new.
-	serviceRegistry := RsrServiceRegistry
-		rsrId: 1
-		rsrConnection: self.
-	registry retain: serviceRegistry
 ]
 
 { #category : #accessing }
@@ -236,19 +233,26 @@ RsrConnection >> start [
 		ifFalse: [^RsrConnectionClosed signal].
 	stream := RsrStream on: (SocketStream on: socket).
 	stream binary.
-	serviceRegistry registerWith: registry.
 	dispatcher := RsrCommandDispatcher on: self.
 	commandReader := RsrCommandReader on: self.
 	commandWriter := RsrCommandWriter on: self.
 	dispatcher start.
 	commandReader start.
-	commandWriter start
+	commandWriter start.
+	serviceFactory := RsrServiceFactory
+		rsrId: self oidSpigot next
+		rsrConnection: self.
+	serviceFactory registerWith: registry.
+	serviceRegistry := RsrServiceRegistry
+		rsrId: 1
+		rsrConnection: self.
+	serviceRegistry registerWith: registry.
 ]
 
 { #category : #accessing }
 RsrConnection >> stream [
 
-	^stream ifNil: [stream := RsrStream on: (SocketStream on: socket)]
+	^stream
 ]
 
 { #category : #accessing }
