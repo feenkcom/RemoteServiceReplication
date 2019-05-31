@@ -214,6 +214,12 @@ to: aService [
 	^dispatchCommand sendOver: self
 ]
 
+{ #category : #'public-service factory' }
+RsrConnection >> serviceFor: aResponsibility [
+
+	^serviceFactory serviceFor: aResponsibility
+]
+
 { #category : #accessing }
 RsrConnection >> serviceRegistry [
 

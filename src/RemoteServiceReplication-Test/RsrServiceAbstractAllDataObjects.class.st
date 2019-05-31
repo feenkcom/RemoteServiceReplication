@@ -7,7 +7,7 @@ Class {
 		'integerZero',
 		'string'
 	],
-	#category : 'RemoteServiceReplication-Test-Services'
+	#category : #'RemoteServiceReplication-Test-Services'
 }
 
 { #category : #accessing }

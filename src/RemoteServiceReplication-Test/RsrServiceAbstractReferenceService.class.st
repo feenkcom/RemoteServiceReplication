@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'service'
 	],
-	#category : 'RemoteServiceReplication-Test-Services'
+	#category : #'RemoteServiceReplication-Test-Services'
 }
 
 { #category : #accessing }

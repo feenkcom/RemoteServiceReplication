@@ -5,7 +5,7 @@ Class {
 		'registry',
 		'connection'
 	],
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #'running-immediates' }

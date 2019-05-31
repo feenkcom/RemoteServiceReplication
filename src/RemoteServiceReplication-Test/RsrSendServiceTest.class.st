@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrSendServiceTest,
 	#superclass : #RsrSystemTestCase,
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #running }
@@ -104,10 +104,11 @@ RsrSendServiceTest >> testReturnArgument [
 RsrSendServiceTest >> testReturnSymbol [
 
 	| service |
-	service := RsrClientNoInstVars new.
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	"service := RsrClientNoInstVars new.
 	self serviceRegistryA
 		at: 'TestService'
-		put: service.
+		put: service."
 	self
 		assert: service sendReturnTestSymbol
 		equals: #testSymbol

@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrAbstractTestService,
 	#superclass : #RsrService,
-	#category : 'RemoteServiceReplication-Test-Services'
+	#category : #'RemoteServiceReplication-Test-Services'
 }
 
 { #category : #accessing }

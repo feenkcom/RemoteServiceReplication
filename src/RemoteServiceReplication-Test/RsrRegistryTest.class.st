@@ -4,7 +4,7 @@ I represent tests for the RsrRegistry.
 Class {
 	#name : #RsrRegistryTest,
 	#superclass : #TestCase,
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #utilities }

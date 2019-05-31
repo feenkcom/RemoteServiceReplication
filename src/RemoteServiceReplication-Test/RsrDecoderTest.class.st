@@ -5,7 +5,7 @@ Class {
 		'decoder',
 		'registry'
 	],
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #asserting }

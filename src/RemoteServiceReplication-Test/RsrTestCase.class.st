@@ -4,7 +4,7 @@ An abstract test class which contains utility methods
 Class {
 	#name : #RsrTestCase,
 	#superclass : #TestCase,
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #testing }

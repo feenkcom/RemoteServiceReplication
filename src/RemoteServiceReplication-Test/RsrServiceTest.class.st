@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrServiceTest,
 	#superclass : #RsrTestCase,
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #running }

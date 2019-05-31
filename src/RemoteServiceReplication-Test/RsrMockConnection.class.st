@@ -7,7 +7,7 @@ Class {
 		'registry',
 		'idSpigot'
 	],
-	#category : 'RemoteServiceReplication-Test-Mocks'
+	#category : #'RemoteServiceReplication-Test-Mocks'
 }
 
 { #category : #'instance creation' }

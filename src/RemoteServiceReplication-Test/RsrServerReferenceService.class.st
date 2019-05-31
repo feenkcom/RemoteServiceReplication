@@ -1,5 +1,5 @@
 Class {
 	#name : #RsrServerReferenceService,
 	#superclass : #RsrServiceAbstractReferenceService,
-	#category : 'RemoteServiceReplication-Test-Services'
+	#category : #'RemoteServiceReplication-Test-Services'
 }

@@ -5,7 +5,7 @@ Class {
 		'objects',
 		'idSpigot'
 	],
-	#category : 'RemoteServiceReplication-Test-Mocks'
+	#category : #'RemoteServiceReplication-Test-Mocks'
 }
 
 { #category : #accessing }

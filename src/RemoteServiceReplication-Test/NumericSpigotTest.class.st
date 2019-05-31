@@ -1,7 +1,7 @@
 Class {
 	#name : #NumericSpigotTest,
 	#superclass : #TestCase,
-	#category : 'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #running }
