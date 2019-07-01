@@ -2,8 +2,7 @@ Class {
 	#name : #RsrDecoderTest,
 	#superclass : #RsrCodecTest,
 	#instVars : [
-		'decoder',
-		'registry'
+		'decoder'
 	],
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
@@ -76,7 +75,7 @@ RsrDecoderTest >> testReleaseObjects [
 ]
 
 { #category : #running }
-RsrDecoderTest >> testRetainNewObject [
+RsrDecoderTest >> testRetainObject [
 
 	| encoding command |
 	encoding :=

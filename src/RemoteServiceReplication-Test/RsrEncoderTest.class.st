@@ -2,7 +2,6 @@ Class {
 	#name : #RsrEncoderTest,
 	#superclass : #RsrCodecTest,
 	#instVars : [
-		'registry',
 		'connection'
 	],
 	#category : #'RemoteServiceReplication-Test-TestCases'

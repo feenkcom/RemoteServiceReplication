@@ -1,6 +1,9 @@
 Class {
 	#name : #RsrCodecTest,
 	#superclass : #RsrTestCase,
+	#instVars : [
+		'registry'
+	],
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
