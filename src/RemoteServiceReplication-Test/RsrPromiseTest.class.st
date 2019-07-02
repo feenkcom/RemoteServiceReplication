@@ -7,24 +7,36 @@ Class {
 { #category : #running }
 RsrPromiseTest >> testError [
 
-	| promise expected |
+	| promise semaphore |
 	promise := RsrPromise new.
-	expected := Object new.
 	[(Delay forSeconds: 1) wait.
 	promise error: Error new] fork.
 	self
 		should: [promise value]
-		raise: Error
+		raise: Error.
+	promise := RsrPromise new.
+	semaphore := Semaphore new.
+	[promise error: Error new.
+	semaphore signal] fork.
+	
 ]
 
 { #category : #running }
 RsrPromiseTest >> testFulfillment [
 
-	| promise expected |
+	| promise expected semaphore |
 	promise := RsrPromise new.
 	expected := Object new.
 	[(Delay forSeconds: 1) wait.
 	promise fulfill: expected] fork.
+	self
+		assert: promise value
+		identicalTo: expected.
+	promise := RsrPromise new.
+	semaphore := Semaphore new.
+	[promise fulfill: expected.
+	semaphore signal] fork.
+	semaphore wait.
 	self
 		assert: promise value
 		identicalTo: expected
