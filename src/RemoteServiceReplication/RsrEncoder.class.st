@@ -259,7 +259,7 @@ on: aStream [
 RsrEncoder >> encodeReferenceOf: anObject
 onto: aStream [
 
-	(self isRsrObject: anObject)
+	(self isService: anObject)
 		ifTrue: [^self encodeControlWord: anObject rsrId onto: aStream].
 	(self isImmediate: anObject)
 		ifTrue: [^self encodeImmediate: anObject onto: aStream].
@@ -440,12 +440,6 @@ RsrEncoder >> immediateOID [
 RsrEncoder >> isArray: anObject [
 
 	^anObject class == Array
-]
-
-{ #category : #'private-testing' }
-RsrEncoder >> isRsrObject: anObject [
-
-	^anObject isKindOf: RsrService
 ]
 
 { #category : #'private-testing' }

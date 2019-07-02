@@ -75,7 +75,7 @@ RsrRetainAnalysis >> isImmediate: anObject [
 ]
 
 { #category : #processing }
-RsrRetainAnalysis >> isRsrObject: anObject [
+RsrRetainAnalysis >> isService: anObject [
 
 	^anObject isKindOf: RsrService
 ]
@@ -97,7 +97,7 @@ RsrRetainAnalysis >> process: anObject [
 
 	(self isDataObject: anObject)
 		ifTrue: [^self processDataObject: anObject].
-	(self isRsrObject: anObject)
+	(self isService: anObject)
 		ifTrue: [^self processRsrObject: anObject].
 	(self isImmediate: anObject)
 		ifTrue: [^anObject].

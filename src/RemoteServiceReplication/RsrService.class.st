@@ -3,8 +3,10 @@ I represent a class of Objects that know offer Rsr Services.
 "
 Class {
 	#name : #RsrService,
-	#superclass : #RsrObject,
+	#superclass : #Object,
 	#instVars : [
+		'rsrId',
+		'rsrConnection',
 		'remoteSelf'
 	],
 	#category : #'RemoteServiceReplication-Public'
@@ -26,6 +28,16 @@ RsrService class >> isClientClass [
 RsrService class >> isServerClass [
 
 	^self == self serverClass
+]
+
+{ #category : #'instance creation' }
+RsrService class >> rsrId: anId
+rsrConnection: aConnection [
+
+	^super new
+		rsrId: anId;
+		rsrConnection: aConnection;
+		yourself
 ]
 
 { #category : #accessing }
@@ -51,6 +63,18 @@ RsrService class >> variablesToReflect [
 RsrService >> isClient [
 
 	^self class isClientClass
+]
+
+{ #category : #'public-testing' }
+RsrService >> isMirrored [
+
+	^rsrConnection ~~ nil
+]
+
+{ #category : #'public-testing' }
+RsrService >> isNotMirrored [
+
+	^self isMirrored not
 ]
 
 { #category : #accessing }
@@ -95,10 +119,28 @@ RsrService >> remoteServiceName [
 ]
 
 { #category : #'private-accessing' }
+RsrService >> rsrConnection [
+
+	^rsrConnection
+]
+
+{ #category : #'private-accessing' }
 RsrService >> rsrConnection: aConnection [
 
-	super rsrConnection: aConnection.
+	rsrConnection := aConnection.
 	remoteSelf := aConnection rsrForwarderClass on: self
+]
+
+{ #category : #'private-accessing' }
+RsrService >> rsrId [
+
+	^rsrId
+]
+
+{ #category : #'private-accessing' }
+RsrService >> rsrId: anRsrId [
+
+	rsrId := anRsrId
 ]
 
 { #category : #'public-accessing' }
