@@ -77,7 +77,7 @@ RsrRetainAnalysis >> isImmediate: anObject [
 { #category : #processing }
 RsrRetainAnalysis >> isRsrObject: anObject [
 
-	^anObject isKindOf: RsrObject
+	^anObject isKindOf: RsrService
 ]
 
 { #category : #accessing }

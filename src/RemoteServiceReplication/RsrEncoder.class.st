@@ -445,7 +445,7 @@ RsrEncoder >> isArray: anObject [
 { #category : #'private-testing' }
 RsrEncoder >> isRsrObject: anObject [
 
-	^anObject isKindOf: RsrObject
+	^anObject isKindOf: RsrService
 ]
 
 { #category : #'private-testing' }

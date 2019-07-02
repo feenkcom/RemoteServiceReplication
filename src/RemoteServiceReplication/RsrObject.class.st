@@ -27,14 +27,6 @@ RsrObject class >> variablesToReflect [
 	^self allInstVarNames
 ]
 
-{ #category : #'instance creation' }
-RsrObject class >> wrap: anObject [
-	|rsr|
-	rsr := RsrObject new.
-	rsr put: anObject.
-	^rsr
-]
-
 { #category : #'public-testing' }
 RsrObject >> isMirrored [
 
