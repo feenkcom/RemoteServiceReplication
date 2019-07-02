@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrAbstractEvaluationService,
 	#superclass : #RsrService,
-	#category : #'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public-Examples'
 }
 
 { #category : #accessing }

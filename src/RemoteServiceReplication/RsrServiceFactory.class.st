@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrServiceFactory,
 	#superclass : #RsrAbstractServiceFactory,
-	#category : #'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public-Examples'
 }
 
 { #category : #'public-manufacturing' }

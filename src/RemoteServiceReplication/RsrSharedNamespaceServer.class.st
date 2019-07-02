@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'namespace'
 	],
-	#category : #'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public-Examples'
 }
 
 { #category : #accessing }

@@ -6,7 +6,7 @@ Class {
 		'client',
 		'server'
 	],
-	#category : #'RemoteServiceReplication-Public'
+	#category : #'RemoteServiceReplication-Public-Examples'
 }
 
 { #category : #adding }
