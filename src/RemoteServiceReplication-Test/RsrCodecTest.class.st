@@ -237,6 +237,20 @@ RsrCodecTest >> testSet [
 ]
 
 { #category : #'running-symbol' }
+RsrCodecTest >> testString [
+
+	| encoding |
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "OID = 0"
+		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
+		#[0 0 0 0 0 0 0 13], "length"
+		#[103 101 110 101 114 105 99 83 116 114 105 110 103].	 "genericString"
+	self
+		verifyImmediate: 'genericString'
+		encoding: encoding
+]
+
+{ #category : #'running-symbol' }
 RsrCodecTest >> testSymbol [
 
 	self
