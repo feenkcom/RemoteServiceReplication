@@ -142,6 +142,33 @@ RsrCodecTest >> testControlWord [
 ]
 
 { #category : #'running-immediates' }
+RsrCodecTest >> testDateTime [
+
+	| dt encoding |
+	dt := DateAndTime unixEpoch.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 14],
+		#[0 0 0 0 0 0 0 0].
+	self
+		verifyImmediate: dt
+		encoding: encoding.
+	dt := DateAndTime fromString: '2019-07-09T10:16:02.657612-07:00'.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 14],
+		#[0 5 141 66 183 23 33 76].
+	self
+		verifyImmediate: dt
+		encoding: encoding.
+	dt := DateAndTime fromString: '1954-06-07T14:59:17.432512-07:00'.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 14],
+		#[255 254 65 47 130 176 51 0].
+]
+
+{ #category : #'running-immediates' }
 RsrCodecTest >> testDictionary [
 
 	| dictionary encoding |

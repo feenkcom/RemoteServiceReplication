@@ -35,6 +35,12 @@ RsrCodec >> controlWordMin [
 ]
 
 { #category : #'private-accessing' }
+RsrCodec >> dateTimeType [
+
+	^14
+]
+
+{ #category : #'private-accessing' }
 RsrCodec >> deliverResponseCommand [
 
 	^2
@@ -59,7 +65,7 @@ RsrCodec >> isImmediate: anObject [
 		or: [anObject isString
 			or: [anObject isInteger
 				or: [anObject isCharacter
-					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection.} includes: anObject class)
+					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection. DateAndTime.} includes: anObject class)
 						or: [#(nil true false) includes: anObject]]]]]
 ]
 

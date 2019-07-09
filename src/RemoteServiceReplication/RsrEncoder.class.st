@@ -70,6 +70,24 @@ onto: aStream [
 ]
 
 { #category : #'private-encoding' }
+RsrEncoder >> encodeDateTime: aDateTime
+on: aStream [
+
+	| seconds microseconds |
+	self
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	self
+		encodeControlWord: self dateTimeType
+		onto: aStream.
+	seconds := (aDateTime - DateAndTime unixEpoch) asSeconds.
+	microseconds := seconds * 1000000 + (aDateTime nanoSecond / 1000) rounded.
+	self
+		encodeControlWord: microseconds
+		onto: aStream
+]
+
+{ #category : #'private-encoding' }
 RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 
 	^ByteArray
@@ -178,6 +196,11 @@ onto: aStream [
 		ifTrue:
 			[^self
 				encodeOrderedCollection: anImmediate
+				on: aStream].
+	anImmediate class == DateAndTime
+		ifTrue:
+			[^self
+				encodeDateTime: anImmediate
 				on: aStream].
 	self error: 'Unsupported Immediate'
 ]

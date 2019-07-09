@@ -85,6 +85,15 @@ RsrDecoder >> decodeControlWord: aStream [
 ]
 
 { #category : #decoding }
+RsrDecoder >> decodeDateTime: aStream [
+
+	| microseconds seconds |
+	microseconds := self decodeControlWord: aStream.
+	seconds := (microseconds / 1000000) + DateAndTime unixEpoch asSeconds.
+	^DateAndTime fromSeconds: seconds
+]
+
+{ #category : #decoding }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
 	| transaction errorName response |
@@ -154,6 +163,8 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		ifTrue: [^self decodeSet: aStream].
 	type = self orderedCollectionType
 		ifTrue: [^self decodeOrderedCollection: aStream].
+	type = self dateTimeType
+		ifTrue: [^self decodeDateTime: aStream].
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 
