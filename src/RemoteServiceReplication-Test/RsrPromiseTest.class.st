@@ -18,7 +18,9 @@ RsrPromiseTest >> testError [
 	semaphore := Semaphore new.
 	[promise error: Error new.
 	semaphore signal] fork.
-	
+	self
+		should: [promise value]
+		raise: Error
 ]
 
 { #category : #running }

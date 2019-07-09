@@ -26,6 +26,12 @@ RsrMessageSendingTest >> testReturnArgument [
 	arguments := OrderedCollection new
 		addAll: #( #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
  		add: (Character codePoint: 16r259F);
+		add: DateAndTime now;
+		add: (Dictionary new at: 1 put: 2; yourself);
+		add: (Set with: 14);
+		add: #[1 2 3 4];
+		add: (OrderedCollection with: 42 with: 43);
+		add: #(1 2 #(nil));
 		yourself.
 	arguments
 		do:
@@ -41,6 +47,12 @@ RsrMessageSendingTest >> testReturnArgument [
 			self
 				assert: result
 				equals: each].
+	self
+		assert: (client sendReturnArgument: arguments)
+		equals: arguments.
+	self
+		assert: (server sendReturnArgument: arguments)
+		equals: arguments.
 	self
 		assert: (client sendReturnArgument: client)
 		identicalTo: client.
@@ -64,10 +76,6 @@ RsrMessageSendingTest >> testReturnSymbol [
 
 	| service |
 	service := connectionA serviceFor: #RsrClientNoInstVars.
-	"service := RsrClientNoInstVars new.
-	self serviceRegistryA
-		at: 'TestService'
-		put: service."
 	self
 		assert: service sendReturnTestSymbol
 		equals: #testSymbol
@@ -92,6 +100,7 @@ RsrMessageSendingTest >> testSendSetMarker [
 		at: 'TestService'
 		put: service.
 	remoteService := self sharedNamespaceB at: 'TestService'.
+	self deny: remoteService marker.
 	service sendSetMarker.
 	self assert: remoteService marker
 ]

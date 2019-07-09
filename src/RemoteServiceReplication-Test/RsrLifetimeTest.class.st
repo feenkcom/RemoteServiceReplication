@@ -24,7 +24,6 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 		encodeUsing: connectionA encoder;
 		writeUsing: connectionA commandWriter.
 	connectionA commandWriter flush.
-	(Delay forSeconds: 1) wait.
 	connectionA close.
 	connectionB close.
 	service := command := nil.
@@ -51,8 +50,7 @@ RsrLifetimeTest >> testRemoteReferenceLifetime [
 	serviceLocal := serviceRemote := nil.
 	valueServiceRemote value: nil.
 	self maximumReclamation.
-	(Delay forSeconds: 2) wait.
-	Smalltalk at: #KeepItAlive put: (Array with: connectionA with: connectionB).
+	(Delay forSeconds: 1) wait. "Needed to ensure there is time for release to propogate to remote environment."
 	marker := Object new.
 	actual := connectionA registry at: id ifAbsent: [marker].
 	self
