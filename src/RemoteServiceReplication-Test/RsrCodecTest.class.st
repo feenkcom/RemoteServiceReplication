@@ -166,6 +166,9 @@ RsrCodecTest >> testDateTime [
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],
 		#[255 254 65 47 130 176 51 0].
+	self
+		verifyImmediate: dt
+		encoding: encoding
 ]
 
 { #category : #'running-immediates' }
