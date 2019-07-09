@@ -161,11 +161,19 @@ RsrCodecTest >> testDateTime [
 	self
 		verifyImmediate: dt
 		encoding: encoding.
+	dt := DateAndTime fromString: '1969-12-31T23:59:59-00:00'.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 14],
+		#[255 255 255 255 255 240 189 192].
+	self
+		verifyImmediate: dt
+		encoding: encoding.
 	dt := DateAndTime fromString: '1954-06-07T14:59:17.432512-07:00'.
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],
-		#[255 254 65 47 130 176 51 0].
+		#[255 254 65 47 130 160 240 192].
 	self
 		verifyImmediate: dt
 		encoding: encoding

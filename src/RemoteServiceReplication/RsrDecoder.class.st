@@ -90,7 +90,7 @@ RsrDecoder >> decodeDateTime: aStream [
 	| microseconds seconds |
 	microseconds := self decodeControlWord: aStream.
 	seconds := (microseconds / 1000000) + DateAndTime unixEpoch asSeconds.
-	^DateAndTime fromSeconds: seconds
+	^DateAndTime fromSeconds: seconds offset: 0
 ]
 
 { #category : #decoding }

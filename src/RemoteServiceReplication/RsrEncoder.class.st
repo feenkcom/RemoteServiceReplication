@@ -80,7 +80,7 @@ on: aStream [
 	self
 		encodeControlWord: self dateTimeType
 		onto: aStream.
-	seconds := (aDateTime - DateAndTime unixEpoch) asSeconds.
+	seconds := aDateTime asSeconds - DateAndTime unixEpoch asSeconds.
 	microseconds := seconds * 1000000 + (aDateTime nanoSecond / 1000) rounded.
 	self
 		encodeControlWord: microseconds
