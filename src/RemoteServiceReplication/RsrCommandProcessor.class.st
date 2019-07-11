@@ -43,11 +43,15 @@ RsrCommandProcessor >> initialize [
 ]
 
 { #category : #running }
+RsrCommandProcessor >> log [
+
+	^self connection log
+]
+
+{ #category : #running }
 RsrCommandProcessor >> log: anException [
 
-	Transcript
-		show: anException messageText;
-		cr
+	self log log: anException messageText
 ]
 
 { #category : #accessing }
@@ -63,7 +67,10 @@ RsrCommandProcessor >> runLoop [
 		whileTrue:
 			[[self executeCycle]
 				on: Error
-				do: [:ex | self connection unknownError: ex]]
+				do:
+					[:ex |
+					self log: ex.
+					self connection unknownError: ex]]
 ]
 
 { #category : #commands }

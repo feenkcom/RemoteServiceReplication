@@ -24,7 +24,10 @@ RsrCommandReader >> executeCycle [
 
 	[self dispatcher dispatch: self nextCommand]
 		on: ConnectionClosed, RsrConnectionClosed
-		do: [:ex | self connection disconnected]
+		do:
+			[:ex |
+			self log: ex.
+			self connection disconnected]
 ]
 
 { #category : #commands }

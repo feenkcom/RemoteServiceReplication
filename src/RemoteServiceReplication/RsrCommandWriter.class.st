@@ -20,7 +20,10 @@ RsrCommandWriter >> executeCycle [
 	queue isEmpty
 		ifTrue: [self flush]]
 		on: ConnectionClosed, RsrConnectionClosed
-		do: [:ex | self connection disconnected]
+		do:
+			[:ex |
+			self log: ex.
+			self connection disconnected]
 ]
 
 { #category : #commands }

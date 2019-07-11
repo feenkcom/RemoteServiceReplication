@@ -7,8 +7,5 @@ Class {
 { #category : #evaluating }
 RsrEvaluationClient >> evaluate: aString [
 
-	Transcript
-		show: 'Client: ', aString;
-		cr.
 	^remoteSelf evaluate: aString
 ]

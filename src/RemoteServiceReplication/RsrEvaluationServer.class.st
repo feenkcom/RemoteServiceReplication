@@ -7,9 +7,6 @@ Class {
 { #category : #evaluating }
 RsrEvaluationServer >> evaluate: aString [
 
-	Transcript
-		show: 'Server: ', aString;
-		cr.
 	^OpalCompiler new
 		source: aString;
 		evaluate

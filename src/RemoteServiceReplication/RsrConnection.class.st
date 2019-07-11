@@ -16,10 +16,50 @@ Class {
 		'reaper',
 		'oidSpigot',
 		'serviceFactory',
-		'sharedNamespace'
+		'sharedNamespace',
+		'log'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
+
+{ #category : #'instance creation' }
+RsrConnection class >> acceptOn: aPortNumber [
+
+	| socket |
+	socket := Socket new.
+	socket listenOn: aPortNumber.
+	socket waitForConnectionFor: self connectionTimeout.
+	socket isConnected
+		ifFalse: [self error: 'No connection request received'].
+	^(self
+		socket: socket
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1)) start
+]
+
+{ #category : #'instance creation' }
+RsrConnection class >> connectTo: aHostName
+port: aPortNumber [
+
+	| socket |
+	socket := Socket new.
+	socket
+		connectTo: (NetNameResolver addressForName: aHostName)
+		port: aPortNumber.
+	socket waitForConnectionFor: self connectionTimeout.
+	socket isConnected
+		ifFalse: [self error: 'Failed to create connection'].
+	^(self
+		socket: socket
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated) start
+]
+
+{ #category : #'instance creation' }
+RsrConnection class >> connectionTimeout [
+
+	^2
+]
 
 { #category : #'instance creation' }
 RsrConnection class >> new [
@@ -85,6 +125,7 @@ RsrConnection >> decoder [
 { #category : #'private-events' }
 RsrConnection >> disconnected [
 
+	self log log: 'Disconnected'.
 	self close
 ]
 
@@ -123,12 +164,19 @@ RsrConnection >> initialize [
 	promises := Dictionary new.
 	registry := RsrRegistry new.
 	sharedNamespace := RsrSharedNamespace new.
+	log := RsrLog new
 ]
 
 { #category : #accessing }
 RsrConnection >> isOpen [
 
 	^isOpen
+]
+
+{ #category : #accessing }
+RsrConnection >> log [
+
+	^log
 ]
 
 { #category : #'private-accessing' }

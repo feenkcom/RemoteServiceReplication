@@ -29,5 +29,5 @@ RsrCommandDispatcher >> initialize [
 { #category : #accessing }
 RsrCommandDispatcher >> priority [
 
-	^Processor lowIOPriority - 1
+	^super priority - 1
 ]

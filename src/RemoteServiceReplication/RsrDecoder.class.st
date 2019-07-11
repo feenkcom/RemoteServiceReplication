@@ -30,7 +30,7 @@ RsrDecoder >> connection: aConnection [
 	connection := aConnection
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeArray: aStream [
 
 	| size array |
@@ -40,7 +40,7 @@ RsrDecoder >> decodeArray: aStream [
 	^array
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeByteArray: aStream [
 
 	| size |
@@ -48,7 +48,7 @@ RsrDecoder >> decodeByteArray: aStream [
 	^aStream next: size
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeCharacter: aStream [
 
 	| codePoint |
@@ -56,7 +56,7 @@ RsrDecoder >> decodeCharacter: aStream [
 	^Character codePoint: codePoint
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-commands' }
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
 
@@ -84,7 +84,7 @@ RsrDecoder >> decodeControlWord: aStream [
 		ifFalse: [unsignedResult]
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeDateTime: aStream [
 
 	| microseconds seconds |
@@ -93,7 +93,7 @@ RsrDecoder >> decodeDateTime: aStream [
 	^DateAndTime fromSeconds: seconds offset: 0
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-commands' }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
 	| transaction errorName response |
@@ -107,7 +107,7 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 		yourself
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeDictionary: aStream [
 
 	| size dictionary |
@@ -168,7 +168,7 @@ RsrDecoder >> decodeImmediateObject: aStream [
 	self error: 'Invalid immediate type specified (', type printString, ')'
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeInteger: aStream [
 
 	| length bytes |
@@ -177,21 +177,19 @@ RsrDecoder >> decodeInteger: aStream [
 	^bytes asInteger
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeNegativeInteger: aStream [
 
 	^(self decodeImmediateInteger: aStream) negated
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeObject: aStream [
 
 	| objectType |
 	objectType := self decodeControlWord: aStream.
 	objectType = self serviceType
 		ifTrue: [^self decodeService: aStream].
-	objectType = self arrayType
-		ifTrue: [^self decodeArray: aStream].
 	^self error: 'Invalid object'
 ]
 
@@ -204,7 +202,7 @@ RsrDecoder >> decodeObjectReference: aStream [
 	^registry at: oid ifAbsent: [self signalUnknownOID]
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeOrderedCollection: aStream [
 
 	| size oc |
@@ -214,7 +212,7 @@ RsrDecoder >> decodeOrderedCollection: aStream [
 	^oc
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-commands' }
 RsrDecoder >> decodeReleaseObjects: aStream [
 
 	| count oids |
@@ -229,7 +227,7 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 	^RsrReleaseObjects oids: oids
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-commands' }
 RsrDecoder >> decodeSendMessage: aStream [
 
 	| transaction argCount receiverOID receiver selector arguments |
@@ -246,7 +244,7 @@ RsrDecoder >> decodeSendMessage: aStream [
 		arguments: arguments
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeService: aStream [
 
 	| oid instVarCount serviceName instance |
@@ -269,7 +267,7 @@ RsrDecoder >> decodeService: aStream [
 	^instance
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeSet: aStream [
 
 	| size set |
@@ -279,7 +277,7 @@ RsrDecoder >> decodeSet: aStream [
 	^set
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeString: aStream [
 
 	| length bytes |
@@ -288,7 +286,7 @@ RsrDecoder >> decodeString: aStream [
 	^bytes utf8Decoded
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeSymbol: aStream [
 
 	^(self decodeString: aStream) asSymbol

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'mutex',
 		'value',
-		'error'
+		'error',
+		'markerValue'
 	],
 	#category : #'RemoteServiceReplication-Utilities'
 }
@@ -12,6 +13,8 @@ Class {
 { #category : #fulfillment }
 RsrPromise >> error: anException [
 
+	self isFulfilled
+		ifTrue: [^self error: 'Promise value already set'].
 	error := anException.
 	mutex signal
 
@@ -21,6 +24,8 @@ RsrPromise >> error: anException [
 { #category : #fulfillment }
 RsrPromise >> fulfill: anObject [
 
+	self isFulfilled
+		ifTrue: [^self error: 'Promise value already set'].
 	value := anObject.
 	mutex signal
 ]
@@ -29,7 +34,14 @@ RsrPromise >> fulfill: anObject [
 RsrPromise >> initialize [
 
 	super initialize.
+	value := markerValue := Object new.
 	mutex := Semaphore new
+]
+
+{ #category : #'private-waiting' }
+RsrPromise >> isFulfilled [
+
+	^value ~~ markerValue
 ]
 
 { #category : #accessing }
@@ -44,7 +56,7 @@ RsrPromise >> value [
 { #category : #'private-waiting' }
 RsrPromise >> waitForFulfillment [
 
-	mutex isSignaled
+	self isFulfilled
 		ifTrue: [^self].
 	mutex wait.
 	mutex signal
