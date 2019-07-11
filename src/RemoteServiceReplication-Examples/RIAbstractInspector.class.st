@@ -1,7 +1,7 @@
 Class {
 	#name : #RIAbstractInspector,
 	#superclass : #RsrService,
-	#category : 'RemoteServiceReplication-Examples-Inspector'
+	#category : #'RemoteServiceReplication-Examples-Inspector'
 }
 
 { #category : #accessing }

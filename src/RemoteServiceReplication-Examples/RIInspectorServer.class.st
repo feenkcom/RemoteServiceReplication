@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'object'
 	],
-	#category : 'RemoteServiceReplication-Examples-Inspector'
+	#category : #'RemoteServiceReplication-Examples-Inspector'
 }
 
 { #category : #'instance creation' }
