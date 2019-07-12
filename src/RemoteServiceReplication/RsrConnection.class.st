@@ -287,7 +287,7 @@ RsrConnection >> start [
 
 	(isOpen := socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
-	stream := RsrStream on: (SocketStream on: socket).
+	stream := RsrStream on: (SocketStream on: socket) noTimeout.
 	stream binary.
 	dispatcher := RsrCommandDispatcher on: self.
 	commandReader := RsrCommandReader on: self.

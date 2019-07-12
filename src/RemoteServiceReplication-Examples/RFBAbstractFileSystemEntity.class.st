@@ -28,6 +28,12 @@ RFBAbstractFileSystemEntity >> isFile [
 ]
 
 { #category : #accessing }
+RFBAbstractFileSystemEntity >> name [
+
+	^self path basename
+]
+
+{ #category : #accessing }
 RFBAbstractFileSystemEntity >> path [
 
 	^Path from: self pathString
@@ -41,4 +47,10 @@ RFBAbstractFileSystemEntity >> pathString [
 { #category : #accessing }
 RFBAbstractFileSystemEntity >> pathString: anObject [
 	pathString := anObject
+]
+
+{ #category : #accessing }
+RFBAbstractFileSystemEntity >> printOn: aStream [
+
+	aStream nextPutAll: self pathString
 ]

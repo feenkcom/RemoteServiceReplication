@@ -7,7 +7,14 @@ Class {
 { #category : #accessing }
 RFBDirectoryServer >> entities [
 
-	true ifTrue: [^Array with: RFBFileServer new].
-	^Array
-		with: (RFBFileServer pathString: (self path / 'foo') pathString)
+	^[self path asFileReference children sorted
+		select: [:each | each exists]
+		thenCollect:
+			[:each | | childPathString |
+			childPathString := each asPath pathString.
+			each isDirectory
+				ifTrue: [RFBDirectoryServer pathString: childPathString]
+				ifFalse: [RFBFileServer pathString: childPathString]]]
+		on: Error
+		do: [:ex | Transcript show: ex printString; cr. ex return: OrderedCollection new]
 ]
