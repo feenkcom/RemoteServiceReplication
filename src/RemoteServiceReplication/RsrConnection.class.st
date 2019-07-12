@@ -125,7 +125,7 @@ RsrConnection >> decoder [
 { #category : #'private-events' }
 RsrConnection >> disconnected [
 
-	self log log: 'Disconnected'.
+	self log info: 'Disconnected'.
 	self close
 ]
 

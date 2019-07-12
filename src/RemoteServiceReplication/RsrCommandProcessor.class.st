@@ -51,7 +51,7 @@ RsrCommandProcessor >> log [
 { #category : #running }
 RsrCommandProcessor >> log: anException [
 
-	self log log: anException messageText
+	self log error: anException messageText
 ]
 
 { #category : #accessing }
