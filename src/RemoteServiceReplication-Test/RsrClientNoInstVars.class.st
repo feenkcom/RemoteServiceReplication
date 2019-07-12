@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #'testing-methods' }
+RsrClientNoInstVars >> sendReturnNewService [
+
+	^remoteSelf returnNewService
+]
+
+{ #category : #'testing-methods' }
+RsrClientNoInstVars >> sendReturnNewServiceInArray [
+
+	^remoteSelf returnNewServiceInArray
+]
+
+{ #category : #'testing-methods' }
 RsrClientNoInstVars >> sendReturnTestSymbol [
 
 	^remoteSelf returnTestSymbol

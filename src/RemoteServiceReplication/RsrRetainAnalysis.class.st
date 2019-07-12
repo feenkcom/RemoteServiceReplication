@@ -57,7 +57,13 @@ RsrRetainAnalysis >> initialize [
 	inFlight := IdentitySet new
 ]
 
-{ #category : #processing }
+{ #category : #testing }
+RsrRetainAnalysis >> isCollection: anObject [
+
+	^anObject isCollection
+]
+
+{ #category : #testing }
 RsrRetainAnalysis >> isDataObject: anObject [
 
 	^anObject == true
@@ -74,7 +80,7 @@ RsrRetainAnalysis >> isImmediate: anObject [
 	^self encoder isImmediate: anObject
 ]
 
-{ #category : #processing }
+{ #category : #testing }
 RsrRetainAnalysis >> isService: anObject [
 
 	^anObject isKindOf: RsrService
@@ -99,15 +105,38 @@ RsrRetainAnalysis >> process: anObject [
 		ifTrue: [^self processDataObject: anObject].
 	(self isService: anObject)
 		ifTrue: [^self processRsrObject: anObject].
+	(self isCollection: anObject)
+		ifTrue: [^self processCollection: anObject].
 	(self isImmediate: anObject)
 		ifTrue: [^anObject].
 	^RsrUnsupportedObject signal: 'Unsupported object (' , anObject printString , ')'
 ]
 
 { #category : #processing }
+RsrRetainAnalysis >> processCollection: aCollection [
+
+	aCollection isDictionary
+		ifTrue: [^self processDictionary: aCollection].
+	aCollection do: [:each | self process: each].
+	^aCollection
+]
+
+{ #category : #processing }
 RsrRetainAnalysis >> processDataObject: aDataObject [
 
 	^self
+]
+
+{ #category : #processing }
+RsrRetainAnalysis >> processDictionary: aDictionary [
+
+	aDictionary
+		keysAndValuesDo:
+			[:key :value |
+			self
+				process: key;
+				process: value].
+	^aDictionary
 ]
 
 { #category : #processing }

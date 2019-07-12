@@ -14,6 +14,18 @@ RsrServerNoInstVars >> marker [
 ]
 
 { #category : #'testing-methods' }
+RsrServerNoInstVars >> returnNewService [
+
+	^RsrServerTestService new
+]
+
+{ #category : #'testing-methods' }
+RsrServerNoInstVars >> returnNewServiceInArray [
+
+	^Array with: RsrServerTestService new
+]
+
+{ #category : #'testing-methods' }
 RsrServerNoInstVars >> returnTestSymbol [
 
 	^#testSymbol

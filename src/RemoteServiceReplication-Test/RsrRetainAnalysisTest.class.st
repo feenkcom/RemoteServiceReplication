@@ -5,6 +5,49 @@ Class {
 }
 
 { #category : #running }
+RsrRetainAnalysisTest >> testNewServiceInArray [
+	"Ensure a new service in a collection is properly tagged"
+
+	| service analysis expected |
+	service := RsrServerNoInstVars new.
+	analysis := RsrRetainAnalysis
+		roots: (Array with: (Array with: service))
+		connection: RsrMockConnection new.
+	analysis perform.
+	expected := OrderedCollection
+		with: (RsrRetainObject object: service encoding: ByteArray new).
+	self
+		assert: analysis retainCommands
+		equals: expected.
+	self assert: service isMirrored
+]
+
+{ #category : #running }
+RsrRetainAnalysisTest >> testNewServicesInDictionary [
+	"Ensure a new service in a collection is properly tagged"
+
+	| key value dictionary analysis expected |
+	key := RsrServerNoInstVars new.
+	value := RsrServerNoInstVars new.
+	dictionary := Dictionary new
+		at: key put: value;
+		yourself.
+	analysis := RsrRetainAnalysis
+		roots: (Array with: dictionary)
+		connection: RsrMockConnection new.
+	analysis perform.
+	expected := OrderedCollection
+		with: (RsrRetainObject object: key encoding: ByteArray new)
+		with: (RsrRetainObject object: value encoding: ByteArray new).
+	self
+		assert: analysis retainCommands
+		equals: expected.
+	self
+		assert: key isMirrored;
+		assert: value isMirrored
+]
+
+{ #category : #running }
 RsrRetainAnalysisTest >> testServiceAllDataObjects [
 	"While this code is structurally similar to #testClientNoInstVars, it ensures
 	that Data Objects are actually encoded in-line."

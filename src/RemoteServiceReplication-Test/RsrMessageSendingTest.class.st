@@ -72,6 +72,32 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 ]
 
 { #category : #running }
+RsrMessageSendingTest >> testReturnNewService [
+
+	| service returnedService |
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	returnedService := service sendReturnNewService.
+	self
+		assert: returnedService class
+		equals: RsrClientTestService
+]
+
+{ #category : #running }
+RsrMessageSendingTest >> testReturnNewServiceInArray [
+
+	| service array returnedService |
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	array := service sendReturnNewServiceInArray.
+	self
+		assert: array size
+		equals: 1.
+	returnedService := array first.
+	self
+		assert: returnedService class
+		equals: RsrClientTestService
+]
+
+{ #category : #running }
 RsrMessageSendingTest >> testReturnSymbol [
 
 	| service |
