@@ -28,7 +28,7 @@ RFBBrowser class >> openOn: aDirectory [
 RFBBrowser class >> sample [
 	"self sample"
 
-	| port connectionAPromise connectionBPromise connectionA connectionB semaphore |
+	| port connectionAPromise connectionBPromise connectionA connectionB |
 	port := 7678.
 	connectionAPromise := [RsrConnection acceptOn: port] async.
 	connectionBPromise := [RsrConnection connectTo: '127.0.0.1' port: port] async.
