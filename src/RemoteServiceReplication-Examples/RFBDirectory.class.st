@@ -7,5 +7,7 @@ Class {
 { #category : #accessing }
 RFBDirectory >> entities [
 
-	^remoteSelf entities
+	^self scientist
+		instrument: [remoteSelf entities]
+		label: 'Request ', self pathString, ' entities'
 ]
