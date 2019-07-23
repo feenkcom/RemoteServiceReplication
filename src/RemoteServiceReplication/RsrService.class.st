@@ -143,6 +143,12 @@ RsrService >> rsrId: anRsrId [
 	rsrId := anRsrId
 ]
 
+{ #category : #accessing }
+RsrService >> scientist [
+
+	^RsrScientist new
+]
+
 { #category : #'public-accessing' }
 RsrService >> serviceName [
 

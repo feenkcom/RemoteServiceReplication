@@ -29,6 +29,12 @@ RsrCommand >> executeFor: aConnection [
 	self subclassResponsibility
 ]
 
+{ #category : #accessing }
+RsrCommand >> scientist [
+
+	^RsrScientist new
+]
+
 { #category : #writing }
 RsrCommand >> writeUsing: aCommandWriter [
 
