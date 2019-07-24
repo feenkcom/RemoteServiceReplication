@@ -1,4 +1,4 @@
-# Remote Service Replication (Draft 2)
+# Remote Service Replication (Draft 3)
 
 To provide a means of bridging two disparate Smalltalk environments allowing the sharing of resources.
 
@@ -222,17 +222,6 @@ A series of zero or more object references. May hold an OID referencing another 
 
 Data Objects are not treated as objects in their own rights. They are always encoded as immediate values and encoded in-line in another object. An object reference of 0 is used to denote the start of a data object. The object immediately follows.
 
-## Symbol/String Encoding
-
-Symbols and Strings are encoded in the same format. They only differ in the value of their type field.
-
-| Field        		| Value 						|
-|---				|---							|
-| OID				| 0 to signify immediate		|
-| Immediate Type	| Assigned type designation		|
-| Length			| Number of UTF-8 encoded bytes	|
-| Data				| String encoded using UTF-8	|
-
 ## Command Identifiers
 
 | Command			| Identifier	|
@@ -260,3 +249,27 @@ Symbols and Strings are encoded in the same format. They only differ in the valu
 | Set				| 11			| 								|
 | OrderedCollection	| 12			|								|
 | Dictionary		| 13			| key then value then key...	|
+| DateTime			| 14			| Microseconds since unix epoch	|
+
+## Symbol/String Encoding
+
+Symbols and Strings are encoded in the same format. They only differ in the value of their type field.
+
+| Field        		| Value 						|
+|---				|---							|
+| OID				| 0 to signify immediate		|
+| Immediate Type	| Assigned type designation		|
+| Length			| Number of UTF-8 encoded bytes	|
+| Data				| String encoded using UTF-8	|
+
+## DateTime Encoding
+
+RSR will not support encoding Date or Time encoding. It will support encoding the equivalent of DateTime.
+
+The value will be as a signed 64-bit integer. The value is to be interpreted as microseconds since the unix epoch.
+
+| Field				| Value											|
+|---				|---											|
+| OID				| 0 to signify immediate						|
+| Immediate Type	| Assigned type designation						|
+| Data				| Microseconds since unix epoch (64-bit signed)	|
