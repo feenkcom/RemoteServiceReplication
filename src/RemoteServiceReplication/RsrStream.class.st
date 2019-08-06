@@ -16,9 +16,21 @@ RsrStream class >> on: aStream [
 ]
 
 { #category : #accessing }
-RsrStream >> doesNotUnderstand: aMessage [
+RsrStream >> binary [
 
-	^aMessage sendTo: stream
+	stream binary
+]
+
+{ #category : #accessing }
+RsrStream >> close [
+
+	stream close
+]
+
+{ #category : #accessing }
+RsrStream >> flush [
+
+	stream flush
 ]
 
 { #category : #accessing }
@@ -35,6 +47,12 @@ RsrStream >> next: aLength [
 	bytes size ~~ aLength
 		ifTrue: [RsrConnectionClosed signal].
 	^bytes
+]
+
+{ #category : #accessing }
+RsrStream >> nextPutAll: aByteArray [
+
+	^stream nextPutAll: aByteArray
 ]
 
 { #category : #accessing }
