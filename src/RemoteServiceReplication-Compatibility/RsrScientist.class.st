@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrScientist,
 	#superclass : #Object,
-	#category : #'RemoteServiceReplication-Debugging'
+	#category : #'RemoteServiceReplication-Compatibility'
 }
 
 { #category : #instrumenting }
