@@ -1,9 +1,6 @@
 Class {
 	#name : #RsrDecoderTest,
 	#superclass : #RsrCodecTest,
-	#instVars : [
-		'decoder'
-	],
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
@@ -22,12 +19,6 @@ decodesTo: expected [
 RsrDecoderTest >> decode: anObjectBytes [
 
 	^self decoder decodeObject: anObjectBytes readStream
-]
-
-{ #category : #accessing }
-RsrDecoderTest >> decoder [
-
-	^decoder ifNil: [decoder := RsrDecoder registry: (registry := RsrRegistry new) connection: RsrMockConnection new]
 ]
 
 { #category : #running }

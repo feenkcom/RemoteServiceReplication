@@ -2,7 +2,8 @@ Class {
 	#name : #RsrCodecTest,
 	#superclass : #RsrTestCase,
 	#instVars : [
-		'registry'
+		'registry',
+		'decoder'
 	],
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
@@ -11,6 +12,24 @@ Class {
 RsrCodecTest class >> isAbstract [
 
 	^self == RsrCodecTest
+]
+
+{ #category : #accessing }
+RsrCodecTest >> decoder [
+
+	^decoder ifNil: [decoder := RsrDecoder registry: (registry := RsrRegistry new) connection: RsrMockConnection new]
+]
+
+{ #category : #'encode/decode' }
+RsrCodecTest >> encodeReferenceOf: anObject [
+
+	^ByteArray streamContents: [:stream | self encoder encodeReferenceOf: anObject onto: stream]
+]
+
+{ #category : #accessing }
+RsrCodecTest >> encoder [
+
+	^RsrEncoder new
 ]
 
 { #category : #'running-symbol' }
@@ -182,7 +201,7 @@ RsrCodecTest >> testDateTime [
 { #category : #'running-immediates' }
 RsrCodecTest >> testDictionary [
 
-	| dictionary encoding |
+	| dictionary encoding result |
 	dictionary := Dictionary new.
 	encoding :=
 		#[0 0 0 0 0 0 0 0], "Immediate Object OID"
@@ -195,23 +214,31 @@ RsrCodecTest >> testDictionary [
 		at: 1 put: self genericSymbol;
 		at: nil put: true;
 		yourself.
-	self hack: 'Order is not guaranteed in a dictionary'.
+	encoding := self encodeReferenceOf: dictionary.
+	result := self decoder decodeObjectReference: encoding readStream.
+	self
+		assert: result
+		equals: dictionary.
+	self
+		deny: result
+		identicalTo: dictionary.
+	"self hack: 'Order is not guaranteed in a dictionary'.
 	encoding :=
-		#[0 0 0 0 0 0 0 0], "Immediate OID"
-		#[0 0 0 0 0 0 0 13], "Dictionary Type"
-		#[0 0 0 0 0 0 0 2], "Two assocs"
-		#[0 0 0 0 0 0 0 0], "nil"
+		#[0 0 0 0 0 0 0 0], ""Immediate OID""
+		#[0 0 0 0 0 0 0 13], ""Dictionary Type""
+		#[0 0 0 0 0 0 0 2], ""Two assocs""
+		#[0 0 0 0 0 0 0 0], ""nil""
 		#[0 0 0 0 0 0 0 6],
-		#[0 0 0 0 0 0 0 0], "true"
+		#[0 0 0 0 0 0 0 0], ""true""
 		#[0 0 0 0 0 0 0 7],
-		#[0 0 0 0 0 0 0 0], "Integer 1"
+		#[0 0 0 0 0 0 0 0], ""Integer 1""
 		#[0 0 0 0 0 0 0 3],
 		#[0 0 0 0 0 0 0 1],
 		#[1],
 		self genericSymbolEncoding.
 	self
 		verifyImmediate: dictionary
-		encoding: encoding
+		encoding: encoding"
 ]
 
 { #category : #'running-immediates' }
@@ -249,7 +276,7 @@ RsrCodecTest >> testOrderedCollection [
 { #category : #'running-immediates' }
 RsrCodecTest >> testSet [
 
-	| set encoding |
+	| set encoding result |
 	set := Set new.
 	encoding :=
 		#[0 0 0 0 0 0 0 0], "OID"
@@ -261,17 +288,26 @@ RsrCodecTest >> testSet [
 	set := Set
 		with: true
 		with: nil.
+	encoding := self encodeReferenceOf: set.
+	result := self decoder decodeObjectReference: encoding readStream.
+	self
+		assert: result
+		equals: set.
+	self
+		deny: result
+		identicalTo: set.
+	"self hack: 'Hashed collections do not have an ordering'.
 	encoding :=
-		#[0 0 0 0 0 0 0 0], "OID"
-		#[0 0 0 0 0 0 0 11], "Set"
-		#[0 0 0 0 0 0 0 2], "2 elements"
-		#[0 0 0 0 0 0 0 0], "true"
+		#[0 0 0 0 0 0 0 0], ""OID""
+		#[0 0 0 0 0 0 0 11], ""Set""
+		#[0 0 0 0 0 0 0 2], ""2 elements""
+		#[0 0 0 0 0 0 0 0], ""true""
 		#[0 0 0 0 0 0 0 7],
-		#[0 0 0 0 0 0 0 0], "nil"
+		#[0 0 0 0 0 0 0 0], ""nil""
 		#[0 0 0 0 0 0 0 6].
 	self
 		verifyImmediate: set
-		encoding: encoding
+		encoding: encoding"
 ]
 
 { #category : #'running-symbol' }

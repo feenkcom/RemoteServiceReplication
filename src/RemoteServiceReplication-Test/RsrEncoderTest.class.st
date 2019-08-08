@@ -7,12 +7,6 @@ Class {
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
-{ #category : #accessing }
-RsrEncoderTest >> encoder [
-
-	^RsrEncoder new
-]
-
 { #category : #registration }
 RsrEncoderTest >> register: aService [
 
