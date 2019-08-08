@@ -8,7 +8,7 @@ Class {
 RsrServiceFactory >> serviceFor: aResponsibility [
 
 	| instance |
-	instance := (Smalltalk at: aResponsibility)
+	instance := (RsrClassLocator classNamed: aResponsibility)
 		rsrId: rsrConnection oidSpigot next
 		rsrConnection: rsrConnection.
 	instance synchronize.

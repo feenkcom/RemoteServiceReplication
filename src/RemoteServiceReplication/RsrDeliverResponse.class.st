@@ -40,7 +40,7 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 { #category : #executing }
 RsrDeliverResponse >> error [
 
-	^(Smalltalk at: errorName ifAbsent: [RsrError]) new
+	^(RsrClassLocator classNamed: errorName ifAbsent: [RsrError]) new
 		messageText: response;
 		yourself
 ]
