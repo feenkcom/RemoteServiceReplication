@@ -43,7 +43,7 @@ RsrRegistry >> includes: anRsrObject [
 RsrRegistry >> initialize [
 
 	super initialize.
-	map := WeakValueDictionary new.
+	map := RsrDictionary new.
 	storage := IdentitySet new.
 	mutex := Semaphore forMutualExclusion
 ]
