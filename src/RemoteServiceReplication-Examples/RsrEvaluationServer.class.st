@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrEvaluationServer,
 	#superclass : #RsrAbstractEvaluationService,
-	#category : #'RemoteServiceReplication-Public-Examples'
+	#category : #'RemoteServiceReplication-Examples-RemoteEvaluation'
 }
 
 { #category : #evaluating }
