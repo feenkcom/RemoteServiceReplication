@@ -295,7 +295,7 @@ RsrDecoder >> decodeSymbol: aStream [
 { #category : #utility }
 RsrDecoder >> lookupClass: aClassName [
 
-	^RsrClassLocator classNamed: aClassName
+	^RsrClassResolver classNamed: aClassName
 ]
 
 { #category : #accessing }

@@ -40,7 +40,7 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 { #category : #executing }
 RsrDeliverResponse >> error [
 
-	^(RsrClassLocator classNamed: errorName ifAbsent: [RsrError]) new
+	^(RsrClassResolver classNamed: errorName ifAbsent: [RsrError]) new
 		messageText: response;
 		yourself
 ]
