@@ -17,8 +17,10 @@ RsrSocket >> close [
 RsrSocket >> connectTo: aHostname
 port: aPortNumber [
 
+	| hostAddress |
+	hostAddress := NetNameResolver addressForName: aHostname.
 	socket
-		connectTo: aHostname
+		connectTo: hostAddress
 		port: aPortNumber
 ]
 

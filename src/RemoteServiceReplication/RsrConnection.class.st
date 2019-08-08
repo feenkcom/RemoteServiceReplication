@@ -44,7 +44,7 @@ port: aPortNumber [
 	| socket |
 	socket := RsrSocket new.
 	socket
-		connectTo: (NetNameResolver addressForName: aHostName)
+		connectTo: aHostName
 		port: aPortNumber.
 	socket waitForConnectionFor: self connectionTimeout.
 	socket isConnected

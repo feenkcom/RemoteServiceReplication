@@ -19,7 +19,7 @@ RsrCommandWriter >> executeCycle [
 	[queue next writeUsing: self.
 	queue isEmpty
 		ifTrue: [self flush]]
-		on: ConnectionClosed, RsrConnectionClosed
+		on: RsrConnectionClosed
 		do:
 			[:ex |
 			self log: ex.

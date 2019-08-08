@@ -32,7 +32,7 @@ RsrSocketPair class >> new [
 	secondSocket := RsrSocket new.
 	firstSocket listenOn: self listenPort.
 	secondSocket
-		connectTo: NetNameResolver localHostAddress
+		connectTo: '127.0.0.1'
 		port: self listenPort.
 	firstSocket waitForConnectionFor: self timeout.
 	secondSocket waitForConnectionFor: self timeout.
