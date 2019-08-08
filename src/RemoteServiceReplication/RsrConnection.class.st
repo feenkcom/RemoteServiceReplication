@@ -26,7 +26,7 @@ Class {
 RsrConnection class >> acceptOn: aPortNumber [
 
 	| socket |
-	socket := Socket new.
+	socket := RsrSocket new.
 	socket listenOn: aPortNumber.
 	socket waitForConnectionFor: self connectionTimeout.
 	socket isConnected
@@ -42,7 +42,7 @@ RsrConnection class >> connectTo: aHostName
 port: aPortNumber [
 
 	| socket |
-	socket := Socket new.
+	socket := RsrSocket new.
 	socket
 		connectTo: (NetNameResolver addressForName: aHostName)
 		port: aPortNumber.
@@ -287,8 +287,7 @@ RsrConnection >> start [
 
 	(isOpen := socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
-	stream := RsrStream on: (SocketStream on: socket) noTimeout.
-	stream binary.
+	stream := RsrSocketStream on: socket.
 	dispatcher := RsrCommandDispatcher on: self.
 	commandReader := RsrCommandReader on: self.
 	commandWriter := RsrCommandWriter on: self.

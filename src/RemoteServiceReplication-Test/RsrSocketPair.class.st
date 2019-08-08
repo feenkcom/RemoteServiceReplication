@@ -28,8 +28,8 @@ RsrSocketPair class >> listenPort [
 RsrSocketPair class >> new [
 
 	| firstSocket secondSocket |
-	firstSocket := Socket new.
-	secondSocket := Socket new.
+	firstSocket := RsrSocket new.
+	secondSocket := RsrSocket new.
 	firstSocket listenOn: self listenPort.
 	secondSocket
 		connectTo: NetNameResolver localHostAddress
