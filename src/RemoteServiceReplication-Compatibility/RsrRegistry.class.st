@@ -8,7 +8,8 @@ Class {
 		'mutex',
 		'map',
 		'storage',
-		'reapAction'
+		'reapAction',
+		'reaper'
 	],
 	#classInstVars : [
 		'uniqueInstance',
@@ -60,7 +61,8 @@ RsrRegistry >> initialize [
 	super initialize.
 	map := Dictionary new.
 	storage := IdentitySet new.
-	mutex := Semaphore forMutualExclusion
+	mutex := Semaphore forMutualExclusion.
+	reaper := RsrObjectReaper registry: self
 ]
 
 { #category : #reaping }
@@ -87,13 +89,11 @@ RsrRegistry >> register: anRsrObject [
 	"Keep a weak reference to the provided object.
 	The simple #add: may be an better interface."
 
-	| reaper |
 	mutex
 		critical:
 			[map
 				at: anRsrObject rsrId
 				put: (RsrRegistryElement object: anRsrObject)].
-	reaper := RsrObjectReaper registry: self.
 	anRsrObject
 		toFinalizeSend: #reap:
 		to: reaper
