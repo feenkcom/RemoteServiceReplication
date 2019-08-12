@@ -7,30 +7,45 @@ Class {
 	#instVars : [
 		'mutex',
 		'map',
-		'storage'
+		'storage',
+		'reapAction'
 	],
 	#classInstVars : [
 		'uniqueInstance',
 		'objectOffset'
 	],
-	#category : #'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Compatibility'
 }
+
+{ #category : #'instance creation' }
+RsrRegistry class >> new [
+
+	^self reapAction: [:key |]
+]
+
+{ #category : #'instance creation' }
+RsrRegistry class >> reapAction: aBlock [
+
+	^super new
+		reapAction: aBlock;
+		yourself
+]
 
 { #category : #initialization }
 RsrRegistry >> at: anOID [
 
-	^mutex critical: [map at: anOID]
+	^self at: anOID ifAbsent: [KeyNotFound signal: anOID asString]
 ]
 
 { #category : #initialization }
 RsrRegistry >> at: anOID
 ifAbsent: aBlock [
 
-	^mutex
-		critical:
-			[map
-				at: anOID
-				ifAbsent: aBlock]
+	| element |
+	element := mutex critical: [map at: anOID ifAbsent: []].
+	^element
+		ifNil: aBlock
+		ifNotNil: [element object]
 ]
 
 { #category : #initialization }
@@ -43,9 +58,28 @@ RsrRegistry >> includes: anRsrObject [
 RsrRegistry >> initialize [
 
 	super initialize.
-	map := WeakValueDictionary new.
+	map := Dictionary new.
 	storage := IdentitySet new.
 	mutex := Semaphore forMutualExclusion
+]
+
+{ #category : #reaping }
+RsrRegistry >> reap: aKey [
+
+	self removeKey: aKey.
+	self reapAction value: aKey
+]
+
+{ #category : #accessing }
+RsrRegistry >> reapAction [
+
+	^reapAction
+]
+
+{ #category : #accessing }
+RsrRegistry >> reapAction: aBlock [
+
+	reapAction := aBlock
 ]
 
 { #category : #initialization }
@@ -53,11 +87,17 @@ RsrRegistry >> register: anRsrObject [
 	"Keep a weak reference to the provided object.
 	The simple #add: may be an better interface."
 
+	| reaper |
 	mutex
 		critical:
 			[map
 				at: anRsrObject rsrId
-				put: anRsrObject]
+				put: (RsrRegistryElement object: anRsrObject)].
+	reaper := RsrObjectReaper registry: self.
+	anRsrObject
+		toFinalizeSend: #reap:
+		to: reaper
+		with: anRsrObject rsrId
 ]
 
 { #category : #'adding/removing' }
@@ -69,7 +109,7 @@ RsrRegistry >> removeKey: anRsrId [
 			[value := map
 				removeKey: anRsrId
 				ifAbsent: [^nil].
-			storage remove: value].
+			storage remove: value object ifAbsent: []].
 	^value
 ]
 
@@ -81,6 +121,6 @@ RsrRegistry >> retain: anRsrObject [
 		critical:
 			[map
 				at: anRsrObject rsrId
-				put: anRsrObject.
-			storage add: anRsrObject]
+				put: (RsrRegistryElement object: anRsrObject).
+			storage add: anRsrObject].
 ]

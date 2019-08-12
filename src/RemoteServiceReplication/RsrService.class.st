@@ -84,24 +84,11 @@ RsrService >> isServer [
 ]
 
 { #category : #'private-lifecycle' }
-RsrService >> markForFinalization [
-
-	self isClient
-		ifTrue:
-			[self
-				toFinalizeSend: #reap:
-				to: self rsrConnection reaper
-				with: self rsrId]
-]
-
-{ #category : #'private-lifecycle' }
 RsrService >> registerWith: aRegistry [
 
 	self isServer
 		ifTrue: [aRegistry retain: self]
-		ifFalse:
-			[aRegistry register: self.
-			self markForFinalization]
+		ifFalse: [aRegistry register: self]
 ]
 
 { #category : #accessing }

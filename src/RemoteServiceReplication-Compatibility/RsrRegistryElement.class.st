@@ -1,5 +1,5 @@
 Class {
-	#name : #RsrDictionaryElement,
+	#name : #RsrRegistryElement,
 	#superclass : #Object,
 	#instVars : [
 		'reference'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RsrDictionaryElement class >> object: anObject [
+RsrRegistryElement class >> object: anObject [
 
 	^self new
 		object: anObject;
@@ -16,20 +16,20 @@ RsrDictionaryElement class >> object: anObject [
 ]
 
 { #category : #initializing }
-RsrDictionaryElement >> initialize [
+RsrRegistryElement >> initialize [
 
 	super initialize.
 	reference := WeakArray new: 1
 ]
 
 { #category : #accessing }
-RsrDictionaryElement >> object [
+RsrRegistryElement >> object [
 
 	^reference at: 1
 ]
 
 { #category : #accessing }
-RsrDictionaryElement >> object: anObject [
+RsrRegistryElement >> object: anObject [
 
 	reference
 		at: 1

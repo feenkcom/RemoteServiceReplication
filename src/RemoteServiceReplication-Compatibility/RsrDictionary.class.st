@@ -50,7 +50,7 @@ RsrDictionary >> at: aKey
 put: anObject [
 
 	| element |
-	element := RsrDictionaryElement object: anObject.
+	element := RsrRegistryElement object: anObject.
 	anObject
 		toFinalizeSend: #reap:
 		to: self

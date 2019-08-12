@@ -50,12 +50,6 @@ RsrMockConnection >> oidSpigot [
 ]
 
 { #category : #accessing }
-RsrMockConnection >> reaper [
-
-	^RsrObjectReaper connection: self
-]
-
-{ #category : #accessing }
 RsrMockConnection >> registry [
 
 	^registry ifNil: [registry := RsrRegistry new]

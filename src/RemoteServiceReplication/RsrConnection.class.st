@@ -13,7 +13,6 @@ Class {
 		'stream',
 		'promises',
 		'dispatcher',
-		'reaper',
 		'oidSpigot',
 		'serviceFactory',
 		'sharedNamespace',
@@ -158,11 +157,10 @@ RsrConnection >> initialize [
 
 	super initialize.
 	isOpen := false.
-	reaper := RsrObjectReaper connection: self.
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.
-	registry := RsrRegistry new.
+	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
 	sharedNamespace := RsrSharedNamespace new.
 	log := RsrLog new
 ]
@@ -207,12 +205,6 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 RsrConnection >> promises [
 
 	^promises
-]
-
-{ #category : #accessing }
-RsrConnection >> reaper [
-
-	^reaper
 ]
 
 { #category : #accessing }
