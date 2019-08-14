@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+  
+export GEMSTONE=/home/kkilpela/development/gemstone/gemstone35/product
+export PATH=$PATH:$GEMSTONE/bin
+
+$"${@}"

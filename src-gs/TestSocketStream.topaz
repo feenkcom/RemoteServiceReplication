@@ -1,0 +1,33 @@
+input RsrSocketStream.gs
+
+run
+| aSocket bSocket port startReader startWriter |
+aSocket := GsSignalingSocket new.
+bSocket := GsSignalingSocket new.
+port := 7656.
+
+startReader :=
+    [:stream :expected |
+    [[stream socket isConnected]
+        whileTrue:
+            [GsFile gciLogClient: (stream next: expected size) bytesIntoString]] fork].
+startWriter :=
+    [:stream :string |
+    [[stream socket isConnected]
+        whileTrue:
+            [stream nextPutAll: string asByteArray.
+            (Delay forSeconds: 1) wait]] fork].
+
+[aSocket makeServerAtPort: port.
+startReader
+    value: (RsrSocketStream on: aSocket accept)
+    value: 'hello, world'] fork.
+[bSocket connectTo: port.
+startWriter
+    value: (RsrSocketStream on: bSocket)
+    value: 'hello, world'] fork.
+(Delay forSeconds: 10) wait.
+aSocket isConnected asString, bSocket isConnected asString.
+aSocket close.
+bSocket close.
+%
