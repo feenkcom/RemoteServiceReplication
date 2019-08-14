@@ -39,7 +39,9 @@ RsrClassResolverTestCase >> testSuccessfulResolution [
 	self
 		assert: actual
 		identicalTo: Object.
-	actual := RsrClassResolver classNamed: #Object ifAbsent: [self assert: false].
+	actual := RsrClassResolver
+		classNamed: #Object
+		ifAbsent: [self assert: false].
 	self
 		assert: actual
 		identicalTo: Object
