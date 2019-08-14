@@ -3,5 +3,5 @@ nil
 	subclass: #RsrProtoObject
 	instVarNames: #()
 	inDictionary: UserGlobals
-    constraints: nil
+    constraints: #()
 %
