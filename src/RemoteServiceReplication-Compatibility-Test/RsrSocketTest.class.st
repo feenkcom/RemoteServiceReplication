@@ -3,3 +3,9 @@ Class {
 	#superclass : #RsrTestCase,
 	#category : #'RemoteServiceReplication-Compatibility-Test'
 }
+
+{ #category : #running }
+RsrSocketTest >> testConnectToInvalidPort [
+
+	self assert: false
+]

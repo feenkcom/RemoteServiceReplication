@@ -13,10 +13,24 @@ RsrTestCase class >> isAbstract [
 	^self == RsrTestCase
 ]
 
+{ #category : #asserting }
+RsrTestCase >> assert: anObject
+identicalTo: bObject [
+
+	self assert: anObject == bObject
+]
+
 { #category : #accessing }
 RsrTestCase >> defaultTimeLimit [
 
 	^5 seconds
+]
+
+{ #category : #asserting }
+RsrTestCase >> deny: anObject
+identicalTo: bObject [
+
+	self assert: anObject ~~ bObject
 ]
 
 { #category : #utilities }
