@@ -36,7 +36,7 @@ RFBBrowser class >> sample [
 	| port connectionAPromise connectionBPromise connectionA connectionB |
 	port := 7678.
 	connectionAPromise := [RsrConnection acceptOn: port] async.
-	connectionBPromise := [RsrConnection connectTo: '127.0.0.1' port: port] async.
+	connectionBPromise := [RsrConnection connectTo: port on: '127.0.0.1'] async.
 	connectionA := connectionAPromise value.
 	connectionB := connectionBPromise value.
 	connectionA inspect.

@@ -37,14 +37,14 @@ RsrConnection class >> acceptOn: aPortNumber [
 ]
 
 { #category : #'instance creation' }
-RsrConnection class >> connectTo: aHostName
-port: aPortNumber [
+RsrConnection class >> connectTo: aPortNumber
+on: aHostname [
 
 	| socket |
 	socket := RsrSocket new.
 	socket
-		connectTo: aHostName
-		port: aPortNumber.
+		connectTo: aPortNumber
+		on: aHostname.
 	socket waitForConnectionFor: self connectionTimeout.
 	socket isConnected
 		ifFalse: [self error: 'Failed to create connection'].

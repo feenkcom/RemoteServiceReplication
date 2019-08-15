@@ -14,14 +14,14 @@ RsrSocket >> close [
 ]
 
 { #category : #'opening connection' }
-RsrSocket >> connectTo: aHostname
-port: aPortNumber [
+RsrSocket >> connectTo: aPort
+on: aHostname [
 
 	| hostAddress |
 	hostAddress := NetNameResolver addressForName: aHostname.
 	socket
 		connectTo: hostAddress
-		port: aPortNumber
+		port: aPort
 ]
 
 { #category : #initialization }
