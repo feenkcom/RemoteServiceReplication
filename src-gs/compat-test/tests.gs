@@ -1,4 +1,14 @@
 run
+Object
+	subclass: #RsrMockService
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
+	poolDictionaries: #()
+	inDictionary: UserGlobals
+%
+
+run
 TestCase
 	subclass: #RsrTestCase
 	instVarNames: #()
@@ -20,7 +30,7 @@ RsrTestCase
 
 run
 RsrTestCase
-	subclass: #RsrSocketTest
+	subclass: #RsrRegistryTest
 	instVarNames: #()
 	classVars: #()
 	classInstVars: #()
@@ -38,9 +48,25 @@ RsrTestCase
 	inDictionary: UserGlobals
 %
 
+run
+RsrTestCase
+	subclass: #RsrSocketTest
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
+	poolDictionaries: #()
+	inDictionary: UserGlobals
+%
 
 
 
+
+
+set class RsrMockService
+
+method:
+rsrId	^1
+%
 
 set class RsrTestCase class
 
@@ -92,10 +118,18 @@ method:
 testMaximumReclamation	self assert: RsrGarbageCollector maximumReclamation
 %
 
-set class RsrSocketTest
+set class RsrRegistryTest
 
 method:
-testConnectToInvalidPort	self assert: false
+testRegister	| id object registry marker |	marker := Object new.	object := RsrMockService new.	id := object rsrId.	registry := RsrRegistry new.	registry register: object.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: object.	object := nil.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: marker
+%
+
+
+
+set class RsrRegistryTest
+
+method:
+testRetain	| id object registry marker |	marker := Object new.	object := RsrMockService new.	id := object rsrId.	registry := RsrRegistry new.	registry retain: object.	object := nil.	self maximumReclamation.	object := registry at: id ifAbsent: [marker].	self		deny: object		equals: marker.	self		assert: object class		equals: RsrMockService.	self		assert: object rsrId		equals: id
 %
 
 set class RsrClassResolverTestCase
@@ -118,4 +152,10 @@ set class RsrClassResolverTestCase
 
 method:
 testFailedResolution	| actual marker |	self		should: [RsrClassResolver classNamed: #Xlerb]		raise: Error.	marker := Object new.	actual := RsrClassResolver		classNamed: #Xlerb		ifAbsent: [marker].	self		assert: actual		identicalTo: marker
+%
+
+set class RsrSocketTest
+
+method:
+testConnectToInvalidPort	self assert: false
 %

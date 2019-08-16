@@ -22,6 +22,11 @@ mournAction: aBlock
 %
 
 method:
+key
+
+    ^key
+%
+
 key: anObject
 
     key := anObject
