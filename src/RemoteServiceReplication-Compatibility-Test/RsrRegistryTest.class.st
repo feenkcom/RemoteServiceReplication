@@ -4,18 +4,16 @@ I represent tests for the RsrRegistry.
 Class {
 	#name : #RsrRegistryTest,
 	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#category : #'RemoteServiceReplication-Compatibility-Test'
 }
 
 { #category : #tests }
 RsrRegistryTest >> testRegister [
 
 	| id object registry marker |
-	id := 1.
 	marker := Object new.
-	object := RsrClientNoInstVars
-		rsrId: id
-		rsrConnection: RsrMockConnection new.
+	object := RsrMockService new.
+	id := object rsrId.
 	registry := RsrRegistry new.
 	registry register: object.
 	self maximumReclamation.
@@ -33,11 +31,9 @@ RsrRegistryTest >> testRegister [
 RsrRegistryTest >> testRetain [
 
 	| id object registry marker |
-	id := 1.
 	marker := Object new.
-	object := RsrServerNoInstVars
-		rsrId: id
-		rsrConnection: RsrMockConnection new.
+	object := RsrMockService new.
+	id := object rsrId.
 	registry := RsrRegistry new.
 	registry retain: object.
 	object := nil.
@@ -48,7 +44,7 @@ RsrRegistryTest >> testRetain [
 		equals: marker.
 	self
 		assert: object class
-		equals: RsrServerNoInstVars.
+		equals: RsrMockService.
 	self
 		assert: object rsrId
 		equals: id
