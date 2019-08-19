@@ -28,6 +28,12 @@ RsrSocketStream >> flush [
 ]
 
 { #category : #reading }
+RsrSocketStream >> isConnected [
+
+	^socket isConnected
+]
+
+{ #category : #reading }
 RsrSocketStream >> next [
 
 	^self next: 1
@@ -36,7 +42,9 @@ RsrSocketStream >> next [
 { #category : #reading }
 RsrSocketStream >> next: aCount [
 
-	^socket read: aCount
+	^[socket read: aCount]
+		on: RsrConnectionClosed
+		do: [:ex | ex return: nil]
 ]
 
 { #category : #writing }
