@@ -15,6 +15,12 @@ RsrSocketStream class >> on: anRsrSocket [
 		yourself
 ]
 
+{ #category : #testing }
+RsrSocketStream >> atEnd [
+
+	^self isConnected
+]
+
 { #category : #lifecycle }
 RsrSocketStream >> close [
 
@@ -27,7 +33,7 @@ RsrSocketStream >> flush [
 	"NOP"
 ]
 
-{ #category : #reading }
+{ #category : #testing }
 RsrSocketStream >> isConnected [
 
 	^socket isConnected
