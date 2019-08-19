@@ -27,15 +27,15 @@ RsrSocketPair class >> listenPort [
 { #category : #'instance creation' }
 RsrSocketPair class >> new [
 
-	| firstSocket secondSocket |
-	firstSocket := RsrSocket new.
+	| listener firstSocket secondSocket |
+	listener := RsrSocket new.
 	secondSocket := RsrSocket new.
-	firstSocket listenOn: self listenPort.
+	listener listenOn: self listenPort.
 	secondSocket
 		connectTo: self listenPort
 		on: '127.0.0.1'.
-	firstSocket waitForConnectionFor: self timeout.
-	secondSocket waitForConnectionFor: self timeout.
+	firstSocket := listener accept.
+	listener close.
 	(firstSocket isConnected and: [secondSocket isConnected])
 		ifFalse: [self error: 'Failed to create socket pair'].
 	^self
