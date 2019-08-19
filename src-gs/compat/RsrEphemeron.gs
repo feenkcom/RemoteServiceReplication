@@ -27,6 +27,7 @@ key
     ^key
 %
 
+method:
 key: anObject
 
     key := anObject
