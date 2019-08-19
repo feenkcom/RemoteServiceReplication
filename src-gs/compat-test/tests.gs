@@ -30,7 +30,7 @@ RsrTestCase
 
 run
 RsrTestCase
-	subclass: #RsrRegistryTest
+	subclass: #RsrRegistryTestCase
 	instVarNames: #()
 	classVars: #()
 	classInstVars: #()
@@ -50,8 +50,8 @@ RsrTestCase
 
 run
 RsrTestCase
-	subclass: #RsrSocketTest
-	instVarNames: #(#listenerProcess #clientProcess)
+	subclass: #RsrSocketTestCase
+	instVarNames: #()
 	classVars: #()
 	classInstVars: #()
 	poolDictionaries: #()
@@ -118,7 +118,7 @@ method:
 testMaximumReclamation	self assert: RsrGarbageCollector maximumReclamation
 %
 
-set class RsrRegistryTest
+set class RsrRegistryTestCase
 
 method:
 testRegister	| id object registry marker |	marker := Object new.	object := RsrMockService new.	id := object rsrId.	registry := RsrRegistry new.	registry register: object.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: object.	object := nil.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: marker
@@ -126,7 +126,7 @@ testRegister	| id object registry marker |	marker := Object new.	object := R
 
 
 
-set class RsrRegistryTest
+set class RsrRegistryTestCase
 
 method:
 testRetain	| id object registry marker |	marker := Object new.	object := RsrMockService new.	id := object rsrId.	registry := RsrRegistry new.	registry retain: object.	object := nil.	self maximumReclamation.	object := registry at: id ifAbsent: [marker].	self		deny: object		equals: marker.	self		assert: object class		equals: RsrMockService.	self		assert: object rsrId		equals: id
@@ -154,15 +154,15 @@ method:
 testFailedResolution	| actual marker |	self		should: [RsrClassResolver classNamed: #Xlerb]		raise: Error.	marker := Object new.	actual := RsrClassResolver		classNamed: #Xlerb		ifAbsent: [marker].	self		assert: actual		identicalTo: marker
 %
 
-set class RsrSocketTest
+set class RsrSocketTestCase
 
 method:
-testConnectLocalSockets	| listener server client port |	listener := RsrSocket new.	client := RsrSocket new.	port := self randomPort.	listener listenOn: port.	client connectTo: port on: '127.0.0.1'.	server := listener accept.	listener close.	self		assert: server isConnected;		assert: client isConnected.	self		assertWriting: #(1 2 3 4 5 6 7 8 9 0) asByteArray		to: server		isReadableOn: client.	self		assertWriting: #(0 9 8 7 6 5 4 3 2 1) asByteArray		to: client		isReadableOn: server
+testConnectToClosedPort	| socket |	socket := RsrSocket new.	self		should: [socket connectTo: 64752 on: '127.0.0.1']		raise: Error
 %
 
 
 
-set class RsrSocketTest
+set class RsrSocketTestCase
 
 method:
 assertWriting: bytesto: writingSocketisReadableOn: readSocket	| readBytes |	writingSocket write: bytes.	readBytes := readSocket read: bytes size.	self		assert: readBytes		equals: bytes
@@ -170,7 +170,7 @@ assertWriting: bytesto: writingSocketisReadableOn: readSocket	| readBytes |
 
 
 
-set class RsrSocketTest
+set class RsrSocketTestCase
 
 method:
 randomPort	^50123
@@ -178,16 +178,8 @@ randomPort	^50123
 
 
 
-set class RsrSocketTest
+set class RsrSocketTestCase
 
 method:
-tearDown	listenerProcess ifNotNil: [:process | process terminate].	clientProcess ifNotNil: [:process | process terminate]
-%
-
-
-
-set class RsrSocketTest
-
-method:
-testConnectToClosedPort	| socket |	socket := RsrSocket new.	self		should: [socket connectTo: 64752 on: '127.0.0.1']		raise: Error
+testConnectLocalSockets	| listener server client port |	listener := RsrSocket new.	client := RsrSocket new.	port := self randomPort.	listener listenOn: port.	client connectTo: port on: '127.0.0.1'.	server := listener accept.	listener close.	self		assert: server isConnected;		assert: client isConnected.	self		assertWriting: #(1 2 3 4 5 6 7 8 9 0) asByteArray		to: server		isReadableOn: client.	self		assertWriting: #(0 9 8 7 6 5 4 3 2 1) asByteArray		to: client		isReadableOn: server
 %
