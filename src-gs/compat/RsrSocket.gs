@@ -87,9 +87,3 @@ write: bytes
 
 	socket write: bytes
 %
-
-method:
-waitForConnectionFor: x
-
-	self error: 'wait for connection'
-%
