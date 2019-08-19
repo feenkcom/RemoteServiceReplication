@@ -1,15 +1,11 @@
 Class {
-	#name : #RsrSocketTest,
+	#name : #RsrSocketTestCase,
 	#superclass : #RsrTestCase,
-	#instVars : [
-		'listenerProcess',
-		'clientProcess'
-	],
 	#category : #'RemoteServiceReplication-Compatibility-Test'
 }
 
 { #category : #running }
-RsrSocketTest >> assertWriting: bytes
+RsrSocketTestCase >> assertWriting: bytes
 to: writingSocket
 isReadableOn: readSocket [
 
@@ -22,20 +18,13 @@ isReadableOn: readSocket [
 ]
 
 { #category : #accessing }
-RsrSocketTest >> randomPort [
+RsrSocketTestCase >> randomPort [
 
 	^50123
 ]
 
 { #category : #running }
-RsrSocketTest >> tearDown [
-
-	listenerProcess ifNotNil: [:process | process terminate].
-	clientProcess ifNotNil: [:process | process terminate]
-]
-
-{ #category : #running }
-RsrSocketTest >> testConnectLocalSockets [
+RsrSocketTestCase >> testConnectLocalSockets [
 
 	| listener server client port |
 	listener := RsrSocket new.
@@ -59,7 +48,7 @@ RsrSocketTest >> testConnectLocalSockets [
 ]
 
 { #category : #running }
-RsrSocketTest >> testConnectToClosedPort [
+RsrSocketTestCase >> testConnectToClosedPort [
 
 	| socket |
 	socket := RsrSocket new.

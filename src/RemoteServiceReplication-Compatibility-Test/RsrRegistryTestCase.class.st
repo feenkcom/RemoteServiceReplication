@@ -2,13 +2,13 @@
 I represent tests for the RsrRegistry.
 "
 Class {
-	#name : #RsrRegistryTest,
+	#name : #RsrRegistryTestCase,
 	#superclass : #RsrTestCase,
 	#category : #'RemoteServiceReplication-Compatibility-Test'
 }
 
 { #category : #tests }
-RsrRegistryTest >> testRegister [
+RsrRegistryTestCase >> testRegister [
 
 	| id object registry marker |
 	marker := Object new.
@@ -28,7 +28,7 @@ RsrRegistryTest >> testRegister [
 ]
 
 { #category : #tests }
-RsrRegistryTest >> testRetain [
+RsrRegistryTestCase >> testRetain [
 
 	| id object registry marker |
 	marker := Object new.
