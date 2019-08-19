@@ -24,12 +24,10 @@ Class {
 { #category : #'instance creation' }
 RsrConnection class >> acceptOn: aPortNumber [
 
-	| socket |
-	socket := RsrSocket new.
-	socket listenOn: aPortNumber.
-	socket waitForConnectionFor: self connectionTimeout.
-	socket isConnected
-		ifFalse: [self error: 'No connection request received'].
+	| listener socket |
+	listener := RsrSocket new.
+	listener listenOn: aPortNumber.
+	socket := listener accept.
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
@@ -45,9 +43,6 @@ on: aHostname [
 	socket
 		connectTo: aPortNumber
 		on: aHostname.
-	socket waitForConnectionFor: self connectionTimeout.
-	socket isConnected
-		ifFalse: [self error: 'Failed to create connection'].
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated

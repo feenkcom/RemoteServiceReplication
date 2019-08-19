@@ -75,12 +75,6 @@ RsrSocket >> socket: aSocket [
 ]
 
 { #category : #reading }
-RsrSocket >> waitForConnectionFor: seconds [
-
-	socket waitForConnectionFor: seconds
-]
-
-{ #category : #reading }
 RsrSocket >> write: bytes [
 
 	socket sendData: bytes
