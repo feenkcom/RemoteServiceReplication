@@ -37,21 +37,14 @@ RsrSocketTest >> tearDown [
 { #category : #running }
 RsrSocketTest >> testConnectLocalSockets [
 
-	| listener server client port sema listenSema connectedSema |
+	| listener server client port |
 	listener := RsrSocket new.
 	client := RsrSocket new.
 	port := self randomPort.
-	sema := Semaphore new.
-	listenSema := Semaphore new.
-	connectedSema := Semaphore new.
-	listenerProcess :=
-		[[listener listenOn: port.
-		listenSema signal.
-		connectedSema wait.
-		server := listener accept.
-		listener close] ensure: [sema signal]] fork.
-	clientProcess := [[listenSema wait. client connectTo: port on: '127.0.0.1'] ensure: [connectedSema signal]] fork.
-	sema wait.
+	listener listenOn: port.
+	client connectTo: port on: '127.0.0.1'.
+	server := listener accept.
+	listener close.
 	self
 		assert: server isConnected;
 		assert: client isConnected.
