@@ -1,25 +1,68 @@
 Class {
 	#name : #RsrSocketTest,
 	#superclass : #RsrTestCase,
+	#instVars : [
+		'listenerProcess',
+		'clientProcess'
+	],
 	#category : #'RemoteServiceReplication-Compatibility-Test'
 }
 
 { #category : #running }
+RsrSocketTest >> assertWriting: bytes
+to: writingSocket
+isReadableOn: readSocket [
+
+	| readBytes |
+	writingSocket write: bytes.
+	readBytes := readSocket read: bytes size.
+	self
+		assert: readBytes
+		equals: bytes
+]
+
+{ #category : #accessing }
+RsrSocketTest >> randomPort [
+
+	^50123
+]
+
+{ #category : #running }
+RsrSocketTest >> tearDown [
+
+	listenerProcess ifNotNil: [:process | process terminate].
+	clientProcess ifNotNil: [:process | process terminate]
+]
+
+{ #category : #running }
 RsrSocketTest >> testConnectLocalSockets [
 
-	| server client port sema |
-	server := RsrSocket new.
+	| listener server client port sema listenSema connectedSema |
+	listener := RsrSocket new.
 	client := RsrSocket new.
-	port := 7654.
+	port := self randomPort.
 	sema := Semaphore new.
-	[server listenOn: port.
-	sema signal] fork.
-	[client connectTo: port on: '127.0.0.1'.
-	sema signal] fork.
-	sema wait; wait.
+	listenSema := Semaphore new.
+	connectedSema := Semaphore new.
+	listenerProcess :=
+		[[listener listenOn: port.
+		listenSema signal.
+		connectedSema wait.
+		server := listener accept.
+		listener close] ensure: [sema signal]] fork.
+	clientProcess := [[listenSema wait. client connectTo: port on: '127.0.0.1'] ensure: [connectedSema signal]] fork.
+	sema wait.
 	self
 		assert: server isConnected;
-		assert: client isConnected
+		assert: client isConnected.
+	self
+		assertWriting: #(1 2 3 4 5 6 7 8 9 0) asByteArray
+		to: server
+		isReadableOn: client.
+	self
+		assertWriting: #(0 9 8 7 6 5 4 3 2 1) asByteArray
+		to: client
+		isReadableOn: server
 ]
 
 { #category : #running }

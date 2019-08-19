@@ -7,10 +7,24 @@ Class {
 	#category : #'RemoteServiceReplication-Compatibility'
 }
 
+{ #category : #'instance creation' }
+RsrSocket class >> on: aSocket [
+
+	^self new
+		socket: aSocket;
+		yourself
+]
+
+{ #category : #listening }
+RsrSocket >> accept [
+
+	^self class on: socket accept
+]
+
 { #category : #lifecycle }
 RsrSocket >> close [
 
-	socket close
+	socket closeAndDestroy
 ]
 
 { #category : #'opening connection' }
@@ -40,7 +54,7 @@ RsrSocket >> isConnected [
 { #category : #listening }
 RsrSocket >> listenOn: aPort [
 
-	^socket listenOn: aPort
+	socket listenOn: aPort backlogSize: 2
 ]
 
 { #category : #reading }
@@ -52,6 +66,12 @@ RsrSocket >> read: aCount [
 	bytesRead = aCount
 		ifFalse: [^RsrError signal: 'Failed to read enough bytes'].
 	^bytes
+]
+
+{ #category : #accessing }
+RsrSocket >> socket: aSocket [
+
+	socket := aSocket
 ]
 
 { #category : #reading }
