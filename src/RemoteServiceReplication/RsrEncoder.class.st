@@ -60,12 +60,15 @@ onto: aStream [
 RsrEncoder >> encodeControlWord: anInteger
 onto: aStream [
 
-	| encodedBytes |
+	| encodedInteger encodedBytes |
 	(anInteger between: self controlWordMin and: self controlWordMax)
 		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].
-	encodedBytes := (anInteger positive
+	encodedInteger := (anInteger positive
 		ifTrue: [anInteger]
-		ifFalse: [(2 raisedTo: 64) + anInteger]) asByteArrayOfSize: self sizeOfInteger.
+		ifFalse: [(2 raisedTo: 64) + anInteger]).
+	encodedBytes := self
+		integerAsByteArray: encodedInteger
+		ofSize: self sizeOfInteger.
 	aStream nextPutAll: encodedBytes
 ]
 
@@ -213,7 +216,7 @@ onto: aStream [
 	immediateType := anInteger positive
 		ifTrue: [self positiveIntegerType]
 		ifFalse: [self negativeIntegerType].
-	bytes := anInteger asByteArray.
+	bytes := self integerAsByteArray: anInteger abs.
 	self
 		encodeControlWord: self immediateOID
 		onto: aStream.
@@ -457,6 +460,42 @@ RsrEncoder >> encodeTrueOnto: aStream [
 RsrEncoder >> immediateOID [
 
 	^0
+]
+
+{ #category : #'private-converting' }
+RsrEncoder >> integerAsByteArray: anInteger [
+	"Return a ByteArray representing <anInteger> in big endian format."
+
+	| stream int |
+	anInteger <= 0
+		ifTrue: [^ByteArray with: 0].
+	stream := WriteStream on: (ByteArray new: 8).
+	int := anInteger.
+	[int > 0]
+		whileTrue:
+			[stream nextPut: (int bitAnd: 16rFF).
+			int := int bitShift: -8].
+	^stream contents reversed
+]
+
+{ #category : #'private-converting' }
+RsrEncoder >> integerAsByteArray: anInteger
+ofSize: aNumberOfBytes [
+
+	| bytes int |
+	bytes := ByteArray new: aNumberOfBytes.
+	int := anInteger.
+	aNumberOfBytes
+		to: 1
+		by: -1
+		do:
+			[:i | | byte |
+			byte := int bitAnd: 16rFF.
+			int := int bitShift: -8.
+			bytes at: i put: byte].
+	int ~= 0
+		ifTrue: [self error: 'Loss of precision detected'].
+	^bytes
 ]
 
 { #category : #'private-testing' }
