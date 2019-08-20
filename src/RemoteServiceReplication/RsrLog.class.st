@@ -69,7 +69,7 @@ RsrLog >> levelWarn [
 RsrLog >> log: aString [
 
 	Transcript
-		show: DateAndTime now asStringYMDHM, '-', aString;
+		show: DateAndTime now printString, '-', aString;
 		cr
 ]
 
@@ -78,7 +78,7 @@ RsrLog >> log: aMessage
 level: aLevelString [
 
 	Transcript
-		show: DateAndTime now asStringYMDHM, '-', aLevelString, '-', aMessage;
+		show: DateAndTime now printString, '-', aLevelString, '-', aMessage;
 		cr
 ]
 

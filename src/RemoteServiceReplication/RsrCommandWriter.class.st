@@ -39,13 +39,6 @@ RsrCommandWriter >> initialize [
 	queue := SharedQueue new
 ]
 
-{ #category : #commands }
-RsrCommandWriter >> stop [
-
-	super stop.
-	queue flush
-]
-
 { #category : #writing }
 RsrCommandWriter >> write: aByteArray [
 
