@@ -1,5 +1,5 @@
 run
-Object
+RsrObject
 	subclass: #RsrClassResolver
 	instVarNames: #()
 	classVars: #()

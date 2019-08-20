@@ -1,5 +1,5 @@
 run
-Object
+RsrObject
 	subclass: #RsrEphemeron
 	instVarNames: #(key mournAction)
 	classVars: #()

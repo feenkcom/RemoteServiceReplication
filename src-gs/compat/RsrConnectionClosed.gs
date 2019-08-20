@@ -1,6 +1,6 @@
 run
-RsrObject
-	subclass: #RsrScientist
+Error
+	subclass: #RsrConnectionClosed
 	instVarNames: #()
 	classVars: #()
 	classInstVars: #()

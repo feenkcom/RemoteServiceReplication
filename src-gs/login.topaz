@@ -1,4 +1,5 @@
 set username DataCurator
 set password swordfish
 set gemstone gs64stone
+set inputpauseonerror ON
 login

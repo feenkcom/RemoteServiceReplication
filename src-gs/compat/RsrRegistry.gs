@@ -1,5 +1,5 @@
 run
-Object
+RsrObject
 	subclass: #RsrRegistry
 	instVarNames: #(mutex map storage reapAction)
 	classVars: #()
@@ -19,7 +19,7 @@ new
 classmethod:
 reapAction: aBlock
 
-	^self basicNew initialize
+	^super new
 		reapAction: aBlock;
 		yourself
 %
