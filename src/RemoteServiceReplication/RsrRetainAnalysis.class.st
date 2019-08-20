@@ -69,9 +69,9 @@ RsrRetainAnalysis >> isDataObject: anObject [
 	^anObject == true
 		or: [anObject == false
 			or: [anObject == nil
-				or: [anObject isString
-					or: [anObject isSymbol
-						or: [anObject isInteger]]]]]
+				or: [(self isString: anObject)
+					or: [(self isSymbol: anObject)
+						or: [(self isInteger: anObject)]]]]]
 ]
 
 { #category : #testing }
@@ -81,9 +81,27 @@ RsrRetainAnalysis >> isImmediate: anObject [
 ]
 
 { #category : #testing }
+RsrRetainAnalysis >> isInteger: anObject [
+
+	^anObject isKindOf: Integer
+]
+
+{ #category : #testing }
 RsrRetainAnalysis >> isService: anObject [
 
 	^anObject isKindOf: RsrService
+]
+
+{ #category : #testing }
+RsrRetainAnalysis >> isString: anObject [
+
+	^anObject isString
+]
+
+{ #category : #testing }
+RsrRetainAnalysis >> isSymbol: anObject [
+
+	^anObject isSymbol
 ]
 
 { #category : #accessing }
