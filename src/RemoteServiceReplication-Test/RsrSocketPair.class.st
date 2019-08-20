@@ -69,7 +69,7 @@ RsrSocketPair >> firstSocket: anObject [
 { #category : #accessing }
 RsrSocketPair >> firstStream [
 
-	^SocketStream on: firstSocket
+	^RsrSocketStream on: firstSocket
 ]
 
 { #category : #accessing }
@@ -85,5 +85,5 @@ RsrSocketPair >> secondSocket: anObject [
 { #category : #accessing }
 RsrSocketPair >> secondStream [
 
-	^SocketStream on: secondSocket
+	^RsrSocketStream on: secondSocket
 ]
