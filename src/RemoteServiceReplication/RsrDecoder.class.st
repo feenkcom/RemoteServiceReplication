@@ -18,6 +18,14 @@ connection: aConnection [
 		yourself
 ]
 
+{ #category : #'private-decoding' }
+RsrDecoder >> bytesAsInteger: bytes [
+
+	^bytes
+		inject: 0
+		into: [:int :byte | (int bitShift: 8) bitOr: byte]
+]
+
 { #category : #accessing }
 RsrDecoder >> connection [
 
@@ -78,7 +86,7 @@ RsrDecoder >> decodeControlWord: aStream [
 
 	| bytes unsignedResult |
 	bytes := aStream next: self sizeOfInteger.
-	unsignedResult := bytes asInteger.
+	unsignedResult := self bytesAsInteger: bytes.
 	^unsignedResult > self controlWordMax
 		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]
 		ifFalse: [unsignedResult]
@@ -129,7 +137,7 @@ RsrDecoder >> decodeImmediateInteger: aStream [
 	| length bytes |
 	length := self decodeControlWord: aStream.
 	bytes := aStream next: length.
-	^bytes asInteger
+	^self bytesAsInteger: bytes
 ]
 
 { #category : #decoding }
