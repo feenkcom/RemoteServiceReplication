@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrRegistryElement,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'reference'
 	],

@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrRetainAnalysis,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'roots',
 		'retainCommands',

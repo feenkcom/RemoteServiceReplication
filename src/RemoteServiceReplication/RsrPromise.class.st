@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrPromise,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'mutex',
 		'value',

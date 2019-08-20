@@ -1,6 +1,6 @@
 Class {
 	#name : #RFBBrowser,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'root'
 	],

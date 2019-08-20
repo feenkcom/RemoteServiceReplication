@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrScientist,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility'
 }
 

@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrSocket,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'socket'
 	],

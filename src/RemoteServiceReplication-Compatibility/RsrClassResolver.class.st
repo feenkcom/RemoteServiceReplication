@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrClassResolver,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility'
 }
 

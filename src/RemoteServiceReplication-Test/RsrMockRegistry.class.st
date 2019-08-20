@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrMockRegistry,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'objects',
 		'idSpigot'

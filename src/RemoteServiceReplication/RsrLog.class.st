@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrLog,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'verbosity'
 	],

@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrStream,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'stream'
 	],

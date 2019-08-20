@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrObjectCache,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'storage'
 	],

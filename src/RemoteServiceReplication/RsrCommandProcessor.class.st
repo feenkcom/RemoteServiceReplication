@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrCommandProcessor,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'process',
 		'connection',
@@ -79,7 +79,7 @@ RsrCommandProcessor >> start [
 	isRunning := true.
 	process := [self runLoop]
 		forkAt: self priority
-		named: self class name asString, ' loop'
+		"named: self class name asString, ' loop'"
 ]
 
 { #category : #commands }

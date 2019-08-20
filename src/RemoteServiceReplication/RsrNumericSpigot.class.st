@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrNumericSpigot,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'current',
 		'step'

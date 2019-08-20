@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrMockConnection,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'forwarderClass',
 		'lastMessage',

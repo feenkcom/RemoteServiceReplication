@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrConnection,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'isOpen',
 		'forwarderClass',

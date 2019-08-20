@@ -3,7 +3,7 @@ I maintain the associations between locally stored objects and their remote coun
 "
 Class {
 	#name : #RsrRegistry,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'mutex',
 		'map',

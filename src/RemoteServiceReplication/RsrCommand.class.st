@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrCommand,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'encoding'
 	],

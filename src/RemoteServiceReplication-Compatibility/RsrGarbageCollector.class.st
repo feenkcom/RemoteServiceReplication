@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrGarbageCollector,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility'
 }
 

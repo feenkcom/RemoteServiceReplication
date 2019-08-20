@@ -1,6 +1,6 @@
 Class {
 	#name : #RIInspector,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Examples-Inspector'
 }
 

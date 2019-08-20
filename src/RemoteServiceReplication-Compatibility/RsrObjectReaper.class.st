@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrObjectReaper,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'weakStorage'
 	],
