@@ -5,7 +5,7 @@ Class {
 		'serverStream',
 		'clientStream'
 	],
-	#category : #'RemoteServiceReplication-Test'
+	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
 { #category : #initialization }
