@@ -33,12 +33,18 @@ RFBBrowser class >> openOn: aDirectory [
 RFBBrowser class >> sample [
 	"self sample"
 
-	| port connectionAPromise connectionBPromise connectionA connectionB |
-	port := 7678.
-	connectionAPromise := [RsrConnection acceptOn: port] async.
-	connectionBPromise := [RsrConnection connectTo: port on: '127.0.0.1'] async.
-	connectionA := connectionAPromise value.
-	connectionB := connectionBPromise value.
+	| socketPair connectionA connectionB |
+	socketPair := RsrSocketPair new.
+	connectionA := RsrConnection
+		socket: socketPair firstSocket
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1).
+	connectionB := RsrConnection
+		socket: socketPair secondSocket
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated.
+	[connectionA start] fork.
+	[connectionB start] fork.
 	connectionA inspect.
 	connectionB inspect.
 	self openOn: ((connectionA serviceFor: #RsrEvaluationClient) evaluate: 'RFBDirectoryServer pathString: ''/''')
