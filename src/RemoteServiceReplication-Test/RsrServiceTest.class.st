@@ -18,7 +18,5 @@ RsrServiceTest >> testHasRemoteSelf [
 	service
 		rsrId: 1;
 		rsrConnection: RsrMockConnection new.
-	self
-		deny: service remoteSelf
-		equals: nil
+	self deny: nil == service remoteSelf
 ]
