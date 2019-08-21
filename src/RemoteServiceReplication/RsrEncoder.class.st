@@ -76,15 +76,14 @@ onto: aStream [
 RsrEncoder >> encodeDateTime: aDateTime
 on: aStream [
 
-	| seconds microseconds |
+	| microseconds |
 	self
 		encodeControlWord: self immediateOID
 		onto: aStream.
 	self
 		encodeControlWord: self dateTimeType
 		onto: aStream.
-	seconds := aDateTime asSeconds - DateAndTime unixEpoch asSeconds.
-	microseconds := seconds * 1000000 + (aDateTime nanoSecond / 1000) rounded.
+	microseconds := RsrDateTimeInterface microsecondsSince: aDateTime.
 	self
 		encodeControlWord: microseconds
 		onto: aStream
