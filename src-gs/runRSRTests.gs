@@ -1,3 +1,4 @@
+input RemoteServiceReplication-Base.gs
 input loadRsrCompat.gs
 input loadRSR.topaz
 input RsrEvaluationService.gs
@@ -10,7 +11,7 @@ PRINTIT
     String
         streamContents:
             [:stream |
-            stream nextPutAll: 'Passes:'.
+            stream nextPutAll: 'Passes: (', result passed size printString, ')'.
             result passed
                 do:
                     [:each |
@@ -18,7 +19,7 @@ PRINTIT
                     each printOn: stream].
             stream
                 lf; lf;
-                nextPutAll: 'Failures:'.
+                nextPutAll: 'Failures:(', result failures size printString, ')'.
             result failures
                 do:
                     [:each |
@@ -26,7 +27,7 @@ PRINTIT
                     each printOn: stream].
             stream
                 lf; lf;
-                nextPutAll: 'Errors:'.
+                nextPutAll: 'Errors:(', result errors size printString, ')'.
             result errors
                 do:
                     [:each |

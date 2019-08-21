@@ -104,3 +104,9 @@ ifAbsent: aBlock
 		ifNil: aBlock
 		ifNotNil: [element key]
 %
+
+method:
+includes: aService
+
+	^self critical: [map includesKey: aService rsrId]
+%

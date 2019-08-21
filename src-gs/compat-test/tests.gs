@@ -9,6 +9,16 @@ Object
 %
 
 run
+RsrConcurrency
+	subclass: #RsrTestingConcurrency
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
+	poolDictionaries: #()
+	inDictionary: UserGlobals
+%
+
+run
 TestCase
 	subclass: #RsrTestCase
 	instVarNames: #()
@@ -68,6 +78,28 @@ method:
 rsrId	^1
 %
 
+set class RsrTestingConcurrency
+
+method:
+protect: aBlock	^[aBlock on: Exception do: [:ex | "NOP"]]
+%
+
+
+
+set class RsrTestingConcurrency
+
+method:
+fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority
+%
+
+
+
+set class RsrTestingConcurrency
+
+method:
+fork: aBlock	^super fork: (self protect: aBlock)
+%
+
 set class RsrTestCase class
 
 classmethod:
@@ -109,7 +141,31 @@ deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject
 set class RsrTestCase
 
 method:
+fork: aBlock	^RsrConcurrency fork: aBlock
+%
+
+
+
+set class RsrTestCase
+
+method:
+setUp	super setUp.	RsrConcurrency current: RsrTestingConcurrency new
+%
+
+
+
+set class RsrTestCase
+
+method:
 maximumReclamation	self assert: RsrGarbageCollector maximumReclamation
+%
+
+
+
+set class RsrTestCase
+
+method:
+tearDown	RsrConcurrency resetCurrent.	super tearDown
 %
 
 set class RsrGarbageCollectorTestCase

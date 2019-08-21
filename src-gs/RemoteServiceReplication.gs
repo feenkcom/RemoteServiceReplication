@@ -635,7 +635,7 @@ initialize	super initialize.	verbosity := self levelTrace
 set class RsrLog
 
 method:
-log: aString	Transcript		show: DateAndTime now asStringYMDHM, '-', aString;		cr
+log: aString	Transcript		show: DateAndTime now printString, '-', aString;		cr
 %
 
 
@@ -659,7 +659,7 @@ verbosity: aLogLevel	verbosity := aLogLevel
 set class RsrLog
 
 method:
-log: aMessagelevel: aLevelString	Transcript		show: DateAndTime now asStringYMDHM, '-', aLevelString, '-', aMessage;		cr
+log: aMessagelevel: aLevelString	Transcript		show: DateAndTime now printString, '-', aLevelString, '-', aMessage;		cr
 %
 
 
@@ -1353,14 +1353,6 @@ isCollection: anObject	^anObject isCollection
 set class RsrRetainAnalysis
 
 method:
-isString: anObject	^anObject isString
-%
-
-
-
-set class RsrRetainAnalysis
-
-method:
 processing: anObjectduring: aBlock	(inFlight includes: anObject)		ifTrue: [^RsrCycleDetected signal: 'Cycled detected on: ', anObject printString].	inFlight add: anObject.	self ensureRegistered: anObject.	aBlock value.	self retain: anObject.	inFlight remove: anObject
 %
 
@@ -1369,23 +1361,7 @@ processing: anObjectduring: aBlock	(inFlight includes: anObject)		ifTrue: [^
 set class RsrRetainAnalysis
 
 method:
-isInteger: anObject	^anObject isKindOf: Integer
-%
-
-
-
-set class RsrRetainAnalysis
-
-method:
 isDataObject: anObject	^anObject == true		or: [anObject == false			or: [anObject == nil				or: [(self isString: anObject)					or: [(self isSymbol: anObject)						or: [(self isInteger: anObject)]]]]]
-%
-
-
-
-set class RsrRetainAnalysis
-
-method:
-isSymbol: anObject	^anObject isSymbol
 %
 
 
@@ -1639,7 +1615,7 @@ sizeOfInteger	"Return the number of bytes used to encode an integer"	^8
 set class RsrCodec
 
 method:
-isImmediate: anObject	^anObject isSymbol		or: [anObject isString			or: [anObject isInteger				or: [anObject isCharacter					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection. DateAndTime.} includes: anObject class)						or: [#(nil true false) includes: anObject]]]]]
+isImmediate: anObject	^(self isSymbol: anObject)		or: [(self isString: anObject)			or: [(self isInteger: anObject)				or: [(self isCharacter: anObject)					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection. DateAndTime.} includes: anObject class)						or: [#(nil true false) includes: anObject]]]]]
 %
 
 
@@ -1745,7 +1721,7 @@ priority	^Processor lowIOPriority
 set class RsrCommandProcessor
 
 method:
-log: anException	self log error: anException messageText
+log: anException	self log error: anException description
 %
 
 
@@ -1817,7 +1793,7 @@ stream	^self connection stream
 set class RsrCommandProcessor
 
 method:
-start	isRunning := true.	process := [self runLoop]		forkAt: self priority		"named: self class name asString, ' loop'"
+start	isRunning := true.	process := RsrConcurrency		fork: [self runLoop]		at: self priority
 %
 
 set class RsrObjectCache
@@ -2127,7 +2103,7 @@ encodeDeliverResponse: aDeliverResponse	^ByteArray		streamContents:			[:stre
 set class RsrEncoder
 
 method:
-encodeImmediateInteger: anIntegeronto: aStream	| bytes immediateType |	immediateType := anInteger positive		ifTrue: [self positiveIntegerType]		ifFalse: [self negativeIntegerType].	bytes := anInteger asByteArray.	self		encodeControlWord: self immediateOID		onto: aStream.	self		encodeControlWord: immediateType		onto: aStream.	self		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes
+encodeImmediateInteger: anIntegeronto: aStream	| bytes immediateType |	immediateType := anInteger positive		ifTrue: [self positiveIntegerType]		ifFalse: [self negativeIntegerType].	bytes := self integerAsByteArray: anInteger abs.	self		encodeControlWord: self immediateOID		onto: aStream.	self		encodeControlWord: immediateType		onto: aStream.	self		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes
 %
 
 
@@ -2151,7 +2127,7 @@ reflectedVariablesOf: anRsrObjectdo: aBlock	(self reflectedVariableNamesOf: a
 set class RsrEncoder
 
 method:
-encodeControlWord: anIntegeronto: aStream	| encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedBytes := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]) asByteArrayOfSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes
+encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedInteger := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]).	encodedBytes := self		integerAsByteArray: encodedInteger		ofSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes
 %
 
 
@@ -2192,6 +2168,14 @@ set class RsrEncoder
 
 method:
 encodeSendMessage: aSendMessage	^ByteArray		streamContents:			[:stream |			self				encodeControlWord: self sendMessageIdentifier				onto: stream.			self				encodeControlWord: aSendMessage transaction				onto: stream.			self				encodeControlWord: aSendMessage arguments size				onto: stream.			self				encodeReferenceOf: aSendMessage receiver				onto: stream.			self				encodeReferenceOf: aSendMessage selector				onto: stream.			aSendMessage arguments				do:					[:each |					self						encodeReferenceOf: each						onto: stream]]
+%
+
+
+
+set class RsrEncoder
+
+method:
+integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes
 %
 
 
@@ -2263,7 +2247,7 @@ encodeDictionary: aDictionaryon: aStream	self		encodeControlWord: self immed
 set class RsrEncoder
 
 method:
-encodeStringBody: aStringonto: aStream	| bytes |	bytes := aString utf8Encoded.	self		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes
+encodeStringBody: aStringonto: aStream	| bytes |	bytes := (aString respondsTo: #utf8Encoded)		ifTrue: [aString utf8Encoded "pharo"]		ifFalse: [aString encodeAsUTF8 "GemStone"].	self		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes
 %
 
 
@@ -2272,6 +2256,14 @@ set class RsrEncoder
 
 method:
 isService: anObject	^anObject isKindOf: RsrService
+%
+
+
+
+set class RsrEncoder
+
+method:
+integerAsByteArray: anInteger	"Return a ByteArray representing <anInteger> in big endian format."	| stream int |	anInteger <= 0		ifTrue: [^ByteArray with: 0].	stream := WriteStream on: (ByteArray new: 8).	int := anInteger.	[int > 0]		whileTrue:			[stream nextPut: (int bitAnd: 16rFF).			int := int bitShift: -8].	^stream contents reverse
 %
 
 
@@ -2303,7 +2295,7 @@ isArray: anObject	^anObject class == Array
 set class RsrEncoder
 
 method:
-encodeImmediate: anImmediateonto: aStream	anImmediate isSymbol		ifTrue:			[^self				encodeSymbol: anImmediate				onto: aStream].	anImmediate isString		ifTrue:			[^self				encodeString: anImmediate				onto: aStream].	anImmediate isInteger		ifTrue:			[^self				encodeImmediateInteger: anImmediate				onto: aStream].	anImmediate isCharacter		ifTrue:			[^self				encodeCharacter: anImmediate				onto: aStream].	anImmediate == nil		ifTrue:			[^self encodeNilOnto: aStream].	anImmediate == true		ifTrue:			[^self encodeTrueOnto: aStream].	anImmediate == false		ifTrue:			[^self encodeFalseOnto: aStream].	anImmediate isArray		ifTrue: [^self encodeArray: anImmediate on: aStream].	anImmediate isDictionary		ifTrue:			[^self				encodeDictionary: anImmediate				on: aStream].	anImmediate class == ByteArray		ifTrue:			[^self				encodeByteArray: anImmediate				on: aStream].	anImmediate class == Set		ifTrue:			[^self				encodeSet: anImmediate				on: aStream].	anImmediate class == OrderedCollection		ifTrue:			[^self				encodeOrderedCollection: anImmediate				on: aStream].	anImmediate class == DateAndTime		ifTrue:			[^self				encodeDateTime: anImmediate				on: aStream].	self error: 'Unsupported Immediate'
+encodeImmediate: anImmediateonto: aStream	(self isSymbol: anImmediate)		ifTrue:			[^self				encodeSymbol: anImmediate				onto: aStream].	(self isString: anImmediate)		ifTrue:			[^self				encodeString: anImmediate				onto: aStream].	(self isInteger: anImmediate)		ifTrue:			[^self				encodeImmediateInteger: anImmediate				onto: aStream].	(self isCharacter: anImmediate)		ifTrue:			[^self				encodeCharacter: anImmediate				onto: aStream].	anImmediate == nil		ifTrue:			[^self encodeNilOnto: aStream].	anImmediate == true		ifTrue:			[^self encodeTrueOnto: aStream].	anImmediate == false		ifTrue:			[^self encodeFalseOnto: aStream].	(self isArray: anImmediate)		ifTrue: [^self encodeArray: anImmediate on: aStream].	(self isDictionary: anImmediate)		ifTrue:			[^self				encodeDictionary: anImmediate				on: aStream].	(self isByteArray: anImmediate)		ifTrue:			[^self				encodeByteArray: anImmediate				on: aStream].	(self isSet: anImmediate)		ifTrue:			[^self				encodeSet: anImmediate				on: aStream].	(self isOrderedCollection: anImmediate)		ifTrue:			[^self				encodeOrderedCollection: anImmediate				on: aStream].	(self isDateTime: anImmediate)		ifTrue:			[^self				encodeDateTime: anImmediate				on: aStream].	self error: 'Unsupported Immediate'
 %
 
 set class RsrCommandWriter
@@ -2326,14 +2318,6 @@ set class RsrCommandWriter
 
 method:
 executeCycle	[queue next writeUsing: self.	queue isEmpty		ifTrue: [self flush]]		on: RsrConnectionClosed		do:			[:ex |			self log: ex.			self connection disconnected]
-%
-
-
-
-set class RsrCommandWriter
-
-method:
-stop	super stop.	queue flush
 %
 
 
@@ -2393,7 +2377,15 @@ decodeArray: aStream	| size array |	size := self decodeControlWord: aStream.
 set class RsrDecoder
 
 method:
-decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := bytes asInteger.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]
+bytesAsInteger: bytes	^bytes		inject: 0		into: [:int :byte | (int bitShift: 8) bitOr: byte]
+%
+
+
+
+set class RsrDecoder
+
+method:
+decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := self bytesAsInteger: bytes.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]
 %
 
 
@@ -2417,7 +2409,7 @@ decodeInteger: aStream	| length bytes |	length := self decodeControlWord: aSt
 set class RsrDecoder
 
 method:
-decodeString: aStream	| length bytes |	length := self decodeControlWord: aStream.	bytes := aStream next: length.	^bytes utf8Decoded
+decodeString: aStream	| length bytes |	length := self decodeControlWord: aStream.	bytes := aStream next: length.	^(bytes respondsTo: #utf8Decoded)		ifTrue: [bytes utf8Decoded "Pharo"]		ifFalse: [bytes decodeFromUTF8ToString "GemStone"]
 %
 
 
@@ -2489,7 +2481,7 @@ registry: anRsrRegistry	registry := anRsrRegistry
 set class RsrDecoder
 
 method:
-decodeImmediateInteger: aStream	| length bytes |	length := self decodeControlWord: aStream.	bytes := aStream next: length.	^bytes asInteger
+decodeImmediateInteger: aStream	| length bytes |	length := self decodeControlWord: aStream.	bytes := aStream next: length.	^self bytesAsInteger: bytes
 %
 
 
