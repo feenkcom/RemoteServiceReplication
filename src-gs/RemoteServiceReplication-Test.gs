@@ -1303,7 +1303,7 @@ newInstance	^RsrClientTestService new
 set class RsrServiceTest
 
 method:
-testHasRemoteSelf	| service |	service := self newInstance.	service		rsrId: 1;		rsrConnection: RsrMockConnection new.	self		deny: service remoteSelf		equals: nil
+testHasRemoteSelf	| service |	service := self newInstance.	service		rsrId: 1;		rsrConnection: RsrMockConnection new.	self deny: nil == service remoteSelf
 %
 
 set class RsrServiceRegistryTest
