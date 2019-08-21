@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #reflection }
+RsrReflection class >> allInstancesOf: aClass [
+
+	^(aClass respondsTo: #instancesInMemory)
+		ifTrue: [aClass instancesInMemory "GemStone"]
+		ifFalse: [aClass allInstances]
+]
+
+{ #category : #reflection }
 RsrReflection class >> reflectedVariableIndecesOf: anRsrObject
 do: aBlock [
 
