@@ -363,7 +363,7 @@ on: aStream [
 	"the name of the remote service to create"
 	"Write the object slots"
 	| reflectedVariables |
-	reflectedVariables := self reflectedVariableNamesOf: aService.
+	reflectedVariables := RsrReflection reflectedVariableNamesOf: aService.
 	self
 		encodeControlWord: self serviceType
 		onto: aStream.
@@ -376,7 +376,7 @@ on: aStream [
 	self
 		encodeSymbol: aService remoteServiceName
 		onto: aStream.
-	self
+	RsrReflection
 		reflectedVariablesOf: aService
 		do: [:each | self encodeReferenceOf: each onto: aStream]
 ]
@@ -509,16 +509,6 @@ RsrEncoder >> isArray: anObject [
 RsrEncoder >> isService: anObject [
 
 	^anObject isKindOf: RsrService
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> reflectedVariablesOf: anRsrObject
-do: aBlock [
-
-	(self reflectedVariableNamesOf: anRsrObject)
-		do:
-			[:name |
-			aBlock value: (anRsrObject instVarNamed: name)]
 ]
 
 { #category : #'private-accessing' }

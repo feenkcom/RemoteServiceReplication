@@ -145,7 +145,7 @@ RsrRetainAnalysis >> processRsrObject: anRsrObject [
 	self
 		processing: anRsrObject
 		during:
-			[self
+			[RsrReflection
 				reflectedVariablesOf: anRsrObject
 				do: [:each | self process: each]]
 ]
@@ -161,16 +161,6 @@ during: aBlock [
 	aBlock value.
 	self retain: anObject.
 	inFlight remove: anObject
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> reflectedVariablesOf: anRsrObject
-do: aBlock [
-
-	anRsrObject class variablesToReflect
-		do:
-			[:name |
-			aBlock value: (anRsrObject instVarNamed: name)]
 ]
 
 { #category : #accessing }

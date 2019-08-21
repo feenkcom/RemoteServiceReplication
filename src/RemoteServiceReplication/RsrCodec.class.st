@@ -93,21 +93,6 @@ RsrCodec >> positiveIntegerType [
 	^3
 ]
 
-{ #category : #'private-encoding' }
-RsrCodec >> reflectedVariableNamesOf: aService [
-
-	^RsrReflection reflectedVariableNamesOf: aService
-]
-
-{ #category : #'private-encoding' }
-RsrCodec >> reflectedVariableNamesOf: anRsrObject
-do: aBlock [
-
-	RsrReflection
-		reflectedVariableNamesOf: anRsrObject
-		do: aBlock
-]
-
 { #category : #'private-accessing' }
 RsrCodec >> releaseObjectsCommand [
 

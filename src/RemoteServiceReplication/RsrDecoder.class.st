@@ -266,11 +266,11 @@ RsrDecoder >> decodeService: aStream [
 				rsrConnection: self connection)
 					yourself].
 	instance registerWith: self registry.
-	(self reflectedVariableNamesOf: instance) size = instVarCount
+	(RsrReflection reflectedVariableNamesOf: instance) size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
-	self
-		reflectedVariableNamesOf: instance
-		do: [:name | instance instVarNamed: name put: (self decodeObjectReference: aStream)].
+	RsrReflection
+		reflectedVariableIndecesOf: instance
+		do: [:index | instance instVarAt: index put: (self decodeObjectReference: aStream)].
 	^instance
 ]
 
