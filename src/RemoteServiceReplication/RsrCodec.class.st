@@ -96,17 +96,16 @@ RsrCodec >> positiveIntegerType [
 { #category : #'private-encoding' }
 RsrCodec >> reflectedVariableNamesOf: aService [
 
-	^aService class variablesToReflect
+	^RsrReflection reflectedVariableNamesOf: aService
 ]
 
 { #category : #'private-encoding' }
 RsrCodec >> reflectedVariableNamesOf: anRsrObject
 do: aBlock [
 
-	anRsrObject class variablesToReflect
-		do:
-			[:name |
-			aBlock value: name]
+	RsrReflection
+		reflectedVariableNamesOf: anRsrObject
+		do: aBlock
 ]
 
 { #category : #'private-accessing' }
