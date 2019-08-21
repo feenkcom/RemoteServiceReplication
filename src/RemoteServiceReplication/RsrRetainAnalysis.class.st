@@ -115,7 +115,7 @@ RsrRetainAnalysis >> process: anObject [
 { #category : #processing }
 RsrRetainAnalysis >> processCollection: aCollection [
 
-	aCollection isDictionary
+	(self isDictionary: aCollection)
 		ifTrue: [^self processDictionary: aCollection].
 	aCollection do: [:each | self process: each].
 	^aCollection

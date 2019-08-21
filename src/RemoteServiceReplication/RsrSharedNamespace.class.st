@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrSharedNamespace,
-	#superclass : #Object,
+	#superclass : #RsrObject,
 	#instVars : [
 		'map',
 		'client',
