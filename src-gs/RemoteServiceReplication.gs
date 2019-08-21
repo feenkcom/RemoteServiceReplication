@@ -9,6 +9,16 @@ Object
 %
 
 run
+Object
+	subclass: #RsrReflection
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
+	poolDictionaries: #()
+	inDictionary: UserGlobals
+%
+
+run
 RsrProtoObject
 	subclass: #RsrForwarder
 	instVarNames: #(#rsrObject)
@@ -442,6 +452,28 @@ set class RsrSharedNamespace
 
 method:
 map: anObject	map := anObject
+%
+
+set class RsrReflection class
+
+classmethod:
+reflectedVariableNamesOf: aService	^aService class variablesToReflect
+%
+
+
+
+set class RsrReflection class
+
+classmethod:
+reflectedVariableIndecesOf: anRsrObjectdo: aBlock	| allVariables |	allVariables := anRsrObject class allInstVarNames.	anRsrObject class variablesToReflect		do:			[:varName | | index |			index := allVariables indexOf: varName.			aBlock value: index]
+%
+
+
+
+set class RsrReflection class
+
+classmethod:
+reflectedVariablesOf: anRsrObjectdo: aBlock	RsrReflection		reflectedVariableIndecesOf: anRsrObject		do:			[:index |			aBlock value: (anRsrObject instVarAt: index)]
 %
 
 set class RsrForwarder class
@@ -1337,14 +1369,6 @@ ensureRegistered: anRsrObject	anRsrObject isMirrored		ifFalse:			[anRsrObjec
 set class RsrRetainAnalysis
 
 method:
-reflectedVariablesOf: anRsrObjectdo: aBlock	anRsrObject class variablesToReflect		do:			[:name |			aBlock value: (anRsrObject instVarNamed: name)]
-%
-
-
-
-set class RsrRetainAnalysis
-
-method:
 isCollection: anObject	^anObject isCollection
 %
 
@@ -1417,7 +1441,7 @@ connection	^connection
 set class RsrRetainAnalysis
 
 method:
-processRsrObject: anRsrObject	self		processing: anRsrObject		during:			[self				reflectedVariablesOf: anRsrObject				do: [:each | self process: each]]
+processRsrObject: anRsrObject	self		processing: anRsrObject		during:			[RsrReflection				reflectedVariablesOf: anRsrObject				do: [:each | self process: each]]
 %
 
 
@@ -1464,14 +1488,6 @@ set class RsrCodec
 
 method:
 dictionaryType	^13
-%
-
-
-
-set class RsrCodec
-
-method:
-reflectedVariableNamesOf: aService	^aService class variablesToReflect
 %
 
 
@@ -1624,14 +1640,6 @@ set class RsrCodec
 
 method:
 arrayType	^9
-%
-
-
-
-set class RsrCodec
-
-method:
-reflectedVariableNamesOf: anRsrObjectdo: aBlock	anRsrObject class variablesToReflect		do:			[:name |			aBlock value: name]
 %
 
 
@@ -2087,7 +2095,7 @@ sendMessageIdentifier	^1
 set class RsrEncoder
 
 method:
-encodeService: aServiceon: aStream	"type"	"the OID for the object"	"the name of the remote service to create"	"Write the object slots"	| reflectedVariables |	reflectedVariables := self reflectedVariableNamesOf: aService.	self		encodeControlWord: self serviceType		onto: aStream.	self		encodeControlWord: aService rsrId		onto: aStream.	self		encodeControlWord: reflectedVariables size		onto: aStream.	self		encodeSymbol: aService remoteServiceName		onto: aStream.	self		reflectedVariablesOf: aService		do: [:each | self encodeReferenceOf: each onto: aStream]
+encodeService: aServiceon: aStream	"type"	"the OID for the object"	"the name of the remote service to create"	"Write the object slots"	| reflectedVariables |	reflectedVariables := RsrReflection reflectedVariableNamesOf: aService.	self		encodeControlWord: self serviceType		onto: aStream.	self		encodeControlWord: aService rsrId		onto: aStream.	self		encodeControlWord: reflectedVariables size		onto: aStream.	self		encodeSymbol: aService remoteServiceName		onto: aStream.	RsrReflection		reflectedVariablesOf: aService		do: [:each | self encodeReferenceOf: each onto: aStream]
 %
 
 
@@ -2112,14 +2120,6 @@ set class RsrEncoder
 
 method:
 encodeObject: anObjectonto: aStream	(self isService: anObject)		ifTrue: [^self encodeService: anObject on: aStream].	self error: 'Unable to encode: ', anObject printString
-%
-
-
-
-set class RsrEncoder
-
-method:
-reflectedVariablesOf: anRsrObjectdo: aBlock	(self reflectedVariableNamesOf: anRsrObject)		do:			[:name |			aBlock value: (anRsrObject instVarNamed: name)]
 %
 
 
@@ -2393,7 +2393,7 @@ decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: se
 set class RsrDecoder
 
 method:
-decodeService: aStream	| oid instVarCount serviceName instance |	oid := self decodeControlWord: aStream.	instVarCount := self decodeControlWord: aStream.	serviceName := self decodeObjectReference: aStream.	instance := registry		at: oid		ifAbsent:			[((self lookupClass: serviceName)				rsrId: oid				rsrConnection: self connection)					yourself].	instance registerWith: self registry.	(self reflectedVariableNamesOf: instance) size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	self		reflectedVariableNamesOf: instance		do: [:name | instance instVarNamed: name put: (self decodeObjectReference: aStream)].	^instance
+decodeService: aStream	| oid instVarCount serviceName instance |	oid := self decodeControlWord: aStream.	instVarCount := self decodeControlWord: aStream.	serviceName := self decodeObjectReference: aStream.	instance := registry		at: oid		ifAbsent:			[((self lookupClass: serviceName)				rsrId: oid				rsrConnection: self connection)					yourself].	instance registerWith: self registry.	(RsrReflection reflectedVariableNamesOf: instance) size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	RsrReflection		reflectedVariableIndecesOf: instance		do: [:index | instance instVarAt: index put: (self decodeObjectReference: aStream)].	^instance
 %
 
 
