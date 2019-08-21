@@ -77,9 +77,9 @@ RsrCommandProcessor >> runLoop [
 RsrCommandProcessor >> start [
 
 	isRunning := true.
-	process := [self runLoop]
-		forkAt: self priority
-		"named: self class name asString, ' loop'"
+	process := RsrConcurrency
+		fork: [self runLoop]
+		at: self priority
 ]
 
 { #category : #commands }

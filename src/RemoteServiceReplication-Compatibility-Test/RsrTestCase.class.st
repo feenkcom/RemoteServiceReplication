@@ -34,6 +34,12 @@ identicalTo: bObject [
 ]
 
 { #category : #utilities }
+RsrTestCase >> fork: aBlock [
+
+	^RsrConcurrency fork: aBlock
+]
+
+{ #category : #utilities }
 RsrTestCase >> hack: aString [
 	"Placeholder for things that need to be fixed"
 ]
@@ -42,4 +48,18 @@ RsrTestCase >> hack: aString [
 RsrTestCase >> maximumReclamation [
 
 	self assert: RsrGarbageCollector maximumReclamation
+]
+
+{ #category : #running }
+RsrTestCase >> setUp [
+
+	super setUp.
+	RsrConcurrency current: RsrTestingConcurrency new
+]
+
+{ #category : #running }
+RsrTestCase >> tearDown [
+
+	RsrConcurrency resetCurrent.
+	super tearDown
 ]

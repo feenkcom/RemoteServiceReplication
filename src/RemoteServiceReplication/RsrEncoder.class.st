@@ -149,22 +149,22 @@ RsrEncoder >> encodeFalseOnto: aStream [
 RsrEncoder >> encodeImmediate: anImmediate
 onto: aStream [
 
-	anImmediate isSymbol
+	(self isSymbol: anImmediate)
 		ifTrue:
 			[^self
 				encodeSymbol: anImmediate
 				onto: aStream].
-	anImmediate isString
+	(self isString: anImmediate)
 		ifTrue:
 			[^self
 				encodeString: anImmediate
 				onto: aStream].
-	anImmediate isInteger
+	(self isInteger: anImmediate)
 		ifTrue:
 			[^self
 				encodeImmediateInteger: anImmediate
 				onto: aStream].
-	anImmediate isCharacter
+	(self isCharacter: anImmediate)
 		ifTrue:
 			[^self
 				encodeCharacter: anImmediate
@@ -178,29 +178,29 @@ onto: aStream [
 	anImmediate == false
 		ifTrue:
 			[^self encodeFalseOnto: aStream].
-	anImmediate isArray
+	(self isArray: anImmediate)
 		ifTrue: [^self encodeArray: anImmediate on: aStream].
-	anImmediate isDictionary
+	(self isDictionary: anImmediate)
 		ifTrue:
 			[^self
 				encodeDictionary: anImmediate
 				on: aStream].
-	anImmediate class == ByteArray
+	(self isByteArray: anImmediate)
 		ifTrue:
 			[^self
 				encodeByteArray: anImmediate
 				on: aStream].
-	anImmediate class == Set
+	(self isSet: anImmediate)
 		ifTrue:
 			[^self
 				encodeSet: anImmediate
 				on: aStream].
-	anImmediate class == OrderedCollection
+	(self isOrderedCollection: anImmediate)
 		ifTrue:
 			[^self
 				encodeOrderedCollection: anImmediate
 				on: aStream].
-	anImmediate class == DateAndTime
+	(self isDateTime: anImmediate)
 		ifTrue:
 			[^self
 				encodeDateTime: anImmediate
@@ -477,7 +477,7 @@ RsrEncoder >> integerAsByteArray: anInteger [
 		whileTrue:
 			[stream nextPut: (int bitAnd: 16rFF).
 			int := int bitShift: -8].
-	^stream contents reversed
+	^stream contents reverse
 ]
 
 { #category : #'private-converting' }

@@ -212,7 +212,7 @@ RsrCodecTest >> testDictionary [
 		encoding: encoding.
 	dictionary := Dictionary new
 		at: 1 put: self genericSymbol;
-		at: nil put: true;
+		at: false put: true;
 		yourself.
 	encoding := self encodeReferenceOf: dictionary.
 	result := self decoder decodeObjectReference: encoding readStream.

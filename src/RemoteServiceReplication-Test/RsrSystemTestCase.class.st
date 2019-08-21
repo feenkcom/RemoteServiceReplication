@@ -29,11 +29,14 @@ RsrSystemTestCase >> setUp [
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	semaphore := Semaphore new.
-	[connectionA start.
-	semaphore signal] fork.
-	[connectionB start.
-	semaphore signal] fork.
-	semaphore wait; wait
+	self fork:
+		[[connectionA start] ensure: [semaphore signal]].
+	self fork:
+		[[connectionB start] ensure: [semaphore signal]].
+	semaphore wait; wait.
+	self
+		assert: connectionA isOpen;
+		assert: connectionB isOpen
 ]
 
 { #category : #accesing }

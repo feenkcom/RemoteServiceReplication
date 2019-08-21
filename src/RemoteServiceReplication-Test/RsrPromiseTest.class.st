@@ -9,15 +9,17 @@ RsrPromiseTest >> testError [
 
 	| promise semaphore |
 	promise := RsrPromise new.
-	[(Delay forSeconds: 1) wait.
-	promise error: Error new] fork.
+	self fork:
+		[(Delay forSeconds: 1) wait.
+		promise error: Error new].
 	self
 		should: [promise value]
 		raise: Error.
 	promise := RsrPromise new.
 	semaphore := Semaphore new.
-	[promise error: Error new.
-	semaphore signal] fork.
+	self fork:
+		[promise error: Error new.
+		semaphore signal].
 	self
 		should: [promise value]
 		raise: Error
@@ -29,8 +31,9 @@ RsrPromiseTest >> testFulfillment [
 	| promise expected semaphore |
 	promise := RsrPromise new.
 	expected := Object new.
-	[(Delay forSeconds: 1) wait.
-	promise fulfill: expected] fork.
+	self fork:
+		[(Delay forSeconds: 1) wait.
+		promise fulfill: expected].
 	self
 		assert: promise value
 		identicalTo: expected.

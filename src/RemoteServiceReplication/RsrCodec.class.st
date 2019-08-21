@@ -61,10 +61,10 @@ RsrCodec >> falseType [
 { #category : #'private-testing' }
 RsrCodec >> isImmediate: anObject [
 
-	^anObject isSymbol
-		or: [anObject isString
-			or: [anObject isInteger
-				or: [anObject isCharacter
+	^(self isSymbol: anObject)
+		or: [(self isString: anObject)
+			or: [(self isInteger: anObject)
+				or: [(self isCharacter: anObject)
 					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection. DateAndTime.} includes: anObject class)
 						or: [#(nil true false) includes: anObject]]]]]
 ]

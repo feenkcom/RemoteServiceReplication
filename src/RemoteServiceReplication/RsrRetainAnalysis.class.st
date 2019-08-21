@@ -81,27 +81,9 @@ RsrRetainAnalysis >> isImmediate: anObject [
 ]
 
 { #category : #testing }
-RsrRetainAnalysis >> isInteger: anObject [
-
-	^anObject isKindOf: Integer
-]
-
-{ #category : #testing }
 RsrRetainAnalysis >> isService: anObject [
 
 	^anObject isKindOf: RsrService
-]
-
-{ #category : #testing }
-RsrRetainAnalysis >> isString: anObject [
-
-	^anObject isString
-]
-
-{ #category : #testing }
-RsrRetainAnalysis >> isSymbol: anObject [
-
-	^anObject isSymbol
 ]
 
 { #category : #accessing }
