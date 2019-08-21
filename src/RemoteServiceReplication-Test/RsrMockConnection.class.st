@@ -74,5 +74,7 @@ to: anRsrObject [
 		receiver: anRsrObject
 		selector: aMessage selector
 		arguments: aMessage arguments.
-	^nil
+	^RsrPromise new
+		fulfill: nil;
+		yourself
 ]
