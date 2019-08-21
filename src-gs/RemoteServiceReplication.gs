@@ -635,7 +635,7 @@ initialize	super initialize.	verbosity := self levelTrace
 set class RsrLog
 
 method:
-log: aString	Transcript		show: DateAndTime now printString, '-', aString;		cr
+log: aString	Transcript		show: RsrDateTimeInterface now printString, '-', aString;		cr
 %
 
 
@@ -659,7 +659,7 @@ verbosity: aLogLevel	verbosity := aLogLevel
 set class RsrLog
 
 method:
-log: aMessagelevel: aLevelString	Transcript		show: DateAndTime now printString, '-', aLevelString, '-', aMessage;		cr
+log: aMessagelevel: aLevelString	Transcript		show: RsrDateTimeInterface now printString, '-', aLevelString, '-', aMessage;		cr
 %
 
 
@@ -1615,7 +1615,7 @@ sizeOfInteger	"Return the number of bytes used to encode an integer"	^8
 set class RsrCodec
 
 method:
-isImmediate: anObject	^(self isSymbol: anObject)		or: [(self isString: anObject)			or: [(self isInteger: anObject)				or: [(self isCharacter: anObject)					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection. DateAndTime.} includes: anObject class)						or: [#(nil true false) includes: anObject]]]]]
+isImmediate: anObject	^(self isSymbol: anObject)		or: [(self isString: anObject)			or: [(self isInteger: anObject)				or: [(self isCharacter: anObject)					or: [({Array. Dictionary. ByteArray. Set. OrderedCollection. RsrDateTimeInterface dateTimeClass.} includes: anObject class)						or: [#(nil true false) includes: anObject]]]]]
 %
 
 
@@ -2207,7 +2207,7 @@ encodeFalseOnto: aStream	self		encodeControlWord: self immediateOID		onto: a
 set class RsrEncoder
 
 method:
-encodeDateTime: aDateTimeon: aStream	| seconds microseconds |	self		encodeControlWord: self immediateOID		onto: aStream.	self		encodeControlWord: self dateTimeType		onto: aStream.	seconds := aDateTime asSeconds - DateAndTime unixEpoch asSeconds.	microseconds := seconds * 1000000 + (aDateTime nanoSecond / 1000) rounded.	self		encodeControlWord: microseconds		onto: aStream
+encodeDateTime: aDateTimeon: aStream	| microseconds |	self		encodeControlWord: self immediateOID		onto: aStream.	self		encodeControlWord: self dateTimeType		onto: aStream.	microseconds := RsrDateTimeInterface microsecondsSince: aDateTime.	self		encodeControlWord: microseconds		onto: aStream
 %
 
 
@@ -2465,7 +2465,7 @@ decodeOrderedCollection: aStream	| size oc |	size := self decodeControlWord: 
 set class RsrDecoder
 
 method:
-decodeDateTime: aStream	| microseconds seconds |	microseconds := self decodeControlWord: aStream.	seconds := (microseconds / 1000000) + DateAndTime unixEpoch asSeconds.	^DateAndTime fromSeconds: seconds offset: 0
+decodeDateTime: aStream	| microseconds |	microseconds := self decodeControlWord: aStream.	^RsrDateTimeInterface fromMicroseconds: microseconds
 %
 
 
