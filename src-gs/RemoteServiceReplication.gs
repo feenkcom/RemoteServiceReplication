@@ -1,15 +1,5 @@
 run
 Object
-	subclass: #RsrSharedNamespace
-	instVarNames: #(#map #client #server)
-	classVars: #()
-	classInstVars: #()
-	poolDictionaries: #()
-	inDictionary: UserGlobals
-%
-
-run
-Object
 	subclass: #RsrReflection
 	instVarNames: #()
 	classVars: #()
@@ -42,6 +32,16 @@ run
 RsrObject
 	subclass: #RsrNumericSpigot
 	instVarNames: #(#current #step)
+	classVars: #()
+	classInstVars: #()
+	poolDictionaries: #()
+	inDictionary: UserGlobals
+%
+
+run
+RsrObject
+	subclass: #RsrSharedNamespace
+	instVarNames: #(#map #client #server)
 	classVars: #()
 	classInstVars: #()
 	poolDictionaries: #()
@@ -352,108 +352,6 @@ RsrError
 
 
 
-set class RsrSharedNamespace
-
-method:
-at: aKey	^map at: aKey
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-client	^ client
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-primAt: aKeyput: aValue	^map		at: aKey		put: aValue
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-initialize	super initialize.	map := Dictionary new
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-removeKey: aKey	^[self primRemoveKey: aKey]		ensure: [client removeKey: aKey]
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-server	^ server
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-at: aKeyput: aValue	self		primAt: aKey		put: aValue.	client		at: aKey		put: aValue
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-at: aKeyifAbsent: aBlock	^map at: aKey ifAbsent: aBlock
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-server: anObject	server := anObject
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-primRemoveKey: aKey	^map removeKey: aKey
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-map	^ map
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-client: anObject	client := anObject
-%
-
-
-
-set class RsrSharedNamespace
-
-method:
-map: anObject	map := anObject
-%
-
 set class RsrReflection class
 
 classmethod:
@@ -474,6 +372,14 @@ set class RsrReflection class
 
 classmethod:
 reflectedVariablesOf: anRsrObjectdo: aBlock	RsrReflection		reflectedVariableIndecesOf: anRsrObject		do:			[:index |			aBlock value: (anRsrObject instVarAt: index)]
+%
+
+
+
+set class RsrReflection class
+
+classmethod:
+allInstancesOf: aClass	^(aClass respondsTo: #instancesInMemory)		ifTrue: [aClass instancesInMemory "GemStone"]		ifFalse: [aClass allInstances]
 %
 
 set class RsrForwarder class
@@ -622,6 +528,108 @@ set class RsrNumericSpigot
 
 method:
 step	^step
+%
+
+set class RsrSharedNamespace
+
+method:
+at: aKey	^map at: aKey
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+client	^ client
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+primAt: aKeyput: aValue	^map		at: aKey		put: aValue
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+initialize	super initialize.	map := Dictionary new
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+removeKey: aKey	^[self primRemoveKey: aKey]		ensure: [client removeKey: aKey]
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+server	^ server
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+at: aKeyput: aValue	self		primAt: aKey		put: aValue.	client		at: aKey		put: aValue
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+at: aKeyifAbsent: aBlock	^map at: aKey ifAbsent: aBlock
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+server: anObject	server := anObject
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+primRemoveKey: aKey	^map removeKey: aKey
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+map	^ map
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+client: anObject	client := anObject
+%
+
+
+
+set class RsrSharedNamespace
+
+method:
+map: anObject	map := anObject
 %
 
 set class RsrLog
@@ -1401,7 +1409,7 @@ initialize	super initialize.	retainCommands := OrderedCollection new.	inFlig
 set class RsrRetainAnalysis
 
 method:
-processCollection: aCollection	aCollection isDictionary		ifTrue: [^self processDictionary: aCollection].	aCollection do: [:each | self process: each].	^aCollection
+processCollection: aCollection	(self isDictionary: aCollection)		ifTrue: [^self processDictionary: aCollection].	aCollection do: [:each | self process: each].	^aCollection
 %
 
 
