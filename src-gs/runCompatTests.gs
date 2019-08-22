@@ -1,10 +1,11 @@
+input RemoteServiceReplication-Base.gs
 input loadRsrCompat.gs
 input compat-test/tests.gs
 
-PRINTIT
-    | result |
+exec
+    | result report |
     result := RsrTestCase run.
-    String
+    report := String
         streamContents:
             [:stream |
             stream nextPutAll: 'Passes:'.
@@ -28,5 +29,6 @@ PRINTIT
                 do:
                     [:each |
                     stream lf; tab.
-                    each printOn: stream]]
+                    each printOn: stream]].
+    GsFile gciLogClient: report
 %
