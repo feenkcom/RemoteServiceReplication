@@ -17,7 +17,7 @@ RsrMessageSendingTest >> testRemoteError [
 { #category : #running }
 RsrMessageSendingTest >> testReturnArgument [
 
-	| client server arguments |
+	| client server arguments dt response seconds |
 	client := RsrClientNoInstVars new.
 	self sharedNamespaceA
 		at: 'TestService'
@@ -26,13 +26,17 @@ RsrMessageSendingTest >> testReturnArgument [
 	arguments := OrderedCollection new
 		addAll: #( #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
  		add: (Character codePoint: 16r259F);
-		add: DateAndTime now;
 		add: (Dictionary new at: 1 put: 2; yourself);
 		add: (Set with: 14);
 		add: #[1 2 3 4];
 		add: (OrderedCollection with: 42 with: 43);
 		add: #(1 2 #(nil));
 		yourself.
+	dt := RsrDateTimeInterface now.
+	response := client sendReturnArgument: dt.
+	self
+		assert: (dt asSeconds * 1000000) rounded
+		equals: (response asSeconds * 1000000) rounded.
 	arguments
 		do:
 			[:each | | result |
