@@ -74,11 +74,15 @@ listenOn: aPort
 method:
 read: aCount
 
-	| bytes |
+	| bytes bytesRead |
 	bytes := ByteArray new: aCount.
-	socket
+	bytesRead := socket
 		read: aCount
 		into: bytes.
+	bytesRead = aCount
+		ifFalse:
+			[socket close. "GemStone doesn't seem to detect a socket closing"
+			RsrConnectionClosed signal].
 	^bytes
 %
 
