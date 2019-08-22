@@ -1777,7 +1777,7 @@ connection	^connection
 set class RsrCommandProcessor
 
 method:
-stop	isRunning ifFalse: [^self].	isRunning := false.	self connection close.	self stream close.	process terminate.	process := nil
+stop	isRunning ifFalse: [^self].	isRunning := false.	self connection close.	self stream close
 %
 
 
