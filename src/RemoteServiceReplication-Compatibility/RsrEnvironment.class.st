@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrEnvironment,
-	#superclass : #ProtoObject,
+	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility'
 }
 
