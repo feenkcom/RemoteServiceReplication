@@ -1,8 +1,0 @@
-{
-	"instance" : {
-		"testUnHappyPathForInstanceCreation" : "AaronBlakeman 1/25/2018 10:05",
-		"setUp" : "AaronBlakeman 1/2/2018 16:22",
-		"testHappyPathForInstanceCreation" : "AaronBlakeman 1/25/2018 09:56"
-	},
-	"class" : { }
-}

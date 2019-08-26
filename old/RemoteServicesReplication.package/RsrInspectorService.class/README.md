@@ -1,1 +1,0 @@
-I represent the class of objects that handle being an inspector service.

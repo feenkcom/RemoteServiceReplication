@@ -1,1 +1,0 @@
-I represent the test cases for the RsrBrokerObject.

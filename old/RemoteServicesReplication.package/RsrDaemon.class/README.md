@@ -1,1 +1,0 @@
-I am the daemon that manages connections between Rsr systems.

@@ -1,1 +1,0 @@
-I mediate the flow of objects between clients and RsrServices

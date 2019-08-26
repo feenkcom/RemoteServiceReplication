@@ -1,3 +1,0 @@
-accessing
-remoteRsrServer
-	^remoteRsrServer 
