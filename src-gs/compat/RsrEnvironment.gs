@@ -8,6 +8,8 @@ RsrObject
 	inDictionary: UserGlobals
 %
 
+set class RsrEnvironment
+
 classmethod:
 ifPharo: aPharoBlock
 ifGemStone: aGemStoneBlock
