@@ -1,11 +1,11 @@
-input compat/RsrObject.gs
+!input compat/RsrObject.gs
+!input compat/RsrClassResolver.gs
 input compat/RsrEnvironment.gs
 input compat/RsrConnectionClosed.gs
-input compat/RsrClassResolver.gs
 input compat/RsrEphemeron.gs
 input compat/RsrGarbageCollector.gs
 input compat/RsrRegistry.gs
 input compat/RsrScientist.gs
 input compat/RsrSocket.gs
 input compat/RsrProtoObject.gs
-input compat/RsrDateTimeInterface.gs
+!input compat/RsrDateTimeInterface.gs
