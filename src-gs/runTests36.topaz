@@ -11,12 +11,10 @@ send RsrLoader load: 'RemoteServiceReplication'
 
 ! Topaz format...
 input RsrEvaluationService.gs
-input compat-test/tests.gs
 
 
+send RsrLoader load: 'RemoteServiceReplication-Compatibility-Test'
 send RsrLoader load: 'RemoteServiceReplication-Test'
 
-
 input runRSRTests.gs
-
 quit
