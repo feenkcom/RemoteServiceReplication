@@ -1,2 +1,0 @@
-input loadRsrCompat.gs
-quit
