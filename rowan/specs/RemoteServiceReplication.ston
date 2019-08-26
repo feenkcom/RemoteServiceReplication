@@ -1,0 +1,20 @@
+RwComponentSpecification {
+	#specName : 'RemoteServiceReplication',
+	#version : '0.0.1',
+	#projectUrl : '',
+	#configsPath : 'rowan/components',
+	#specsPath : 'rowan/specs',
+	#repoSpec : RwDiskRepositorySpecification {
+		
+	},
+	#repoPath : 'src',
+	#comment : '',
+	#defaultConfigurationNames : [
+		#'RemoteServiceReplication'
+	],
+	#defaultGroupNames : [
+		'core'
+	],
+	#projectsPath : 'rowan/projects',
+	#defaultComponentName : 'RemoteServiceReplication'
+}

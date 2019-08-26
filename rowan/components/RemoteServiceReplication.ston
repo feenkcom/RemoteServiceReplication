@@ -1,0 +1,28 @@
+RwComponentLoadConfiguration {
+	#name : 'RemoteServiceReplication',
+	#comment : '',
+	#projectName : 'RemoteServiceReplication',
+	#version : '0.0.1',
+	#conditionalPackages : {
+		[
+			'common'
+		] : {
+			'core' : {
+				#packageNames : [
+					#'RemoteServiceReplication'
+				]
+			}
+		}
+	},
+	#conditionalPackageMapSpecs : {
+		'gemstone' : {
+			'SystemUser' : {
+				#packageNameToPlatformPropertiesMap : {
+					'RemoteServiceReplication' : {
+						'symbolDictName' : 'UserGlobals'
+					}
+				}
+			}
+		}
+	}
+}
