@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrObject,
 	#superclass : #Object,
-	#category : #'RemoteServiceReplication-Compatibility-Pharo'
+	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
 
 { #category : #'instance creation' }

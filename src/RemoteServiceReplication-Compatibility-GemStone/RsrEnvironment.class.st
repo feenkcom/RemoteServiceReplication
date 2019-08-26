@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrEnvironment,
 	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Compatibility-Pharo'
+	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
 
 { #category : #branching }

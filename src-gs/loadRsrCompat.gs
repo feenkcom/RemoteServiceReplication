@@ -1,4 +1,3 @@
-input compat/RsrConnectionClosed.gs
 input compat/RsrEphemeron.gs
 input compat/RsrGarbageCollector.gs
 input compat/RsrRegistry.gs
