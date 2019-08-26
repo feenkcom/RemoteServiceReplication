@@ -290,9 +290,9 @@ RsrDecoder >> decodeString: aStream [
 	| length bytes |
 	length := self decodeControlWord: aStream.
 	bytes := aStream next: length.
-	^(bytes respondsTo: #utf8Decoded)
-		ifTrue: [bytes utf8Decoded "Pharo"]
-		ifFalse: [bytes decodeFromUTF8ToString "GemStone"]
+	^RsrEnvironment
+		ifPharo: [bytes utf8Decoded]
+		ifGemStone: [bytes decodeFromUTF8ToString]
 ]
 
 { #category : #'decoding-objects' }

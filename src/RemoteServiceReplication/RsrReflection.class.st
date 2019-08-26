@@ -7,9 +7,9 @@ Class {
 { #category : #reflection }
 RsrReflection class >> allInstancesOf: aClass [
 
-	^(aClass respondsTo: #instancesInMemory)
-		ifTrue: [aClass instancesInMemory "GemStone"]
-		ifFalse: [aClass allInstances]
+	^RsrEnvironment
+		ifPharo: [aClass allInstances]
+		ifGemStone: [aClass instancesInMemory]
 ]
 
 { #category : #reflection }

@@ -422,9 +422,9 @@ RsrEncoder >> encodeStringBody: aString
 onto: aStream [
 
 	| bytes |
-	bytes := (aString respondsTo: #utf8Encoded)
-		ifTrue: [aString utf8Encoded "pharo"]
-		ifFalse: [aString encodeAsUTF8 "GemStone"].
+	bytes := RsrEnvironment
+		ifPharo: [aString utf8Encoded]
+		ifGemStone: [aString encodeAsUTF8].
 	self
 		encodeControlWord: bytes size
 		onto: aStream.
