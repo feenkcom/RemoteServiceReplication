@@ -9,10 +9,10 @@ input rowanRSR.gs
 
 ! Topaz format...
 input RsrEvaluationService.gs
-
-
 input compat-test/tests.gs
-input RemoteServiceReplication-Test.gs
+
+
+input rowanRSR-Test.gs
 
 
 
