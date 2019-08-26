@@ -8,9 +8,9 @@ Class {
 RsrMessageSendingTest >> testRemoteError [
 
 	| service |
-	service := connectionA serviceFor: #RsrEvaluationClient.
+	service := connectionA serviceFor: #RsrClientNoInstVars.
 	self
-		should: [service evaluate: 'Error signal']
+		should: [service sendSignalError]
 		raise: Error
 ]
 

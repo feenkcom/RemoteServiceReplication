@@ -35,6 +35,12 @@ RsrClientNoInstVars >> sendSetMarker [
 ]
 
 { #category : #'testing-methods' }
+RsrClientNoInstVars >> sendSignalError [
+
+	^remoteSelf signalError
+]
+
+{ #category : #'testing-methods' }
 RsrClientNoInstVars >> sendUnaryReturn42Message [
 
 	^remoteSelf unaryReturn42

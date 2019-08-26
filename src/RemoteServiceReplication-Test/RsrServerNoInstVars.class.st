@@ -44,6 +44,12 @@ RsrServerNoInstVars >> setMarker [
 ]
 
 { #category : #'testing-methods' }
+RsrServerNoInstVars >> signalError [
+
+	^Error signal
+]
+
+{ #category : #'testing-methods' }
 RsrServerNoInstVars >> unaryReturn42 [
 
 	^42
