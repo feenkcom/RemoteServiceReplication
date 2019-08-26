@@ -17,6 +17,12 @@ RsrClientNoInstVars >> sendReturnNewServiceInArray [
 ]
 
 { #category : #'testing-methods' }
+RsrClientNoInstVars >> sendReturnObjectNew [
+
+	^remoteSelf returnObjectNew
+]
+
+{ #category : #'testing-methods' }
 RsrClientNoInstVars >> sendReturnTestSymbol [
 
 	^remoteSelf returnTestSymbol

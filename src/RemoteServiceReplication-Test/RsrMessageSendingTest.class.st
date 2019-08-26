@@ -69,9 +69,9 @@ RsrMessageSendingTest >> testReturnArgument [
 RsrMessageSendingTest >> testReturnInvalidObject [
 
 	| service |
-	service := connectionA serviceFor: #RsrEvaluationClient.
+	service := connectionA serviceFor: #RsrClientNoInstVars.
 	self
-		should: [service evaluate: 'Object new']
+		should: [service sendReturnObjectNew]
 		raise: RsrUnsupportedObject
 ]
 

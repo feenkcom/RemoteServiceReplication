@@ -26,6 +26,12 @@ RsrServerNoInstVars >> returnNewServiceInArray [
 ]
 
 { #category : #'testing-methods' }
+RsrServerNoInstVars >> returnObjectNew [
+
+	^Object new
+]
+
+{ #category : #'testing-methods' }
 RsrServerNoInstVars >> returnTestSymbol [
 
 	^#testSymbol
