@@ -379,7 +379,7 @@ reflectedVariablesOf: anRsrObjectdo: aBlock	RsrReflection		reflectedVariable
 set class RsrReflection class
 
 classmethod:
-allInstancesOf: aClass	^(aClass respondsTo: #instancesInMemory)		ifTrue: [aClass instancesInMemory "GemStone"]		ifFalse: [aClass allInstances]
+allInstancesOf: aClass	^RsrEnvironment		ifPharo: [aClass allInstances]		ifGemStone: [aClass instancesInMemory]
 %
 
 set class RsrForwarder class
@@ -2255,7 +2255,7 @@ encodeDictionary: aDictionaryon: aStream	self		encodeControlWord: self immed
 set class RsrEncoder
 
 method:
-encodeStringBody: aStringonto: aStream	| bytes |	bytes := (aString respondsTo: #utf8Encoded)		ifTrue: [aString utf8Encoded "pharo"]		ifFalse: [aString encodeAsUTF8 "GemStone"].	self		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes
+encodeStringBody: aStringonto: aStream	| bytes |	bytes := RsrEnvironment		ifPharo: [aString utf8Encoded]		ifGemStone: [aString encodeAsUTF8].	self		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes
 %
 
 
@@ -2417,7 +2417,7 @@ decodeInteger: aStream	| length bytes |	length := self decodeControlWord: aSt
 set class RsrDecoder
 
 method:
-decodeString: aStream	| length bytes |	length := self decodeControlWord: aStream.	bytes := aStream next: length.	^(bytes respondsTo: #utf8Decoded)		ifTrue: [bytes utf8Decoded "Pharo"]		ifFalse: [bytes decodeFromUTF8ToString "GemStone"]
+decodeString: aStream	| length bytes |	length := self decodeControlWord: aStream.	bytes := aStream next: length.	^RsrEnvironment		ifPharo: [bytes utf8Decoded]		ifGemStone: [bytes decodeFromUTF8ToString]
 %
 
 

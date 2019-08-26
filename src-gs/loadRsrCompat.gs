@@ -1,4 +1,5 @@
 input compat/RsrObject.gs
+input compat/RsrEnvironment.gs
 input compat/RsrConnectionClosed.gs
 input compat/RsrClassResolver.gs
 input compat/RsrEphemeron.gs
