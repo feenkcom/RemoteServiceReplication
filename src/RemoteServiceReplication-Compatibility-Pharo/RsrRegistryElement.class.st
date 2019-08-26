@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'reference'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-Pharo-RemoteServiceReplication-Compatibility-Pharo'
+	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
 { #category : #'instance creation' }
