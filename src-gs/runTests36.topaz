@@ -8,11 +8,6 @@ send RsrLoader load: 'RemoteServiceReplication-Base'
 input loadRsrCompat.gs
 
 send RsrLoader load: 'RemoteServiceReplication'
-
-! Topaz format...
-input RsrEvaluationService.gs
-
-
 send RsrLoader load: 'RemoteServiceReplication-Compatibility-Test'
 send RsrLoader load: 'RemoteServiceReplication-Test'
 
