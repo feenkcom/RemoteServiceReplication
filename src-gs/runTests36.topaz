@@ -1,19 +1,20 @@
 input login36.topaz
+input RsrLoader.gs
 
-input rowanBase.gs
+send RsrLoader load: 'RemoteServiceReplication-Base'
+
 
 ! Topaz format...
 input loadRsrCompat.gs
 
-input rowanRSR.gs
+send RsrLoader load: 'RemoteServiceReplication'
 
 ! Topaz format...
 input RsrEvaluationService.gs
 input compat-test/tests.gs
 
 
-input rowanRSR-Test.gs
-
+send RsrLoader load: 'RemoteServiceReplication-Test'
 
 
 input runRSRTests.gs

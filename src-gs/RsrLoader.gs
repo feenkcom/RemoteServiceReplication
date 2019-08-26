@@ -22,17 +22,13 @@ loadFromRoot: repositoryRoot ston: aStonFileName
   projectDefinition load: platformConfigurationAttributes.
 %
 
-
 classmethod: RsrLoader
-loadRSRBase
-    "run by SystemUser, loads the RSR-Base package into UserGlobals."
+load: aPackageName
+
     | repositoryRoot |
     repositoryRoot := '/home/kkilpela/development/repos/RSR-Prototype'.
     self
-    loadFromRoot: repositoryRoot
-    ston: 'RemoteServiceReplication-Base.ston'.
+        loadFromRoot: repositoryRoot
+        ston: aPackageName, '.ston'.
     ^true
 %
-
-! load RemoteServiceReplication-Base package into UserGlobals.
-send RsrLoader loadRSRBase
