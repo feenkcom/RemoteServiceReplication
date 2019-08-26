@@ -1,10 +1,3 @@
-input RemoteServiceReplication-Base.gs
-input loadRsrCompat.gs
-input loadRSR.topaz
-input RsrEvaluationService.gs
-input compat-test/tests.gs
-input RemoteServiceReplication-Test.gs
-
 exec
     | result report |
     result := RsrTestCase run.
