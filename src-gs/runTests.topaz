@@ -1,13 +1,15 @@
-input $RSR_ROOT/src-gs/RsrLoader.gs
 
-send RsrLoader load: 'RemoteServiceReplication-Base'
-
-send RsrLoader load: 'RemoteServiceReplication-Compatibility-GemStone'
 ! Topaz format...
+input $RSR_ROOT/src-gs/RsrLoader.gs
 input $RSR_ROOT/src-gs/RsrProtoObject.gs
 
-send RsrLoader load: 'RemoteServiceReplication'
-send RsrLoader load: 'RemoteServiceReplication-Compatibility-Test'
-send RsrLoader load: 'RemoteServiceReplication-Test'
+exec
+    RsrLoader
+        load: 'RemoteServiceReplication-Base';
+        load: 'RemoteServiceReplication-Compatibility-GemStone';
+        load: 'RemoteServiceReplication';
+        load: 'RemoteServiceReplication-Compatibility-Test';
+        load: 'RemoteServiceReplication-Test'
+%
 
 input $RSR_ROOT/src-gs/executeReportTests.topaz
