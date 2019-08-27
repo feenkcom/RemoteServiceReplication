@@ -6,7 +6,6 @@ send RsrLoader load: 'RemoteServiceReplication-Base'
 
 send RsrLoader load: 'RemoteServiceReplication-Compatibility-GemStone'
 ! Topaz format...
-input compat/RsrRegistry.gs
 input compat/RsrProtoObject.gs
 
 send RsrLoader load: 'RemoteServiceReplication'
