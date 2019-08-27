@@ -1,7 +1,0 @@
-set netldi: localhost:53036
-set gemnet !@daytank#netldi:53036!gemnetobject
-set gemstone gs36stone
-set username SystemUser
-set password swordfish
-set inputpauseonerror ON
-login

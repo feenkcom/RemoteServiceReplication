@@ -26,9 +26,12 @@ classmethod: RsrLoader
 load: aPackageName
 
     | repositoryRoot |
-    repositoryRoot := '/home/kkilpela/development/repos/RSR-Prototype'.
-    self
+    repositoryRoot := System gemEnvironmentVariable: 'RSR_ROOT'.
+    repositoryRoot ifNil: [Error signal: 'RSR_ROOT must be defined in environment'].
+    [self
         loadFromRoot: repositoryRoot
-        ston: aPackageName, '.ston'.
+        ston: aPackageName, '.ston']
+      on: Error
+      do: [:ex | ex isResumable ifTrue: [ex resume] "Avoids informational error from stopping topaz"].
     ^true
 %

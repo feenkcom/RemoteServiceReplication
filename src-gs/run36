@@ -1,6 +1,0 @@
-#! /usr/bin/env bash
-  
-export GEMSTONE=/home/kkilpela/development/repos/36x/svn/fast50/gs/product
-export PATH=$PATH:$GEMSTONE/bin
-
-$"${@}"
