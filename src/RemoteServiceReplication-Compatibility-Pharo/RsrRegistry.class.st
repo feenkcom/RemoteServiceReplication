@@ -11,10 +11,6 @@ Class {
 		'reapAction',
 		'reaper'
 	],
-	#classInstVars : [
-		'uniqueInstance',
-		'objectOffset'
-	],
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
