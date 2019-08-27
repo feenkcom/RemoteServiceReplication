@@ -1,17 +1,11 @@
-run
-RsrObject
-	subclass: #RsrGarbageCollector
-	instVarNames: #()
-	classVars: #()
-	classInstVars: #()
-	poolDictionaries: #()
-	inDictionary: UserGlobals
-%
+Class {
+	#name : #RsrGarbageCollector,
+	#superclass : #RsrObject,
+	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+}
 
-set class RsrGarbageCollector
-
-classmethod:
-maximumReclamation
+{ #category : #cleaning }
+RsrGarbageCollector class >> maximumReclamation [
 
 	| object ephemeron sema |
 	object := Object new.
@@ -24,4 +18,4 @@ maximumReclamation
 		_generationScavenge_vmMarkSweep;
 		_generationScavenge_vmMarkSweep.
 	^sema waitForMilliseconds: 10
-%
+]
