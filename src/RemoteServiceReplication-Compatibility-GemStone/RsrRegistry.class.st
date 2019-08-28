@@ -60,7 +60,7 @@ RsrRegistry >> critical: aBlock [
 { #category : #initialization }
 RsrRegistry >> includes: aService [
 
-	^self critical: [map includesKey: aService rsrId]
+	^self critical: [map includesKey: aService _id]
 ]
 
 { #category : #initialization }
@@ -91,9 +91,9 @@ RsrRegistry >> register: aService [
 	element := RsrEphemeron
 		on: aService
 		mournAction:
-			[self removeKey: aService rsrId.
-			reapAction value: aService rsrId].
-	self critical: [map at: aService rsrId put: element]
+			[self removeKey: aService _id.
+			reapAction value: aService _id].
+	self critical: [map at: aService _id put: element]
 ]
 
 { #category : #'adding/removing' }
@@ -118,6 +118,6 @@ RsrRegistry >> retain: aService [
 		mournAction: [:x |].
 	self
 		critical:
-			[map at: aService rsrId put: element.
+			[map at: aService _id put: element.
 			storage add: aService]
 ]
