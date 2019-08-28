@@ -15,7 +15,6 @@ Class {
 		'dispatcher',
 		'oidSpigot',
 		'serviceFactory',
-		'sharedNamespace',
 		'log'
 	],
 	#category : #'RemoteServiceReplication-Communications'
@@ -156,7 +155,6 @@ RsrConnection >> initialize [
 	objectCache := RsrObjectCache new.
 	promises := Dictionary new.
 	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
-	sharedNamespace := RsrSharedNamespace new.
 	log := RsrLog new
 ]
 
@@ -258,12 +256,6 @@ RsrConnection >> serviceFor: aResponsibility [
 ]
 
 { #category : #'private-accessing' }
-RsrConnection >> sharedNamespace [
-
-	^sharedNamespace
-]
-
-{ #category : #'private-accessing' }
 RsrConnection >> socket: aSocket [
 
 	socket := aSocket
@@ -284,8 +276,7 @@ RsrConnection >> start [
 	serviceFactory := RsrServiceFactory
 		rsrId: self oidSpigot next
 		rsrConnection: self.
-	serviceFactory registerWith: registry.
-	sharedNamespace client: (self serviceFor: #RsrSharedNamespaceClient)
+	serviceFactory registerWith: registry
 ]
 
 { #category : #'private-accessing' }

@@ -39,18 +39,6 @@ RsrSystemTestCase >> setUp [
 		assert: connectionB isOpen
 ]
 
-{ #category : #accesing }
-RsrSystemTestCase >> sharedNamespaceA [
-
-	^connectionA sharedNamespace
-]
-
-{ #category : #accesing }
-RsrSystemTestCase >> sharedNamespaceB [
-
-	^connectionB sharedNamespace
-]
-
 { #category : #initialization }
 RsrSystemTestCase >> tearDown [
 
