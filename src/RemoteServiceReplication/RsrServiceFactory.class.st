@@ -5,12 +5,16 @@ Class {
 }
 
 { #category : #'public-manufacturing' }
+RsrServiceFactory >> mirror: aService [
+
+	remoteSelf return: aService
+]
+
+{ #category : #'public-manufacturing' }
 RsrServiceFactory >> serviceFor: aResponsibility [
 
 	| instance |
-	instance := (RsrClassResolver classNamed: aResponsibility)
-		rsrId: rsrConnection oidSpigot next
-		rsrConnection: rsrConnection.
-	instance synchronize.
+	instance := (RsrClassResolver classNamed: aResponsibility) basicNew.
+	self mirror: instance.
 	^instance
 ]

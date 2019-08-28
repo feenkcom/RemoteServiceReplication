@@ -32,6 +32,25 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 ]
 
 { #category : #running }
+RsrLifetimeTest >> testObjectCreatedViaServiceFactor [
+	"Ensure objects created by the RsrServiceFactory maintain the same
+	properties as other objects"
+
+	| service remoteService |
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	self
+		assert: (connectionA registry at: service _id)
+		identicalTo: service.
+	remoteService := connectionB registry at: service _id.
+	self
+		assert: remoteService class
+		equals: RsrServerNoInstVars.
+	self
+		assert: service sendReturnSelf
+		identicalTo: service
+]
+
+{ #category : #running }
 RsrLifetimeTest >> testRemoteReferenceLifetime [
 
 	| name valueServiceLocal valueServiceRemote serviceLocal serviceRemote id marker actual |

@@ -23,6 +23,12 @@ RsrClientNoInstVars >> sendReturnObjectNew [
 ]
 
 { #category : #'testing-methods' }
+RsrClientNoInstVars >> sendReturnSelf [
+
+	^remoteSelf returnSelf
+]
+
+{ #category : #'testing-methods' }
 RsrClientNoInstVars >> sendReturnTestSymbol [
 
 	^remoteSelf returnTestSymbol

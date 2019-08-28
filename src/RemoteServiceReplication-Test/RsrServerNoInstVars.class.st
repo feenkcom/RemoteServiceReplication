@@ -32,6 +32,12 @@ RsrServerNoInstVars >> returnObjectNew [
 ]
 
 { #category : #'testing-methods' }
+RsrServerNoInstVars >> returnSelf [
+
+	^self
+]
+
+{ #category : #'testing-methods' }
 RsrServerNoInstVars >> returnTestSymbol [
 
 	^#testSymbol
