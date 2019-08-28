@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'mutex',
 		'map',
-		'storage',
 		'reapAction'
 	],
 	#category : #'RemoteServiceReplication-Compatibility-GemStone'
@@ -68,8 +67,7 @@ RsrRegistry >> initialize [
 
 	super initialize.
 	mutex := Semaphore forMutualExclusion.
-	map := Dictionary new.
-	storage := IdentitySet new
+	map := Dictionary new
 ]
 
 { #category : #accessing }
