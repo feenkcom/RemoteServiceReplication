@@ -83,7 +83,7 @@ RsrDecoderTest >> testRetainObject [
 		assert: command object class
 		equals: RsrServerNoInstVars.
 	self
-		assert: command object rsrId
+		assert: command object _id
 		equals: 1.
 	self assert: (registry includes: command object)
 ]
@@ -146,7 +146,7 @@ RsrDecoderTest >> testServiceNoInstVars [
 		assert: decodedService class
 		equals: RsrServerNoInstVars.
 	self
-		assert: decodedService rsrId
+		assert: decodedService _id
 		equals: 1
 ]
 
@@ -159,7 +159,7 @@ RsrDecoderTest >> testServiceReferenceService [
 		assert: referencedService class
 		equals: RsrServerNoInstVars.
 	self
-		assert: referencedService rsrId
+		assert: referencedService _id
 		equals: 2.
 	rootService := self decode: self rootServiceEncoding.
 	self

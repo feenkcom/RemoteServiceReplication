@@ -17,8 +17,8 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 	self assert: (RsrReflection allInstancesOf: RsrClientNoInstVars) isEmpty.
 	service := RsrServerNoInstVars new.
 	service
-		rsrId: 2;
-		rsrConnection: connectionA.
+		_id: 2;
+		_connection: connectionA.
 	command := RsrRetainObject object: service.
 	command
 		encodeUsing: connectionA encoder;
@@ -43,7 +43,7 @@ RsrLifetimeTest >> testRemoteReferenceLifetime [
 		put: valueServiceLocal.
 	valueServiceRemote := self sharedNamespaceB at: name.
 	serviceRemote := valueServiceRemote value.
-	id := serviceLocal rsrId.
+	id := serviceLocal _id.
 	self
 		assert: serviceRemote class
 		equals: RsrServerNoInstVars.

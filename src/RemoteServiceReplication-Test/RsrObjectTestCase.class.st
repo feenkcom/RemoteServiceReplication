@@ -25,10 +25,10 @@ RsrObjectTestCase >> testInitialization [
 		assert: instance isMirrored
 		equals: false.
 	self
-		assert: instance rsrId
+		assert: instance _id
 		equals: nil.
 	self
-		assert: instance rsrConnection
+		assert: instance _connection
 		equals: nil
 ]
 
@@ -39,7 +39,7 @@ RsrObjectTestCase >> testIsMirrored [
 	instance := self newInstance.
 	self deny: instance isMirrored.
 	instance
-		rsrId: 1;
-		rsrConnection: RsrMockConnection new.
+		_id: 1;
+		_connection: RsrMockConnection new.
 	self assert: instance isMirrored
 ]

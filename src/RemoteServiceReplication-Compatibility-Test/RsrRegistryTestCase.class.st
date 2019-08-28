@@ -13,7 +13,7 @@ RsrRegistryTestCase >> testRegister [
 	| id object registry marker |
 	marker := Object new.
 	object := RsrMockService new.
-	id := object rsrId.
+	id := object _id.
 	registry := RsrRegistry new.
 	registry register: object.
 	self maximumReclamation.
@@ -33,7 +33,7 @@ RsrRegistryTestCase >> testRetain [
 	| id object registry marker |
 	marker := Object new.
 	object := RsrMockService new.
-	id := object rsrId.
+	id := object _id.
 	registry := RsrRegistry new.
 	registry retain: object.
 	object := nil.
@@ -46,6 +46,6 @@ RsrRegistryTestCase >> testRetain [
 		assert: object class
 		equals: RsrMockService.
 	self
-		assert: object rsrId
+		assert: object _id
 		equals: id
 ]

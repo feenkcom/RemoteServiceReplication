@@ -35,8 +35,8 @@ RsrService class >> rsrId: anId
 rsrConnection: aConnection [
 
 	^super new
-		rsrId: anId;
-		rsrConnection: aConnection;
+		_id: anId;
+		_connection: aConnection;
 		yourself
 ]
 
@@ -57,6 +57,31 @@ RsrService class >> variablesToReflect [
 			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
 			currentClass := currentClass superclass].
 	^variables
+]
+
+{ #category : #'private-accessing' }
+RsrService >> _connection [
+
+	^rsrConnection
+]
+
+{ #category : #'private-accessing' }
+RsrService >> _connection: aConnection [
+
+	rsrConnection := aConnection.
+	remoteSelf := aConnection rsrForwarderClass on: self
+]
+
+{ #category : #'private-accessing' }
+RsrService >> _id [
+
+	^rsrId
+]
+
+{ #category : #'private-accessing' }
+RsrService >> _id: anRsrId [
+
+	rsrId := anRsrId
 ]
 
 { #category : #accessing }
@@ -103,31 +128,6 @@ RsrService >> remoteServiceClass [
 RsrService >> remoteServiceName [
 
 	^self remoteServiceClass name
-]
-
-{ #category : #'private-accessing' }
-RsrService >> rsrConnection [
-
-	^rsrConnection
-]
-
-{ #category : #'private-accessing' }
-RsrService >> rsrConnection: aConnection [
-
-	rsrConnection := aConnection.
-	remoteSelf := aConnection rsrForwarderClass on: self
-]
-
-{ #category : #'private-accessing' }
-RsrService >> rsrId [
-
-	^rsrId
-]
-
-{ #category : #'private-accessing' }
-RsrService >> rsrId: anRsrId [
-
-	rsrId := anRsrId
 ]
 
 { #category : #accessing }

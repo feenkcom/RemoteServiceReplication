@@ -11,8 +11,8 @@ Class {
 RsrEncoderTest >> register: aService [
 
 	aService
-		rsrId: connection oidSpigot next;
-		rsrConnection: connection.
+		_id: connection oidSpigot next;
+		_connection: connection.
 	registry retain: aService
 ]
 

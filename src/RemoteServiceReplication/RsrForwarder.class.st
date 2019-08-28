@@ -20,7 +20,7 @@ RsrForwarder class >> on: anRsrObject [
 RsrForwarder >> doesNotUnderstand: aMessage [
 
 	| promise |
-	promise := rsrObject rsrConnection
+	promise := rsrObject _connection
 		rsrSendMessage: aMessage
 		to: rsrObject.
 	^promise value

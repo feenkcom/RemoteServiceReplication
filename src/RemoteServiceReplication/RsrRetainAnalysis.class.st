@@ -44,8 +44,8 @@ RsrRetainAnalysis >> ensureRegistered: anRsrObject [
 	anRsrObject isMirrored
 		ifFalse:
 			[anRsrObject
-				rsrId: self nextOid;
-				rsrConnection: self connection.
+				_id: self nextOid;
+				_connection: self connection.
 			anRsrObject registerWith: self registry]
 ]
 

@@ -8,6 +8,14 @@ Class {
 }
 
 { #category : #accessing }
+RsrSharedNamespaceServer >> _connection: aConnection [
+
+	super _connection: aConnection.
+	namespace := aConnection sharedNamespace.
+	namespace server: self
+]
+
+{ #category : #accessing }
 RsrSharedNamespaceServer >> at: aKey
 put: aValue [
 
@@ -20,12 +28,4 @@ put: aValue [
 RsrSharedNamespaceServer >> removeKey: aKey [
 
 	^namespace primRemoveKey: aKey
-]
-
-{ #category : #accessing }
-RsrSharedNamespaceServer >> rsrConnection: aConnection [
-
-	super rsrConnection: aConnection.
-	namespace := aConnection sharedNamespace.
-	namespace server: self
 ]

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-RsrMockService >> rsrId [
+RsrMockService >> _id [
 
 	^1
 ]

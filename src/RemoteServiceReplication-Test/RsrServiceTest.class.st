@@ -16,7 +16,7 @@ RsrServiceTest >> testHasRemoteSelf [
 	| service |
 	service := self newInstance.
 	service
-		rsrId: 1;
-		rsrConnection: RsrMockConnection new.
+		_id: 1;
+		_connection: RsrMockConnection new.
 	self deny: nil == service remoteSelf
 ]

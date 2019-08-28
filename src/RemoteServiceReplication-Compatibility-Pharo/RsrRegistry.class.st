@@ -48,7 +48,7 @@ ifAbsent: aBlock [
 { #category : #initialization }
 RsrRegistry >> includes: anRsrObject [
 
-	^mutex critical: [map includesKey: anRsrObject rsrId]
+	^mutex critical: [map includesKey: anRsrObject _id]
 ]
 
 { #category : #initialization }
@@ -88,12 +88,12 @@ RsrRegistry >> register: anRsrObject [
 	mutex
 		critical:
 			[map
-				at: anRsrObject rsrId
+				at: anRsrObject _id
 				put: (RsrRegistryElement object: anRsrObject)].
 	anRsrObject
 		toFinalizeSend: #reap:
 		to: reaper
-		with: anRsrObject rsrId
+		with: anRsrObject _id
 ]
 
 { #category : #'adding/removing' }
@@ -116,7 +116,7 @@ RsrRegistry >> retain: anRsrObject [
 	mutex
 		critical:
 			[map
-				at: anRsrObject rsrId
+				at: anRsrObject _id
 				put: (RsrRegistryElement object: anRsrObject).
 			storage add: anRsrObject].
 ]

@@ -26,8 +26,8 @@ RsrServiceRegistryTest >> testCloseWithDanglingObjectInRegistry [
 		assert: actual class
 		equals: RsrServerNoInstVars.
 	self
-		assert: actual rsrId
-		equals: service rsrId
+		assert: actual _id
+		equals: service _id
 ]
 
 { #category : #running }
@@ -49,8 +49,8 @@ RsrServiceRegistryTest >> testRegistration [
 		assert: actual class
 		equals: RsrServerNoInstVars.
 	self
-		assert: actual rsrId
-		equals: service rsrId.
+		assert: actual _id
+		equals: service _id.
 	self sharedNamespaceB removeKey: name.
 	self
 		assert: (self sharedNamespaceA at: name ifAbsent:[marker])

@@ -285,7 +285,7 @@ RsrEncoder >> encodeReferenceOf: anObject
 onto: aStream [
 
 	(self isService: anObject)
-		ifTrue: [^self encodeControlWord: anObject rsrId onto: aStream].
+		ifTrue: [^self encodeControlWord: anObject _id onto: aStream].
 	(self isImmediate: anObject)
 		ifTrue: [^self encodeImmediate: anObject onto: aStream].
 	self error: 'Unsupported type'
@@ -368,7 +368,7 @@ on: aStream [
 		encodeControlWord: self serviceType
 		onto: aStream.
 	self
-		encodeControlWord: aService rsrId
+		encodeControlWord: aService _id
 		onto: aStream.
 	self
 		encodeControlWord: reflectedVariables size

@@ -73,7 +73,7 @@ oidSpigot: anOidSpigot [
 		yourself
 ]
 
-{ #category : #lifecycle }
+{ #category : #'public-lifecycle' }
 RsrConnection >> close [
 
 	isOpen
@@ -147,7 +147,7 @@ RsrConnection >> forwarderClass: anObject [
 	forwarderClass := anObject
 ]
 
-{ #category : #initialization }
+{ #category : #'private-initialization' }
 RsrConnection >> initialize [
 
 	super initialize.
@@ -269,7 +269,7 @@ RsrConnection >> socket: aSocket [
 	socket := aSocket
 ]
 
-{ #category : #lifecycle }
+{ #category : #'public-lifecycle' }
 RsrConnection >> start [
 
 	(isOpen := socket isConnected)
