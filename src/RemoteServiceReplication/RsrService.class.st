@@ -12,6 +12,16 @@ Class {
 	#category : #'RemoteServiceReplication-Public'
 }
 
+{ #category : #'instance creation' }
+RsrService class >> _id: anId
+_connection: aConnection [
+
+	^super new
+		_id: anId;
+		_connection: aConnection;
+		yourself
+]
+
 { #category : #accessing }
 RsrService class >> clientClass [
 
@@ -28,16 +38,6 @@ RsrService class >> isClientClass [
 RsrService class >> isServerClass [
 
 	^self == self serverClass
-]
-
-{ #category : #'instance creation' }
-RsrService class >> rsrId: anId
-rsrConnection: aConnection [
-
-	^super new
-		_id: anId;
-		_connection: aConnection;
-		yourself
 ]
 
 { #category : #accessing }

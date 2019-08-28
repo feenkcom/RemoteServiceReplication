@@ -262,8 +262,8 @@ RsrDecoder >> decodeService: aStream [
 		at: oid
 		ifAbsent:
 			[((self lookupClass: serviceName)
-				rsrId: oid
-				rsrConnection: self connection)
+				_id: oid
+				_connection: self connection)
 					yourself].
 	instance registerWith: self registry.
 	(RsrReflection reflectedVariableNamesOf: instance) size = instVarCount

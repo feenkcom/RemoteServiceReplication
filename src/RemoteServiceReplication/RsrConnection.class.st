@@ -274,8 +274,8 @@ RsrConnection >> start [
 	commandReader start.
 	commandWriter start.
 	serviceFactory := RsrServiceFactory
-		rsrId: self oidSpigot next
-		rsrConnection: self.
+		_id: self oidSpigot next
+		_connection: self.
 	serviceFactory registerWith: registry
 ]
 
