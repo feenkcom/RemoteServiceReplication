@@ -88,8 +88,8 @@ RsrRegistry >> reapAction: aBlock [
 RsrRegistry >> register: aService [
 
 	| element |
-	element := RsrEphemeron
-		on: aService
+	element := RsrWeakRegistryElement
+		with: aService
 		mournAction:
 			[self removeKey: aService _id.
 			reapAction value: aService _id].
@@ -113,11 +113,6 @@ RsrRegistry >> retain: aService [
 	"Keep a strong reference to the provided object."
 
 	| element |
-	element := RsrEphemeron
-		on: aService
-		mournAction: [:x |].
-	self
-		critical:
-			[map at: aService _id put: element.
-			storage add: aService]
+	element := RsrRegistryElement with: aService.
+	self critical: [map at: aService _id put: element]
 ]
