@@ -26,9 +26,3 @@ RsrRegistryElement >> value: anObject [
 
 	value := anObject
 ]
-
-{ #category : #accessing }
-RsrRegistryElement >> key [
-
-	^value
-]

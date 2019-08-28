@@ -46,7 +46,7 @@ ifAbsent: aBlock [
 				ifAbsent: [nil]].
 	^element
 		ifNil: aBlock
-		ifNotNil: [element key]
+		ifNotNil: [element value]
 ]
 
 { #category : #protecting }
@@ -103,7 +103,7 @@ RsrRegistry >> removeKey: anRsrId [
 			[map
 				removeKey: anRsrId
 				ifAbsent: [nil]].
-	^element ifNotNil: [element key]
+	^element ifNotNil: [element value]
 ]
 
 { #category : #initialization }
