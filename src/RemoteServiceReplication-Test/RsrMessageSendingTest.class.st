@@ -122,11 +122,8 @@ RsrMessageSendingTest >> testSendInvalidObject [
 RsrMessageSendingTest >> testSendSetMarker [
 
 	| service remoteService |
-	service := RsrClientNoInstVars new.
-	self sharedNamespaceA
-		at: 'TestService'
-		put: service.
-	remoteService := self sharedNamespaceB at: 'TestService'.
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	remoteService := connectionB registry at: service _id.
 	self deny: remoteService marker.
 	service sendSetMarker.
 	self assert: remoteService marker
