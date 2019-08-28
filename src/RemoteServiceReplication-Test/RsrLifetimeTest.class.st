@@ -53,14 +53,11 @@ RsrLifetimeTest >> testObjectCreatedViaServiceFactor [
 { #category : #running }
 RsrLifetimeTest >> testRemoteReferenceLifetime [
 
-	| name valueServiceLocal valueServiceRemote serviceLocal serviceRemote id marker actual |
-	name := 'ValueService'.
+	| valueServiceLocal valueServiceRemote serviceLocal serviceRemote id marker actual |
 	serviceLocal := RsrClientNoInstVars new.
-	valueServiceLocal := RsrValueHolderClient value: serviceLocal.
-	self sharedNamespaceA
-		at: name
-		put: valueServiceLocal.
-	valueServiceRemote := self sharedNamespaceB at: name.
+	valueServiceLocal := connectionA serviceFor: #RsrValueHolderClient.
+	valueServiceLocal value: serviceLocal.
+	valueServiceRemote := connectionB registry at: valueServiceLocal _id.
 	serviceRemote := valueServiceRemote value.
 	id := serviceLocal _id.
 	self
