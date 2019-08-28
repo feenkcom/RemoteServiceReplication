@@ -86,31 +86,31 @@ RsrConnection >> close [
 	objectCache reset
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> commandReader [
 
 	^commandReader
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> commandReader: aCommandReader [
 
 	commandReader := aCommandReader
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> commandWriter [
 
 	^commandWriter
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> commandWriter: anRsrCommandWriter [
 
 	commandWriter := anRsrCommandWriter
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> decoder [
 
 	^RsrDecoder registry: registry connection: self
@@ -123,25 +123,25 @@ RsrConnection >> disconnected [
 	self close
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> dispatcher [
 
 	^dispatcher
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> encoder [
 
 	^RsrEncoder new
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> forwarderClass [
 
 	^forwarderClass ifNil: [RsrForwarder]
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> forwarderClass: anObject [
 
 	forwarderClass := anObject
@@ -160,13 +160,13 @@ RsrConnection >> initialize [
 	log := RsrLog new
 ]
 
-{ #category : #accessing }
+{ #category : #'public-testing' }
 RsrConnection >> isOpen [
 
 	^isOpen
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> log [
 
 	^log
@@ -178,31 +178,31 @@ RsrConnection >> newTransactionId [
 	^transactionSpigot next
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> objectCache [
 
 	^objectCache
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> oidSpigot [
 
 	^oidSpigot
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> oidSpigot: anIntegerSpigot [
 
 	oidSpigot := anIntegerSpigot
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> promises [
 
 	^promises
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> registry [
 
 	^registry
@@ -257,13 +257,13 @@ RsrConnection >> serviceFor: aResponsibility [
 	^serviceFactory serviceFor: aResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> sharedNamespace [
 
 	^sharedNamespace
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> socket: aSocket [
 
 	socket := aSocket
@@ -288,19 +288,19 @@ RsrConnection >> start [
 	sharedNamespace client: (self serviceFor: #RsrSharedNamespaceClient)
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> stream [
 
 	^stream
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> transactionSpigot [
 
 	^transactionSpigot
 ]
 
-{ #category : #accessing }
+{ #category : #'private-accessing' }
 RsrConnection >> transactionSpigot: anObject [
 
 	transactionSpigot := anObject
