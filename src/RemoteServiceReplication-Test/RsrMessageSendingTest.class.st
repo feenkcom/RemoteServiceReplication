@@ -17,12 +17,9 @@ RsrMessageSendingTest >> testRemoteError [
 { #category : #running }
 RsrMessageSendingTest >> testReturnArgument [
 
-	| client server arguments dt response seconds |
-	client := RsrClientNoInstVars new.
-	self sharedNamespaceA
-		at: 'TestService'
-		put: client.
-	server := self sharedNamespaceB at: 'TestService'.
+	| client server arguments dt response |
+	client := connectionA serviceFor: #RsrClientNoInstVars.
+	server := connectionB registry at: client _id.
 	arguments := OrderedCollection new
 		addAll: #( #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
  		add: (Character codePoint: 16r259F);
