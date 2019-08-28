@@ -1,32 +1,32 @@
 Class {
-	#name : #RsrDateTimeInterface,
+	#name : #RsrDateAndTimeInterface,
 	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
 { #category : #accessing }
-RsrDateTimeInterface class >> dateTimeClass [
+RsrDateAndTimeInterface class >> dateAndTimeClass [
 
 	^DateAndTime
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> fromMicroseconds: anInteger [
+RsrDateAndTimeInterface class >> fromMicroseconds: anInteger [
 	"DateTime is encoded in offset +00:00"
 
-	^self dateTimeClass
+	^self dateAndTimeClass
 		fromSeconds: (anInteger / 1000000) + self secondsSincePosixEpoch
 		offset: 0
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> fromString: aString [
+RsrDateAndTimeInterface class >> fromString: aString [
 
-	^self dateTimeClass fromString: aString
+	^self dateAndTimeClass fromString: aString
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> microsecondsSince: aDateTime [
+RsrDateAndTimeInterface class >> microsecondsSince: aDateTime [
 	"DateTime is encoded in offset +00:00"
 
 	| seconds |
@@ -35,19 +35,19 @@ RsrDateTimeInterface class >> microsecondsSince: aDateTime [
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> now [
+RsrDateAndTimeInterface class >> now [
 
-	^self dateTimeClass now
+	^self dateAndTimeClass now
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> posixEpoch [
+RsrDateAndTimeInterface class >> posixEpoch [
 
-	^self dateTimeClass unixEpoch
+	^self dateAndTimeClass unixEpoch
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> secondsSincePosixEpoch [
+RsrDateAndTimeInterface class >> secondsSincePosixEpoch [
 
 	^self posixEpoch asSeconds
 ]

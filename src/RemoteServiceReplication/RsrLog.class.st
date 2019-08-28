@@ -69,7 +69,7 @@ RsrLog >> levelWarn [
 RsrLog >> log: aString [
 
 	Transcript
-		show: RsrDateTimeInterface now printString, '-', aString;
+		show: RsrDateAndTimeInterface now printString, '-', aString;
 		cr
 ]
 
@@ -78,7 +78,7 @@ RsrLog >> log: aMessage
 level: aLevelString [
 
 	Transcript
-		show: RsrDateTimeInterface now printString, '-', aLevelString, '-', aMessage;
+		show: RsrDateAndTimeInterface now printString, '-', aLevelString, '-', aMessage;
 		cr
 ]
 

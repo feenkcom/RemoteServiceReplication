@@ -164,7 +164,7 @@ RsrCodecTest >> testControlWord [
 RsrCodecTest >> testDateTime [
 
 	| dt encoding |
-	dt := RsrDateTimeInterface posixEpoch.
+	dt := RsrDateAndTimeInterface posixEpoch.
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],
@@ -172,7 +172,7 @@ RsrCodecTest >> testDateTime [
 	self
 		verifyImmediate: dt
 		encoding: encoding.
-	dt := RsrDateTimeInterface fromString: '2019-07-09T10:16:02.657612-07:00'.
+	dt := RsrDateAndTimeInterface fromString: '2019-07-09T10:16:02.657612-07:00'.
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],
@@ -180,7 +180,7 @@ RsrCodecTest >> testDateTime [
 	self
 		verifyImmediate: dt
 		encoding: encoding.
-	dt := RsrDateTimeInterface fromString: '1969-12-31T23:59:59-00:00'.
+	dt := RsrDateAndTimeInterface fromString: '1969-12-31T23:59:59-00:00'.
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],
@@ -188,7 +188,7 @@ RsrCodecTest >> testDateTime [
 	self
 		verifyImmediate: dt
 		encoding: encoding.
-	dt := RsrDateTimeInterface fromString: '1954-06-07T14:59:17.432512-07:00'.
+	dt := RsrDateAndTimeInterface fromString: '1954-06-07T14:59:17.432512-07:00'.
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],

@@ -97,7 +97,7 @@ RsrDecoder >> decodeDateTime: aStream [
 
 	| microseconds |
 	microseconds := self decodeControlWord: aStream.
-	^RsrDateTimeInterface fromMicroseconds: microseconds
+	^RsrDateAndTimeInterface fromMicroseconds: microseconds
 ]
 
 { #category : #'decoding-commands' }

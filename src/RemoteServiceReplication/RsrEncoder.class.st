@@ -83,7 +83,7 @@ on: aStream [
 	self
 		encodeControlWord: self dateTimeType
 		onto: aStream.
-	microseconds := RsrDateTimeInterface microsecondsSince: aDateTime.
+	microseconds := RsrDateAndTimeInterface microsecondsSince: aDateTime.
 	self
 		encodeControlWord: microseconds
 		onto: aStream

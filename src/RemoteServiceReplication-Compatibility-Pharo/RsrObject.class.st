@@ -37,7 +37,7 @@ RsrObject >> isCharacter: anObject [
 { #category : #testing }
 RsrObject >> isDateTime: anObject [
 
-	^anObject isKindOf: RsrDateTimeInterface dateTimeClass
+	^anObject isKindOf: RsrDateAndTimeInterface dateAndTimeClass
 ]
 
 { #category : #testing }
