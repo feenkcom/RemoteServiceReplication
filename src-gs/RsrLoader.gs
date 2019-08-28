@@ -31,7 +31,7 @@ load: aPackageName
     [self
         loadFromRoot: repositoryRoot
         ston: aPackageName, '.ston']
-      on: Error
+      on: LookupError
       do: [:ex | ex isResumable ifTrue: [ex resume] "Avoids informational error from stopping topaz"].
     ^true
 %

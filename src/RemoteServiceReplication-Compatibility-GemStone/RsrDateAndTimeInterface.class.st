@@ -1,47 +1,47 @@
 Class {
-	#name : #RsrDateTimeInterface,
+	#name : #RsrDateAndTimeInterface,
 	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
 
 { #category : #accessing }
-RsrDateTimeInterface class >> dateTimeClass [
+RsrDateAndTimeInterface class >> dateAndTimeClass [
 
 	^DateAndTime
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> fromMicroseconds: anInteger [
+RsrDateAndTimeInterface class >> fromMicroseconds: anInteger [
 	"DateTime is encoded in offset +00:00"
 
-    ^self dateTimeClass
+    ^self dateAndTimeClass
         posixSeconds: (anInteger / 1000000)
         offset: Duration zero
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> fromString: aString [
+RsrDateAndTimeInterface class >> fromString: aString [
 
-	^self dateTimeClass fromString: aString
+	^self dateAndTimeClass fromString: aString
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> microsecondsSince: aDateAndTime [
+RsrDateAndTimeInterface class >> microsecondsSince: aDateAndTime [
 	"DateTime is encoded in offset +00:00"
 
 	^((aDateAndTime asSeconds - self posixEpoch asSeconds) * 1000000) rounded
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> now [
+RsrDateAndTimeInterface class >> now [
 
-	^self dateTimeClass now
+	^self dateAndTimeClass now
 ]
 
 { #category : #accessing }
-RsrDateTimeInterface class >> posixEpoch [
+RsrDateAndTimeInterface class >> posixEpoch [
 
-	^self dateTimeClass
+	^self dateAndTimeClass
         posixSeconds: 0
         offset: Duration zero
 ]
