@@ -199,7 +199,7 @@ onto: aStream [
 			[^self
 				encodeOrderedCollection: anImmediate
 				on: aStream].
-	(self isDateTime: anImmediate)
+	(self isDateAndTime: anImmediate)
 		ifTrue:
 			[^self
 				encodeDateTime: anImmediate
