@@ -98,11 +98,7 @@ RsrRegistry >> register: anRsrObject [
 RsrRegistry >> removeKey: anRsrId [
 
 	| element |
-	element := mutex
-		critical:
-			[map
-				removeKey: anRsrId
-				ifAbsent: [nil]].
+	element := mutex critical: [map removeKey: anRsrId ifAbsent: [nil]].
 	^element ifNotNil: [element value]
 ]
 
