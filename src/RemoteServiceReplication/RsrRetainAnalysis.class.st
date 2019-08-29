@@ -64,17 +64,6 @@ RsrRetainAnalysis >> isCollection: anObject [
 ]
 
 { #category : #testing }
-RsrRetainAnalysis >> isDataObject: anObject [
-
-	^anObject == true
-		or: [anObject == false
-			or: [anObject == nil
-				or: [(self isString: anObject)
-					or: [(self isSymbol: anObject)
-						or: [(self isInteger: anObject)]]]]]
-]
-
-{ #category : #testing }
 RsrRetainAnalysis >> isImmediate: anObject [
 
 	^self encoder isImmediate: anObject
@@ -101,10 +90,8 @@ RsrRetainAnalysis >> perform [
 { #category : #processing }
 RsrRetainAnalysis >> process: anObject [
 
-	(self isDataObject: anObject)
-		ifTrue: [^self processDataObject: anObject].
 	(self isService: anObject)
-		ifTrue: [^self processRsrObject: anObject].
+		ifTrue: [^self processService: anObject].
 	(self isCollection: anObject)
 		ifTrue: [^self processCollection: anObject].
 	(self isImmediate: anObject)
@@ -122,12 +109,6 @@ RsrRetainAnalysis >> processCollection: aCollection [
 ]
 
 { #category : #processing }
-RsrRetainAnalysis >> processDataObject: aDataObject [
-
-	^self
-]
-
-{ #category : #processing }
 RsrRetainAnalysis >> processDictionary: aDictionary [
 
 	aDictionary
@@ -140,13 +121,13 @@ RsrRetainAnalysis >> processDictionary: aDictionary [
 ]
 
 { #category : #processing }
-RsrRetainAnalysis >> processRsrObject: anRsrObject [
+RsrRetainAnalysis >> processService: aService [
 
 	self
-		processing: anRsrObject
+		processing: aService
 		during:
 			[RsrReflection
-				reflectedVariablesOf: anRsrObject
+				reflectedVariablesOf: aService
 				do: [:each | self process: each]]
 ]
 
