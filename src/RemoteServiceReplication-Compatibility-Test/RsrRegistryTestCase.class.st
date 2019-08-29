@@ -53,3 +53,33 @@ RsrRegistryTestCase >> testAddServer [
 		assert: object _id
 		equals: id
 ]
+
+{ #category : #tests }
+RsrRegistryTestCase >> testIncludesKey [
+
+	| registry client |
+	registry := RsrRegistry new.
+	client := RsrMockClient new.
+	self deny: (registry includesKey: client _id).
+	registry
+		at: client _id
+		put: client.
+	self assert: (registry includesKey: client _id)
+]
+
+{ #category : #tests }
+RsrRegistryTestCase >> testRemoveKey [
+
+	| registry client |
+	registry := RsrRegistry new.
+	client := RsrMockClient new.
+	self
+		assert: (registry removeKey: client _id)
+		equals: nil.
+	registry
+		at: client _id
+		put: client.
+	self
+		assert: (registry removeKey: client _id)
+		identicalTo: client
+]
