@@ -39,7 +39,7 @@ RsrRegistry >> at: aKey
 ifAbsent: aBlock [
 
 	| element |
-	element := self
+	element := mutex
 		critical:
 			[map
 				at: aKey
@@ -62,20 +62,14 @@ put: aService [
 				mournAction:
 					[self removeKey: aKey.
 					reapAction value: aKey]].
-	self critical: [map at: aKey put: element]
-]
-
-{ #category : #protecting }
-RsrRegistry >> critical: aBlock [
-
-	mutex wait.
-	^aBlock ensure: [mutex signal]
+	mutex critical: [map at: aKey put: element].
+	^aService
 ]
 
 { #category : #initialization }
 RsrRegistry >> includesKey: aKey [
 
-	^self critical: [map includesKey: aKey]
+	^mutex critical: [map includesKey: aKey]
 ]
 
 { #category : #initialization }
@@ -102,7 +96,7 @@ RsrRegistry >> reapAction: aBlock [
 RsrRegistry >> removeKey: anRsrId [
 
 	| element |
-	element := self
+	element := mutex
 		critical:
 			[map
 				removeKey: anRsrId
