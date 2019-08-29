@@ -55,6 +55,31 @@ RsrRegistryTestCase >> testAddServer [
 ]
 
 { #category : #tests }
+RsrRegistryTestCase >> testAtAtIfAbsent [
+
+	| registry server id marker |
+	registry := RsrRegistry new.
+	server := RsrMockServer new.
+	id := server _id.
+	self
+		should: [registry at: id]
+		raise: Error.
+	marker := Object new.
+	self
+		assert: (registry at: id ifAbsent: [marker])
+		identicalTo: marker.
+	registry
+		at: id
+		put: server.
+	self
+		assert: (registry at: id)
+		identicalTo: server.
+	self
+		assert: (registry at: id ifAbsent: [marker])
+		identicalTo: server
+]
+
+{ #category : #tests }
 RsrRegistryTestCase >> testIncludesKey [
 
 	| registry client |
