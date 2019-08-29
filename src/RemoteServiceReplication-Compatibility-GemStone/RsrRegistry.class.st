@@ -27,26 +27,42 @@ RsrRegistry class >> reapAction: aBlock [
 ]
 
 { #category : #initialization }
-RsrRegistry >> at: anOID [
+RsrRegistry >> at: aKey [
 
 	^self
-		at: anOID
-		ifAbsent: [self error: 'Unknown OID']
+		at: aKey
+		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
 ]
 
 { #category : #initialization }
-RsrRegistry >> at: anOID
+RsrRegistry >> at: aKey
 ifAbsent: aBlock [
 
 	| element |
 	element := self
 		critical:
 			[map
-				at: anOID
+				at: aKey
 				ifAbsent: [nil]].
 	^element
 		ifNil: aBlock
 		ifNotNil: [element value]
+]
+
+{ #category : #accessing }
+RsrRegistry >> at: aKey
+put: aService [
+
+	| element |
+	element := aService isServer
+		ifTrue: [RsrRegistryElement with: aService]
+		ifFalse:
+			[RsrWeakRegistryElement
+				with: aService
+				mournAction:
+					[self removeKey: aKey.
+					reapAction value: aKey]].
+	self critical: [map at: aKey put: element]
 ]
 
 { #category : #protecting }
@@ -57,9 +73,9 @@ RsrRegistry >> critical: aBlock [
 ]
 
 { #category : #initialization }
-RsrRegistry >> includes: aService [
+RsrRegistry >> includesKey: aKey [
 
-	^self critical: [map includesKey: aService _id]
+	^self critical: [map includesKey: aKey]
 ]
 
 { #category : #initialization }
@@ -82,18 +98,6 @@ RsrRegistry >> reapAction: aBlock [
 	reapAction := aBlock
 ]
 
-{ #category : #initialization }
-RsrRegistry >> register: aService [
-
-	| element |
-	element := RsrWeakRegistryElement
-		with: aService
-		mournAction:
-			[self removeKey: aService _id.
-			reapAction value: aService _id].
-	self critical: [map at: aService _id put: element]
-]
-
 { #category : #'adding/removing' }
 RsrRegistry >> removeKey: anRsrId [
 
@@ -104,13 +108,4 @@ RsrRegistry >> removeKey: anRsrId [
 				removeKey: anRsrId
 				ifAbsent: [nil]].
 	^element ifNotNil: [element value]
-]
-
-{ #category : #initialization }
-RsrRegistry >> retain: aService [
-	"Keep a strong reference to the provided object."
-
-	| element |
-	element := RsrRegistryElement with: aService.
-	self critical: [map at: aService _id put: element]
 ]
