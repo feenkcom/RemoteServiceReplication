@@ -29,15 +29,9 @@ RsrNumericSpigot class >> start: aNumber
 step: anIncrement [
 
 	^super new
-		first: aNumber;
+		start: aNumber;
 		step: anIncrement;
 		yourself
-]
-
-{ #category : #accessing }
-RsrNumericSpigot >> first: aNumber [
-
-	current := aNumber
 ]
 
 { #category : #accessing }
@@ -64,6 +58,12 @@ RsrNumericSpigot >> next: aCount [
 	result := Array new: aCount.
 	1 to: aCount do: [:i | result at: i put: self next].
 	^result
+]
+
+{ #category : #accessing }
+RsrNumericSpigot >> start: aNumber [
+
+	current := aNumber
 ]
 
 { #category : #accessing }
