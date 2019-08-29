@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrConnectionClosed,
 	#superclass : #RsrError,
-	#category : #'RemoteServiceReplication-Compatibility-Pharo'
+	#category : #'RemoteServiceReplication-Base-Errors'
 }
 
 { #category : #accessing }
