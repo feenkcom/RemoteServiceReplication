@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrConnectionClosed,
-	#superclass : #Error,
+	#superclass : #RsrError,
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 

@@ -4,7 +4,7 @@ Class {
 	#classInstVars : [
 		'current'
 	],
-	#category : #'RemoteServiceReplication-Base'
+	#category : #'RemoteServiceReplication-Base-Concurrency'
 }
 
 { #category : #accessing }

@@ -1,5 +1,5 @@
 Class {
 	#name : #RsrError,
 	#superclass : #Error,
-	#category : #'RemoteServiceReplication-Exceptions'
+	#category : #'RemoteServiceReplication-Base-Errors'
 }
