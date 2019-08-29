@@ -30,9 +30,9 @@ RsrSystemTestCase >> setUp [
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	semaphore := Semaphore new.
 	self fork:
-		[[connectionA start] ensure: [semaphore signal]].
+		[[connectionA open] ensure: [semaphore signal]].
 	self fork:
-		[[connectionB start] ensure: [semaphore signal]].
+		[[connectionB open] ensure: [semaphore signal]].
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;

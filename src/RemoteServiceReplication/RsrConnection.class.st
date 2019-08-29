@@ -29,7 +29,7 @@ RsrConnection class >> acceptOn: aPortNumber [
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1)) start
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1)) open
 ]
 
 { #category : #'instance creation' }
@@ -44,7 +44,7 @@ on: aHostname [
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
-		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated) start
+		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated) open
 ]
 
 { #category : #'instance creation' }
@@ -195,6 +195,24 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 	oidSpigot := anIntegerSpigot
 ]
 
+{ #category : #'public-lifecycle' }
+RsrConnection >> open [
+
+	(isOpen := socket isConnected)
+		ifFalse: [^RsrConnectionClosed signal].
+	stream := RsrSocketStream on: socket.
+	dispatcher := RsrCommandDispatcher on: self.
+	commandReader := RsrCommandReader on: self.
+	commandWriter := RsrCommandWriter on: self.
+	dispatcher start.
+	commandReader start.
+	commandWriter start.
+	serviceFactory := RsrServiceFactory
+		_id: self oidSpigot next
+		_connection: self.
+	serviceFactory registerWith: registry
+]
+
 { #category : #'private-accessing' }
 RsrConnection >> promises [
 
@@ -228,24 +246,6 @@ RsrConnection >> serviceFor: aResponsibility [
 RsrConnection >> socket: aSocket [
 
 	socket := aSocket
-]
-
-{ #category : #'public-lifecycle' }
-RsrConnection >> start [
-
-	(isOpen := socket isConnected)
-		ifFalse: [^RsrConnectionClosed signal].
-	stream := RsrSocketStream on: socket.
-	dispatcher := RsrCommandDispatcher on: self.
-	commandReader := RsrCommandReader on: self.
-	commandWriter := RsrCommandWriter on: self.
-	dispatcher start.
-	commandReader start.
-	commandWriter start.
-	serviceFactory := RsrServiceFactory
-		_id: self oidSpigot next
-		_connection: self.
-	serviceFactory registerWith: registry
 ]
 
 { #category : #'private-accessing' }
