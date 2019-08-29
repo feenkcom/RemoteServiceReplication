@@ -2,16 +2,16 @@ Class {
 	#name : #RsrRegistryElement,
 	#superclass : #RsrObject,
 	#instVars : [
-		'reference'
+		'storage'
 	],
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
 { #category : #'instance creation' }
-RsrRegistryElement class >> object: anObject [
+RsrRegistryElement class >> value: anObject [
 
 	^self new
-		object: anObject;
+		value: anObject;
 		yourself
 ]
 
@@ -19,19 +19,26 @@ RsrRegistryElement class >> object: anObject [
 RsrRegistryElement >> initialize [
 
 	super initialize.
-	reference := WeakArray new: 1
+	storage := self storageClass new: 1
 ]
 
 { #category : #accessing }
-RsrRegistryElement >> object [
+RsrRegistryElement >> storageClass [
+	"Return the class of the storage"
 
-	^reference at: 1
+	^WeakArray
 ]
 
 { #category : #accessing }
-RsrRegistryElement >> object: anObject [
+RsrRegistryElement >> value [
 
-	reference
+	^storage at: 1
+]
+
+{ #category : #accessing }
+RsrRegistryElement >> value: anObject [
+
+	storage
 		at: 1
 		put: anObject
 ]

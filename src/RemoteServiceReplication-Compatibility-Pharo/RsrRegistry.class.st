@@ -42,7 +42,7 @@ ifAbsent: aBlock [
 	element := mutex critical: [map at: anOID ifAbsent: []].
 	^element
 		ifNil: aBlock
-		ifNotNil: [element object]
+		ifNotNil: [element value]
 ]
 
 { #category : #initialization }
@@ -89,7 +89,7 @@ RsrRegistry >> register: anRsrObject [
 		critical:
 			[map
 				at: anRsrObject _id
-				put: (RsrRegistryElement object: anRsrObject)].
+				put: (RsrRegistryElement value: anRsrObject)].
 	anRsrObject
 		toFinalizeSend: #reap:
 		to: reaper
@@ -99,14 +99,14 @@ RsrRegistry >> register: anRsrObject [
 { #category : #'adding/removing' }
 RsrRegistry >> removeKey: anRsrId [
 
-	| value |
+	| element |
 	mutex
 		critical:
-			[value := map
+			[element := map
 				removeKey: anRsrId
 				ifAbsent: [^nil].
-			storage remove: value object ifAbsent: []].
-	^value
+			storage remove: element value ifAbsent: []].
+	^element value
 ]
 
 { #category : #initialization }
@@ -117,6 +117,6 @@ RsrRegistry >> retain: anRsrObject [
 		critical:
 			[map
 				at: anRsrObject _id
-				put: (RsrRegistryElement object: anRsrObject).
+				put: (RsrRegistryElement value: anRsrObject).
 			storage add: anRsrObject].
 ]
