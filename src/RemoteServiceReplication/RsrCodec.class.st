@@ -35,7 +35,7 @@ RsrCodec >> controlWordMin [
 ]
 
 { #category : #'private-accessing' }
-RsrCodec >> dateTimeType [
+RsrCodec >> dateAndTimeType [
 
 	^14
 ]

@@ -40,7 +40,7 @@ RsrDecoder >> connection: aConnection [
 	connection := aConnection
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeArray: aStream [
 
 	| size array |
@@ -50,7 +50,7 @@ RsrDecoder >> decodeArray: aStream [
 	^array
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeByteArray: aStream [
 
 	| size |
@@ -58,7 +58,7 @@ RsrDecoder >> decodeByteArray: aStream [
 	^aStream next: size
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeCharacter: aStream [
 
 	| codePoint |
@@ -97,7 +97,7 @@ RsrDecoder >> decodeControlWord: aStream [
 		ifFalse: [unsignedResult]
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeDateTime: aStream [
 
 	| microseconds |
@@ -119,7 +119,7 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 		yourself
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeDictionary: aStream [
 
 	| size dictionary |
@@ -135,13 +135,13 @@ RsrDecoder >> decodeDictionary: aStream [
 	^dictionary
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeFalse: aStream [
 
 	^false
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeImmediateObject: aStream [
 
 	| type decodeSelector |
@@ -160,22 +160,13 @@ RsrDecoder >> decodeImmediateObjectMap [
 	^decodeImmediateObjectMap ifNil: [self initializeDecodeImmediateObjectMap]
 ]
 
-{ #category : #'decoding-objects' }
-RsrDecoder >> decodeInteger: aStream [
-
-	| length bytes |
-	length := self decodeControlWord: aStream.
-	bytes := aStream next: length.
-	^bytes asInteger
-]
-
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeNegativeInteger: aStream [
 
 	^(self decodePositiveInteger: aStream) negated
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeNil: aStream [
 
 	^nil
@@ -200,7 +191,7 @@ RsrDecoder >> decodeObjectReference: aStream [
 	^registry at: oid ifAbsent: [self signalUnknownOID]
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeOrderedCollection: aStream [
 
 	| size oc |
@@ -210,7 +201,7 @@ RsrDecoder >> decodeOrderedCollection: aStream [
 	^oc
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodePositiveInteger: aStream [
 
 	| length bytes |
@@ -280,7 +271,7 @@ RsrDecoder >> decodeService: aStream [
 	^instance
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeSet: aStream [
 
 	| size set |
@@ -290,7 +281,7 @@ RsrDecoder >> decodeSet: aStream [
 	^set
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeString: aStream [
 
 	| length bytes |
@@ -301,13 +292,13 @@ RsrDecoder >> decodeString: aStream [
 		ifGemStone: [bytes decodeFromUTF8ToString]
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeSymbol: aStream [
 
 	^(self decodeString: aStream) asSymbol
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeTrue: aStream [
 
 	^true
@@ -343,7 +334,7 @@ RsrDecoder >> initializeDecodeImmediateObjectMap [
 		at: self byteArrayType put: #decodeByteArray:;
 		at: self setType put: #decodeSet:;
 		at: self orderedCollectionType put: #decodeOrderedCollection:;
-		at: self dateTimeType put: #decodeDateTime:.
+		at: self dateAndTimeType put: #decodeDateTime:.
 	^decodeImmediateObjectMap
 ]
 

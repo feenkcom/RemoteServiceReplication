@@ -81,7 +81,7 @@ on: aStream [
 		encodeControlWord: self immediateOID
 		onto: aStream.
 	self
-		encodeControlWord: self dateTimeType
+		encodeControlWord: self dateAndTimeType
 		onto: aStream.
 	microseconds := RsrDateAndTimeInterface microsecondsSince: aDateTime.
 	self
