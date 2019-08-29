@@ -72,6 +72,12 @@ oidSpigot: anOidSpigot [
 		yourself
 ]
 
+{ #category : #'private-accessing' }
+RsrConnection >> _forwarderClass [
+
+	^RsrForwarder
+]
+
 { #category : #'public-lifecycle' }
 RsrConnection >> close [
 
@@ -132,18 +138,6 @@ RsrConnection >> dispatcher [
 RsrConnection >> encoder [
 
 	^RsrEncoder new
-]
-
-{ #category : #'private-accessing' }
-RsrConnection >> forwarderClass [
-
-	^forwarderClass ifNil: [RsrForwarder]
-]
-
-{ #category : #'private-accessing' }
-RsrConnection >> forwarderClass: anObject [
-
-	forwarderClass := anObject
 ]
 
 { #category : #'private-initialization' }
@@ -215,18 +209,6 @@ RsrConnection >> releaseOid: anOid [
 	command := RsrReleaseObjects oids: (Array with: anOid).
 	command encodeUsing: self encoder.
 	commandWriter enqueue: command
-]
-
-{ #category : #'private-accessing' }
-RsrConnection >> rsrForwarderClass [
-
-	^self forwarderClass
-]
-
-{ #category : #'private-accessing' }
-RsrConnection >> rsrForwarderClass: aClass [
-
-	^self forwarderClass: aClass
 ]
 
 { #category : #'private-sending' }

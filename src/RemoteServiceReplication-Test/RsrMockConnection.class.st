@@ -19,15 +19,15 @@ RsrMockConnection class >> forwarderClass: aClass [
 ]
 
 { #category : #accessing }
-RsrMockConnection >> encoder [
+RsrMockConnection >> _forwarderClass [
 
-	^RsrMockEncoder new
+	^forwarderClass ifNil: [RsrMockForwarder]
 ]
 
 { #category : #accessing }
-RsrMockConnection >> forwarderClass [
+RsrMockConnection >> encoder [
 
-	^forwarderClass ifNil: [RsrMockForwarder]
+	^RsrMockEncoder new
 ]
 
 { #category : #accessing }
@@ -57,12 +57,6 @@ RsrMockConnection >> registry [
 
 { #category : #commands }
 RsrMockConnection >> releaseOid: anInteger [
-]
-
-{ #category : #accessing }
-RsrMockConnection >> rsrForwarderClass [
-
-	^self forwarderClass
 ]
 
 { #category : #dispatching }

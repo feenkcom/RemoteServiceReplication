@@ -69,7 +69,7 @@ RsrService >> _connection [
 RsrService >> _connection: aConnection [
 
 	rsrConnection := aConnection.
-	remoteSelf := aConnection rsrForwarderClass on: self
+	remoteSelf := aConnection _forwarderClass on: self
 ]
 
 { #category : #'private-accessing' }
