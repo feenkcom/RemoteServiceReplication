@@ -12,7 +12,7 @@ RsrRegistryTestCase >> testRegister [
 
 	| id object registry marker |
 	marker := Object new.
-	object := RsrMockService new.
+	object := RsrMockClient new.
 	id := object _id.
 	registry := RsrRegistry new.
 	registry register: object.
@@ -32,7 +32,7 @@ RsrRegistryTestCase >> testRetain [
 
 	| id object registry marker |
 	marker := Object new.
-	object := RsrMockService new.
+	object := RsrMockServer new.
 	id := object _id.
 	registry := RsrRegistry new.
 	registry retain: object.
@@ -44,7 +44,7 @@ RsrRegistryTestCase >> testRetain [
 		equals: marker.
 	self
 		assert: object class
-		equals: RsrMockService.
+		equals: RsrMockServer.
 	self
 		assert: object _id
 		equals: id

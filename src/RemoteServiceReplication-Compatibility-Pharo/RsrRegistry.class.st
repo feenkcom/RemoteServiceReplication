@@ -45,6 +45,23 @@ ifAbsent: aBlock [
 ]
 
 { #category : #initialization }
+RsrRegistry >> at: aKey
+put: aService [
+	"Store aService into the registry"
+
+	| element |
+	element := aService isServer
+		ifTrue: [RsrRegistryElement value: aService]
+		ifFalse:
+			[aService
+				toFinalizeSend: #reap:
+				to: reaper
+				with: aKey.
+			RsrWeakRegistryElement value: aService].
+	mutex critical: [map at: aKey put: element]
+]
+
+{ #category : #initialization }
 RsrRegistry >> includes: anRsrObject [
 
 	^mutex critical: [map includesKey: anRsrObject _id]
@@ -83,15 +100,9 @@ RsrRegistry >> register: anRsrObject [
 	"Keep a weak reference to the provided object.
 	The simple #add: may be an better interface."
 
-	mutex
-		critical:
-			[map
-				at: anRsrObject _id
-				put: (RsrWeakRegistryElement value: anRsrObject)].
-	anRsrObject
-		toFinalizeSend: #reap:
-		to: reaper
-		with: anRsrObject _id
+	self
+		at: anRsrObject _id
+		put: anRsrObject
 ]
 
 { #category : #'adding/removing' }
@@ -106,9 +117,7 @@ RsrRegistry >> removeKey: anRsrId [
 RsrRegistry >> retain: anRsrObject [
 	"Keep a strong reference to the provided object."
 
-	mutex
-		critical:
-			[map
-				at: anRsrObject _id
-				put: (RsrRegistryElement value: anRsrObject)].
+	self
+		at: anRsrObject _id
+		put: anRsrObject
 ]

@@ -9,3 +9,15 @@ RsrMockService >> _id [
 
 	^1
 ]
+
+{ #category : #testing }
+RsrMockService >> isClient [
+
+	^self class == RsrMockClient
+]
+
+{ #category : #testing }
+RsrMockService >> isServer [
+
+	^self class == RsrMockServer
+]
