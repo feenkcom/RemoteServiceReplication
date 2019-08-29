@@ -99,7 +99,7 @@ RsrDecoder >> decodeControlWord: aStream [
 ]
 
 { #category : #'decoding-immediates' }
-RsrDecoder >> decodeDateTime: aStream [
+RsrDecoder >> decodeDateAndTime: aStream [
 
 	| microseconds |
 	microseconds := self decodeControlWord: aStream.
@@ -335,7 +335,7 @@ RsrDecoder >> initializeDecodeImmediateObjectMap [
 		at: self byteArrayType put: #decodeByteArray:;
 		at: self setType put: #decodeSet:;
 		at: self orderedCollectionType put: #decodeOrderedCollection:;
-		at: self dateAndTimeType put: #decodeDateTime:.
+		at: self dateAndTimeType put: #decodeDateAndTime:.
 	^decodeImmediateObjectMap
 ]
 

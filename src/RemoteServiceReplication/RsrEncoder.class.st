@@ -73,7 +73,7 @@ onto: aStream [
 ]
 
 { #category : #'private-encoding' }
-RsrEncoder >> encodeDateTime: aDateTime
+RsrEncoder >> encodeDateAndTime: aDateTime
 on: aStream [
 
 	| microseconds |
@@ -202,7 +202,7 @@ onto: aStream [
 	(self isDateAndTime: anImmediate)
 		ifTrue:
 			[^self
-				encodeDateTime: anImmediate
+				encodeDateAndTime: anImmediate
 				on: aStream].
 	self error: 'Unsupported Immediate'
 ]
