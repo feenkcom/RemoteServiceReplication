@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 RsrClassResolver class >> classNamed: aSymbol [
 
-	^Smalltalk at: aSymbol ifAbsent: [self error: aSymbol asString, ' was not found']
+	^Smalltalk at: aSymbol ifAbsent: [RsrUnknownClass signal: aSymbol]
 ]
 
 { #category : #accessing }

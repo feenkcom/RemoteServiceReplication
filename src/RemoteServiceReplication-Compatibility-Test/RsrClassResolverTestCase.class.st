@@ -21,7 +21,7 @@ RsrClassResolverTestCase >> testFailedResolution [
 	| actual marker |
 	self
 		should: [RsrClassResolver classNamed: #Xlerb]
-		raise: Error.
+		raise: RsrUnknownClass.
 	marker := Object new.
 	actual := RsrClassResolver
 		classNamed: #Xlerb
