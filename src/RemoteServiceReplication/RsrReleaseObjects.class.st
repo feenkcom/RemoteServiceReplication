@@ -15,13 +15,13 @@ RsrReleaseObjects class >> oids: anArray [
 		yourself
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrReleaseObjects >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeReleaseObjects: self
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrReleaseObjects >> executeFor: aConnection [
 
 	| registry |

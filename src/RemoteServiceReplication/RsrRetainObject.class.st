@@ -36,13 +36,13 @@ RsrRetainObject >> = anEncodedObject [
 		and: [self encoding = anEncodedObject encoding]
 ]
 
-{ #category : #encoding }
+{ #category : #lifecycle }
 RsrRetainObject >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeRetainObject: self
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrRetainObject >> executeFor: aConnection [
 
 	aConnection objectCache add: object
@@ -65,7 +65,7 @@ RsrRetainObject >> object: anObject [
 	object := anObject
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrRetainObject >> writeUsing: aCommandWriter [
 
 	super writeUsing: aCommandWriter

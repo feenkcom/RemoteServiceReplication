@@ -31,13 +31,13 @@ response: anObject [
 		yourself
 ]
 
-{ #category : #encoding }
+{ #category : #lifecycle }
 RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeDeliverResponse: self
 ]
 
-{ #category : #executing }
+{ #category : #accessing }
 RsrDeliverResponse >> error [
 
 	^(RsrClassResolver classNamed: errorName ifAbsent: [RsrError]) new
@@ -45,19 +45,19 @@ RsrDeliverResponse >> error [
 		yourself
 ]
 
-{ #category : #executing }
+{ #category : #accessing }
 RsrDeliverResponse >> errorName [
 
 	^errorName
 ]
 
-{ #category : #executing }
+{ #category : #accessing }
 RsrDeliverResponse >> errorName: aSymbol [
 
 	errorName := aSymbol
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| promise |
@@ -72,7 +72,7 @@ RsrDeliverResponse >> executeFor: aConnection [
 	
 ]
 
-{ #category : #encoding }
+{ #category : #testing }
 RsrDeliverResponse >> isError [
 
 	^errorName notNil
@@ -90,7 +90,7 @@ RsrDeliverResponse >> response: anObject [
 	response := anObject
 ]
 
-{ #category : #encoding }
+{ #category : #lifecycle }
 RsrDeliverResponse >> sendOver: aConnection [
 
 	| analysis |
@@ -115,7 +115,7 @@ RsrDeliverResponse >> transaction: aTransactionId [
 	transaction := aTransactionId
 ]
 
-{ #category : #encoding }
+{ #category : #lifecycle }
 RsrDeliverResponse >> writeUsing: aCommandWriter [
 
 	retainList do: [:each | each writeUsing: aCommandWriter].

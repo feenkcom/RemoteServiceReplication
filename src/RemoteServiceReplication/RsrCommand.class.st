@@ -7,7 +7,7 @@ Class {
 	#category : #'RemoteServiceReplication-Communications'
 }
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrCommand >> encodeUsing: anRsrEncoder [
 
 	self subclassResponsibility
@@ -23,7 +23,7 @@ RsrCommand >> encoding: anObject [
 	encoding := anObject
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrCommand >> executeFor: aConnection [
 
 	self subclassResponsibility
@@ -35,7 +35,12 @@ RsrCommand >> scientist [
 	^RsrScientist new
 ]
 
-{ #category : #writing }
+{ #category : #lifecycle }
+RsrCommand >> sendOver: aConnection [
+	"Do nothing unless a subclass offers a specialization"
+]
+
+{ #category : #lifecycle }
 RsrCommand >> writeUsing: aCommandWriter [
 
 	aCommandWriter write: encoding

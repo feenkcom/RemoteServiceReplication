@@ -35,13 +35,13 @@ RsrSendMessage >> arguments: anObject [
 	arguments := anObject
 ]
 
-{ #category : #encoding }
+{ #category : #lifecycle }
 RsrSendMessage >> encodeUsing: anEncoder [
 
 	encoding := anEncoder encodeSendMessage: self
 ]
 
-{ #category : #executing }
+{ #category : #lifecycle }
 RsrSendMessage >> executeFor: aConnection [
 
 	| result response |
@@ -83,7 +83,7 @@ RsrSendMessage >> selector: anObject [
 	selector := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #lifecycle }
 RsrSendMessage >> sendOver: aConnection [
 
 	| analysis promise |
@@ -111,7 +111,7 @@ RsrSendMessage >> transaction: anObject [
 	transaction := anObject
 ]
 
-{ #category : #writing }
+{ #category : #lifecycle }
 RsrSendMessage >> writeUsing: aCommandWriter [
 
 	retainList do: [:each | each writeUsing: aCommandWriter].
