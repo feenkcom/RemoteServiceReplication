@@ -3,7 +3,9 @@ Class {
 	#superclass : #RsrCodec,
 	#instVars : [
 		'registry',
-		'connection'
+		'connection',
+		'decodeCommandMap',
+		'decodeImmediateObjectMap'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
@@ -68,17 +70,20 @@ RsrDecoder >> decodeCharacter: aStream [
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
 
-	| command |
+	| command decodeSelector |
 	command := self decodeControlWord: aStream.
-	command == self retainObjectCommand
-		ifTrue: [^RsrRetainObject object: (self decodeObject: aStream)].
-	command == self sendMessageCommand
-		ifTrue: [^self decodeSendMessage: aStream].
-	command == self deliverResponseCommand
-		ifTrue: [^self decodeDeliverResponse: aStream].
-	command == self releaseObjectsCommand
-		ifTrue: [^self decodeReleaseObjects: aStream].
-	self error: 'Invalid message'
+	decodeSelector := self decodeCommandMap
+		at: command
+		ifAbsent: [self error: 'Invalid command received'].
+	^self
+		perform: decodeSelector
+		with: aStream
+]
+
+{ #category : #accessing }
+RsrDecoder >> decodeCommandMap [
+
+	^decodeCommandMap ifNil: [self initializeDecodeCommandMap]
 ]
 
 { #category : #decoding }
@@ -130,49 +135,29 @@ RsrDecoder >> decodeDictionary: aStream [
 	^dictionary
 ]
 
-{ #category : #decoding }
-RsrDecoder >> decodeImmediateInteger: aStream [
+{ #category : #'decoding-objects' }
+RsrDecoder >> decodeFalse: aStream [
 
-	| length bytes |
-	length := self decodeControlWord: aStream.
-	bytes := aStream next: length.
-	^self bytesAsInteger: bytes
+	^false
 ]
 
-{ #category : #decoding }
+{ #category : #'decoding-objects' }
 RsrDecoder >> decodeImmediateObject: aStream [
 
-	| type |
+	| type decodeSelector |
 	type := self decodeControlWord: aStream.
-	type = self symbolType
-		ifTrue: [^self decodeSymbol: aStream].
-	type = self stringType
-		ifTrue: [^self decodeString: aStream].
-	type = self positiveIntegerType
-		ifTrue: [^self decodeImmediateInteger: aStream].
-	type = self negativeIntegerType
-		ifTrue: [^self decodeNegativeInteger: aStream].
-	type = self characterType
-		ifTrue: [^self decodeCharacter: aStream].
-	type = self nilType
-		ifTrue: [^nil].
-	type = self trueType
-		ifTrue: [^true].
-	type = self falseType
-		ifTrue: [^false].
-	type = self arrayType
-		ifTrue: [^self decodeArray: aStream].
-	type = self dictionaryType
-		ifTrue: [^self decodeDictionary: aStream].
-	type = self byteArrayType
-		ifTrue: [^self decodeByteArray: aStream].
-	type = self setType
-		ifTrue: [^self decodeSet: aStream].
-	type = self orderedCollectionType
-		ifTrue: [^self decodeOrderedCollection: aStream].
-	type = self dateTimeType
-		ifTrue: [^self decodeDateTime: aStream].
-	self error: 'Invalid immediate type specified (', type printString, ')'
+	decodeSelector := self decodeImmediateObjectMap
+		at: type
+		ifAbsent: [self error: 'Invalid immediate type specified (', type printString, ')'].
+	^self
+		perform: decodeSelector
+		with: aStream
+]
+
+{ #category : #accessing }
+RsrDecoder >> decodeImmediateObjectMap [
+
+	^decodeImmediateObjectMap ifNil: [self initializeDecodeImmediateObjectMap]
 ]
 
 { #category : #'decoding-objects' }
@@ -187,10 +172,16 @@ RsrDecoder >> decodeInteger: aStream [
 { #category : #'decoding-objects' }
 RsrDecoder >> decodeNegativeInteger: aStream [
 
-	^(self decodeImmediateInteger: aStream) negated
+	^(self decodePositiveInteger: aStream) negated
 ]
 
 { #category : #'decoding-objects' }
+RsrDecoder >> decodeNil: aStream [
+
+	^nil
+]
+
+{ #category : #'decoding-services' }
 RsrDecoder >> decodeObject: aStream [
 
 	| objectType |
@@ -219,6 +210,15 @@ RsrDecoder >> decodeOrderedCollection: aStream [
 	^oc
 ]
 
+{ #category : #'decoding-objects' }
+RsrDecoder >> decodePositiveInteger: aStream [
+
+	| length bytes |
+	length := self decodeControlWord: aStream.
+	bytes := aStream next: length.
+	^self bytesAsInteger: bytes
+]
+
 { #category : #'decoding-commands' }
 RsrDecoder >> decodeReleaseObjects: aStream [
 
@@ -232,6 +232,12 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 			oid := self decodeControlWord: aStream.
 			oids at: i put: oid].
 	^RsrReleaseObjects oids: oids
+]
+
+{ #category : #'decoding-commands' }
+RsrDecoder >> decodeRetainObject: aStream [
+
+	^RsrRetainObject object: (self decodeObject: aStream)
 ]
 
 { #category : #'decoding-commands' }
@@ -251,7 +257,7 @@ RsrDecoder >> decodeSendMessage: aStream [
 		arguments: arguments
 ]
 
-{ #category : #'decoding-objects' }
+{ #category : #'decoding-services' }
 RsrDecoder >> decodeService: aStream [
 
 	| oid instVarCount serviceName instance |
@@ -299,6 +305,46 @@ RsrDecoder >> decodeString: aStream [
 RsrDecoder >> decodeSymbol: aStream [
 
 	^(self decodeString: aStream) asSymbol
+]
+
+{ #category : #'decoding-objects' }
+RsrDecoder >> decodeTrue: aStream [
+
+	^true
+]
+
+{ #category : #'private-initialization' }
+RsrDecoder >> initializeDecodeCommandMap [
+
+	decodeCommandMap := Dictionary new.
+	decodeCommandMap
+		at: self retainObjectCommand put: #decodeRetainObject:;
+		at: self sendMessageCommand put: #decodeSendMessage:;
+		at: self deliverResponseCommand put: #decodeDeliverResponse:;
+		at: self releaseObjectsCommand put: #decodeReleaseObjects:.
+	^decodeCommandMap
+]
+
+{ #category : #'private-initialization' }
+RsrDecoder >> initializeDecodeImmediateObjectMap [
+
+	decodeImmediateObjectMap := Dictionary new.
+	decodeImmediateObjectMap
+		at: self symbolType put: #decodeSymbol:;
+		at: self stringType put: #decodeString:;
+		at: self positiveIntegerType put: #decodePositiveInteger:;
+		at: self negativeIntegerType put: #decodeNegativeInteger:;
+		at: self characterType put: #decodeCharacter:;
+		at: self nilType put: #decodeNil:;
+		at: self trueType put: #decodeTrue:;
+		at: self falseType put: #decodeFalse:;
+		at: self arrayType put: #decodeArray:;
+		at: self dictionaryType put: #decodeDictionary:;
+		at: self byteArrayType put: #decodeByteArray:;
+		at: self setType put: #decodeSet:;
+		at: self orderedCollectionType put: #decodeOrderedCollection:;
+		at: self dateTimeType put: #decodeDateTime:.
+	^decodeImmediateObjectMap
 ]
 
 { #category : #utility }
