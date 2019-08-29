@@ -20,12 +20,13 @@ connection: aConnection [
 		yourself
 ]
 
-{ #category : #'private-decoding' }
+{ #category : #'private-converting' }
 RsrDecoder >> bytesAsInteger: bytes [
 
-	^bytes
-		inject: 0
-		into: [:int :byte | (int bitShift: 8) bitOr: byte]
+	| res |
+	res := 0.
+	bytes do: [:e | res := (res bitShift: 8) bitOr: e].
+	^res
 ]
 
 { #category : #accessing }
