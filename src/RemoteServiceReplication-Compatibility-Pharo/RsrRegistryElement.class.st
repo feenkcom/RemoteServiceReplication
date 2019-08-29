@@ -26,7 +26,7 @@ RsrRegistryElement >> initialize [
 RsrRegistryElement >> storageClass [
 	"Return the class of the storage"
 
-	^WeakArray
+	^Array
 ]
 
 { #category : #accessing }

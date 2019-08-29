@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'mutex',
 		'map',
-		'storage',
 		'reapAction',
 		'reaper'
 	],
@@ -56,7 +55,6 @@ RsrRegistry >> initialize [
 
 	super initialize.
 	map := Dictionary new.
-	storage := IdentitySet new.
 	mutex := Semaphore forMutualExclusion.
 	reaper := RsrObjectReaper registry: self
 ]
@@ -89,7 +87,7 @@ RsrRegistry >> register: anRsrObject [
 		critical:
 			[map
 				at: anRsrObject _id
-				put: (RsrRegistryElement value: anRsrObject)].
+				put: (RsrWeakRegistryElement value: anRsrObject)].
 	anRsrObject
 		toFinalizeSend: #reap:
 		to: reaper
@@ -100,13 +98,12 @@ RsrRegistry >> register: anRsrObject [
 RsrRegistry >> removeKey: anRsrId [
 
 	| element |
-	mutex
+	element := mutex
 		critical:
-			[element := map
+			[map
 				removeKey: anRsrId
-				ifAbsent: [^nil].
-			storage remove: element value ifAbsent: []].
-	^element value
+				ifAbsent: [nil]].
+	^element ifNotNil: [element value]
 ]
 
 { #category : #initialization }
@@ -117,6 +114,5 @@ RsrRegistry >> retain: anRsrObject [
 		critical:
 			[map
 				at: anRsrObject _id
-				put: (RsrRegistryElement value: anRsrObject).
-			storage add: anRsrObject].
+				put: (RsrRegistryElement value: anRsrObject)].
 ]
