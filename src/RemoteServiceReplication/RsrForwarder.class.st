@@ -21,7 +21,7 @@ RsrForwarder >> doesNotUnderstand: aMessage [
 
 	| promise |
 	promise := rsrObject _connection
-		rsrSendMessage: aMessage
+		_sendMessage: aMessage
 		to: rsrObject.
 	^promise value
 ]

@@ -77,6 +77,26 @@ RsrConnection >> _forwarderClass [
 	^RsrForwarder
 ]
 
+{ #category : #'private-sending' }
+RsrConnection >> _sendMessage: aMessage
+to: aService [
+
+"Open coordination window"
+	"Send dirty transitive closure of aRemoteMessage"
+	"Send DispatchMessage command"
+"Coorination window closed"
+	"Return Promise"
+	| dispatchCommand |
+	isOpen
+		ifFalse: [self error: 'Connection is not open'].
+	dispatchCommand := RsrSendMessage
+		transaction: self newTransactionId
+		receiver: aService
+		selector: aMessage selector
+		arguments: aMessage arguments.
+	^dispatchCommand sendOver: self
+]
+
 { #category : #'public-lifecycle' }
 RsrConnection >> close [
 
@@ -196,26 +216,6 @@ RsrConnection >> releaseOid: anOid [
 	command := RsrReleaseObjects oids: (Array with: anOid).
 	command encodeUsing: self encoder.
 	commandWriter enqueue: command
-]
-
-{ #category : #'private-sending' }
-RsrConnection >> rsrSendMessage: aMessage
-to: aService [
-
-"Open coordination window"
-	"Send dirty transitive closure of aRemoteMessage"
-	"Send DispatchMessage command"
-"Coorination window closed"
-	"Return Promise"
-	| dispatchCommand |
-	isOpen
-		ifFalse: [self error: 'Connection is not open'].
-	dispatchCommand := RsrSendMessage
-		transaction: self newTransactionId
-		receiver: aService
-		selector: aMessage selector
-		arguments: aMessage arguments.
-	^dispatchCommand sendOver: self
 ]
 
 { #category : #'public-service factory' }

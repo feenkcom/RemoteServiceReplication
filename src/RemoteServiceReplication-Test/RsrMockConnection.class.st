@@ -24,6 +24,20 @@ RsrMockConnection >> _forwarderClass [
 	^forwarderClass ifNil: [RsrMockForwarder]
 ]
 
+{ #category : #dispatching }
+RsrMockConnection >> _sendMessage: aMessage
+to: anRsrObject [
+
+	lastMessage := RsrSendMessage
+		transaction: 1
+		receiver: anRsrObject
+		selector: aMessage selector
+		arguments: aMessage arguments.
+	^RsrPromise new
+		fulfill: nil;
+		yourself
+]
+
 { #category : #accessing }
 RsrMockConnection >> encoder [
 
@@ -57,18 +71,4 @@ RsrMockConnection >> registry [
 
 { #category : #commands }
 RsrMockConnection >> releaseOid: anInteger [
-]
-
-{ #category : #dispatching }
-RsrMockConnection >> rsrSendMessage: aMessage
-to: anRsrObject [
-
-	lastMessage := RsrSendMessage
-		transaction: 1
-		receiver: anRsrObject
-		selector: aMessage selector
-		arguments: aMessage arguments.
-	^RsrPromise new
-		fulfill: nil;
-		yourself
 ]
