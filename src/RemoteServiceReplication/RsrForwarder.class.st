@@ -12,8 +12,14 @@ RsrForwarder class >> on: anRsrObject [
 
 	| instance |
 	instance := self new.
-	instance rsrObject: anRsrObject.
+	instance _object: anRsrObject.
 	^instance
+]
+
+{ #category : #'private-accessing' }
+RsrForwarder >> _object: anRsrObject [
+
+	rsrObject := anRsrObject
 ]
 
 { #category : #'private-forwarding' }
@@ -24,10 +30,4 @@ RsrForwarder >> doesNotUnderstand: aMessage [
 		_sendMessage: aMessage
 		to: rsrObject.
 	^promise value
-]
-
-{ #category : #'private-accessing' }
-RsrForwarder >> rsrObject: anRsrObject [
-
-	rsrObject := anRsrObject
 ]
