@@ -32,7 +32,7 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 ]
 
 { #category : #running }
-RsrLifetimeTest >> testObjectCreatedViaServiceFactor [
+RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 	"Ensure objects created by the RsrServiceFactory maintain the same
 	properties as other objects"
 
