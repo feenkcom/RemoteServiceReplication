@@ -8,6 +8,13 @@ Class {
 	#category : #'RemoteServiceReplication-Test-Mocks'
 }
 
+{ #category : #adding }
+RsrMockRegistry >> at: aKey
+put: aService [
+
+	self objects add: aService
+]
+
 { #category : #accessing }
 RsrMockRegistry >> connection [
 

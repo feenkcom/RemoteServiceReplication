@@ -85,7 +85,7 @@ RsrDecoderTest >> testRetainObject [
 	self
 		assert: command object _id
 		equals: 1.
-	self assert: (registry includes: command object)
+	self assert: (registry includesKey: command object _id)
 ]
 
 { #category : #running }

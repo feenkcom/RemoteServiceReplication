@@ -28,17 +28,17 @@ RsrRegistry class >> reapAction: aBlock [
 ]
 
 { #category : #initialization }
-RsrRegistry >> at: anOID [
+RsrRegistry >> at: aKey [
 
-	^self at: anOID ifAbsent: [KeyNotFound signal: anOID asString]
+	^self at: aKey ifAbsent: [KeyNotFound signal: aKey asString]
 ]
 
 { #category : #initialization }
-RsrRegistry >> at: anOID
+RsrRegistry >> at: aKey
 ifAbsent: aBlock [
 
 	| element |
-	element := mutex critical: [map at: anOID ifAbsent: []].
+	element := mutex critical: [map at: aKey ifAbsent: []].
 	^element
 		ifNil: aBlock
 		ifNotNil: [element value]
@@ -62,9 +62,9 @@ put: aService [
 ]
 
 { #category : #initialization }
-RsrRegistry >> includes: anRsrObject [
+RsrRegistry >> includesKey: aKey [
 
-	^mutex critical: [map includesKey: anRsrObject _id]
+	^mutex critical: [map includesKey: aKey]
 ]
 
 { #category : #initialization }
@@ -95,29 +95,10 @@ RsrRegistry >> reapAction: aBlock [
 	reapAction := aBlock
 ]
 
-{ #category : #initialization }
-RsrRegistry >> register: anRsrObject [
-	"Keep a weak reference to the provided object.
-	The simple #add: may be an better interface."
-
-	self
-		at: anRsrObject _id
-		put: anRsrObject
-]
-
 { #category : #'adding/removing' }
-RsrRegistry >> removeKey: anRsrId [
+RsrRegistry >> removeKey: aKey [
 
 	| element |
-	element := mutex critical: [map removeKey: anRsrId ifAbsent: [nil]].
+	element := mutex critical: [map removeKey: aKey ifAbsent: [nil]].
 	^element ifNotNil: [element value]
-]
-
-{ #category : #initialization }
-RsrRegistry >> retain: anRsrObject [
-	"Keep a strong reference to the provided object."
-
-	self
-		at: anRsrObject _id
-		put: anRsrObject
 ]

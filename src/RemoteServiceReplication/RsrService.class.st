@@ -111,9 +111,9 @@ RsrService >> isServer [
 { #category : #'private-lifecycle' }
 RsrService >> registerWith: aRegistry [
 
-	self isServer
-		ifTrue: [aRegistry retain: self]
-		ifFalse: [aRegistry register: self]
+	aRegistry
+		at: rsrId
+		put: self
 ]
 
 { #category : #accessing }

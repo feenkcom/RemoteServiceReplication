@@ -8,14 +8,16 @@ Class {
 }
 
 { #category : #tests }
-RsrRegistryTestCase >> testRegister [
+RsrRegistryTestCase >> testAddClient [
 
 	| id object registry marker |
 	marker := Object new.
 	object := RsrMockClient new.
 	id := object _id.
 	registry := RsrRegistry new.
-	registry register: object.
+	registry
+		at: id
+		put: object.
 	self maximumReclamation.
 	self
 		assert: (registry at: id ifAbsent: [marker])
@@ -28,14 +30,16 @@ RsrRegistryTestCase >> testRegister [
 ]
 
 { #category : #tests }
-RsrRegistryTestCase >> testRetain [
+RsrRegistryTestCase >> testAddServer [
 
 	| id object registry marker |
 	marker := Object new.
 	object := RsrMockServer new.
 	id := object _id.
 	registry := RsrRegistry new.
-	registry retain: object.
+	registry
+		at: id
+		put: object.
 	object := nil.
 	self maximumReclamation.
 	object := registry at: id ifAbsent: [marker].

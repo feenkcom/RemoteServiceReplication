@@ -13,7 +13,9 @@ RsrEncoderTest >> register: aService [
 	aService
 		_id: connection oidSpigot next;
 		_connection: connection.
-	registry retain: aService
+	registry
+		at: aService _id
+		put: aService
 ]
 
 { #category : #running }
