@@ -9,7 +9,7 @@ RsrClassResolver class >> classNamed: aSymbol [
 
 	^self
 		classNamed: aSymbol
-		ifAbsent: [self error: 'Unknown class']
+		ifAbsent: [RsrUnknownClass signal: aSymbol]
 ]
 
 { #category : #accessing }
