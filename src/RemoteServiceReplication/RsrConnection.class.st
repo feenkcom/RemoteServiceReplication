@@ -3,7 +3,6 @@ Class {
 	#superclass : #RsrObject,
 	#instVars : [
 		'isOpen',
-		'forwarderClass',
 		'transactionSpigot',
 		'commandWriter',
 		'commandReader',
@@ -57,7 +56,7 @@ RsrConnection class >> connectionTimeout [
 { #category : #'instance creation' }
 RsrConnection class >> new [
 
-	self error
+	self error: 'Instance creation via #new is unsupported'
 ]
 
 { #category : #'instance creation' }
@@ -98,21 +97,9 @@ RsrConnection >> commandReader [
 ]
 
 { #category : #'private-accessing' }
-RsrConnection >> commandReader: aCommandReader [
-
-	commandReader := aCommandReader
-]
-
-{ #category : #'private-accessing' }
 RsrConnection >> commandWriter [
 
 	^commandWriter
-]
-
-{ #category : #'private-accessing' }
-RsrConnection >> commandWriter: anRsrCommandWriter [
-
-	commandWriter := anRsrCommandWriter
 ]
 
 { #category : #'private-accessing' }
