@@ -7,8 +7,7 @@ Class {
 	#instVars : [
 		'mutex',
 		'map',
-		'reapAction',
-		'reaper'
+		'reapAction'
 	],
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
@@ -55,7 +54,7 @@ put: aService [
 		ifFalse:
 			[aService
 				toFinalizeSend: #reap:
-				to: reaper
+				to: self
 				with: aKey.
 			RsrWeakRegistryElement value: aService].
 	mutex critical: [map at: aKey put: element]
@@ -72,8 +71,7 @@ RsrRegistry >> initialize [
 
 	super initialize.
 	map := Dictionary new.
-	mutex := Semaphore forMutualExclusion.
-	reaper := RsrObjectReaper registry: self
+	mutex := Semaphore forMutualExclusion
 ]
 
 { #category : #reaping }
