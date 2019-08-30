@@ -7,9 +7,10 @@ Class {
 { #category : #running }
 RsrTestingConcurrencyTestCase >> exceptionCase [
 
-	RsrConcurrency
-		fork: [Error signal]
-		at: Processor highIOPriority
+	| sema |
+	sema := Semaphore new.
+	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].
+	sema wait
 ]
 
 { #category : #running }
