@@ -12,7 +12,7 @@ classmethod: RsrLoader
 loadFromRoot: repositoryRoot ston: aStonFileName 
   | platformConfigurationAttributes specUrl projectDefinition |
   SessionTemps current at: #ROWAN_TRACE put: #gciLogServer .
-  platformConfigurationAttributes := { 'common'. 'core'. 'gemstone' }.
+  platformConfigurationAttributes := { 'common'. 'test'. }.
   specUrl := repositoryRoot asFileReference /'rowan'/ 'specs' / aStonFileName .
   projectDefinition := RwComponentProjectDefinition newForUrl: 'file://', (specUrl pathString).
   projectDefinition

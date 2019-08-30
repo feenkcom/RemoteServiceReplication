@@ -9,7 +9,19 @@ RwComponentLoadConfiguration {
 		] : {
 			'core' : {
 				#packageNames : [
+					#'RemoteServiceReplication-Base',
+					#'RemoteServiceReplication-Compatibility-GemStone',
 					#'RemoteServiceReplication'
+				]
+			}
+		},
+		[
+			'test'
+		] : {
+			'core' : {
+				#packageNames : [
+					#'RemoteServiceReplication-Compatibility-Test',
+					#'RemoteServiceReplication-Test'
 				]
 			}
 		}

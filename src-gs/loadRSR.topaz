@@ -2,11 +2,4 @@
 ! Topaz format...
 input $RSR_ROOT/src-gs/RsrLoader.gs
 
-exec
-    RsrLoader
-        load: 'RemoteServiceReplication-Base';
-        load: 'RemoteServiceReplication-Compatibility-GemStone';
-        load: 'RemoteServiceReplication';
-        load: 'RemoteServiceReplication-Compatibility-Test';
-        load: 'RemoteServiceReplication-Test'
-%
+send RsrLoader load: 'RemoteServiceReplication'
