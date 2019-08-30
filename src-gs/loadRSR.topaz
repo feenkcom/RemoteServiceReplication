@@ -1,7 +1,6 @@
 
 ! Topaz format...
 input $RSR_ROOT/src-gs/RsrLoader.gs
-input $RSR_ROOT/src-gs/RsrProtoObject.gs
 
 exec
     RsrLoader
