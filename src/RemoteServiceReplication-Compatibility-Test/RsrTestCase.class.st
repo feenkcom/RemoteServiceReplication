@@ -51,15 +51,12 @@ RsrTestCase >> maximumReclamation [
 ]
 
 { #category : #running }
-RsrTestCase >> setUp [
+RsrTestCase >> runCase [
 
-	super setUp.
-	RsrConcurrency current: RsrTestingConcurrency new
-]
-
-{ #category : #running }
-RsrTestCase >> tearDown [
-
+	| concurrency |
+	concurrency := RsrTestingConcurrency new.
+	RsrConcurrency current: concurrency.
+	super runCase.
 	RsrConcurrency resetCurrent.
-	super tearDown
+	concurrency forkedException ifNotNil: [:ex | ex signal]
 ]
