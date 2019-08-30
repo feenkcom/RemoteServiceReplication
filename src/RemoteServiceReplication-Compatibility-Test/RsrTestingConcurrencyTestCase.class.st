@@ -18,8 +18,7 @@ RsrTestingConcurrencyTestCase >> noExceptionCase [
 	| process sema |
 	sema := Semaphore new.
 	process := RsrConcurrency fork: [sema signal].
-	sema wait.
-	self assert: process isTerminated
+	sema wait
 ]
 
 { #category : #running }
