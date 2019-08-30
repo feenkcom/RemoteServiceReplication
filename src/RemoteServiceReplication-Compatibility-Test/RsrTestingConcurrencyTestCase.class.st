@@ -16,9 +16,9 @@ RsrTestingConcurrencyTestCase >> exceptionCase [
 { #category : #running }
 RsrTestingConcurrencyTestCase >> noExceptionCase [
 
-	| process sema |
+	| sema |
 	sema := Semaphore new.
-	process := RsrConcurrency fork: [sema signal].
+	RsrConcurrency fork: [sema signal].
 	sema wait
 ]
 
