@@ -5,14 +5,6 @@ Class {
 }
 
 { #category : #reflection }
-RsrReflection class >> allInstancesOf: aClass [
-
-	^RsrEnvironment
-		ifPharo: [aClass allInstances]
-		ifGemStone: [aClass instancesInMemory]
-]
-
-{ #category : #reflection }
 RsrReflection class >> reflectedVariableIndecesOf: anRsrObject
 do: aBlock [
 
