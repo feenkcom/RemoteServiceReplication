@@ -21,7 +21,7 @@ RsrMessageSendingTest >> testReturnArgument [
 	client := connectionA serviceFor: #RsrClientNoInstVars.
 	server := connectionB registry at: client _id.
 	arguments := OrderedCollection new
-		addAll: #( #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
+		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
  		add: (Character codePoint: 16r259F);
 		add: (Dictionary new at: 1 put: 2; yourself);
 		add: (Set with: 14);

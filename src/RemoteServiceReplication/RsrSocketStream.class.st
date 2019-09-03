@@ -48,6 +48,8 @@ RsrSocketStream >> next [
 { #category : #reading }
 RsrSocketStream >> next: aCount [
 
+	aCount = 0
+		ifTrue: [^#[]].
 	^[socket read: aCount]
 		on: RsrConnectionClosed
 		do: [:ex | ex return: nil]
