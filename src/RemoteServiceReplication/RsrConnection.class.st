@@ -26,6 +26,7 @@ RsrConnection class >> acceptOn: aPortNumber [
 	listener := RsrSocket new.
 	listener listenOn: aPortNumber.
 	socket := listener accept.
+	listener close.
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
