@@ -71,6 +71,7 @@ RsrSocket >> read: aCount [
 { #category : #accessing }
 RsrSocket >> socket: aSocket [
 
+	aSocket setOption: 'TCP_NODELAY' value: 1.
 	socket := aSocket
 ]
 
