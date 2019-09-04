@@ -81,6 +81,7 @@ RsrSocket >> read: aCount [
 { #category : #accessing }
 RsrSocket >> socket: aSocket [
 
+	aSocket option: 'NODELAY' put: true.
 	socket := aSocket
 ]
 
