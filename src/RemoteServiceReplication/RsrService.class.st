@@ -3,7 +3,7 @@ I represent a class of Objects that know offer Rsr Services.
 "
 Class {
 	#name : #RsrService,
-	#superclass : #RsrObject,
+	#superclass : #RsrAbstractService,
 	#instVars : [
 		'rsrId',
 		'rsrConnection',
