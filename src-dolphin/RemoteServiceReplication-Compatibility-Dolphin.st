@@ -321,3 +321,11 @@ socket: aHostSocket
 write: aByteArray
 
 	socket send: aByteArray! !
+
+
+!RsrEnvironment class methodsFor!
+ifPharo: p
+ifGemStone: g
+ifDolphin: aBlock
+
+	^aBlock value! !
