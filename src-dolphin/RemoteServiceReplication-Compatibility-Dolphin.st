@@ -95,16 +95,6 @@ RsrRegistryElement
 	classInstanceVariableNames: ''!
 !RsrWeakRegistryElement categoriesForClass!RemoteServiceReplication-Compatibility-Dolphin! !
 
-!RsrObject class methodsFor!
-new
-
-	^super new initialize! !
-
-!RsrObject methodsFor!
-initialize
-
-	^self! !
-
 
 !RsrGarbageCollector class methodsFor!
 maximumReclamation
@@ -165,6 +155,17 @@ finalize
 	finalizationSend value! !
 
 
+
+!RsrRegistry class methodsFor!
+new
+
+	^self reapAction: [:key | ]!
+
+reapAction: aBlock
+
+	^super new
+		reapAction: aBlock;
+		yourself! !
 
 !RsrRegistry methodsFor!
 elementValue: anElement
@@ -287,6 +288,8 @@ accept
 
 close
 
+	(Smalltalk at: #KurtMarker ifAbsent: [false])
+		ifTrue: [self halt].
 	socket close!
 
 connectTo: aPort
@@ -311,7 +314,9 @@ read: aCount
 
 	| bytes |
 	bytes := ByteArray new: aCount.
-	socket receive: bytes.
+	[socket receive: bytes]
+		on: SocketClosed
+		do: [:ex | socket close.  ex resignalAs: RsrConnectionClosed new].
 	^bytes!
 
 socket: aHostSocket
@@ -329,3 +334,87 @@ ifGemStone: g
 ifDolphin: aBlock
 
 	^aBlock value! !
+
+
+
+!RsrObject class methodsFor!
+new
+
+	^super new initialize! !
+
+!RsrObject methodsFor!
+initialize
+
+	^self!
+
+isArray: anObject
+
+	^anObject class == Array!
+
+isByteArray: anObject
+
+	^anObject class == ByteArray!
+
+isCharacter: anObject
+
+	^anObject class == Character!
+
+isCollection: anObject
+
+	^anObject isKindOf: Collection!
+
+isDateAndTime: anObject
+
+	^anObject class == RsrDateAndTimeInterface dateAndTimeClass!
+
+isDictionary: anObject
+
+	^anObject class == Dictionary!
+
+isInteger: anObject
+
+	^anObject isInteger!
+
+isOrderedCollection: anObject
+
+	^anObject class == OrderedCollection!
+
+isSet: anObject
+
+	^anObject class == Set!
+
+isString: anObject
+
+	^anObject isKindOf: String!
+
+isSymbol: anObject
+
+	^anObject class == Symbol! !
+
+
+!RsrDateAndTimeInterface class methodsFor!
+dateAndTimeClass
+
+	^TimeStamp!
+
+fromMicroseconds: anInteger
+
+	^self dateAndTimeClass fromMilliseconds: self posixEpoch asMilliseconds + (anInteger // 1000)!
+
+fromString: aString
+
+	^self now!
+
+microsecondsSince: aTimeStamp
+
+	| millisDiff |
+	millisDiff := aTimeStamp asMilliseconds - self posixEpoch asMilliseconds.
+	^millisDiff * 1000!
+
+now
+
+	^self dateAndTimeClass current!
+
+posixEpoch
+
+	^self dateAndTimeClass fromSeconds: 2177452800! !
