@@ -17,7 +17,7 @@ RsrCommandWriter >> enqueue: aCommand [
 RsrCommandWriter >> executeCycle [
 
 	[queue next writeUsing: self.
-	queue isEmpty
+	(queue size = 0)
 		ifTrue: [self flush]]
 		on: RsrConnectionClosed
 		do:
