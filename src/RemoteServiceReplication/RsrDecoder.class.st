@@ -291,7 +291,7 @@ RsrDecoder >> decodeString: aStream [
 	^RsrEnvironment
 		ifPharo: [bytes utf8Decoded]
 		ifGemStone: [bytes decodeFromUTF8ToString]
-		ifDolphin: [Utf8String fromByteArray: bytes]
+		ifDolphin: [(RsrClassResolver classNamed: #Utf8String) fromByteArray: bytes]
 ]
 
 { #category : #'decoding-immediates' }
