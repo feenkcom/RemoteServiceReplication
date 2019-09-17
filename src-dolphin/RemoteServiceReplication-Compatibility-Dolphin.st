@@ -288,8 +288,6 @@ accept
 
 close
 
-	(Smalltalk at: #KurtMarker ifAbsent: [false])
-		ifTrue: [self halt].
 	socket close!
 
 connectTo: aPort
