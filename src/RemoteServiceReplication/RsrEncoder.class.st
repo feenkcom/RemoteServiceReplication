@@ -424,7 +424,8 @@ onto: aStream [
 	| bytes |
 	bytes := RsrEnvironment
 		ifPharo: [aString utf8Encoded]
-		ifGemStone: [aString encodeAsUTF8].
+		ifGemStone: [aString encodeAsUTF8]
+		ifDolphin: [aString asUtf8String asByteArray].
 	self
 		encodeControlWord: bytes size
 		onto: aStream.
