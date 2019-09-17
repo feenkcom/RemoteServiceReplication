@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrMockService,
-	#superclass : #Object,
+	#superclass : #RsrAbstractService,
 	#category : #'RemoteServiceReplication-Compatibility-Test'
 }
 
