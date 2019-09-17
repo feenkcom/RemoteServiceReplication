@@ -6,7 +6,8 @@ Class {
 
 { #category : #branching }
 RsrEnvironment class >> ifPharo: aPharoBlock
-ifGemStone: aGemStoneBlock [
+ifGemStone: aGemStoneBlock
+ifDolphin: aDolphinBlock [
 
 	^aGemStoneBlock value
 ]
