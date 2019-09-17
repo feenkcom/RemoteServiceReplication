@@ -58,12 +58,6 @@ RsrRetainAnalysis >> initialize [
 ]
 
 { #category : #testing }
-RsrRetainAnalysis >> isCollection: anObject [
-
-	^anObject isCollection
-]
-
-{ #category : #testing }
 RsrRetainAnalysis >> isImmediate: anObject [
 
 	^self encoder isImmediate: anObject

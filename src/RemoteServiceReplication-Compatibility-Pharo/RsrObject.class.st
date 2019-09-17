@@ -35,6 +35,12 @@ RsrObject >> isCharacter: anObject [
 ]
 
 { #category : #testing }
+RsrObject >> isCollection: anObject [
+
+	^anObject isCollection
+]
+
+{ #category : #testing }
 RsrObject >> isDateAndTime: anObject [
 
 	^anObject isKindOf: RsrDateAndTimeInterface dateAndTimeClass
