@@ -272,3 +272,52 @@ storageClass
 	"Return the class of the storage"
 
 	^WeakArray! !
+
+!RsrSocket class methodsFor!
+on: aHostSocket
+
+	^self new
+		socket: aHostSocket;
+		yourself! !
+
+!RsrSocket methodsFor!
+accept
+
+	^self class on: socket accept!
+
+close
+
+	socket close!
+
+connectTo: aPort
+on: aHostname
+
+	socket := Socket2
+		port: aPort
+		host: aHostname.
+	socket connect!
+
+isConnected
+
+	^socket notNil and: [socket isOpen]!
+
+listenOn: aPort
+
+	socket := ServerSocket2
+		port: aPort
+		backlog: 1!
+
+read: aCount
+
+	| bytes |
+	bytes := ByteArray new: aCount.
+	socket receive: bytes.
+	^bytes!
+
+socket: aHostSocket
+
+	socket := aHostSocket!
+
+write: aByteArray
+
+	socket send: aByteArray! !
