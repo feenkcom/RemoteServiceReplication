@@ -24,6 +24,7 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 		encodeUsing: connectionA encoder;
 		writeUsing: connectionA commandWriter.
 	connectionA commandWriter flush.
+	(Delay forMilliseconds: 10) wait.
 	connectionA close.
 	connectionB close.
 	service := command := nil.
