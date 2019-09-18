@@ -16,7 +16,10 @@ RsrCommandDispatcher >> dispatch: aCommand [
 { #category : #running }
 RsrCommandDispatcher >> executeCycle [
 
-	queue next executeFor: connection
+	| item |
+	item := queue next.
+	item == self stopToken
+		ifFalse: [item executeFor: connection]
 ]
 
 { #category : #initialize }
@@ -30,4 +33,17 @@ RsrCommandDispatcher >> initialize [
 RsrCommandDispatcher >> priority [
 
 	^super priority - 1
+]
+
+{ #category : #commands }
+RsrCommandDispatcher >> stop [
+
+	super stop.
+	queue nextPut: self stopToken
+]
+
+{ #category : #accessing }
+RsrCommandDispatcher >> stopToken [
+
+	^self stoppedState
 ]

@@ -10,13 +10,17 @@ Class {
 { #category : #commands }
 RsrCommandWriter >> enqueue: aCommand [
 
-	isRunning ifTrue: [queue nextPut: aCommand]
+	self isActive ifTrue: [queue nextPut: aCommand]
 ]
 
 { #category : #commands }
 RsrCommandWriter >> executeCycle [
 
-	[queue next writeUsing: self.
+	[| item |
+	item := queue next.
+	item == self stopToken
+		ifTrue: [^self].
+	item writeUsing: self.
 	(queue size = 0)
 		ifTrue: [self flush]]
 		on: RsrConnectionClosed
@@ -37,6 +41,12 @@ RsrCommandWriter >> initialize [
 
 	super initialize.
 	queue := SharedQueue new
+]
+
+{ #category : #accessing }
+RsrCommandWriter >> stopToken [
+
+	^self stoppedState
 ]
 
 { #category : #writing }

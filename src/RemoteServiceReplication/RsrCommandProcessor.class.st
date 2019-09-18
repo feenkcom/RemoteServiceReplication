@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'process',
 		'connection',
-		'isRunning'
+		'state'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
@@ -39,7 +39,13 @@ RsrCommandProcessor >> executeCycle [
 RsrCommandProcessor >> initialize [
 
 	super initialize.
-	isRunning := false
+	state := self stoppedState
+]
+
+{ #category : #testing }
+RsrCommandProcessor >> isActive [
+
+	^state == self runningState
 ]
 
 { #category : #running }
@@ -63,7 +69,7 @@ RsrCommandProcessor >> priority [
 { #category : #running }
 RsrCommandProcessor >> runLoop [
 
-	[isRunning]
+	[self isActive]
 		whileTrue:
 			[[self executeCycle]
 				on: Error
@@ -73,10 +79,16 @@ RsrCommandProcessor >> runLoop [
 					self connection unknownError: ex]]
 ]
 
+{ #category : #accessing }
+RsrCommandProcessor >> runningState [
+
+	^#Running
+]
+
 { #category : #commands }
 RsrCommandProcessor >> start [
 
-	isRunning := true.
+	state := self runningState.
 	process := RsrConcurrency
 		fork: [self runLoop]
 		at: self priority
@@ -85,10 +97,16 @@ RsrCommandProcessor >> start [
 { #category : #commands }
 RsrCommandProcessor >> stop [
 
-	isRunning ifFalse: [^self].
-	isRunning := false.
+	self isActive ifFalse: [^self].
+	state := self stoppedState.
 	self connection close.
 	self stream close
+]
+
+{ #category : #accessing }
+RsrCommandProcessor >> stoppedState [
+
+	^#Stop
 ]
 
 { #category : #accessing }
