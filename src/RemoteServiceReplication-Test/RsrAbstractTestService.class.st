@@ -1,6 +1,9 @@
 Class {
 	#name : #RsrAbstractTestService,
 	#superclass : #RsrService,
+	#instVars : [
+		'sharedVariable'
+	],
 	#category : #'RemoteServiceReplication-Test-Services'
 }
 
@@ -20,4 +23,16 @@ RsrAbstractTestService class >> serverClass [
 RsrAbstractTestService >> remoteSelf [
 
 	^remoteSelf
+]
+
+{ #category : #accessing }
+RsrAbstractTestService >> sharedVariable [
+
+	^sharedVariable
+]
+
+{ #category : #accessing }
+RsrAbstractTestService >> sharedVariable: anObject [
+
+	sharedVariable := anObject
 ]

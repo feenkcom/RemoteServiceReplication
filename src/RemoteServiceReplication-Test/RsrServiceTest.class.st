@@ -50,3 +50,27 @@ RsrServiceTest >> testIsMirrored [
 	self mirror: instance.
 	self assert: instance isMirrored
 ]
+
+{ #category : #running }
+RsrServiceTest >> testVariableReflection [
+
+	| localService remoteService |
+	localService := RsrClientTestService new
+		sharedVariable: #shared;
+		privateVariable: #private;
+		yourself.
+	self mirror: localService.
+	remoteService := connectionB registry at: localService _id.
+	self
+		assert: (RsrReflection reflectedVariableNamesOf: localService) asArray
+		equals: #(#sharedVariable).
+	self
+		assert: localService sharedVariable
+		identicalTo: remoteService sharedVariable.
+	self
+		assert: localService privateVariable
+		identicalTo: #private.
+	self
+		assert: remoteService privateVariable
+		identicalTo: nil
+]
