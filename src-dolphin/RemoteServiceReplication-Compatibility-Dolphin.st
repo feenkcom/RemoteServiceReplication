@@ -203,7 +203,7 @@ put: aService
 			[| finalizeSend |
 			finalizeSend := MessageSend
 				receiver: self
-				selector: #removeKey:
+				selector: #reap:
 				argument: aKey.
 			aService toFinalizeEvaluate: finalizeSend.
 			RsrWeakRegistryElement value: aService].
