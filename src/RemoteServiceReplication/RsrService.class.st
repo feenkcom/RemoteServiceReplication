@@ -84,6 +84,13 @@ RsrService >> _id: anRsrId [
 	rsrId := anRsrId
 ]
 
+{ #category : #'private-synchronization' }
+RsrService >> _synchronize [
+	"Return self to synchronize with the remote peer"
+
+	^self
+]
+
 { #category : #accessing }
 RsrService >> isClient [
 
@@ -145,5 +152,5 @@ RsrService >> serviceName [
 { #category : #'public-synchronization' }
 RsrService >> synchronize [
 
-	remoteSelf yourself
+	remoteSelf _synchronize
 ]
