@@ -97,19 +97,29 @@ RsrRegistryElement
 
 
 !RsrGarbageCollector class methodsFor!
+invokeGarbageCollector
+
+	MemoryManager current
+		collectGarbage;
+		compact!
+
 maximumReclamation
 
-	| service element sema |
+	| service element sema didFinalize action |
 	service := RsrAbstractService new.
 	sema := Semaphore new.
-	service toFinalizeEvaluate: (MessageSend receiver: sema selector: #signal).
+	didFinalize := false.
+	action :=
+		[didFinalize := true.
+		sema signal].
+	service toFinalizeEvaluate: action.
 	element := RsrWeakRegistryElement value: service.
 	service := nil.
-	MemoryManager current collectGarbage.
-	[(Delay forMilliseconds: 10) wait.
-	sema signal] forkAt: Processor systemBackgroundPriority.
+	self invokeGarbageCollector.
+	[(Delay forSeconds: 1) wait. "Wait up to one second for finalization"
+	sema signal] fork.
 	sema wait.
-	^element value == DeadObject current! !
+	^didFinalize! !
 
 !RsrScientist methodsFor!
 instrument: aBlock
