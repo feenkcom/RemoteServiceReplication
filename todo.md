@@ -15,6 +15,11 @@
     - [x] Reflected instance variables appear in remoteSelf
     - [x] Instance variables in concrete classes do not appear
     - [x] Instance variables declared in RsrService and above are not mirrored
+- [] RsrSocketStream
+    - [] #nextAvailable
+- [] RsrSocket
+    - [] Data available?
+    - [] Read available data
 
 ## Needed Functionality
 
