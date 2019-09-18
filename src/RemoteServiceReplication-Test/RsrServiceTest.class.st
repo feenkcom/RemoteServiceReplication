@@ -52,6 +52,37 @@ RsrServiceTest >> testIsMirrored [
 ]
 
 { #category : #running }
+RsrServiceTest >> testReflectedVariableNames [
+
+	| clientNames serverNames |
+	clientNames := RsrReflection reflectedVariableNamesOf: RsrClientTestService new.
+	serverNames := RsrReflection reflectedVariableNamesOf: RsrServerTestService new.
+	self
+		assert: clientNames
+		equals: serverNames.
+	self
+		assert: clientNames size
+		equals: 1.
+	self
+		assert: (clientNames at: 1) asSymbol
+		equals: #sharedVariable.
+	clientNames := RsrReflection reflectedVariableNamesOf: RsrReflectedVariableTestClient new.
+	serverNames := RsrReflection reflectedVariableNamesOf: RsrReflectedVariableTestServer new.
+	self
+		assert: clientNames
+		equals: serverNames.
+	self
+		assert: clientNames size
+		equals: 2.
+	self
+		assert: (clientNames at: 1) asSymbol
+		equals: #varA.
+	self
+		assert: (clientNames at: 2) asSymbol
+		equals: #varB
+]
+
+{ #category : #running }
 RsrServiceTest >> testVariableReflection [
 
 	| localService remoteService |
@@ -61,9 +92,6 @@ RsrServiceTest >> testVariableReflection [
 		yourself.
 	self mirror: localService.
 	remoteService := connectionB registry at: localService _id.
-	self
-		assert: (RsrReflection reflectedVariableNamesOf: localService) asArray
-		equals: #(#sharedVariable).
 	self
 		assert: localService sharedVariable
 		identicalTo: remoteService sharedVariable.
