@@ -89,7 +89,7 @@ RsrObject
 
 RsrRegistryElement
 	subclass: #RsrWeakRegistryElement
-	instanceVariableNames: ''
+	instanceVariableNames: 'finalizationSend'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -99,9 +99,7 @@ RsrRegistryElement
 !RsrGarbageCollector class methodsFor!
 invokeGarbageCollector
 
-	MemoryManager current
-		collectGarbage;
-		compact!
+	MemoryManager current collectGarbage!
 
 maximumReclamation
 
@@ -112,8 +110,9 @@ maximumReclamation
 	action :=
 		[didFinalize := true.
 		sema signal].
-	service toFinalizeEvaluate: action.
-	element := RsrWeakRegistryElement value: service.
+	element := RsrWeakRegistryElement
+		value: service
+		toFinalizeEvaluate: action.
 	service := nil.
 	self invokeGarbageCollector.
 	[(Delay forSeconds: 1) wait. "Wait up to one second for finalization"
@@ -215,8 +214,9 @@ put: aService
 				receiver: self
 				selector: #reap:
 				argument: aKey.
-			aService toFinalizeEvaluate: finalizeSend.
-			RsrWeakRegistryElement value: aService].
+			RsrWeakRegistryElement
+				value: aService
+				toFinalizeEvaluate: finalizeSend].
 	mutex critical: [map at: aKey put: element]!
 
 removeKey: aKey
@@ -258,10 +258,9 @@ value: anObject
 		yourself! !
 
 !RsrRegistryElement methodsFor!
-storageClass
-	"Return the class of the storage"
+initializeStorage
 
-	^Array!
+	storage := Array new: 1!
 
 value
 
@@ -276,13 +275,30 @@ value: anObject
 initialize
 
 	super initialize.
-	storage := self storageClass new: 1! !
+	self initializeStorage! !
+
+!RsrWeakRegistryElement class methodsFor!
+value: aService
+toFinalizeEvaluate: anEvaluable
+
+	^(self value: aService)
+		toFinalizeEvaluate: anEvaluable;
+		yourself! !
 
 !RsrWeakRegistryElement methodsFor!
-storageClass
-	"Return the class of the storage"
+initializeStorage
 
-	^WeakArray! !
+	storage := MourningWeakArray new: 1.
+	storage pathologist: self!
+
+toFinalizeEvaluate: anEvaluable
+
+	finalizationSend := anEvaluable!
+
+elementsExpired: anInteger
+of: anArray
+
+	finalizationSend ifNotNil: [:action | [action value] fork]! !
 
 !RsrSocket class methodsFor!
 on: aHostSocket
