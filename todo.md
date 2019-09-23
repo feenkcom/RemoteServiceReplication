@@ -22,6 +22,21 @@
 - [] RsrSocket
     - [] Data available?
     - [] Read available data
+- [] Unicode
+    - [] Strings containing
+        - [] 8-bit characters
+        - [] 16-bit characters
+        - [] 32-bit characters
+    - [] Symbols containing
+        - [] 8-bit characters
+        - [] 16-bit characters
+        - [] 32-bit characters
+    - [] Characters
+        - [] Ascii
+        - [] Extended ascii
+        - [] 8-bit characters
+        - [] 16-bit characters
+        - [] 32-bit characters
 
 ## Needed Functionality
 
