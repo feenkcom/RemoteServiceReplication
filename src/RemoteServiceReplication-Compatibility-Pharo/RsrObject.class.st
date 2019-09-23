@@ -1,8 +1,43 @@
 Class {
 	#name : #RsrObject,
 	#superclass : #Object,
+	#classInstVars : [
+		'nativeClasses'
+	],
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
+
+{ #category : #initialization }
+RsrObject class >> initializeNativeClasses [
+
+	nativeClasses := Set new.
+	nativeClasses
+		add: ByteSymbol;
+		add: WideSymbol;
+		add: ByteString;
+		add: WideString;
+		add: LargePositiveInteger;
+		add: LargeNegativeInteger;
+		add: SmallInteger;
+		add: Character;
+		add: UndefinedObject;
+		add: True;
+		add: False;
+		add: Array;
+		add: ByteArray;
+		add: Set;
+		add: OrderedCollection;
+		add: Dictionary;
+		add: DateAndTime.
+	^nativeClasses
+]
+
+{ #category : #accessing }
+RsrObject class >> nativeClasses [
+	"Return the collection of classes supported by RSR in this environment"
+
+	^nativeClasses ifNil: [self initializeNativeClasses]
+]
 
 { #category : #'instance creation' }
 RsrObject class >> new [
@@ -80,4 +115,11 @@ RsrObject >> isString: anObject [
 RsrObject >> isSymbol: anObject [
 
 	^anObject isSymbol
+]
+
+{ #category : #accessing }
+RsrObject >> nativeClasses [
+	"Return the collection of classes supported by RSR in this environment"
+
+	^self class nativeClasses
 ]
