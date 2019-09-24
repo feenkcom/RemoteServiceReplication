@@ -48,4 +48,4 @@
 
 ## Bugs
 
-- [] All RsrCommandProcessors should #stop regardless of whether they are waiting on a socket or a queue
+- [x] All RsrCommandProcessors should #stop regardless of whether they are waiting on a socket or a queue
