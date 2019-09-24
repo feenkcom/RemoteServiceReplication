@@ -7,13 +7,6 @@ Class {
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
-{ #category : #accessing }
-RsrObject class >> nativeClasses [
-	"Return the collection of classes supported by RSR in this environment"
-
-	^Set withAll: RsrSpecies speciesMapping keys
-]
-
 { #category : #'instance creation' }
 RsrObject class >> new [
 
@@ -24,11 +17,4 @@ RsrObject class >> new [
 RsrObject >> initialize [
 
 	^self
-]
-
-{ #category : #accessing }
-RsrObject >> nativeClasses [
-	"Return the collection of classes supported by RSR in this environment"
-
-	^self class nativeClasses
 ]

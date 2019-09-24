@@ -64,6 +64,13 @@ RsrCodec >> isImmediate: anObject [
 	^self nativeClasses includes: anObject class
 ]
 
+{ #category : #'private-accessing' }
+RsrCodec >> nativeClasses [
+	"Return the collection of classes supported by RSR in this environment"
+
+	^Set withAll: RsrSpecies speciesMapping keys
+]
+
 { #category : #'private-accessing-object types' }
 RsrCodec >> negativeIntegerType [
 
