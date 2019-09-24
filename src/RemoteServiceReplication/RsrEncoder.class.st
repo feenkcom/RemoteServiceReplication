@@ -149,7 +149,7 @@ RsrEncoder >> encodeImmediate: anImmediate
 onto: aStream [
 
 	| species |
-	species := self speciesMappings
+	species := self speciesMapping
 		at: anImmediate class
 		ifAbsent: [RsrSpecies nullSpecies].
 	^species
@@ -473,4 +473,11 @@ RsrEncoder >> retainObjectIdentifier [
 RsrEncoder >> sendMessageIdentifier [
 
 	^1
+]
+
+{ #category : #accessing }
+RsrEncoder >> speciesMapping [
+	"Return a mapping between the native class and their associated RsrSpecies"
+
+	^RsrSpecies speciesMapping
 ]
