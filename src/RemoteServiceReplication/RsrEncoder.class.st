@@ -466,13 +466,6 @@ RsrEncoder >> sendMessageIdentifier [
 ]
 
 { #category : #accessing }
-RsrEncoder >> speciesMapping [
-	"Return a mapping between the native class and their associated RsrSpecies"
-
-	^RsrSpecies speciesMapping
-]
-
-{ #category : #accessing }
 RsrEncoder >> speciesOf: anObject [
 
 	(self isService: anObject)
