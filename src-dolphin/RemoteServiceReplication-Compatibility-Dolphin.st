@@ -11,7 +11,7 @@ Object
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	classInstanceVariableNames: ''!
+	classInstanceVariableNames: 'nativeClasses'!
 !RsrObject categoriesForClass!RemoteServiceReplication-Compatibility-Dolphin! !
 
 RsrObject
@@ -364,7 +364,33 @@ ifDolphin: aBlock
 !RsrObject class methodsFor!
 new
 
-	^super new initialize! !
+	^super new initialize!
+
+nativeClasses
+	"Return the collection of classes supported by RSR in this environment"
+
+	^nativeClasses ifNil: [self initializeNativeClasses]!
+
+initializeNativeClasses
+
+	nativeClasses := Set new.
+	nativeClasses
+		add: Symbol;
+		add: String;
+		add: Utf8String;
+		add: LargeInteger;
+		add: SmallInteger;
+		add: Character;
+		add: UndefinedObject;
+		add: True;
+		add: False;
+		add: Array;
+		add: ByteArray;
+		add: Set;
+		add: OrderedCollection;
+		add: Dictionary;
+		add: TimeStamp.
+	^nativeClasses! !
 
 !RsrObject methodsFor!
 initialize
@@ -413,7 +439,12 @@ isString: anObject
 
 isSymbol: anObject
 
-	^anObject class == Symbol! !
+	^anObject class == Symbol!
+
+nativeClasses
+	"Return the collection of classes supported by RSR in this environment"
+
+	^self class nativeClasses! !
 
 
 !RsrDateAndTimeInterface class methodsFor!
