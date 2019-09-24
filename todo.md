@@ -39,6 +39,7 @@
         - [] 32-bit characters
 - [] Service
     - [] Mirrored instance variable reference unsupported object
+    - [] Mirror instance variables containing each supported species
 
 ## Needed Functionality
 
