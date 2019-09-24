@@ -145,20 +145,6 @@ RsrEncoder >> encodeFalseOnto: aStream [
 ]
 
 { #category : #'private-encoding' }
-RsrEncoder >> encodeImmediate: anImmediate
-onto: aStream [
-
-	| species |
-	species := self speciesMapping
-		at: anImmediate class
-		ifAbsent: [RsrSpecies nullSpecies].
-	^species
-		encodeReference: anImmediate
-		with: self
-		onto: aStream
-]
-
-{ #category : #'private-encoding' }
 RsrEncoder >> encodeImmediateInteger: anInteger
 onto: aStream [
 
@@ -235,11 +221,12 @@ on: aStream [
 RsrEncoder >> encodeReferenceOf: anObject
 onto: aStream [
 
-	(self isService: anObject)
-		ifTrue: [^self encodeControlWord: anObject _id onto: aStream].
-	(self isImmediate: anObject)
-		ifTrue: [^self encodeImmediate: anObject onto: aStream].
-	self error: 'Unsupported type'
+	| species |
+	species := self speciesOf: anObject.
+	species
+		encodeReference: anObject
+		with: self
+		onto: aStream
 ]
 
 { #category : #'private-encoding' }
@@ -330,6 +317,15 @@ on: aStream [
 	RsrReflection
 		reflectedVariablesOf: aService
 		do: [:each | self encodeReferenceOf: each onto: aStream]
+]
+
+{ #category : #'private-encoding' }
+RsrEncoder >> encodeServiceReference: aService
+onto: aStream [
+
+	^self
+		encodeControlWord: aService _id
+		onto: aStream
 ]
 
 { #category : #'private-encoding' }
@@ -474,4 +470,14 @@ RsrEncoder >> speciesMapping [
 	"Return a mapping between the native class and their associated RsrSpecies"
 
 	^RsrSpecies speciesMapping
+]
+
+{ #category : #accessing }
+RsrEncoder >> speciesOf: anObject [
+
+	(self isService: anObject)
+		ifTrue: [^RsrServiceSpecies].
+	^self speciesMapping
+		at: anObject class
+		ifAbsent: [RsrSpecies nullSpecies]
 ]

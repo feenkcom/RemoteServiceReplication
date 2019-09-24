@@ -179,7 +179,7 @@ RsrEncoderTest >> testUnsupportedObject [
 		should: [self encoder encodeObject: Object new]
 		raise: RsrUnsupportedObject.
 	self
-		should: [self encoder encodeImmediate: Object new onto: (WriteStream on: ByteArray new)]
+		should: [self encoder encodeReferenceOf: Object new onto: (WriteStream on: ByteArray new)]
 		raise: RsrUnsupportedObject
 ]
 
