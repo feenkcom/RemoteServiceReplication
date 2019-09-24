@@ -60,7 +60,7 @@ RsrRetainAnalysis >> initialize [
 { #category : #testing }
 RsrRetainAnalysis >> isCollection: anObject [
 
-	^anObject isCollection
+	^anObject isKindOf: Collection
 ]
 
 { #category : #testing }
