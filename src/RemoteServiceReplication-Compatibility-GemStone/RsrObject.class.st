@@ -1,7 +1,6 @@
 Class {
 	#name : #RsrObject,
 	#superclass : #Object,
-	#classInstVars : ['nativeClasses'],
 	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
 
