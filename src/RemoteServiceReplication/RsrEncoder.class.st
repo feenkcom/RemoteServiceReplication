@@ -452,12 +452,6 @@ ofSize: aNumberOfBytes [
 ]
 
 { #category : #'private-testing' }
-RsrEncoder >> isArray: anObject [
-
-	^anObject class == Array
-]
-
-{ #category : #'private-testing' }
 RsrEncoder >> isService: anObject [
 
 	^anObject isKindOf: RsrService

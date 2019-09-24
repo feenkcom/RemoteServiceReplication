@@ -58,6 +58,18 @@ RsrRetainAnalysis >> initialize [
 ]
 
 { #category : #testing }
+RsrRetainAnalysis >> isCollection: anObject [
+
+	^anObject isCollection
+]
+
+{ #category : #testing }
+RsrRetainAnalysis >> isDictionary: anObject [
+
+	^anObject class == Dictionary
+]
+
+{ #category : #testing }
 RsrRetainAnalysis >> isImmediate: anObject [
 
 	^self encoder isImmediate: anObject
