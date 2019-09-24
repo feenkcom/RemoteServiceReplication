@@ -5,34 +5,6 @@ Class {
 	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #accessing }
-RsrObject class >> nativeClasses [
-	"Return the collection of classes supported by RSR in this environment"
-
-	^nativeClasses ifNil: [self initializeNativeClasses]
-]
-
-{ #category : #initialization }
-RsrObject class >> initializeNativeClasses [
-
-	nativeClasses := Set new.
-	nativeClasses
-		add: Symbol;
-		add: String;
-		add: LargeInteger;
-		add: SmallInteger;
-		add: Character;
-		add: UndefinedObject;
-		add: Boolean;
-		add: Array;
-		add: ByteArray;
-		add: Set;
-		add: OrderedCollection;
-		add: Dictionary;
-		add: DateAndTime.
-	^nativeClasses
-]
-
 { #category : #'instance creation' }
 RsrObject class >> new [
 
@@ -109,11 +81,4 @@ RsrObject >> isString: anObject [
 RsrObject >> isSymbol: anObject [
 
 	^anObject isSymbol
-]
-
-{ #category : #accessing }
-RsrObject >> nativeClasses [
-	"Return the collection of classes supported by RSR in this environment"
-
-	^self class nativeClasses
 ]
