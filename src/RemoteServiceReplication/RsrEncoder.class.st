@@ -448,6 +448,12 @@ ofSize: aNumberOfBytes [
 ]
 
 { #category : #'private-testing' }
+RsrEncoder >> isImmediate: anObject [
+
+	^self speciesMapping includesKey: anObject class
+]
+
+{ #category : #'private-testing' }
 RsrEncoder >> isService: anObject [
 
 	^anObject isKindOf: RsrService
@@ -463,6 +469,13 @@ RsrEncoder >> retainObjectIdentifier [
 RsrEncoder >> sendMessageIdentifier [
 
 	^1
+]
+
+{ #category : #'private-accessing' }
+RsrEncoder >> speciesMapping [
+	"Return a mapping between the native class and their associated RsrSpecies"
+
+	^RsrSpecies speciesMapping
 ]
 
 { #category : #accessing }

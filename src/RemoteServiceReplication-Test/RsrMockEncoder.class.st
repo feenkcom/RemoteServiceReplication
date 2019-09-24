@@ -1,6 +1,6 @@
 Class {
 	#name : #RsrMockEncoder,
-	#superclass : #RsrCodec,
+	#superclass : #RsrEncoder,
 	#category : #'RemoteServiceReplication-Test-Mocks'
 }
 

@@ -58,12 +58,6 @@ RsrCodec >> falseType [
 	^8
 ]
 
-{ #category : #'private-testing' }
-RsrCodec >> isImmediate: anObject [
-
-	^self speciesMapping includesKey: anObject class
-]
-
 { #category : #'private-accessing-object types' }
 RsrCodec >> negativeIntegerType [
 
@@ -123,13 +117,6 @@ RsrCodec >> sizeOfInteger [
 	"Return the number of bytes used to encode an integer"
 
 	^8
-]
-
-{ #category : #'private-accessing' }
-RsrCodec >> speciesMapping [
-	"Return a mapping between the native class and their associated RsrSpecies"
-
-	^RsrSpecies speciesMapping
 ]
 
 { #category : #'private-accessing-object types' }
