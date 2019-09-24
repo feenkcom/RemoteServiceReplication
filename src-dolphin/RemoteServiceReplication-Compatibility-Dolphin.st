@@ -11,7 +11,7 @@ Object
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	classInstanceVariableNames: 'nativeClasses'!
+	classInstanceVariableNames: ''!
 !RsrObject categoriesForClass!RemoteServiceReplication-Compatibility-Dolphin! !
 
 RsrObject
@@ -364,87 +364,12 @@ ifDolphin: aBlock
 !RsrObject class methodsFor!
 new
 
-	^super new initialize!
-
-nativeClasses
-	"Return the collection of classes supported by RSR in this environment"
-
-	^nativeClasses ifNil: [self initializeNativeClasses]!
-
-initializeNativeClasses
-
-	nativeClasses := Set new.
-	nativeClasses
-		add: Symbol;
-		add: String;
-		add: Utf8String;
-		add: LargeInteger;
-		add: SmallInteger;
-		add: Character;
-		add: UndefinedObject;
-		add: True;
-		add: False;
-		add: Array;
-		add: ByteArray;
-		add: Set;
-		add: OrderedCollection;
-		add: Dictionary;
-		add: TimeStamp.
-	^nativeClasses! !
+	^super new initialize! !
 
 !RsrObject methodsFor!
 initialize
 
-	^self!
-
-isArray: anObject
-
-	^anObject class == Array!
-
-isByteArray: anObject
-
-	^anObject class == ByteArray!
-
-isCharacter: anObject
-
-	^anObject class == Character!
-
-isCollection: anObject
-
-	^anObject isKindOf: Collection!
-
-isDateAndTime: anObject
-
-	^anObject class == RsrDateAndTimeInterface dateAndTimeClass!
-
-isDictionary: anObject
-
-	^anObject class == Dictionary!
-
-isInteger: anObject
-
-	^anObject isInteger!
-
-isOrderedCollection: anObject
-
-	^anObject class == OrderedCollection!
-
-isSet: anObject
-
-	^anObject class == Set!
-
-isString: anObject
-
-	^anObject isKindOf: String!
-
-isSymbol: anObject
-
-	^anObject class == Symbol!
-
-nativeClasses
-	"Return the collection of classes supported by RSR in this environment"
-
-	^self class nativeClasses! !
+	^self! !
 
 
 !RsrDateAndTimeInterface class methodsFor!
@@ -473,3 +398,54 @@ now
 posixEpoch
 
 	^self dateAndTimeClass fromSeconds: 2177452800! !
+
+!RsrSpecies class methodsFor!
+initializeSpeciesMapping
+
+	speciesMapping := Dictionary new.
+	speciesMapping
+		at: Symbol
+		put: RsrSymbolSpecies.
+	speciesMapping
+		at: String
+		put: RsrStringSpecies.
+	speciesMapping
+		at: Utf8String
+		put: RsrStringSpecies.
+	speciesMapping
+		at: LargeInteger
+		put: RsrIntegerSpecies.
+	speciesMapping
+		at: SmallInteger
+		put: RsrIntegerSpecies.
+	speciesMapping
+		at: Character
+		put: RsrCharacterSpecies.
+	speciesMapping
+		at: UndefinedObject
+		put: RsrUndefinedObjectSpecies.
+	speciesMapping
+		at: True
+		put: RsrBooleanSpecies.
+	speciesMapping
+		at: False
+		put: RsrBooleanSpecies.
+	speciesMapping
+		at: Array
+		put: RsrArraySpecies.
+	speciesMapping
+		at: ByteArray
+		put: RsrByteArraySpecies.
+	speciesMapping
+		at: Set
+		put: RsrSetSpecies.
+	speciesMapping
+		at: OrderedCollection
+		put: RsrOrderedCollectionSpecies.
+	speciesMapping
+		at: Dictionary
+		put: RsrDictionarySpecies.
+	speciesMapping
+		at: TimeStamp
+		put: RsrDateAndTimeSpecies.
+	^speciesMapping! !
