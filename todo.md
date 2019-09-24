@@ -37,6 +37,8 @@
         - [] 8-bit characters
         - [] 16-bit characters
         - [] 32-bit characters
+- [] Service
+    - [] Mirrored instance variable reference unsupported object
 
 ## Needed Functionality
 
