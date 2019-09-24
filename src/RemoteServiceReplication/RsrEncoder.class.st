@@ -153,7 +153,7 @@ onto: aStream [
 		at: anImmediate class
 		ifAbsent: [RsrSpecies nullSpecies].
 	^species
-		encode: anImmediate
+		encodeReference: anImmediate
 		with: self
 		onto: aStream
 ]

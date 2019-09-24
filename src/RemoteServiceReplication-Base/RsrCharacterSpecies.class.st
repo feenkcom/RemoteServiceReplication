@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrCharacterSpecies class >> encode: aCharacter
+RsrCharacterSpecies class >> encodeReference: aCharacter
 with: anEncoder
 onto: aStream [
 

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrIntegerSpecies class >> encode: anInteger
+RsrIntegerSpecies class >> encodeReference: anInteger
 with: anEncoder
 onto: aStream [
 

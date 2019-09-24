@@ -11,7 +11,7 @@ RsrNullSpecies class >> decode: bytes [
 ]
 
 { #category : #coding }
-RsrNullSpecies class >> encode: anObject
+RsrNullSpecies class >> encodeReference: anObject
 with: anEncoder
 onto: aStream [
 

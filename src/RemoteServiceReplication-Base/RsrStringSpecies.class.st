@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrStringSpecies class >> encode: aString
+RsrStringSpecies class >> encodeReference: aString
 with: anEncoder
 onto: aStream [
 

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrArraySpecies class >> encode: anArray
+RsrArraySpecies class >> encodeReference: anArray
 with: anEncoder
 onto: aStream [
 

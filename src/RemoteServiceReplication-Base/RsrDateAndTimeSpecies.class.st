@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrDateAndTimeSpecies class >> encode: aDateAndTime
+RsrDateAndTimeSpecies class >> encodeReference: aDateAndTime
 with: anEncoder
 onto: aStream [
 

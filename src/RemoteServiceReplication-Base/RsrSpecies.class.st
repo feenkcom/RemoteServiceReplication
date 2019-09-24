@@ -15,7 +15,7 @@ RsrSpecies class >> decode: bytes [
 ]
 
 { #category : #coding }
-RsrSpecies class >> encode: anObject
+RsrSpecies class >> encodeReference: anObject
 with: anEncoder
 onto: aStream [
 	"Encode the native object using the provided encoder"

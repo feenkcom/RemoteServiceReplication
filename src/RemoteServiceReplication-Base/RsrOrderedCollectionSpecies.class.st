@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrOrderedCollectionSpecies class >> encode: anOrderedCollection
+RsrOrderedCollectionSpecies class >> encodeReference: anOrderedCollection
 with: anEncoder
 onto: aStream [
 

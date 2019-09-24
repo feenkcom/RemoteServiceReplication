@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrSetSpecies class >> encode: aSet
+RsrSetSpecies class >> encodeReference: aSet
 with: anEncoder
 onto: aStream [
 

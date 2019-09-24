@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrDictionarySpecies class >> encode: aDictionary
+RsrDictionarySpecies class >> encodeReference: aDictionary
 with: anEncoder
 onto: aStream [
 

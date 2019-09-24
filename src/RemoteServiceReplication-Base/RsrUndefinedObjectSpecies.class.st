@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrUndefinedObjectSpecies class >> encode: nilArgument
+RsrUndefinedObjectSpecies class >> encodeReference: nilArgument
 with: anEncoder
 onto: aStream [
 

@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #coding }
-RsrSymbolSpecies class >> encode: aSymbol
+RsrSymbolSpecies class >> encodeReference: aSymbol
 with: anEncoder
 onto: aStream [
 
