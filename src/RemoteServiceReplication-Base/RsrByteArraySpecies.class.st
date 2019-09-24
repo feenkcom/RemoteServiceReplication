@@ -11,5 +11,5 @@ onto: aStream [
 
 	^anEncoder
 		encodeByteArray: aByteArray
-		on: aStream
+		onto: aStream
 ]

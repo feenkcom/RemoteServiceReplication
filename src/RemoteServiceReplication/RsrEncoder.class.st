@@ -6,7 +6,7 @@ Class {
 
 { #category : #'private-encoding' }
 RsrEncoder >> encodeArray: anArray
-on: aStream [
+onto: aStream [
 
 	self
 		encodeControlWord: self immediateOID
@@ -27,7 +27,7 @@ on: aStream [
 
 { #category : #'private-encoding' }
 RsrEncoder >> encodeByteArray: aByteArray
-on: aStream [
+onto: aStream [
 
 	self
 		encodeControlWord: self immediateOID
@@ -74,7 +74,7 @@ onto: aStream [
 
 { #category : #'private-encoding' }
 RsrEncoder >> encodeDateAndTime: aDateTime
-on: aStream [
+onto: aStream [
 
 	| microseconds |
 	self
@@ -111,7 +111,7 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 
 { #category : #'private-encoding' }
 RsrEncoder >> encodeDictionary: aDictionary
-on: aStream [
+onto: aStream [
 
 	self
 		encodeControlWord: self immediateOID
@@ -192,7 +192,7 @@ RsrEncoder >> encodeObject: anObject
 onto: aStream [
 
 	(self isService: anObject)
-		ifTrue: [^self encodeService: anObject on: aStream].
+		ifTrue: [^self encodeService: anObject onto: aStream].
 	RsrUnsupportedObject signal: anObject
 ]
 
@@ -294,7 +294,7 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 
 { #category : #'private-encoding' }
 RsrEncoder >> encodeService: aService
-on: aStream [
+onto: aStream [
 
 	"type"
 	"the OID for the object"
@@ -330,7 +330,7 @@ onto: aStream [
 
 { #category : #'private-encoding' }
 RsrEncoder >> encodeSet: aSet
-on: aStream [
+onto: aStream [
 
 	self
 		encodeControlWord: self immediateOID

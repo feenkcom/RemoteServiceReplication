@@ -11,5 +11,5 @@ onto: aStream [
 
 	^anEncoder
 		encodeDateAndTime: aDateAndTime
-		on: aStream
+		onto: aStream
 ]

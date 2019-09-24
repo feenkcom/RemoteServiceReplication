@@ -11,5 +11,5 @@ onto: aStream [
 
 	^anEncoder
 		encodeDictionary: aDictionary
-		on: aStream
+		onto: aStream
 ]
