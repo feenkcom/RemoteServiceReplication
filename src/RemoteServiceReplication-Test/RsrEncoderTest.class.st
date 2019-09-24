@@ -172,6 +172,17 @@ RsrEncoderTest >> testServiceReferenceService [
 		equals: expectedEncoding
 ]
 
+{ #category : #running }
+RsrEncoderTest >> testUnsupportedObject [
+
+	self
+		should: [self encoder encodeObject: Object new]
+		raise: RsrUnsupportedObject.
+	self
+		should: [self encoder encodeImmediate: Object new onto: (WriteStream on: ByteArray new)]
+		raise: RsrUnsupportedObject
+]
+
 { #category : #'running-immediates' }
 RsrEncoderTest >> verifyControlWord: anInteger
 encoding: expected [

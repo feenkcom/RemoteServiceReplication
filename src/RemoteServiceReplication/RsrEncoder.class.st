@@ -148,63 +148,14 @@ RsrEncoder >> encodeFalseOnto: aStream [
 RsrEncoder >> encodeImmediate: anImmediate
 onto: aStream [
 
-	(self isSymbol: anImmediate)
-		ifTrue:
-			[^self
-				encodeSymbol: anImmediate
-				onto: aStream].
-	(self isString: anImmediate)
-		ifTrue:
-			[^self
-				encodeString: anImmediate
-				onto: aStream].
-	(self isInteger: anImmediate)
-		ifTrue:
-			[^self
-				encodeImmediateInteger: anImmediate
-				onto: aStream].
-	(self isCharacter: anImmediate)
-		ifTrue:
-			[^self
-				encodeCharacter: anImmediate
-				onto: aStream].
-	anImmediate == nil
-		ifTrue:
-			[^self encodeNilOnto: aStream].
-	anImmediate == true
-		ifTrue:
-			[^self encodeTrueOnto: aStream].
-	anImmediate == false
-		ifTrue:
-			[^self encodeFalseOnto: aStream].
-	(self isArray: anImmediate)
-		ifTrue: [^self encodeArray: anImmediate on: aStream].
-	(self isDictionary: anImmediate)
-		ifTrue:
-			[^self
-				encodeDictionary: anImmediate
-				on: aStream].
-	(self isByteArray: anImmediate)
-		ifTrue:
-			[^self
-				encodeByteArray: anImmediate
-				on: aStream].
-	(self isSet: anImmediate)
-		ifTrue:
-			[^self
-				encodeSet: anImmediate
-				on: aStream].
-	(self isOrderedCollection: anImmediate)
-		ifTrue:
-			[^self
-				encodeOrderedCollection: anImmediate
-				on: aStream].
-	(self isDateAndTime: anImmediate)
-		ifTrue:
-			[^self
-				encodeDateAndTime: anImmediate
-				on: aStream].
-	self error: 'Unsupported Immediate'
+	| species |
+	species := self speciesMappings
+		at: anImmediate class
+		ifAbsent: [RsrSpecies nullSpecies].
+	^species
+		encode: anImmediate
+		with: self
+		onto: aStream
 ]
 
 { #category : #'private-encoding' }
@@ -256,7 +207,7 @@ onto: aStream [
 
 	(self isService: anObject)
 		ifTrue: [^self encodeService: anObject on: aStream].
-	self error: 'Unable to encode: ', anObject printString
+	RsrUnsupportedObject signal: anObject
 ]
 
 { #category : #'private-encoding' }
