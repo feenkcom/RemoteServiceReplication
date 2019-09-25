@@ -13,3 +13,9 @@ onto: aStream [
 		encodeSymbol: aSymbol
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrSymbolSpecies class >> speciesIdentifier [
+
+	^1
+]

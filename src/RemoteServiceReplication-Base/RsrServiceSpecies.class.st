@@ -13,3 +13,9 @@ onto: aStream [
 		encodeServiceReference: aService
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrServiceSpecies class >> speciesIdentifier [
+
+	^0
+]

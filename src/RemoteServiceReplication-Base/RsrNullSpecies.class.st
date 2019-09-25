@@ -17,3 +17,9 @@ onto: aStream [
 
 	^RsrUnsupportedObject signal: anObject
 ]
+
+{ #category : #accessing }
+RsrNullSpecies class >> speciesIdentifier [
+
+	^self shouldNotImplement
+]

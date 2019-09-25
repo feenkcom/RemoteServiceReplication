@@ -13,3 +13,9 @@ onto: aStream [
 		encodeByteArray: aByteArray
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrByteArraySpecies class >> speciesIdentifier [
+
+	^10
+]

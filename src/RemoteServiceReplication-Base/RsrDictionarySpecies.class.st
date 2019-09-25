@@ -13,3 +13,9 @@ onto: aStream [
 		encodeDictionary: aDictionary
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrDictionarySpecies class >> speciesIdentifier [
+
+	^13
+]

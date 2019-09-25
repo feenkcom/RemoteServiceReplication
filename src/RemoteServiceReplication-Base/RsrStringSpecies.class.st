@@ -13,3 +13,9 @@ onto: aStream [
 		encodeString: aString
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrStringSpecies class >> speciesIdentifier [
+
+	^2
+]

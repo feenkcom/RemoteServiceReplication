@@ -11,3 +11,9 @@ onto: aStream [
 
 	^anEncoder encodeNilOnto: aStream
 ]
+
+{ #category : #accessing }
+RsrUndefinedObjectSpecies class >> speciesIdentifier [
+
+	^6
+]

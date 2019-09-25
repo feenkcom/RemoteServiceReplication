@@ -13,3 +13,9 @@ onto: aStream [
 		encodeCharacter: aCharacter
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrCharacterSpecies class >> speciesIdentifier [
+
+	^5
+]

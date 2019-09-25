@@ -13,3 +13,9 @@ onto: aStream [
 		encodeSet: aSet
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrSetSpecies class >> speciesIdentifier [
+
+	^11
+]

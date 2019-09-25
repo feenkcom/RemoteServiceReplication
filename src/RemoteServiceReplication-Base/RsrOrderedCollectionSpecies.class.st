@@ -13,3 +13,9 @@ onto: aStream [
 		encodeOrderedCollection: anOrderedCollection
 		on: aStream
 ]
+
+{ #category : #accessing }
+RsrOrderedCollectionSpecies class >> speciesIdentifier [
+
+	^12
+]

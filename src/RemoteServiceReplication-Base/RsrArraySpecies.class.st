@@ -13,3 +13,9 @@ onto: aStream [
 		encodeArray: anArray
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrArraySpecies class >> speciesIdentifier [
+
+	^9
+]

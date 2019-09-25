@@ -13,3 +13,9 @@ onto: aStream [
 		encodeDateAndTime: aDateAndTime
 		onto: aStream
 ]
+
+{ #category : #accessing }
+RsrDateAndTimeSpecies class >> speciesIdentifier [
+
+	^14
+]

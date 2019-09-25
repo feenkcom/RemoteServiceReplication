@@ -30,6 +30,12 @@ RsrSpecies class >> nullSpecies [
 ]
 
 { #category : #accessing }
+RsrSpecies class >> speciesIdentifier [
+
+	^self subclassResponsibility
+]
+
+{ #category : #accessing }
 RsrSpecies class >> speciesMapping [
 	"Return a mapping between the native class and their associated RsrSpecies"
 
