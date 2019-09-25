@@ -15,9 +15,3 @@ RsrDateAndTimeInterface class >> fromString: aString [
 
 	^self dateAndTimeClass fromString: aString
 ]
-
-{ #category : #accessing }
-RsrDateAndTimeInterface class >> now [
-
-	^self dateAndTimeClass now
-]

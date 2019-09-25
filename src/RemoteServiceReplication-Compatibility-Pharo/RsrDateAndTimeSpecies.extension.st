@@ -17,6 +17,13 @@ RsrDateAndTimeSpecies class >> microsecondsSinceEpoch: aDateAndTime [
 ]
 
 { #category : #'*RemoteServiceReplication-Compatibility-Pharo' }
+RsrDateAndTimeSpecies class >> now [
+	"Return an instance of the native DateAndTime class representing the current instant"
+
+	^DateAndTime now
+]
+
+{ #category : #'*RemoteServiceReplication-Compatibility-Pharo' }
 RsrDateAndTimeSpecies class >> posixEpoch [
 
 	^DateAndTime unixEpoch
