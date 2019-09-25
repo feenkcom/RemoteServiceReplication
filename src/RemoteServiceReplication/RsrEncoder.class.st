@@ -178,12 +178,6 @@ onto: aStream [
 	aStream nextPutAll: bytes
 ]
 
-{ #category : #'private-accessing' }
-RsrEncoder >> immediateOID [
-
-	^0
-]
-
 { #category : #'private-converting' }
 RsrEncoder >> integerAsByteArray: anInteger [
 	"Return a ByteArray representing <anInteger> in big endian format."

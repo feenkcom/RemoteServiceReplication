@@ -15,6 +15,25 @@ RsrSpecies class >> decode: bytes [
 ]
 
 { #category : #coding }
+RsrSpecies class >> decodeBody: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	self notYetImplemented
+]
+
+{ #category : #coding }
+RsrSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| decodeSelector |
+	decodeSelector := aDecoder decodeImmediateObjectMap at: self speciesIdentifier.
+	^aDecoder
+		perform: decodeSelector
+		with: aStream
+]
+
+{ #category : #coding }
 RsrSpecies class >> encodeReference: anObject
 with: anEncoder
 onto: aStream [
@@ -39,6 +58,26 @@ RsrSpecies class >> nullSpecies [
 RsrSpecies class >> speciesIdentifier [
 
 	^self subclassResponsibility
+]
+
+{ #category : #accessing }
+RsrSpecies class >> speciesList [
+
+	^{RsrServiceSpecies.
+	RsrSymbolSpecies.
+	RsrStringSpecies.
+	RsrPositiveIntegerSpecies.
+	RsrNegativeIntegerSpecies.
+	RsrCharacterSpecies.
+	RsrUndefinedObjectSpecies.
+	RsrTrueSpecies.
+	RsrFalseSpecies.
+	RsrArraySpecies.
+	RsrByteArraySpecies.
+	RsrSetSpecies.
+	RsrOrderedCollectionSpecies.
+	RsrDictionarySpecies.
+	RsrDateAndTimeSpecies.}
 ]
 
 { #category : #accessing }

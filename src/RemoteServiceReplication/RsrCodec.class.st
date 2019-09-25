@@ -58,6 +58,12 @@ RsrCodec >> falseType [
 	^8
 ]
 
+{ #category : #'private-accessing' }
+RsrCodec >> immediateOID [
+
+	^0
+]
+
 { #category : #'private-accessing-object types' }
 RsrCodec >> negativeIntegerType [
 

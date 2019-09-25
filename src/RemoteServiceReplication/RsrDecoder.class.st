@@ -137,22 +137,13 @@ RsrDecoder >> decodeDictionary: aStream [
 ]
 
 { #category : #'decoding-immediates' }
-RsrDecoder >> decodeFalse: aStream [
-
-	^false
-]
-
-{ #category : #'decoding-immediates' }
 RsrDecoder >> decodeImmediateObject: aStream [
 
-	| type decodeSelector |
+	| type |
 	type := self decodeControlWord: aStream.
-	decodeSelector := self decodeImmediateObjectMap
-		at: type
-		ifAbsent: [self error: 'Invalid immediate type specified (', type printString, ')'].
-	^self
-		perform: decodeSelector
-		with: aStream
+	^(RsrSpecies speciesList at: type + 1)
+		decodeWith: self
+		from: aStream
 ]
 
 { #category : #accessing }
@@ -188,7 +179,7 @@ RsrDecoder >> decodeObjectReference: aStream [
 
 	| oid |
 	oid := self decodeControlWord: aStream.
-	oid = 0 ifTrue: [^self decodeImmediateObject: aStream].
+	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
 	^registry at: oid ifAbsent: [self signalUnknownOID]
 ]
 
@@ -298,12 +289,6 @@ RsrDecoder >> decodeString: aStream [
 RsrDecoder >> decodeSymbol: aStream [
 
 	^(self decodeString: aStream) asSymbol
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeTrue: aStream [
-
-	^true
 ]
 
 { #category : #'private-initialization' }
