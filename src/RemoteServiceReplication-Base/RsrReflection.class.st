@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrReflection,
 	#superclass : #Object,
-	#category : #'RemoteServiceReplication-Utilities'
+	#category : #'RemoteServiceReplication-Base-Utilities'
 }
 
 { #category : #reflection }
