@@ -30,18 +30,21 @@ for: aDecoder [
 ]
 
 { #category : #coding }
+RsrSpecies class >> encode: anObject
+with: anEncoder
+on: aStream [
+	"Encode this object. This is specifically used by RsrServiceSpecies."
+
+	self shouldNotImplement
+]
+
+{ #category : #coding }
 RsrSpecies class >> encodeReference: anObject
 with: anEncoder
 onto: aStream [
 	"Encode the native object using the provided encoder"
 
 	self subclassResponsibility
-]
-
-{ #category : #accessing }
-RsrSpecies class >> immediateOID [
-
-	^0
 ]
 
 { #category : #accessing }

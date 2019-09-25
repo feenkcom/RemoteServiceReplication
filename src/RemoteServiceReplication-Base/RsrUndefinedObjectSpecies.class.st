@@ -18,7 +18,7 @@ with: anEncoder
 onto: aStream [
 
 	anEncoder
-		encodeControlWord: self immediateOID
+		encodeControlWord: anEncoder immediateOID
 		onto: aStream.
 	anEncoder
 		encodeControlWord: self speciesIdentifier

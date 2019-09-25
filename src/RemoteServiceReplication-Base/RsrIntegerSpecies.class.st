@@ -12,7 +12,7 @@ onto: aStream [
 	| bytes |
 	bytes := self integerAsByteArray: anInteger abs.
 	anEncoder
-		encodeControlWord: self immediateOID
+		encodeControlWord: anEncoder immediateOID
 		onto: aStream.
 	anEncoder
 		encodeControlWord: self speciesIdentifier

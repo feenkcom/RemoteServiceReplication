@@ -13,6 +13,15 @@ for: aDecoder [
 ]
 
 { #category : #coding }
+RsrNullSpecies class >> encode: anObject
+with: anEncoder
+on: aStream [
+	"Encode this object. This is specifically used by RsrServiceSpecies."
+
+	RsrUnsupportedObject signal: anObject
+]
+
+{ #category : #coding }
 RsrNullSpecies class >> encodeReference: anObject
 with: anEncoder
 onto: aStream [

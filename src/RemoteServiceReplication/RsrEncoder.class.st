@@ -55,9 +55,10 @@ RsrEncoder >> encodeObject: anObject [
 RsrEncoder >> encodeObject: anObject
 onto: aStream [
 
-	(self isService: anObject)
-		ifTrue: [^self encodeService: anObject onto: aStream].
-	RsrUnsupportedObject signal: anObject
+	(self speciesOf: anObject)
+		encode: anObject
+		with: self
+		on: aStream
 ]
 
 { #category : #'private-encoding' }
@@ -133,32 +134,6 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 					self
 						encodeReferenceOf: each
 						onto: stream]]
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeService: aService
-onto: aStream [
-
-	"type"
-	"the OID for the object"
-	"the name of the remote service to create"
-	"Write the object slots"
-	| reflectedVariables |
-	reflectedVariables := aService variablesToReflect.
-	self
-		encodeControlWord: self serviceType
-		onto: aStream.
-	self
-		encodeControlWord: aService _id
-		onto: aStream.
-	self
-		encodeControlWord: reflectedVariables size
-		onto: aStream.
-	(self speciesOf: aService remoteServiceName)
-		encodeReference: aService remoteServiceName
-		with: self
-		onto: aStream.
-	aService _reflectedVariablesDo: [:each | self encodeReferenceOf: each onto: aStream]
 ]
 
 { #category : #converting }

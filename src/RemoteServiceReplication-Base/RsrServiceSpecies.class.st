@@ -28,6 +28,34 @@ for: aDecoder [
 ]
 
 { #category : #coding }
+RsrServiceSpecies class >> encode: aService
+with: anEncoder
+on: aStream [
+	"Encode this object. This is specifically used by RsrServiceSpecies."
+
+	"type"
+	"the OID for the object"
+	"the name of the remote service to create"
+	"Write the object slots"
+	| reflectedVariables |
+	reflectedVariables := aService variablesToReflect.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeControlWord: aService _id
+		onto: aStream.
+	anEncoder
+		encodeControlWord: reflectedVariables size
+		onto: aStream.
+	(anEncoder speciesOf: aService remoteServiceName)
+		encodeReference: aService remoteServiceName
+		with: anEncoder
+		onto: aStream.
+	aService _reflectedVariablesDo: [:each | anEncoder encodeReferenceOf: each onto: aStream]
+]
+
+{ #category : #coding }
 RsrServiceSpecies class >> encodeReference: aService
 with: anEncoder
 onto: aStream [
