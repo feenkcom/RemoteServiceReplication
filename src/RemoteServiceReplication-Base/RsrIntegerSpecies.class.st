@@ -10,7 +10,7 @@ with: anEncoder
 onto: aStream [
 
 	| bytes |
-	bytes := anEncoder integerAsByteArray: anInteger abs.
+	bytes := self integerAsByteArray: anInteger abs.
 	anEncoder
 		encodeControlWord: self immediateOID
 		onto: aStream.
@@ -21,6 +21,22 @@ onto: aStream [
 		encodeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes
+]
+
+{ #category : #converting }
+RsrIntegerSpecies class >> integerAsByteArray: anInteger [
+	"Return a ByteArray representing <anInteger> in big endian format."
+
+	| stream int |
+	anInteger <= 0
+		ifTrue: [^ByteArray with: 0].
+	stream := WriteStream on: (ByteArray new: 8).
+	int := anInteger.
+	[int > 0]
+		whileTrue:
+			[stream nextPut: (int bitAnd: 16rFF).
+			int := int bitShift: -8].
+	^stream contents reverse
 ]
 
 { #category : #accessing }

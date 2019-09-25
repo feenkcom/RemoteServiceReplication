@@ -95,12 +95,6 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		for: self
 ]
 
-{ #category : #accessing }
-RsrDecoder >> decodeImmediateObjectMap [
-
-	^decodeImmediateObjectMap ifNil: [self initializeDecodeImmediateObjectMap]
-]
-
 { #category : #decoding }
 RsrDecoder >> decodeObjectReference: aStream [
 
@@ -167,28 +161,6 @@ RsrDecoder >> initializeDecodeCommandMap [
 		at: self deliverResponseCommand put: #decodeDeliverResponse:;
 		at: self releaseObjectsCommand put: #decodeReleaseObjects:.
 	^decodeCommandMap
-]
-
-{ #category : #'private-initialization' }
-RsrDecoder >> initializeDecodeImmediateObjectMap [
-
-	decodeImmediateObjectMap := Dictionary new.
-	decodeImmediateObjectMap
-		at: self symbolType put: #decodeSymbol:;
-		at: self stringType put: #decodeString:;
-		at: self positiveIntegerType put: #decodePositiveInteger:;
-		at: self negativeIntegerType put: #decodeNegativeInteger:;
-		at: self characterType put: #decodeCharacter:;
-		at: self nilType put: #decodeNil:;
-		at: self trueType put: #decodeTrue:;
-		at: self falseType put: #decodeFalse:;
-		at: self arrayType put: #decodeArray:;
-		at: self dictionaryType put: #decodeDictionary:;
-		at: self byteArrayType put: #decodeByteArray:;
-		at: self setType put: #decodeSet:;
-		at: self orderedCollectionType put: #decodeOrderedCollection:;
-		at: self dateAndTimeType put: #decodeDateAndTime:.
-	^decodeImmediateObjectMap
 ]
 
 { #category : #utility }

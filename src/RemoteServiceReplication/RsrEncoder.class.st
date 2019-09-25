@@ -163,23 +163,7 @@ onto: aStream [
 		do: [:each | self encodeReferenceOf: each onto: aStream]
 ]
 
-{ #category : #'private-converting' }
-RsrEncoder >> integerAsByteArray: anInteger [
-	"Return a ByteArray representing <anInteger> in big endian format."
-
-	| stream int |
-	anInteger <= 0
-		ifTrue: [^ByteArray with: 0].
-	stream := WriteStream on: (ByteArray new: 8).
-	int := anInteger.
-	[int > 0]
-		whileTrue:
-			[stream nextPut: (int bitAnd: 16rFF).
-			int := int bitShift: -8].
-	^stream contents reverse
-]
-
-{ #category : #'private-converting' }
+{ #category : #converting }
 RsrEncoder >> integerAsByteArray: anInteger
 ofSize: aNumberOfBytes [
 

@@ -26,11 +26,7 @@ RsrSpecies class >> decodeReference: aStream
 for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
-	| decodeSelector |
-	decodeSelector := aDecoder decodeImmediateObjectMap at: self speciesIdentifier.
-	^aDecoder
-		perform: decodeSelector
-		with: aStream
+	self subclassResponsibility
 ]
 
 { #category : #coding }
