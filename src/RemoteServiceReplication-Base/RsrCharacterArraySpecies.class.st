@@ -34,26 +34,8 @@ onto: aStream [
 	aStream nextPutAll: bytes
 ]
 
-{ #category : #converting }
-RsrCharacterArraySpecies class >> fromBytes: aByteArray [
-
-	^RsrEnvironment
-		ifPharo: [aByteArray utf8Decoded]
-		ifGemStone: [aByteArray decodeFromUTF8ToString]
-		ifDolphin: [(RsrClassResolver classNamed: #Utf8String) fromByteArray: aByteArray]
-]
-
 { #category : #accessing }
 RsrCharacterArraySpecies class >> speciesIdentifier [
 
 	^self subclassResponsibility
-]
-
-{ #category : #converting }
-RsrCharacterArraySpecies class >> toBytes: aCharacterArray [
-
-	^RsrEnvironment
-		ifPharo: [aCharacterArray utf8Encoded]
-		ifGemStone: [aCharacterArray encodeAsUTF8]
-		ifDolphin: [aCharacterArray asUtf8String asByteArray].
 ]
