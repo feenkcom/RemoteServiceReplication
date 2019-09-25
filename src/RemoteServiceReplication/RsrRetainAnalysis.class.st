@@ -46,7 +46,7 @@ RsrRetainAnalysis >> ensureRegistered: anRsrObject [
 			[anRsrObject
 				_id: self nextOid;
 				_connection: self connection.
-			anRsrObject registerWith: self registry]
+			anRsrObject _addTo: self registry]
 ]
 
 { #category : #initialization }
@@ -131,7 +131,7 @@ RsrRetainAnalysis >> processService: aService [
 
 	self
 		processing: aService
-		during: [aService reflectedVariablesDo: [:each | self process: each]]
+		during: [aService _reflectedVariablesDo: [:each | self process: each]]
 ]
 
 { #category : #processing }

@@ -158,7 +158,7 @@ onto: aStream [
 		encodeReference: aService remoteServiceName
 		with: self
 		onto: aStream.
-	aService reflectedVariablesDo: [:each | self encodeReferenceOf: each onto: aStream]
+	aService _reflectedVariablesDo: [:each | self encodeReferenceOf: each onto: aStream]
 ]
 
 { #category : #converting }

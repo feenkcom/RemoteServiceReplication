@@ -211,7 +211,7 @@ RsrConnection >> open [
 	serviceFactory := RsrServiceFactory
 		_id: self oidSpigot next
 		_connection: self.
-	serviceFactory registerWith: registry
+	serviceFactory _addTo: registry
 ]
 
 { #category : #'private-accessing' }

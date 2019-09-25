@@ -20,10 +20,10 @@ for: aDecoder [
 				_id: oid
 				_connection: aDecoder connection)
 					yourself].
-	instance registerWith: aDecoder registry.
+	instance _addTo: aDecoder registry.
 	instance variablesToReflect size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
-	instance reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
+	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
 	^instance
 ]
 

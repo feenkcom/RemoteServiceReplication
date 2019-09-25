@@ -59,6 +59,14 @@ RsrService class >> variablesToReflect [
 	^variables
 ]
 
+{ #category : #'private-lifecycle' }
+RsrService >> _addTo: aRegistry [
+
+	aRegistry
+		at: rsrId
+		put: self
+]
+
 { #category : #'private-accessing' }
 RsrService >> _connection [
 
@@ -82,6 +90,24 @@ RsrService >> _id [
 RsrService >> _id: anRsrId [
 
 	rsrId := anRsrId
+]
+
+{ #category : #'private-enumerating' }
+RsrService >> _reflectedVariableIndecesDo: aBlock [
+
+	| allVariables |
+	allVariables := self class allInstVarNames.
+	self class variablesToReflect
+		do:
+			[:varName | | index |
+			index := allVariables indexOf: varName.
+			aBlock value: index]
+]
+
+{ #category : #'private-enumerating' }
+RsrService >> _reflectedVariablesDo: aBlock [
+
+	self _reflectedVariableIndecesDo: [:index | aBlock value: (self instVarAt: index)]
 ]
 
 { #category : #'private-synchronization' }
@@ -113,32 +139,6 @@ RsrService >> isNotMirrored [
 RsrService >> isServer [
 
 	^self class isServerClass
-]
-
-{ #category : #enumerating }
-RsrService >> reflectedVariableIndecesDo: aBlock [
-
-	| allVariables |
-	allVariables := self class allInstVarNames.
-	self class variablesToReflect
-		do:
-			[:varName | | index |
-			index := allVariables indexOf: varName.
-			aBlock value: index]
-]
-
-{ #category : #enumerating }
-RsrService >> reflectedVariablesDo: aBlock [
-
-	self reflectedVariableIndecesDo: [:index | aBlock value: (self instVarAt: index)]
-]
-
-{ #category : #'private-lifecycle' }
-RsrService >> registerWith: aRegistry [
-
-	aRegistry
-		at: rsrId
-		put: self
 ]
 
 { #category : #accessing }
