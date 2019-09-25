@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #coding }
+RsrCharacterSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| codePoint |
+	codePoint := aDecoder decodeControlWord: aStream.
+	^Character codePoint: codePoint
+]
+
+{ #category : #coding }
 RsrCharacterSpecies class >> encodeReference: aCharacter
 with: anEncoder
 onto: aStream [

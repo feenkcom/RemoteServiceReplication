@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #coding }
+RsrDateAndTimeSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| microseconds |
+	microseconds := aDecoder decodeControlWord: aStream.
+	^RsrDateAndTimeInterface fromMicroseconds: microseconds
+]
+
+{ #category : #coding }
 RsrDateAndTimeSpecies class >> encodeReference: aDateAndTime
 with: anEncoder
 onto: aStream [

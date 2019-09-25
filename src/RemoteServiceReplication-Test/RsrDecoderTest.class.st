@@ -18,7 +18,7 @@ decodesTo: expected [
 { #category : #decoding }
 RsrDecoderTest >> decode: anObjectBytes [
 
-	^self decoder decodeObject: anObjectBytes readStream
+	^self decoder decodeService: anObjectBytes readStream
 ]
 
 { #category : #running }

@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #coding }
+RsrUndefinedObjectSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	^nil
+]
+
+{ #category : #coding }
 RsrUndefinedObjectSpecies class >> encodeReference: nilArgument
 with: anEncoder
 onto: aStream [

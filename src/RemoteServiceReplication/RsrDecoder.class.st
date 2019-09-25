@@ -41,32 +41,6 @@ RsrDecoder >> connection: aConnection [
 	connection := aConnection
 ]
 
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeArray: aStream [
-
-	| size array |
-	size := self decodeControlWord: aStream.
-	array := Array new: size.
-	1 to: size do: [:i | array at: i put: (self decodeObjectReference: aStream)].
-	^array
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeByteArray: aStream [
-
-	| size |
-	size := self decodeControlWord: aStream.
-	^aStream next: size
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeCharacter: aStream [
-
-	| codePoint |
-	codePoint := self decodeControlWord: aStream.
-	^Character codePoint: codePoint
-]
-
 { #category : #'decoding-commands' }
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
@@ -98,14 +72,6 @@ RsrDecoder >> decodeControlWord: aStream [
 		ifFalse: [unsignedResult]
 ]
 
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeDateAndTime: aStream [
-
-	| microseconds |
-	microseconds := self decodeControlWord: aStream.
-	^RsrDateAndTimeInterface fromMicroseconds: microseconds
-]
-
 { #category : #'decoding-commands' }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
@@ -118,22 +84,6 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 		errorName: errorName;
 		response: response;
 		yourself
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeDictionary: aStream [
-
-	| size dictionary |
-	size := self decodeControlWord: aStream.
-	dictionary := Dictionary new: size.
-	1
-		to: size
-		do:
-			[:i |
-			dictionary
-				at: (self decodeObjectReference: aStream)
-				put: (self decodeObjectReference: aStream)].
-	^dictionary
 ]
 
 { #category : #'decoding-immediates' }
@@ -152,28 +102,6 @@ RsrDecoder >> decodeImmediateObjectMap [
 	^decodeImmediateObjectMap ifNil: [self initializeDecodeImmediateObjectMap]
 ]
 
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeNegativeInteger: aStream [
-
-	^(self decodePositiveInteger: aStream) negated
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeNil: aStream [
-
-	^nil
-]
-
-{ #category : #'decoding-services' }
-RsrDecoder >> decodeObject: aStream [
-
-	| objectType |
-	objectType := self decodeControlWord: aStream.
-	objectType = self serviceType
-		ifTrue: [^self decodeService: aStream].
-	^self error: 'Invalid object'
-]
-
 { #category : #decoding }
 RsrDecoder >> decodeObjectReference: aStream [
 
@@ -181,25 +109,6 @@ RsrDecoder >> decodeObjectReference: aStream [
 	oid := self decodeControlWord: aStream.
 	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
 	^registry at: oid ifAbsent: [self signalUnknownOID]
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeOrderedCollection: aStream [
-
-	| size oc |
-	size := self decodeControlWord: aStream.
-	oc := OrderedCollection new: size.
-	size timesRepeat: [oc add: (self decodeObjectReference: aStream)].
-	^oc
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodePositiveInteger: aStream [
-
-	| length bytes |
-	length := self decodeControlWord: aStream.
-	bytes := aStream next: length.
-	^self bytesAsInteger: bytes
 ]
 
 { #category : #'decoding-commands' }
@@ -220,7 +129,7 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 { #category : #'decoding-commands' }
 RsrDecoder >> decodeRetainObject: aStream [
 
-	^RsrRetainObject object: (self decodeObject: aStream)
+	^RsrRetainObject object: (self decodeService: aStream)
 ]
 
 { #category : #'decoding-commands' }
@@ -243,52 +152,11 @@ RsrDecoder >> decodeSendMessage: aStream [
 { #category : #'decoding-services' }
 RsrDecoder >> decodeService: aStream [
 
-	| oid instVarCount serviceName instance |
-	oid := self decodeControlWord: aStream.
-	instVarCount := self decodeControlWord: aStream.
-	serviceName := self decodeObjectReference: aStream.
-	instance := registry
-		at: oid
-		ifAbsent:
-			[((self lookupClass: serviceName)
-				_id: oid
-				_connection: self connection)
-					yourself].
-	instance registerWith: self registry.
-	(RsrReflection reflectedVariableNamesOf: instance) size = instVarCount
-		ifFalse: [self error: 'Incorrectly encoded instance detected'].
-	RsrReflection
-		reflectedVariableIndecesOf: instance
-		do: [:index | instance instVarAt: index put: (self decodeObjectReference: aStream)].
-	^instance
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeSet: aStream [
-
-	| size set |
-	size := self decodeControlWord: aStream.
-	set := Set new: size.
-	size timesRepeat: [set add: (self decodeObjectReference: aStream)].
-	^set
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeString: aStream [
-
-	| length bytes |
-	length := self decodeControlWord: aStream.
-	bytes := aStream next: length.
-	^RsrEnvironment
-		ifPharo: [bytes utf8Decoded]
-		ifGemStone: [bytes decodeFromUTF8ToString]
-		ifDolphin: [(RsrClassResolver classNamed: #Utf8String) fromByteArray: bytes]
-]
-
-{ #category : #'decoding-immediates' }
-RsrDecoder >> decodeSymbol: aStream [
-
-	^(self decodeString: aStream) asSymbol
+	| objectType |
+	objectType := self decodeControlWord: aStream.
+	objectType = self serviceType
+		ifTrue: [^RsrServiceSpecies decodeWith: self from: aStream].
+	^self error: 'Invalid object'
 ]
 
 { #category : #'private-initialization' }

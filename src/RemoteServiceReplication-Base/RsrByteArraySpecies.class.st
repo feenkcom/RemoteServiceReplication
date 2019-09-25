@@ -5,6 +5,16 @@ Class {
 }
 
 { #category : #coding }
+RsrByteArraySpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| size |
+	size := aDecoder decodeControlWord: aStream.
+	^aStream next: size
+]
+
+{ #category : #coding }
 RsrByteArraySpecies class >> encodeReference: aByteArray
 with: anEncoder
 onto: aStream [

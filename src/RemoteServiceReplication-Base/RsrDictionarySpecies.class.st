@@ -5,6 +5,24 @@ Class {
 }
 
 { #category : #coding }
+RsrDictionarySpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| size dictionary |
+	size := aDecoder decodeControlWord: aStream.
+	dictionary := Dictionary new: size.
+	1
+		to: size
+		do:
+			[:i |
+			dictionary
+				at: (aDecoder decodeObjectReference: aStream)
+				put: (aDecoder decodeObjectReference: aStream)].
+	^dictionary
+]
+
+{ #category : #coding }
 RsrDictionarySpecies class >> encodeReference: aDictionary
 with: anEncoder
 onto: aStream [

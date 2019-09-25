@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #coding }
+RsrOrderedCollectionSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| size oc |
+	size := aDecoder decodeControlWord: aStream.
+	oc := OrderedCollection new: size.
+	size timesRepeat: [oc add: (aDecoder decodeObjectReference: aStream)].
+	^oc
+]
+
+{ #category : #coding }
 RsrOrderedCollectionSpecies class >> encodeReference: anOrderedCollection
 with: anEncoder
 onto: aStream [

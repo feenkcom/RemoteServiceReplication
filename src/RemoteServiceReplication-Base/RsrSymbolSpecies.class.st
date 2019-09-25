@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #coding }
+RsrSymbolSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	^(RsrStringSpecies decodeWith: aDecoder from: aStream) asSymbol
+]
+
+{ #category : #coding }
 RsrSymbolSpecies class >> encodeReference: aSymbol
 with: anEncoder
 onto: aStream [

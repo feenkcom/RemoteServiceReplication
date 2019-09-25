@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #coding }
+RsrSetSpecies class >> decodeWith: aDecoder
+from: aStream [
+	"Decode the provided bytes into the default native class for this species"
+
+	| size set |
+	size := aDecoder decodeControlWord: aStream.
+	set := Set new: size.
+	size timesRepeat: [set add: (aDecoder decodeObjectReference: aStream)].
+	^set
+]
+
+{ #category : #coding }
 RsrSetSpecies class >> encodeReference: aSet
 with: anEncoder
 onto: aStream [
