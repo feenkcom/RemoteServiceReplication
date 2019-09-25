@@ -1,11 +1,11 @@
 Class {
-	#name : #RsrScientist,
+	#name : #RsrInstruments,
 	#superclass : #RsrObject,
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
 { #category : #instrumenting }
-RsrScientist >> instrument: aBlock
+RsrInstruments >> instrument: aBlock
 label: aString [
 
 	| time result |
@@ -17,7 +17,7 @@ label: aString [
 ]
 
 { #category : #instrumenting }
-RsrScientist >> profile: aBlock
+RsrInstruments >> profile: aBlock
 label: aString [
 
 	| result |
@@ -26,7 +26,7 @@ label: aString [
 ]
 
 { #category : #instrumenting }
-RsrScientist >> profile: aBlock
+RsrInstruments >> profile: aBlock
 label: aString
 if: aCondition [
 

@@ -18,3 +18,9 @@ RsrObject >> initialize [
 
 	^self
 ]
+
+{ #category : #accessing }
+RsrObject >> instruments [
+
+	^RsrInstruments new
+]

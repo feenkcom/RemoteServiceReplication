@@ -7,7 +7,7 @@ Class {
 { #category : #accessing }
 RFBDirectoryServer >> entities [
 
-	^self scientist
+	^self instruments
 		profile:
 			[[self path asFileReference children sorted
 				collect:

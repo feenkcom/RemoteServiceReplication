@@ -29,12 +29,6 @@ RsrCommand >> executeFor: aConnection [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
-RsrCommand >> scientist [
-
-	^RsrScientist new
-]
-
 { #category : #lifecycle }
 RsrCommand >> sendOver: aConnection [
 	"Do nothing unless a subclass offers a specialization"

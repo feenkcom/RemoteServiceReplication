@@ -151,12 +151,6 @@ RsrService >> remoteServiceName [
 ]
 
 { #category : #'public-accessing' }
-RsrService >> scientist [
-
-	^RsrScientist new
-]
-
-{ #category : #'public-accessing' }
 RsrService >> serviceName [
 
 	^self class name
