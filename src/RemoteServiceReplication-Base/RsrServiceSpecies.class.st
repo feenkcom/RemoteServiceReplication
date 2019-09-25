@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #coding }
-RsrServiceSpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrServiceSpecies class >> decodeReference: aStream
+for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| oid instVarCount serviceName instance |

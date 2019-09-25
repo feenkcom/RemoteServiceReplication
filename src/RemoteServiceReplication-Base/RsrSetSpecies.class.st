@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #coding }
-RsrSetSpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrSetSpecies class >> decodeReference: aStream
+for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| size set |

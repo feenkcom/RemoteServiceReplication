@@ -5,11 +5,11 @@ Class {
 }
 
 { #category : #coding }
-RsrNegativeIntegerSpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrNegativeIntegerSpecies class >> decodeReference: aStream for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
-	^(RsrPositiveIntegerSpecies decodeWith: aDecoder from: aStream) negated
+	^ (RsrPositiveIntegerSpecies decodeReference: aStream for: aDecoder)
+		negated
 ]
 
 { #category : #accessing }

@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #coding }
-RsrCharacterSpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrCharacterSpecies class >> decodeReference: aStream
+for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| codePoint |

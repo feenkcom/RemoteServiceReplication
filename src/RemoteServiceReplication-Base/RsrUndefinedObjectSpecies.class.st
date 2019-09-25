@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #coding }
-RsrUndefinedObjectSpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrUndefinedObjectSpecies class >> decodeReference: aStream
+for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	^nil

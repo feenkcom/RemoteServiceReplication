@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #coding }
-RsrPositiveIntegerSpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrPositiveIntegerSpecies class >> decodeReference: aStream
+for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| length bytes |

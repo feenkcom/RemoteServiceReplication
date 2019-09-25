@@ -5,8 +5,8 @@ Class {
 }
 
 { #category : #coding }
-RsrDictionarySpecies class >> decodeWith: aDecoder
-from: aStream [
+RsrDictionarySpecies class >> decodeReference: aStream
+for: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| size dictionary |

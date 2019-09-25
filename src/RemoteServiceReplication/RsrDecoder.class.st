@@ -88,12 +88,11 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 
 { #category : #'decoding-immediates' }
 RsrDecoder >> decodeImmediateObject: aStream [
-
 	| type |
 	type := self decodeControlWord: aStream.
-	^(RsrSpecies speciesList at: type + 1)
-		decodeWith: self
-		from: aStream
+	^ (RsrSpecies speciesList at: type + 1)
+		decodeReference: aStream
+		for: self
 ]
 
 { #category : #accessing }
@@ -151,12 +150,11 @@ RsrDecoder >> decodeSendMessage: aStream [
 
 { #category : #'decoding-services' }
 RsrDecoder >> decodeService: aStream [
-
 	| objectType |
 	objectType := self decodeControlWord: aStream.
 	objectType = self serviceType
-		ifTrue: [^RsrServiceSpecies decodeWith: self from: aStream].
-	^self error: 'Invalid object'
+		ifTrue: [ ^ RsrServiceSpecies decodeReference: aStream for: self ].
+	^ self error: 'Invalid object'
 ]
 
 { #category : #'private-initialization' }
