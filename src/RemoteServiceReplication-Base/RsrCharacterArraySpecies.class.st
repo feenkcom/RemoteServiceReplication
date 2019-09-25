@@ -30,10 +30,7 @@ onto: aStream [
 	anEncoder
 		encodeControlWord: self speciesIdentifier
 		onto: aStream.
-	bytes := RsrEnvironment
-		ifPharo: [aCharacterArray utf8Encoded]
-		ifGemStone: [aCharacterArray encodeAsUTF8]
-		ifDolphin: [aCharacterArray asUtf8String asByteArray].
+	bytes := self toBytes: aCharacterArray.
 	anEncoder
 		encodeControlWord: bytes size
 		onto: aStream.
@@ -44,4 +41,13 @@ onto: aStream [
 RsrCharacterArraySpecies class >> speciesIdentifier [
 
 	^self subclassResponsibility
+]
+
+{ #category : #converting }
+RsrCharacterArraySpecies class >> toBytes: aCharacterArray [
+
+	^RsrEnvironment
+		ifPharo: [aCharacterArray utf8Encoded]
+		ifGemStone: [aCharacterArray encodeAsUTF8]
+		ifDolphin: [aCharacterArray asUtf8String asByteArray].
 ]
