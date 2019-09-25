@@ -12,10 +12,7 @@ for: aDecoder [
 	| length bytes |
 	length := aDecoder decodeControlWord: aStream.
 	bytes := aStream next: length.
-	^RsrEnvironment
-		ifPharo: [bytes utf8Decoded]
-		ifGemStone: [bytes decodeFromUTF8ToString]
-		ifDolphin: [(RsrClassResolver classNamed: #Utf8String) fromByteArray: bytes]
+	^self fromBytes: bytes
 ]
 
 { #category : #coding }
@@ -35,6 +32,15 @@ onto: aStream [
 		encodeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes
+]
+
+{ #category : #converting }
+RsrCharacterArraySpecies class >> fromBytes: aByteArray [
+
+	^RsrEnvironment
+		ifPharo: [aByteArray utf8Decoded]
+		ifGemStone: [aByteArray decodeFromUTF8ToString]
+		ifDolphin: [(RsrClassResolver classNamed: #Utf8String) fromByteArray: aByteArray]
 ]
 
 { #category : #accessing }
