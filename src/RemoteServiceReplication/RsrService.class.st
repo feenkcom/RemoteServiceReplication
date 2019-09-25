@@ -117,7 +117,7 @@ RsrService >> _synchronize [
 	^self
 ]
 
-{ #category : #accessing }
+{ #category : #'public-accessing' }
 RsrService >> isClient [
 
 	^self class isClientClass
@@ -135,13 +135,13 @@ RsrService >> isNotMirrored [
 	^self isMirrored not
 ]
 
-{ #category : #accessing }
+{ #category : #'public-accessing' }
 RsrService >> isServer [
 
 	^self class isServerClass
 ]
 
-{ #category : #accessing }
+{ #category : #'public-accessing' }
 RsrService >> remoteServiceClass [
 
 	^self isClient
@@ -149,13 +149,13 @@ RsrService >> remoteServiceClass [
 		ifFalse: [self class clientClass]
 ]
 
-{ #category : #accessing }
+{ #category : #'public-accessing' }
 RsrService >> remoteServiceName [
 
 	^self remoteServiceClass name
 ]
 
-{ #category : #accessing }
+{ #category : #'public-accessing' }
 RsrService >> scientist [
 
 	^RsrScientist new
@@ -173,7 +173,7 @@ RsrService >> synchronize [
 	remoteSelf _synchronize
 ]
 
-{ #category : #accessing }
+{ #category : #'public-accessing' }
 RsrService >> variablesToReflect [
 
 	^self class variablesToReflect
