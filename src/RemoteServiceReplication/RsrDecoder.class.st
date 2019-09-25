@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'registry',
 		'connection',
-		'decodeCommandMap',
-		'decodeImmediateObjectMap'
+		'decodeCommandMap'
 	],
 	#category : #'RemoteServiceReplication-Communications'
 }
