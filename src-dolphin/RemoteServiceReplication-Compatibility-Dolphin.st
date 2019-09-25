@@ -377,27 +377,9 @@ dateAndTimeClass
 
 	^TimeStamp!
 
-fromMicroseconds: anInteger
-
-	^self dateAndTimeClass fromMilliseconds: self posixEpoch asMilliseconds + (anInteger // 1000)!
-
 fromString: aString
 
-	^self now!
-
-microsecondsSince: aTimeStamp
-
-	| millisDiff |
-	millisDiff := aTimeStamp asMilliseconds - self posixEpoch asMilliseconds.
-	^millisDiff * 1000!
-
-now
-
-	^self dateAndTimeClass current!
-
-posixEpoch
-
-	^self dateAndTimeClass fromSeconds: 2177452800! !
+	^self dateAndTimeClass current! !
 
 !RsrSpecies class methodsFor!
 initializeSpeciesMapping
@@ -449,3 +431,33 @@ initializeSpeciesMapping
 		at: TimeStamp
 		put: RsrDateAndTimeSpecies.
 	^speciesMapping! !
+
+
+!RsrCharacterArraySpecies class methodsFor!
+fromBytes: aByteArray
+
+	^Utf8String fromByteArray: aByteArray!
+
+toBytes: aCharacterArray
+
+	^aCharacterArray asUtf8String asByteArray! !
+
+
+!RsrDateAndTimeSpecies class methodsFor!
+fromMicroseconds: anInteger
+
+	^TimeStamp fromMilliseconds: self posixEpoch asMilliseconds + (anInteger // 1000)!
+
+microsecondsSinceEpoch: aTimeStamp
+
+	| millisDiff |
+	millisDiff := aTimeStamp asMilliseconds - self posixEpoch asMilliseconds.
+	^millisDiff * 1000!
+
+now
+
+	^TimeStamp current!
+
+posixEpoch
+
+	^TimeStamp fromSeconds: 2177452800! !
