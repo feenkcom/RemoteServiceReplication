@@ -11,7 +11,7 @@ for: aDecoder [
 
 	| microseconds |
 	microseconds := aDecoder decodeControlWord: aStream.
-	^RsrDateAndTimeInterface fromMicroseconds: microseconds
+	^self fromMicroseconds: microseconds
 ]
 
 { #category : #coding }
@@ -26,7 +26,7 @@ onto: aStream [
 	anEncoder
 		encodeControlWord: self speciesIdentifier
 		onto: aStream.
-	microseconds := RsrDateAndTimeInterface microsecondsSince: aDateAndTime.
+	microseconds := self microsecondsSinceEpoch: aDateAndTime.
 	anEncoder
 		encodeControlWord: microseconds
 		onto: aStream

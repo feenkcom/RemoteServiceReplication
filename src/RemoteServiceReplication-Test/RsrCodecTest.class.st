@@ -164,7 +164,7 @@ RsrCodecTest >> testControlWord [
 RsrCodecTest >> testDateTime [
 
 	| dt encoding |
-	dt := RsrDateAndTimeInterface posixEpoch.
+	dt := RsrDateAndTimeSpecies posixEpoch.
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 14],
