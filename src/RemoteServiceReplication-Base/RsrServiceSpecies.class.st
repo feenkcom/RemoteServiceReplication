@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrServiceSpecies class >> decodeReference: aStream
-for: aDecoder [
+using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| oid instVarCount serviceName instance |
@@ -29,7 +29,7 @@ for: aDecoder [
 
 { #category : #coding }
 RsrServiceSpecies class >> encode: aService
-with: anEncoder
+using: anEncoder
 on: aStream [
 	"Encode this object. This is specifically used by RsrServiceSpecies."
 
@@ -50,14 +50,14 @@ on: aStream [
 		onto: aStream.
 	(anEncoder speciesOf: aService remoteServiceName)
 		encodeReference: aService remoteServiceName
-		with: anEncoder
+		using: anEncoder
 		onto: aStream.
 	aService _reflectedVariablesDo: [:each | anEncoder encodeReferenceOf: each onto: aStream]
 ]
 
 { #category : #coding }
 RsrServiceSpecies class >> encodeReference: aService
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	anEncoder

@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrNullSpecies class >> decodeReference: aStream
-for: aDecoder [
+using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	self shouldNotImplement
@@ -14,7 +14,7 @@ for: aDecoder [
 
 { #category : #coding }
 RsrNullSpecies class >> encode: anObject
-with: anEncoder
+using: anEncoder
 on: aStream [
 	"Encode this object. This is specifically used by RsrServiceSpecies."
 
@@ -23,7 +23,7 @@ on: aStream [
 
 { #category : #coding }
 RsrNullSpecies class >> encodeReference: anObject
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	^RsrUnsupportedObject signal: anObject

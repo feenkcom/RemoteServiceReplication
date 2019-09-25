@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrIntegerSpecies class >> encodeReference: anInteger
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	| bytes |

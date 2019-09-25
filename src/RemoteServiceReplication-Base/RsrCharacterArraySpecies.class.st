@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrCharacterArraySpecies class >> decodeReference: aStream
-for: aDecoder [
+using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| length bytes |
@@ -17,7 +17,7 @@ for: aDecoder [
 
 { #category : #coding }
 RsrCharacterArraySpecies class >> encodeReference: aCharacterArray
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	| bytes |

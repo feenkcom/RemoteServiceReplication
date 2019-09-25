@@ -5,10 +5,10 @@ Class {
 }
 
 { #category : #coding }
-RsrSymbolSpecies class >> decodeReference: aStream for: aDecoder [
+RsrSymbolSpecies class >> decodeReference: aStream using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
-	^ (super decodeReference: aStream for: aDecoder) asSymbol
+	^ (super decodeReference: aStream using: aDecoder) asSymbol
 ]
 
 { #category : #accessing }

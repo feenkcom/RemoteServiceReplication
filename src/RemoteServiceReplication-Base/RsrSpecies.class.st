@@ -8,22 +8,8 @@ Class {
 }
 
 { #category : #coding }
-RsrSpecies class >> decode: bytes [
-	"Decode the provided bytes into the default native class for this species"
-
-	self notYetImplemented
-]
-
-{ #category : #coding }
-RsrSpecies class >> decodeBody: aStream [
-	"Decode the provided bytes into the default native class for this species"
-
-	self notYetImplemented
-]
-
-{ #category : #coding }
 RsrSpecies class >> decodeReference: aStream
-for: aDecoder [
+using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	self subclassResponsibility
@@ -31,7 +17,7 @@ for: aDecoder [
 
 { #category : #coding }
 RsrSpecies class >> encode: anObject
-with: anEncoder
+using: anEncoder
 on: aStream [
 	"Encode this object. This is specifically used by RsrServiceSpecies."
 
@@ -40,7 +26,7 @@ on: aStream [
 
 { #category : #coding }
 RsrSpecies class >> encodeReference: anObject
-with: anEncoder
+using: anEncoder
 onto: aStream [
 	"Encode the native object using the provided encoder"
 

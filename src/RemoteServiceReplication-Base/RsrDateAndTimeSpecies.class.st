@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrDateAndTimeSpecies class >> decodeReference: aStream
-for: aDecoder [
+using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| microseconds |
@@ -16,7 +16,7 @@ for: aDecoder [
 
 { #category : #coding }
 RsrDateAndTimeSpecies class >> encodeReference: aDateAndTime
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	| microseconds |

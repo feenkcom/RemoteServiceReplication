@@ -57,7 +57,7 @@ onto: aStream [
 
 	(self speciesOf: anObject)
 		encode: anObject
-		with: self
+		using: self
 		on: aStream
 ]
 
@@ -69,7 +69,7 @@ onto: aStream [
 	species := self speciesOf: anObject.
 	species
 		encodeReference: anObject
-		with: self
+		using: self
 		onto: aStream
 ]
 

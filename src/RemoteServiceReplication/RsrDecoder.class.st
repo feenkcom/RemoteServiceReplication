@@ -92,7 +92,7 @@ RsrDecoder >> decodeImmediateObject: aStream [
 	species := self decodeControlWord: aStream.
 	^ (RsrSpecies speciesList at: species + 1)
 		decodeReference: aStream
-		for: self
+		using: self
 ]
 
 { #category : #decoding }
@@ -149,7 +149,7 @@ RsrDecoder >> decodeService: aStream [
 	species := self decodeControlWord: aStream.
 	^(RsrSpecies speciesList at: species + 1)
 		decodeReference: aStream
-		for: self
+		using: self
 ]
 
 { #category : #'private-initialization' }

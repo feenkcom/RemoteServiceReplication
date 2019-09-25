@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrBooleanSpecies class >> encodeReference: aBoolean
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	anEncoder

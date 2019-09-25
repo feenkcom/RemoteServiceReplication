@@ -6,7 +6,7 @@ Class {
 
 { #category : #coding }
 RsrDictionarySpecies class >> decodeReference: aStream
-for: aDecoder [
+using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
 	| size dictionary |
@@ -24,7 +24,7 @@ for: aDecoder [
 
 { #category : #coding }
 RsrDictionarySpecies class >> encodeReference: aDictionary
-with: anEncoder
+using: anEncoder
 onto: aStream [
 
 	anEncoder
