@@ -4,6 +4,12 @@ Class {
 	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
 
+{ #category : #reflection }
+RsrObject class >> allInstances [
+
+	^self instancesInMemory
+]
+
 { #category : #'instance creation' }
 RsrObject class >> new [
 
