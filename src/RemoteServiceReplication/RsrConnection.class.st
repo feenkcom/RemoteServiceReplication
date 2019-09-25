@@ -210,7 +210,7 @@ RsrConnection >> open [
 	commandWriter start.
 	serviceFactory := RsrServiceFactory
 		_id: self oidSpigot next
-		_connection: self.
+		connection: self.
 	serviceFactory _addTo: registry
 ]
 

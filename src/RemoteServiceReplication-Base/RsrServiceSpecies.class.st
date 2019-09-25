@@ -18,7 +18,7 @@ for: aDecoder [
 		ifAbsent:
 			[((aDecoder lookupClass: serviceName)
 				_id: oid
-				_connection: aDecoder connection)
+				connection: aDecoder connection)
 					yourself].
 	instance _addTo: aDecoder registry.
 	instance variablesToReflect size = instVarCount

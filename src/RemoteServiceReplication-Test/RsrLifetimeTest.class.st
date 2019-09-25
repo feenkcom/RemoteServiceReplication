@@ -17,8 +17,8 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 	self assert: RsrClientNoInstVars allInstances isEmpty.
 	service := RsrServerNoInstVars new.
 	service
-		_id: 2;
-		_connection: connectionA.
+		_id: 2
+		connection: connectionA.
 	command := RsrRetainObject object: service.
 	command
 		encodeUsing: connectionA encoder;

@@ -94,7 +94,7 @@ RsrDecoderTest >> testSendMessage [
 	| service encoding command |
 	service := RsrServerNoInstVars
 		_id: 1
-		_connection: RsrMockConnection new.
+		connection: RsrMockConnection new.
 	self decoder.
 	service _addTo: registry.
 	encoding :=

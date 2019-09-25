@@ -14,11 +14,10 @@ Class {
 
 { #category : #'instance creation' }
 RsrService class >> _id: anId
-_connection: aConnection [
+connection: aConnection [
 
 	^super new
-		_id: anId;
-		_connection: aConnection;
+		_id: anId connection: aConnection;
 		yourself
 ]
 
@@ -74,22 +73,18 @@ RsrService >> _connection [
 ]
 
 { #category : #'private-accessing' }
-RsrService >> _connection: aConnection [
-
-	rsrConnection := aConnection.
-	remoteSelf := aConnection _forwarderClass on: self
-]
-
-{ #category : #'private-accessing' }
 RsrService >> _id [
 
 	^rsrId
 ]
 
 { #category : #'private-accessing' }
-RsrService >> _id: anRsrId [
+RsrService >> _id: anRsrId
+connection: aConnection [
 
-	rsrId := anRsrId
+	rsrId := anRsrId.
+	rsrConnection := aConnection.
+	remoteSelf := aConnection _forwarderClass on: self
 ]
 
 { #category : #'private-enumerating' }
