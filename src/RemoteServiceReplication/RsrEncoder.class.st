@@ -163,21 +163,6 @@ onto: aStream [
 		do: [:each | self encodeReferenceOf: each onto: aStream]
 ]
 
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeStringBody: aString
-onto: aStream [
-
-	| bytes |
-	bytes := RsrEnvironment
-		ifPharo: [aString utf8Encoded]
-		ifGemStone: [aString encodeAsUTF8]
-		ifDolphin: [aString asUtf8String asByteArray].
-	self
-		encodeControlWord: bytes size
-		onto: aStream.
-	aStream nextPutAll: bytes
-]
-
 { #category : #'private-converting' }
 RsrEncoder >> integerAsByteArray: anInteger [
 	"Return a ByteArray representing <anInteger> in big endian format."
