@@ -115,6 +115,24 @@ RsrService >> isServer [
 	^self class isServerClass
 ]
 
+{ #category : #enumerating }
+RsrService >> reflectedVariableIndecesDo: aBlock [
+
+	| allVariables |
+	allVariables := self class allInstVarNames.
+	self class variablesToReflect
+		do:
+			[:varName | | index |
+			index := allVariables indexOf: varName.
+			aBlock value: index]
+]
+
+{ #category : #enumerating }
+RsrService >> reflectedVariablesDo: aBlock [
+
+	self reflectedVariableIndecesDo: [:index | aBlock value: (self instVarAt: index)]
+]
+
 { #category : #'private-lifecycle' }
 RsrService >> registerWith: aRegistry [
 
@@ -153,4 +171,10 @@ RsrService >> serviceName [
 RsrService >> synchronize [
 
 	remoteSelf _synchronize
+]
+
+{ #category : #accessing }
+RsrService >> variablesToReflect [
+
+	^self class variablesToReflect
 ]

@@ -131,10 +131,7 @@ RsrRetainAnalysis >> processService: aService [
 
 	self
 		processing: aService
-		during:
-			[RsrReflection
-				reflectedVariablesOf: aService
-				do: [:each | self process: each]]
+		during: [aService reflectedVariablesDo: [:each | self process: each]]
 ]
 
 { #category : #processing }

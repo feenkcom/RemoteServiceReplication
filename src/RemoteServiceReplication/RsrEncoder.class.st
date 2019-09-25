@@ -144,7 +144,7 @@ onto: aStream [
 	"the name of the remote service to create"
 	"Write the object slots"
 	| reflectedVariables |
-	reflectedVariables := RsrReflection reflectedVariableNamesOf: aService.
+	reflectedVariables := aService variablesToReflect.
 	self
 		encodeControlWord: self serviceType
 		onto: aStream.
@@ -158,9 +158,7 @@ onto: aStream [
 		encodeReference: aService remoteServiceName
 		with: self
 		onto: aStream.
-	RsrReflection
-		reflectedVariablesOf: aService
-		do: [:each | self encodeReferenceOf: each onto: aStream]
+	aService reflectedVariablesDo: [:each | self encodeReferenceOf: each onto: aStream]
 ]
 
 { #category : #converting }

@@ -55,8 +55,8 @@ RsrServiceTest >> testIsMirrored [
 RsrServiceTest >> testReflectedVariableNames [
 
 	| clientNames serverNames |
-	clientNames := RsrReflection reflectedVariableNamesOf: RsrClientTestService new.
-	serverNames := RsrReflection reflectedVariableNamesOf: RsrServerTestService new.
+	clientNames := RsrClientTestService variablesToReflect.
+	serverNames := RsrServerTestService variablesToReflect.
 	self
 		assert: clientNames
 		equals: serverNames.
@@ -66,8 +66,8 @@ RsrServiceTest >> testReflectedVariableNames [
 	self
 		assert: (clientNames at: 1) asSymbol
 		equals: #sharedVariable.
-	clientNames := RsrReflection reflectedVariableNamesOf: RsrReflectedVariableTestClient new.
-	serverNames := RsrReflection reflectedVariableNamesOf: RsrReflectedVariableTestServer new.
+	clientNames := RsrReflectedVariableTestClient variablesToReflect.
+	serverNames := RsrReflectedVariableTestServer variablesToReflect.
 	self
 		assert: clientNames
 		equals: serverNames.
