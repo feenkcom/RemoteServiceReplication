@@ -11,7 +11,7 @@ label: aString [
 	| time result |
 	time := Time millisecondsToRun: [result := aBlock value].
 	Transcript
-		show: RsrDateAndTimeInterface now printString, ': ', aString asString, ' took (', time asString, ') ms.';
+		show: RsrDateAndTimeSpecies now printString, ': ', aString asString, ' took (', time asString, ') ms.';
 		cr.
 	^result
 ]
