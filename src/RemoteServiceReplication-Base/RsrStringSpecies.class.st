@@ -9,8 +9,14 @@ RsrStringSpecies class >> encodeReference: aString
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeString: aString
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeStringBody: aString
 		onto: aStream
 ]
 

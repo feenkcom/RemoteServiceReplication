@@ -9,8 +9,14 @@ RsrCharacterSpecies class >> encodeReference: aCharacter
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeCharacter: aCharacter
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeControlWord: aCharacter codePoint
 		onto: aStream
 ]
 

@@ -9,9 +9,21 @@ RsrSetSpecies class >> encodeReference: aSet
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeSet: aSet
-		onto: aStream
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeControlWord: aSet size
+		onto: aStream.
+	aSet
+		do:
+			[:each |
+			anEncoder
+				encodeReferenceOf: each
+				onto: aStream]
 ]
 
 { #category : #accessing }

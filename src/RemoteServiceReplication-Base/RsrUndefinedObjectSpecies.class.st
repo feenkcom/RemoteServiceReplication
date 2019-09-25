@@ -9,7 +9,12 @@ RsrUndefinedObjectSpecies class >> encodeReference: nilArgument
 with: anEncoder
 onto: aStream [
 
-	^anEncoder encodeNilOnto: aStream
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream
 ]
 
 { #category : #accessing }

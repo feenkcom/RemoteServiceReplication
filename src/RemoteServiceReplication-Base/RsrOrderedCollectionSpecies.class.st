@@ -9,9 +9,21 @@ RsrOrderedCollectionSpecies class >> encodeReference: anOrderedCollection
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeOrderedCollection: anOrderedCollection
-		on: aStream
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeControlWord: anOrderedCollection size
+		onto: aStream.
+	anOrderedCollection
+		do:
+			[:each |
+			anEncoder
+				encodeReferenceOf: each
+				onto: aStream]
 ]
 
 { #category : #accessing }

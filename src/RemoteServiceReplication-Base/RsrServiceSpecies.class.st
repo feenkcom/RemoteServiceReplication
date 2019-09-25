@@ -9,8 +9,8 @@ RsrServiceSpecies class >> encodeReference: aService
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeServiceReference: aService
+	anEncoder
+		encodeControlWord: aService _id
 		onto: aStream
 ]
 

@@ -24,6 +24,12 @@ onto: aStream [
 ]
 
 { #category : #accessing }
+RsrSpecies class >> immediateOID [
+
+	^0
+]
+
+{ #category : #accessing }
 RsrSpecies class >> nullSpecies [
 
 	^RsrNullSpecies

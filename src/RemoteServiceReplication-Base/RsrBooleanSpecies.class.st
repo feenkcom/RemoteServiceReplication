@@ -9,7 +9,16 @@ RsrBooleanSpecies class >> encodeReference: aBoolean
 with: anEncoder
 onto: aStream [
 
-	^aBoolean
-		ifTrue: [anEncoder encodeTrueOnto: aStream]
-		ifFalse: [anEncoder encodeFalseOnto: aStream]
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream
+]
+
+{ #category : #accessing }
+RsrBooleanSpecies class >> speciesIdentifier [
+
+	^self subclassResponsibility
 ]

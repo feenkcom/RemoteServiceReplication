@@ -5,58 +5,6 @@ Class {
 }
 
 { #category : #'private-encoding' }
-RsrEncoder >> encodeArray: anArray
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self arrayType
-		onto: aStream.
-	self
-		encodeControlWord: anArray size
-		onto: aStream.
-	anArray
-		do:
-			[:each |
-			self
-				encodeReferenceOf: each
-				onto: aStream]
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeByteArray: aByteArray
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self byteArrayType
-		onto: aStream.
-	self
-		encodeControlWord: aByteArray size
-		onto: aStream.
-	aStream nextPutAll: aByteArray
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeCharacter: aCharacter
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self characterType
-		onto: aStream.
-	self
-		encodeControlWord: aCharacter codePoint
-		onto: aStream
-]
-
-{ #category : #'private-encoding' }
 RsrEncoder >> encodeControlWord: anInteger
 onto: aStream [
 
@@ -70,23 +18,6 @@ onto: aStream [
 		integerAsByteArray: encodedInteger
 		ofSize: self sizeOfInteger.
 	aStream nextPutAll: encodedBytes
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeDateAndTime: aDateTime
-onto: aStream [
-
-	| microseconds |
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self dateAndTimeType
-		onto: aStream.
-	microseconds := RsrDateAndTimeInterface microsecondsSince: aDateTime.
-	self
-		encodeControlWord: microseconds
-		onto: aStream
 ]
 
 { #category : #'private-encoding' }
@@ -109,73 +40,6 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 				onto: stream]
 ]
 
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeDictionary: aDictionary
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self dictionaryType
-		onto: aStream.
-	self
-		encodeControlWord: aDictionary size
-		onto: aStream.
-	aDictionary
-		keysAndValuesDo:
-			[:key :value |
-			self
-				encodeReferenceOf: key
-				onto: aStream.
-			self
-				encodeReferenceOf: value
-				onto: aStream]
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeFalseOnto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self falseType
-		onto: aStream
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeImmediateInteger: anInteger
-onto: aStream [
-
-	| bytes immediateType |
-	immediateType := anInteger positive
-		ifTrue: [self positiveIntegerType]
-		ifFalse: [self negativeIntegerType].
-	bytes := self integerAsByteArray: anInteger abs.
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: immediateType
-		onto: aStream.
-	self
-		encodeControlWord: bytes size
-		onto: aStream.
-	aStream nextPutAll: bytes
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeNilOnto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self nilType
-		onto: aStream
-]
-
 { #category : #encoding }
 RsrEncoder >> encodeObject: anObject [
 
@@ -194,27 +58,6 @@ onto: aStream [
 	(self isService: anObject)
 		ifTrue: [^self encodeService: anObject onto: aStream].
 	RsrUnsupportedObject signal: anObject
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeOrderedCollection: anOrderedCollection
-on: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self orderedCollectionType
-		onto: aStream.
-	self
-		encodeControlWord: anOrderedCollection size
-		onto: aStream.
-	anOrderedCollection
-		do:
-			[:each |
-			self
-				encodeReferenceOf: each
-				onto: aStream]
 ]
 
 { #category : #'private-encoding' }
@@ -311,57 +154,13 @@ onto: aStream [
 	self
 		encodeControlWord: reflectedVariables size
 		onto: aStream.
-	self
-		encodeSymbol: aService remoteServiceName
+	(self speciesOf: aService remoteServiceName)
+		encodeReference: aService remoteServiceName
+		with: self
 		onto: aStream.
 	RsrReflection
 		reflectedVariablesOf: aService
 		do: [:each | self encodeReferenceOf: each onto: aStream]
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeServiceReference: aService
-onto: aStream [
-
-	^self
-		encodeControlWord: aService _id
-		onto: aStream
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeSet: aSet
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self setType
-		onto: aStream.
-	self
-		encodeControlWord: aSet size
-		onto: aStream.
-	aSet
-		do:
-			[:each |
-			self
-				encodeReferenceOf: each
-				onto: aStream]
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeString: aString
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self stringType
-		onto: aStream.
-	self
-		encodeStringBody: aString
-		onto: aStream
 ]
 
 { #category : #'private-encoding' }
@@ -377,32 +176,6 @@ onto: aStream [
 		encodeControlWord: bytes size
 		onto: aStream.
 	aStream nextPutAll: bytes
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeSymbol: aSymbol
-onto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self symbolType
-		onto: aStream.
-	self
-		encodeStringBody: aSymbol
-		onto: aStream
-]
-
-{ #category : #'private-encoding' }
-RsrEncoder >> encodeTrueOnto: aStream [
-
-	self
-		encodeControlWord: self immediateOID
-		onto: aStream.
-	self
-		encodeControlWord: self trueType
-		onto: aStream
 ]
 
 { #category : #'private-accessing' }

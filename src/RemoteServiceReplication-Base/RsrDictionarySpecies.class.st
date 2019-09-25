@@ -9,9 +9,24 @@ RsrDictionarySpecies class >> encodeReference: aDictionary
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeDictionary: aDictionary
-		onto: aStream
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeControlWord: aDictionary size
+		onto: aStream.
+	aDictionary
+		keysAndValuesDo:
+			[:key :value |
+			anEncoder
+				encodeReferenceOf: key
+				onto: aStream.
+			anEncoder
+				encodeReferenceOf: value
+				onto: aStream]
 ]
 
 { #category : #accessing }

@@ -9,8 +9,14 @@ RsrSymbolSpecies class >> encodeReference: aSymbol
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeSymbol: aSymbol
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	anEncoder
+		encodeStringBody: aSymbol
 		onto: aStream
 ]
 

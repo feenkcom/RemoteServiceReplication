@@ -9,8 +9,16 @@ RsrDateAndTimeSpecies class >> encodeReference: aDateAndTime
 with: anEncoder
 onto: aStream [
 
-	^anEncoder
-		encodeDateAndTime: aDateAndTime
+	| microseconds |
+	anEncoder
+		encodeControlWord: self immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self speciesIdentifier
+		onto: aStream.
+	microseconds := RsrDateAndTimeInterface microsecondsSince: aDateAndTime.
+	anEncoder
+		encodeControlWord: microseconds
 		onto: aStream
 ]
 
