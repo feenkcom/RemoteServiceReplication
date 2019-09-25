@@ -14,7 +14,7 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 
 	| service command |
 	self maximumReclamation.
-	self assert: (RsrReflection allInstancesOf: RsrClientNoInstVars) isEmpty.
+	self assert: RsrReflection allInstances isEmpty.
 	service := RsrServerNoInstVars new.
 	service
 		_id: 2;
@@ -29,7 +29,7 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 	connectionB close.
 	service := command := nil.
 	self maximumReclamation.
-	self assert: (RsrReflection allInstancesOf: RsrClientNoInstVars) isEmpty
+	self assert: RsrReflection allInstances isEmpty
 ]
 
 { #category : #running }
