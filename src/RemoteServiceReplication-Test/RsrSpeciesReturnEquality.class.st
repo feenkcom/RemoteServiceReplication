@@ -22,7 +22,7 @@ RsrSpeciesReturnEquality >> basicExamples [
 	#[123].
 	Set with: 42.
 	OrderedCollection with: #x.
-	Dictionary with: #key->#value.
+	Dictionary new at: #key put: #value; yourself.
 	RsrDateAndTimeSpecies now}
 ]
 
