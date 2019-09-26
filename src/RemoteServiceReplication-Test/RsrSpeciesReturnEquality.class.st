@@ -55,7 +55,6 @@ RsrSpeciesReturnEquality >> testByteArray [
 RsrSpeciesReturnEquality >> testDateAndTime [
 
 	self
-		verify: RsrDateAndTimeSpecies now;
 		verify: (RsrDateAndTimeSpecies fromMicroseconds: -491277642567488); "1954-06-07T14:59:17.432512-07:00"
 		verify: (RsrDateAndTimeSpecies fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"
 ]
