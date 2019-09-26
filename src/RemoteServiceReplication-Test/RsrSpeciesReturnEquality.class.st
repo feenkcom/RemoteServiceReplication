@@ -23,7 +23,7 @@ RsrSpeciesReturnEquality >> basicExamples [
 	Set with: 42.
 	OrderedCollection with: #x.
 	Dictionary new at: #key put: #value; yourself.
-	RsrDateAndTimeSpecies now}
+	RsrDateAndTimeSpecies fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}
 ]
 
 { #category : #running }
