@@ -66,7 +66,7 @@ RsrSpeciesReturnEquality >> testDictionary [
 	example := Dictionary new.
 	self verify: example.
 	self basicExamples do: [:each | each ifNotNil: [example at: each put: each]].
-	example at: 1 put: nil.
+	example at: #testDictionaryPrivateKey put: nil.
 	self verify: example
 ]
 
