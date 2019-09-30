@@ -41,10 +41,10 @@
         - [] 32-bit characters
 - [] Service
     - [] Mirrored instance variable reference unsupported object
-    - [] Mirror instance variables containing each supported species
-    - [] Send and return Service
+    - [x] Mirror instance variables containing each supported species
+    - [x] Send and return Service
         - [x] Referencing another service
-        - [] Referencing all data objects
+        - [x] Referencing all data objects
 
 ## Needed Functionality
 
