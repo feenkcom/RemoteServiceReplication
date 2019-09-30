@@ -40,8 +40,8 @@
 - [] Service
     - [] Mirrored instance variable reference unsupported object
     - [] Mirror instance variables containing each supported species
-    - [] Return
-        - [] Referencing another service
+    - [] Send and return Service
+        - [x] Referencing another service
         - [] Referencing all data objects
 
 ## Needed Functionality
