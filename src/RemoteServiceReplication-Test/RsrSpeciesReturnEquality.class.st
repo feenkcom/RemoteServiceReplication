@@ -94,6 +94,15 @@ RsrSpeciesReturnEquality >> testOrderedCollection [
 ]
 
 { #category : #running }
+RsrSpeciesReturnEquality >> testService [
+
+	self
+		verify: RsrClientNoInstVars new;
+		verify: (RsrClientReferenceService service: RsrClientNoInstVars new);
+		verify: (RsrServerReferenceService service: RsrClientNoInstVars new)
+]
+
+{ #category : #running }
 RsrSpeciesReturnEquality >> testSet [
 
 	self
