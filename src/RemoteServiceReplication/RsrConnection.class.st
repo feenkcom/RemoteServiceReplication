@@ -108,6 +108,7 @@ RsrConnection >> close [
 	commandWriter stop.
 	dispatcher stop.
 	self promises do: [:each | each error: RsrConnectionClosed new].
+	(self registry respondsTo: #clear) ifTrue: [self registry clear].
 	objectCache reset
 ]
 

@@ -60,6 +60,12 @@ put: aService [
 	mutex critical: [map at: aKey put: element]
 ]
 
+{ #category : #hack }
+RsrRegistry >> clear [
+
+	map := Dictionary new
+]
+
 { #category : #initialization }
 RsrRegistry >> includesKey: aKey [
 
