@@ -2,13 +2,15 @@
 
 - [x] Implement compatibility subsystem
     - [x] Add seam for RsrService finalization hook (via RsrAbstractService)
-- [] #testRemoteReferenceLifetime failure
+- [x] #testRemoteReferenceLifetime failure
     - [x] Failure of service synchronization fixed via sending _synchronize
     - [x] Failure to send ReleaseService message fixed via finalization sending #reap:
 - [x] TimeStamp
     - [x] Does not support timezones (will be ignored)
     - [x] Does not support #fromString: testing format (will be ignored)
     - [x] Test using Dolphin 7.1.14 - DateAndTime implemented
+- [] Hashing
+    - [] Collections do not implement #hash therefore #testDictionary fails
 
 ## Needed Tests
 
