@@ -10,7 +10,9 @@ RsrSpeciesReturnEquality >> basicExamples [
 
 	^{RsrClientNoInstVars new.
 	#h.
+	#''.
 	'h'.
+	''.
 	0.
 	234.
 	-97.
@@ -18,11 +20,17 @@ RsrSpeciesReturnEquality >> basicExamples [
 	nil.
 	true.
 	false.
+	{}.
 	{RsrClientNoInstVars new. {}.}.
+	#[].
 	#[123].
+	Set new.
 	Set with: 42.
+	OrderedCollection new.
 	OrderedCollection with: #x.
+	Dictionary new.
 	Dictionary new at: #key put: #value; yourself.
+	RsrDateAndTimeSpecies posixEpoch.
 	RsrDateAndTimeSpecies fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}
 ]
 
