@@ -5,11 +5,12 @@ Class {
 }
 
 { #category : #coding }
-RsrServiceSpecies class >> decodeReference: aStream
+RsrServiceSpecies class >> decode: aStream
 using: aDecoder [
-	"Decode the provided bytes into the default native class for this species"
+	"Decode a Service from the stream"
 
-	| oid instVarCount serviceName instance |
+	| species oid instVarCount serviceName instance |
+	species := aDecoder decodeControlWord: aStream.
 	oid := aDecoder decodeControlWord: aStream.
 	instVarCount := aDecoder decodeControlWord: aStream.
 	serviceName := aDecoder decodeObjectReference: aStream.
@@ -25,6 +26,14 @@ using: aDecoder [
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
 	^instance
+]
+
+{ #category : #coding }
+RsrServiceSpecies class >> decodeReference: aStream
+using: aDecoder [
+	"Decode the provided bytes into the default native class for this species"
+
+	self shouldNotImplement
 ]
 
 { #category : #coding }

@@ -16,9 +16,9 @@ decodesTo: expected [
 ]
 
 { #category : #decoding }
-RsrDecoderTest >> decode: anObjectBytes [
+RsrDecoderTest >> decodeService: anObjectBytes [
 
-	^self decoder decodeObject: anObjectBytes readStream
+	^self decoder decodeService: anObjectBytes readStream
 ]
 
 { #category : #running }
@@ -130,8 +130,8 @@ RsrDecoderTest >> testServiceDecodeIdentity [
 	a single object getting created."
 
 	| firstService secondService |
-	firstService := self decode: self serviceNoInstVarsEncoding.
-	secondService := self decode: self serviceNoInstVarsEncoding.
+	firstService := self decodeService: self serviceNoInstVarsEncoding.
+	secondService := self decodeService: self serviceNoInstVarsEncoding.
 	self
 		assert: firstService
 		identicalTo: secondService
@@ -141,7 +141,7 @@ RsrDecoderTest >> testServiceDecodeIdentity [
 RsrDecoderTest >> testServiceNoInstVars [
 
 	| decodedService |
-	decodedService := self decode: self serviceNoInstVarsEncoding.
+	decodedService := self decodeService: self serviceNoInstVarsEncoding.
 	self
 		assert: decodedService class
 		equals: RsrServerNoInstVars.
@@ -154,14 +154,14 @@ RsrDecoderTest >> testServiceNoInstVars [
 RsrDecoderTest >> testServiceReferenceService [
 
 	| rootService referencedService |
-	referencedService := self decode: self referencedServiceEncoding.
+	referencedService := self decodeService: self referencedServiceEncoding.
 	self
 		assert: referencedService class
 		equals: RsrServerNoInstVars.
 	self
 		assert: referencedService _id
 		equals: 2.
-	rootService := self decode: self rootServiceEncoding.
+	rootService := self decodeService: self rootServiceEncoding.
 	self
 		assert: rootService class
 		equals: RsrServerReferenceService.

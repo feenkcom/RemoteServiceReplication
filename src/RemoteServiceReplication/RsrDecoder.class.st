@@ -86,7 +86,7 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 ]
 
 { #category : #'decoding-services' }
-RsrDecoder >> decodeObject: aStream [
+RsrDecoder >> decodeImmediateObject: aStream [
 
 	| species |
 	species := self decodeControlWord: aStream.
@@ -100,7 +100,7 @@ RsrDecoder >> decodeObjectReference: aStream [
 
 	| oid |
 	oid := self decodeControlWord: aStream.
-	oid = self immediateOID ifTrue: [^self decodeObject: aStream].
+	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
 	^registry at: oid ifAbsent: [self signalUnknownOID]
 ]
 
@@ -122,7 +122,7 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 { #category : #'decoding-commands' }
 RsrDecoder >> decodeRetainObject: aStream [
 
-	^RsrRetainObject object: (self decodeObject: aStream)
+	^RsrRetainObject object: (self decodeService: aStream)
 ]
 
 { #category : #'decoding-commands' }
@@ -140,6 +140,14 @@ RsrDecoder >> decodeSendMessage: aStream [
 		receiver: receiver
 		selector: selector
 		arguments: arguments
+]
+
+{ #category : #'decoding-services' }
+RsrDecoder >> decodeService: aStream [
+
+	^RsrServiceSpecies
+		decode: aStream
+		using: self
 ]
 
 { #category : #'private-initialization' }
