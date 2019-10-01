@@ -42,6 +42,12 @@ on: aHostname [
 		on: aHostname
 ]
 
+{ #category : #testing }
+RsrSocket >> dataAvailable [
+
+	^socket readWillNotBlock
+]
+
 { #category : #initialization }
 RsrSocket >> initialize [
 

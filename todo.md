@@ -1,4 +1,4 @@
-## Dolphin Port
+## Dolphin Port (7.0.56)
 
 - [x] Implement compatibility subsystem
     - [x] Add seam for RsrService finalization hook (via RsrAbstractService)
@@ -11,6 +11,10 @@
     - [x] Test using Dolphin 7.1.14 - DateAndTime implemented
 - [] Hashing
     - [] Collections do not implement #hash therefore #testDictionary fails
+- [] Character Arrays
+    - [] Symbols do not support Unicode codepoints
+    - [] Cannot construct a string containing characters in the unicode range (via #with: family of selectors)
+
 
 ## Needed Tests
 
