@@ -74,6 +74,22 @@ RsrSocket >> read: aCount [
 	^bytes
 ]
 
+{ #category : #reading }
+RsrSocket >> readAvailable [
+
+	| bytes bytesRead |
+	bytes := ByteArray new: 4096.
+	^ByteArray
+		streamContents:
+			[:stream |
+			[self dataAvailable]
+				whileTrue:
+					[bytesRead := socket receiveAvailableDataInto: bytes.
+					bytesRead == bytes size
+						ifTrue: [stream nextPutAll: bytes]
+						ifFalse: [stream nextPutAll: (bytes copyFrom: 1 to: bytesRead)]]]
+]
+
 { #category : #accessing }
 RsrSocket >> socket: aSocket [
 
@@ -81,7 +97,7 @@ RsrSocket >> socket: aSocket [
 	socket := aSocket
 ]
 
-{ #category : #reading }
+{ #category : #writing }
 RsrSocket >> write: bytes [
 
 	socket sendData: bytes
