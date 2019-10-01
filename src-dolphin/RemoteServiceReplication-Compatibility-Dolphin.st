@@ -347,6 +347,22 @@ read: aCount
 		do: [:ex | socket close.  ex resignalAs: RsrConnectionClosed new].
 	^bytes!
 
+readAvailable
+
+	| bytes totalBytesRead bytesRead |
+	bytes := ByteArray new: 4096.
+	totalBytesRead := 0.
+	[self dataAvailable]
+		whileTrue:
+			[bytes size = totalBytesRead
+				ifTrue: [bytes := bytes, (ByteArray new: 4096)].
+			bytesRead := socket
+				receiveSome: bytes
+				count: bytes size - totalBytesRead
+				startingAt: totalBytesRead + 1.
+			totalBytesRead := totalBytesRead + bytesRead].
+	^bytes copyFrom: 1 to: totalBytesRead!
+
 socket: aHostSocket
 
 	socket := aHostSocket!
