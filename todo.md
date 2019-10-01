@@ -24,10 +24,10 @@
     - [x] Instance variables in concrete classes do not appear
     - [x] Instance variables declared in RsrService and above are not mirrored
 - [] RsrSocketStream
-    - [] #nextAvailable
-- [] RsrSocket
-    - [] Data available?
-    - [] Read available data
+    - [] Internal buffer of written data
+- [x] RsrSocket
+    - [x] Data available?
+    - [x] Read available data
 - [x] Unicode
     - [x] Strings
     - [x] Symbols
