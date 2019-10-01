@@ -84,6 +84,26 @@ RsrSocket >> read: aCount [
 	^bytes
 ]
 
+{ #category : #reading }
+RsrSocket >> readAvailable [
+
+	| bytes totalBytesRead bytesRead |
+	bytes := ByteArray new: 4096.
+	totalBytesRead := 0.
+	[self dataAvailable]
+		whileTrue:
+			[bytes size = totalBytesRead
+				ifTrue: [bytes := bytes, (ByteArray new: 4096)].
+			bytesRead := socket
+				read: bytes size - totalBytesRead
+				into: bytes
+				startingAt: totalBytesRead + 1.
+			bytesRead = nil
+				ifTrue: [^bytes copyFrom: 1 to: totalBytesRead].
+			totalBytesRead := totalBytesRead + bytesRead].
+	^bytes copyFrom: 1 to: totalBytesRead
+]
+
 { #category : #accessing }
 RsrSocket >> socket: aSocket [
 
