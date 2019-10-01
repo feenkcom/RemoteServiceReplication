@@ -29,7 +29,7 @@
     - [x] Symbols
     - [x] Characters
 - [] Service
-    - [] Mirrored instance variable reference unsupported object
+    - [x] Mirrored instance variable reference unsupported object
     - [x] Mirror instance variables containing each supported species
     - [x] Send and return Service
         - [x] Referencing another service
