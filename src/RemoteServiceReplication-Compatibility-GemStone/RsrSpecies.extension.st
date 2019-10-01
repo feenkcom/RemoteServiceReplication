@@ -8,10 +8,22 @@ RsrSpecies class >> initializeSpeciesMapping [
 		at: Symbol
 		put: RsrSymbolSpecies.
 	speciesMapping
+		at: DoubleByteSymbol
+		put: RsrSymbolSpecies.
+	speciesMapping
+		at: QuadByteSymbol
+		put: RsrSymbolSpecies.
+	speciesMapping
 		at: String
 		put: RsrStringSpecies.
     speciesMapping
         at: Unicode7
+        put: RsrStringSpecies.
+    speciesMapping
+        at: DoubleByteString
+        put: RsrStringSpecies.
+    speciesMapping
+        at: QuadByteString
         put: RsrStringSpecies.
 	speciesMapping
 		at: LargeInteger
