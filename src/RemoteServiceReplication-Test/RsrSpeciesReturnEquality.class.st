@@ -60,6 +60,17 @@ RsrSpeciesReturnEquality >> testByteArray [
 ]
 
 { #category : #running }
+RsrSpeciesReturnEquality >> testCharacter [
+
+	self
+		verify: (Character codePoint: 0);
+		verify: (Character codePoint: 65);
+		verify: $A;
+		verify: (Character codePoint: 16r01D4);
+		verify: (Character codePoint: 16r8334)
+]
+
+{ #category : #running }
 RsrSpeciesReturnEquality >> testDateAndTime [
 
 	self

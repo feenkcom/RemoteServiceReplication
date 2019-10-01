@@ -33,7 +33,8 @@ Class {
 		'set',
 		'setWithAllTypes',
 		'orderedCollectionWithAllTypes',
-		'dictionaryWithAllTypes'
+		'dictionaryWithAllTypes',
+		'unicodeCharacter'
 	],
 	#category : #'RemoteServiceReplication-Test-Services'
 }
@@ -66,11 +67,12 @@ RsrAbstractReferenceAllSpecies >> initialize [
 	smallPositive := 1.
 	largePositive := 29183756217893561289745689732456.
 	asciiCharacter := $e.
+	unicodeCharacter := Character codePoint: 16r01D4.
 	undefinedObject := nil.
 	booleanTrue := true.
 	booleanFalse := false.
 	emptyArray := #().
-	array := {emptyService. serviceReferenceService. emptySymbol. symbol. emptyString. string. largeNegative. smallNegative. zero. smallPositive. largePositive. asciiCharacter. undefinedObject. booleanTrue. booleanFalse. emptyArray.}.
+	array := {emptyService. serviceReferenceService. emptySymbol. symbol. emptyString. string. largeNegative. smallNegative. zero. smallPositive. largePositive. asciiCharacter. unicodeCharacter. undefinedObject. booleanTrue. booleanFalse. emptyArray.}.
 	emptyByteArray := #[].
 	byteArray := #[123 45 67].
 	emptySet := Set new.
