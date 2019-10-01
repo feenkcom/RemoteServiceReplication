@@ -152,6 +152,27 @@ RsrSpeciesReturnEquality >> testUndefinedObject [
 	self verify: nil
 ]
 
+{ #category : #running }
+RsrSpeciesReturnEquality >> testUnicodeString [
+
+	self verify: self unicodeString
+]
+
+{ #category : #running }
+RsrSpeciesReturnEquality >> testUnicodeSymbol [
+
+	self verify: self unicodeString asSymbol
+]
+
+{ #category : #running }
+RsrSpeciesReturnEquality >> unicodeString [
+
+	^String
+		with: $a
+		with: (Character codePoint: 16r8349)
+		with: (Character codePoint: 16r10E60)
+]
+
 { #category : #asserting }
 RsrSpeciesReturnEquality >> verify: anObject [
 	"Send <anObject> through RSR and have it returned. Assert it is equivalent."
