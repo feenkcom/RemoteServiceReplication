@@ -324,6 +324,10 @@ on: aHostname
 		host: aHostname.
 	socket connect!
 
+dataAvailable
+
+	^socket notNil and: [socket hasInput]!
+
 isConnected
 
 	^socket notNil and: [socket isOpen]!
