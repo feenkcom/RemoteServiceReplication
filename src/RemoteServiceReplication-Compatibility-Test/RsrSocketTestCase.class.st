@@ -68,7 +68,7 @@ RsrSocketTestCase >> testHasDataAvailable [
 ]
 
 { #category : #running }
-RsrSocketTestCase >> testReadAvaiable [
+RsrSocketTestCase >> testReadAvailable [
 
 	| pair a b bytes readBytes writingProcess |
 	pair := RsrSocketPair new.
@@ -84,15 +84,11 @@ RsrSocketTestCase >> testReadAvaiable [
 		assert: a readAvailable
 		equals: bytes.
 	self deny: a dataAvailable.
-	bytes := ByteArray new: 8*1024*1024.
-	1 to: bytes size do: [:i | bytes at: i put: (i \\ 256)].
-	writingProcess := RsrConcurrency fork: [b write: bytes].
-	(Delay forMilliseconds: 10) wait.
-	readBytes := a readAvailable.
+	bytes := ByteArray withAll: (1 to: 255).
+	b write: bytes.
 	self
-		assert: (readBytes size between: 1 and: bytes size - 1);
-		assert: (bytes beginsWith: readBytes).
-	writingProcess terminate
+		assert: a readAvailable
+		equals: bytes
 
 
 
