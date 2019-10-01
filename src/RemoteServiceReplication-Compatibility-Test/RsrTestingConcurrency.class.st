@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'forkedException'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-Test'
+	#category : #'RemoteServiceReplication-Compatibility-Test-Support'
 }
 
 { #category : #'managing-concurrency' }

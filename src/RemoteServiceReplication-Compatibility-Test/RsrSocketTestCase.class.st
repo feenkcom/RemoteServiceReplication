@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrSocketTestCase,
 	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test'
+	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
 }
 
 { #category : #running }
@@ -55,4 +55,14 @@ RsrSocketTestCase >> testConnectToClosedPort [
 	self
 		should: [socket connectTo: 64752 on: '127.0.0.1']
 		raise: Error
+]
+
+{ #category : #running }
+RsrSocketTestCase >> testHasDataAvailable [
+
+	| socketPair |
+	socketPair := RsrSocketPair new.
+	self deny: socketPair firstSocket dataAvailable.
+	socketPair secondSocket write: #[1].
+	self assert: socketPair firstSocket dataAvailable.
 ]

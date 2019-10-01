@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrClassResolverTestCase,
 	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test'
+	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
 }
 
 { #category : #asserting }

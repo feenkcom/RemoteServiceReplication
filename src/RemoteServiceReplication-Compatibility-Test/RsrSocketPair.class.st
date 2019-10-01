@@ -5,7 +5,7 @@ Class {
 		'firstSocket',
 		'secondSocket'
 	],
-	#category : #'RemoteServiceReplication-Test-Utilities'
+	#category : #'RemoteServiceReplication-Compatibility-Test-Utilities'
 }
 
 { #category : #'instance creation' }
@@ -69,7 +69,7 @@ RsrSocketPair >> firstSocket: anObject [
 { #category : #accessing }
 RsrSocketPair >> firstStream [
 
-	^RsrSocketStream on: firstSocket
+	^(RsrClassResolver classNamed: #RsrSocketStream) on: firstSocket
 ]
 
 { #category : #accessing }
@@ -85,5 +85,5 @@ RsrSocketPair >> secondSocket: anObject [
 { #category : #accessing }
 RsrSocketPair >> secondStream [
 
-	^RsrSocketStream on: secondSocket
+	^(RsrClassResolver classNamed: #RsrSocketStream) on: secondSocket
 ]

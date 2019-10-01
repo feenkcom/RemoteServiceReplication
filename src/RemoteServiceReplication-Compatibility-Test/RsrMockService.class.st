@@ -1,7 +1,7 @@
 Class {
 	#name : #RsrMockService,
 	#superclass : #RsrAbstractService,
-	#category : #'RemoteServiceReplication-Compatibility-Test'
+	#category : #'RemoteServiceReplication-Compatibility-Test-Support'
 }
 
 { #category : #accessing }

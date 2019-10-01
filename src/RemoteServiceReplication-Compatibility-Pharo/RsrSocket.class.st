@@ -38,6 +38,12 @@ on: aHostname [
 		port: aPort
 ]
 
+{ #category : #testing }
+RsrSocket >> dataAvailable [
+
+	^socket dataAvailable
+]
+
 { #category : #initialization }
 RsrSocket >> initialize [
 
