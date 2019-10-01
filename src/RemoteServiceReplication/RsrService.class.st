@@ -159,7 +159,8 @@ RsrService >> serviceName [
 { #category : #'public-synchronization' }
 RsrService >> synchronize [
 
-	remoteSelf _synchronize
+	remoteSelf == nil
+		ifFalse: [remoteSelf _synchronize]
 ]
 
 { #category : #'public-accessing' }

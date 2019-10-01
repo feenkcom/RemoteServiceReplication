@@ -123,6 +123,16 @@ RsrSpeciesReturnEquality >> testService [
 ]
 
 { #category : #running }
+RsrSpeciesReturnEquality >> testServiceWithUnsupportedObject [
+
+	| service |
+	service := connectionA serviceFor: #RsrClientNoInstVars.
+	self
+		should: [service sendReturnArgument: (RsrValueHolderClient value: Object new)]
+		raise: RsrUnsupportedObject
+]
+
+{ #category : #running }
 RsrSpeciesReturnEquality >> testSet [
 
 	self
