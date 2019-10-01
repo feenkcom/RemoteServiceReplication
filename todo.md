@@ -24,21 +24,10 @@
 - [] RsrSocket
     - [] Data available?
     - [] Read available data
-- [] Unicode
-    - [] Strings containing
-        - [] 8-bit characters
-        - [] 16-bit characters
-        - [] 32-bit characters
-    - [] Symbols containing
-        - [] 8-bit characters
-        - [] 16-bit characters
-        - [] 32-bit characters
-    - [] Characters
-        - [] Ascii
-        - [] Extended ascii
-        - [] 8-bit characters
-        - [] 16-bit characters
-        - [] 32-bit characters
+- [x] Unicode
+    - [x] Strings
+    - [x] Symbols
+    - [x] Characters
 - [] Service
     - [] Mirrored instance variable reference unsupported object
     - [x] Mirror instance variables containing each supported species
