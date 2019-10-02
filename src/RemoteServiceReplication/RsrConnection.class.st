@@ -202,7 +202,7 @@ RsrConnection >> open [
 
 	(isOpen := socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
-	stream := RsrBufferedSocketStream on: (RsrSocketStream on: socket).
+	stream := RsrSocketStream on: socket.
 	dispatcher := RsrCommandDispatcher on: self.
 	commandReader := RsrCommandReader on: self.
 	commandWriter := RsrCommandWriter on: self.
