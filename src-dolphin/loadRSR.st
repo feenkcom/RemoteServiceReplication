@@ -1,7 +1,7 @@
 | packages |
 packages := #(
 	'RemoteServiceReplication-Base'
-	'RemoteServiceReplication-Compatibility-Dolphin'
+	'RemoteServiceReplication-Compatibility-Dolphin\RemoteServiceReplication-Compatibility-Dolphin'
 	'RemoteServiceReplication-Compatibility-Test'
 	'RemoteServiceReplication'
 	'RemoteServiceReplication-Test'
