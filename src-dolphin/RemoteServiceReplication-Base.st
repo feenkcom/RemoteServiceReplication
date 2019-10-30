@@ -1,0 +1,412 @@
+Object
+	subclass: #RsrConcurrency
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: 'current'!
+!RsrConcurrency categoriesForClass!RemoteServiceReplication-Base-Concurrency! !
+
+Object
+	subclass: #RsrSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: 'speciesMapping'!
+!RsrSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrArraySpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrArraySpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrBooleanSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrBooleanSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrByteArraySpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrByteArraySpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrCharacterArraySpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrCharacterArraySpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrCharacterSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrCharacterSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrDateAndTimeSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrDateAndTimeSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrDictionarySpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrDictionarySpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrIntegerSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrIntegerSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrNullSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrNullSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrOrderedCollectionSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrOrderedCollectionSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrServiceSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrServiceSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrSetSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrSetSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrSpecies
+	subclass: #RsrUndefinedObjectSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrUndefinedObjectSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+Error
+	subclass: #RsrError
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrError categoriesForClass!RemoteServiceReplication-Base-Errors! !
+
+RsrBooleanSpecies
+	subclass: #RsrFalseSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrFalseSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrIntegerSpecies
+	subclass: #RsrNegativeIntegerSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrNegativeIntegerSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrIntegerSpecies
+	subclass: #RsrPositiveIntegerSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrPositiveIntegerSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrCharacterArraySpecies
+	subclass: #RsrStringSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrStringSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrCharacterArraySpecies
+	subclass: #RsrSymbolSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrSymbolSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrBooleanSpecies
+	subclass: #RsrTrueSpecies
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTrueSpecies categoriesForClass!RemoteServiceReplication-Base-Species! !
+
+RsrError
+	subclass: #RsrConnectionClosed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrConnectionClosed categoriesForClass!RemoteServiceReplication-Base-Errors! !
+
+RsrError
+	subclass: #RsrUnknownClass
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrUnknownClass categoriesForClass!RemoteServiceReplication-Base-Errors! !
+
+RsrError
+	subclass: #RsrUnsupportedObject
+	instanceVariableNames: 'object'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrUnsupportedObject categoriesForClass!RemoteServiceReplication-Base-Errors! !
+
+!RsrServiceSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	self shouldNotImplement! !
+
+!RsrServiceSpecies class methodsFor!
+speciesIdentifier	^0! !
+
+!RsrServiceSpecies class methodsFor!
+decode: aStreamusing: aDecoder	"Decode a Service from the stream"	| species oid instVarCount serviceName instance |	species := aDecoder decodeControlWord: aStream.	oid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := aDecoder decodeObjectReference: aStream.	instance := aDecoder registry		at: oid		ifAbsent:			[((aDecoder lookupClass: serviceName)				_id: oid				connection: aDecoder connection)					yourself].	instance _addTo: aDecoder registry.	instance variablesToReflect size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].	^instance! !
+
+!RsrServiceSpecies class methodsFor!
+encodeReference: aServiceusing: anEncoderonto: aStream	anEncoder		encodeControlWord: aService _id		onto: aStream! !
+
+!RsrServiceSpecies class methodsFor!
+encode: aServiceusing: anEncoderon: aStream	"Encode this object. This is specifically used by RsrServiceSpecies."	"type"	"the OID for the object"	"the name of the remote service to create"	"Write the object slots"	| reflectedVariables |	reflectedVariables := aService variablesToReflect.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aService _id		onto: aStream.	anEncoder		encodeControlWord: reflectedVariables size		onto: aStream.	(anEncoder speciesOf: aService remoteServiceName)		encodeReference: aService remoteServiceName		using: anEncoder		onto: aStream.	aService _reflectedVariablesDo: [:each | anEncoder encodeReferenceOf: each onto: aStream]! !
+
+!RsrStringSpecies class methodsFor!
+speciesIdentifier	^2! !
+
+!RsrUnsupportedObject class methodsFor!
+signal: anObject	^self new		object: anObject;		signal! !
+
+!RsrNullSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	self shouldNotImplement! !
+
+!RsrNullSpecies class methodsFor!
+speciesIdentifier	^self shouldNotImplement! !
+
+!RsrNullSpecies class methodsFor!
+encodeReference: anObjectusing: anEncoderonto: aStream	^RsrUnsupportedObject signal: anObject! !
+
+!RsrNullSpecies class methodsFor!
+encode: anObjectusing: anEncoderon: aStream	"Encode this object. This is specifically used by RsrServiceSpecies."	RsrUnsupportedObject signal: anObject! !
+
+!RsrByteArraySpecies class methodsFor!
+encodeReference: aByteArrayusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aByteArray size		onto: aStream.	aStream nextPutAll: aByteArray! !
+
+!RsrByteArraySpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| size |	size := aDecoder decodeControlWord: aStream.	^aStream next: size! !
+
+!RsrByteArraySpecies class methodsFor!
+speciesIdentifier	^10! !
+
+!RsrDictionarySpecies class methodsFor!
+encodeReference: aDictionaryusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aDictionary size		onto: aStream.	aDictionary		keysAndValuesDo:			[:key :value |			anEncoder				encodeReferenceOf: key				onto: aStream.			anEncoder				encodeReferenceOf: value				onto: aStream]! !
+
+!RsrDictionarySpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| size dictionary |	size := aDecoder decodeControlWord: aStream.	dictionary := Dictionary new: size.	1		to: size		do:			[:i |			dictionary				at: (aDecoder decodeObjectReference: aStream)				put: (aDecoder decodeObjectReference: aStream)].	^dictionary! !
+
+!RsrDictionarySpecies class methodsFor!
+speciesIdentifier	^13! !
+
+!RsrOrderedCollectionSpecies class methodsFor!
+encodeReference: anOrderedCollectionusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: anOrderedCollection size		onto: aStream.	anOrderedCollection		do:			[:each |			anEncoder				encodeReferenceOf: each				onto: aStream]! !
+
+!RsrOrderedCollectionSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| size oc |	size := aDecoder decodeControlWord: aStream.	oc := OrderedCollection new: size.	size timesRepeat: [oc add: (aDecoder decodeObjectReference: aStream)].	^oc! !
+
+!RsrOrderedCollectionSpecies class methodsFor!
+speciesIdentifier	^12! !
+
+!RsrIntegerSpecies class methodsFor!
+encodeReference: anIntegerusing: anEncoderonto: aStream	| bytes |	bytes := self integerAsByteArray: anInteger abs.	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+
+!RsrIntegerSpecies class methodsFor!
+speciesIdentifier	^self subclassResponsibility! !
+
+!RsrIntegerSpecies class methodsFor!
+integerAsByteArray: anInteger	"Return a ByteArray representing <anInteger> in big endian format."	| stream int |	anInteger <= 0		ifTrue: [^ByteArray with: 0].	stream := WriteStream on: (ByteArray new: 8).	int := anInteger.	[int > 0]		whileTrue:			[stream nextPut: (int bitAnd: 16rFF).			int := int bitShift: -8].	^stream contents reverse! !
+
+!RsrCharacterArraySpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	^self fromBytes: bytes! !
+
+!RsrCharacterArraySpecies class methodsFor!
+speciesIdentifier	^self subclassResponsibility! !
+
+!RsrCharacterArraySpecies class methodsFor!
+encodeReference: aCharacterArrayusing: anEncoderonto: aStream	| bytes |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	bytes := self toBytes: aCharacterArray.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+
+!RsrSetSpecies class methodsFor!
+encodeReference: aSetusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aSet size		onto: aStream.	aSet		do:			[:each |			anEncoder				encodeReferenceOf: each				onto: aStream]! !
+
+!RsrSetSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| size set |	size := aDecoder decodeControlWord: aStream.	set := Set new: size.	size timesRepeat: [set add: (aDecoder decodeObjectReference: aStream)].	^set! !
+
+!RsrSetSpecies class methodsFor!
+speciesIdentifier	^11! !
+
+!RsrArraySpecies class methodsFor!
+encodeReference: anArrayusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: anArray size		onto: aStream.	anArray		do:			[:each |			anEncoder				encodeReferenceOf: each				onto: aStream]! !
+
+!RsrArraySpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| size array |	size := aDecoder decodeControlWord: aStream.	array := Array new: size.	1 to: size do: [:i | array at: i put: (aDecoder decodeObjectReference: aStream)].	^array! !
+
+!RsrArraySpecies class methodsFor!
+speciesIdentifier	^9! !
+
+!RsrSymbolSpecies class methodsFor!
+decodeReference: aStream using: aDecoder	"Decode the provided bytes into the default native class for this species"	^ (super decodeReference: aStream using: aDecoder) asSymbol! !
+
+!RsrSymbolSpecies class methodsFor!
+speciesIdentifier	^1! !
+
+!RsrConcurrency class methodsFor!
+fork: aBlock	^self current fork: aBlock! !
+
+!RsrConcurrency class methodsFor!
+resetCurrent	^current := self new! !
+
+!RsrConcurrency class methodsFor!
+current	^current ifNil: [self resetCurrent]! !
+
+!RsrConcurrency class methodsFor!
+current: concurrency	current := concurrency! !
+
+!RsrConcurrency class methodsFor!
+fork: aBlockat: aPriority	^self current		fork: aBlock		at: aPriority! !
+
+!RsrSpecies class methodsFor!
+speciesIdentifier	^self subclassResponsibility! !
+
+!RsrSpecies class methodsFor!
+encode: anObjectusing: anEncoderon: aStream	"Encode this object. This is specifically used by RsrServiceSpecies."	self shouldNotImplement! !
+
+!RsrSpecies class methodsFor!
+nullSpecies	^RsrNullSpecies! !
+
+!RsrSpecies class methodsFor!
+encodeReference: anObjectusing: anEncoderonto: aStream	"Encode the native object using the provided encoder"	self subclassResponsibility! !
+
+!RsrSpecies class methodsFor!
+speciesMapping	"Return a mapping between the native class and their associated RsrSpecies"	^speciesMapping ifNil: [self initializeSpeciesMapping]! !
+
+!RsrSpecies class methodsFor!
+speciesList	^{RsrServiceSpecies.	RsrSymbolSpecies.	RsrStringSpecies.	RsrPositiveIntegerSpecies.	RsrNegativeIntegerSpecies.	RsrCharacterSpecies.	RsrUndefinedObjectSpecies.	RsrTrueSpecies.	RsrFalseSpecies.	RsrArraySpecies.	RsrByteArraySpecies.	RsrSetSpecies.	RsrOrderedCollectionSpecies.	RsrDictionarySpecies.	RsrDateAndTimeSpecies.}! !
+
+!RsrSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	self subclassResponsibility! !
+
+!RsrDateAndTimeSpecies class methodsFor!
+encodeReference: aDateAndTimeusing: anEncoderonto: aStream	| microseconds |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	microseconds := self microsecondsSinceEpoch: aDateAndTime.	anEncoder		encodeControlWord: microseconds		onto: aStream! !
+
+!RsrDateAndTimeSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| microseconds |	microseconds := aDecoder decodeControlWord: aStream.	^self fromMicroseconds: microseconds! !
+
+!RsrDateAndTimeSpecies class methodsFor!
+speciesIdentifier	^14! !
+
+!RsrFalseSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^false! !
+
+!RsrFalseSpecies class methodsFor!
+speciesIdentifier	^8! !
+
+!RsrBooleanSpecies class methodsFor!
+encodeReference: aBooleanusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream! !
+
+!RsrBooleanSpecies class methodsFor!
+speciesIdentifier	^self subclassResponsibility! !
+
+!RsrTrueSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^true! !
+
+!RsrTrueSpecies class methodsFor!
+speciesIdentifier	^7! !
+
+!RsrPositiveIntegerSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	^aDecoder bytesAsInteger: bytes! !
+
+!RsrPositiveIntegerSpecies class methodsFor!
+speciesIdentifier	^3! !
+
+!RsrNegativeIntegerSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^(RsrPositiveIntegerSpecies decodeReference: aStream using: aDecoder) negated! !
+
+!RsrNegativeIntegerSpecies class methodsFor!
+speciesIdentifier	^4! !
+
+!RsrCharacterSpecies class methodsFor!
+encodeReference: aCharacterusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aCharacter codePoint		onto: aStream! !
+
+!RsrCharacterSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| codePoint |	codePoint := aDecoder decodeControlWord: aStream.	^Character codePoint: codePoint! !
+
+!RsrCharacterSpecies class methodsFor!
+speciesIdentifier	^5! !
+
+!RsrUndefinedObjectSpecies class methodsFor!
+encodeReference: nilArgumentusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream! !
+
+!RsrUndefinedObjectSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^nil! !
+
+!RsrUndefinedObjectSpecies class methodsFor!
+speciesIdentifier	^6! !
+
+!RsrUnsupportedObject methodsFor!
+object	^object! !
+
+!RsrUnsupportedObject methodsFor!
+messageText	^'Unsupported native class (', object class name, ')'! !
+
+!RsrUnsupportedObject methodsFor!
+object: anObject	object := anObject! !
+
+!RsrConcurrency methodsFor!
+fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
+
+!RsrConcurrency methodsFor!
+fork: aBlock	^aBlock fork! !
+
+!RsrConnectionClosed methodsFor!
+messageText	^'The connection has closed'! !
