@@ -4,6 +4,15 @@ Class {
 	#category : #'RemoteServiceReplication-Base-Species'
 }
 
+{ #category : #'object analysis' }
+RsrNullSpecies class >> analyze: anObject
+using: anAnalyzer [
+	"A method that works in conjunction with RsrRetainAnalysis to analyze
+	an object"
+
+	^RsrUnsupportedObject signal: 'Unsupported object (' , anObject printString , ')'
+]
+
 { #category : #coding }
 RsrNullSpecies class >> decodeReference: aStream
 using: aDecoder [

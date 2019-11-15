@@ -4,6 +4,15 @@ Class {
 	#category : #'RemoteServiceReplication-Base-Species'
 }
 
+{ #category : #'object analysis' }
+RsrDictionarySpecies class >> analyze: aDictionary
+using: anAnalyzer [
+	"A method that works in conjunction with RsrRetainAnalysis to analyze
+	an object"
+
+	^anAnalyzer analyzeDictionary: aDictionary
+]
+
 { #category : #coding }
 RsrDictionarySpecies class >> decodeReference: aStream
 using: aDecoder [

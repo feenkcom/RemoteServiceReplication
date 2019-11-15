@@ -4,6 +4,15 @@ Class {
 	#category : #'RemoteServiceReplication-Base-Species'
 }
 
+{ #category : #'object analysis' }
+RsrArraySpecies class >> analyze: anArray
+using: anAnalyzer [
+	"A method that works in conjunction with RsrRetainAnalysis to analyze
+	an object"
+
+	^anAnalyzer analyzeCollection: anArray
+]
+
 { #category : #coding }
 RsrArraySpecies class >> decodeReference: aStream
 using: aDecoder [

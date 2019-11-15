@@ -20,6 +20,61 @@ connection: aConnection [
 		yourself
 ]
 
+{ #category : #analysis }
+RsrRetainAnalysis >> analyze: anObject [
+
+	^(self speciesOf: anObject)
+		analyze: anObject
+		using: self
+]
+
+{ #category : #analysis }
+RsrRetainAnalysis >> analyzeCollection: aCollection [
+
+	aCollection do: [:each | self analyze: each].
+	^aCollection
+]
+
+{ #category : #analysis }
+RsrRetainAnalysis >> analyzeDictionary: aDictionary [
+
+	aDictionary
+		keysAndValuesDo:
+			[:key :value |
+			self
+				analyze: key;
+				analyze: value].
+	^aDictionary
+]
+
+{ #category : #analysis }
+RsrRetainAnalysis >> analyzeImmediate: anObject [
+	"Nothing to do for a generic immediate"
+
+	^anObject
+]
+
+{ #category : #analysis }
+RsrRetainAnalysis >> analyzeService: aService [
+
+	self
+		analyzing: aService
+		during: [aService _reflectedVariablesDo: [:each | self analyze: each]]
+]
+
+{ #category : #analysis }
+RsrRetainAnalysis >> analyzing: anObject
+during: aBlock [
+
+	(inFlight includes: anObject)
+		ifTrue: [^RsrCycleDetected signal: 'Cycled detected on: ', anObject printString].
+	inFlight add: anObject.
+	self ensureRegistered: anObject.
+	aBlock value.
+	self retain: anObject.
+	inFlight remove: anObject
+]
+
 { #category : #accessing }
 RsrRetainAnalysis >> connection [
 
@@ -42,11 +97,11 @@ RsrRetainAnalysis >> encoder [
 RsrRetainAnalysis >> ensureRegistered: anRsrObject [
 
 	anRsrObject isMirrored
-		ifFalse:
-			[anRsrObject
-				_id: self nextOid
-				connection: self connection.
-			anRsrObject _addTo: self registry]
+		ifTrue: [^self].
+	anRsrObject
+		_id: self nextOid
+		connection: self connection.
+	anRsrObject _addTo: self registry
 ]
 
 { #category : #initialization }
@@ -90,61 +145,7 @@ RsrRetainAnalysis >> nextOid [
 { #category : #actions }
 RsrRetainAnalysis >> perform [
 
-	roots do: [:each | self process: each]
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> process: anObject [
-
-	(self isService: anObject)
-		ifTrue: [^self processService: anObject].
-	(self isCollection: anObject)
-		ifTrue: [^self processCollection: anObject].
-	(self isImmediate: anObject)
-		ifTrue: [^anObject].
-	^RsrUnsupportedObject signal: 'Unsupported object (' , anObject printString , ')'
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> processCollection: aCollection [
-
-	(self isDictionary: aCollection)
-		ifTrue: [^self processDictionary: aCollection].
-	aCollection do: [:each | self process: each].
-	^aCollection
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> processDictionary: aDictionary [
-
-	aDictionary
-		keysAndValuesDo:
-			[:key :value |
-			self
-				process: key;
-				process: value].
-	^aDictionary
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> processService: aService [
-
-	self
-		processing: aService
-		during: [aService _reflectedVariablesDo: [:each | self process: each]]
-]
-
-{ #category : #processing }
-RsrRetainAnalysis >> processing: anObject
-during: aBlock [
-
-	(inFlight includes: anObject)
-		ifTrue: [^RsrCycleDetected signal: 'Cycled detected on: ', anObject printString].
-	inFlight add: anObject.
-	self ensureRegistered: anObject.
-	aBlock value.
-	self retain: anObject.
-	inFlight remove: anObject
+	roots do: [:each | self analyze: each]
 ]
 
 { #category : #accessing }
@@ -178,4 +179,10 @@ RsrRetainAnalysis >> roots [
 RsrRetainAnalysis >> roots: anObject [
 
 	roots := anObject
+]
+
+{ #category : #accessing }
+RsrRetainAnalysis >> speciesOf: anObject [
+
+	^self encoder speciesOf: anObject
 ]
