@@ -38,6 +38,8 @@
     - [x] Send and return Service
         - [x] Referencing another service
         - [x] Referencing all data objects
+- [] Collection
+    - [] reference to self in collection
 
 ## Needed Functionality
 
