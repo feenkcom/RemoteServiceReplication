@@ -67,7 +67,7 @@ RsrRetainAnalysis >> analyzing: anObject
 during: aBlock [
 
 	(inFlight includes: anObject)
-		ifTrue: [^RsrCycleDetected signal: 'Cycled detected on: ', anObject printString].
+		ifTrue: [^RsrCycleDetected signal: anObject].
 	inFlight add: anObject.
 	self ensureRegistered: anObject.
 	aBlock value.
