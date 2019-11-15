@@ -112,30 +112,6 @@ RsrRetainAnalysis >> initialize [
 	inFlight := IdentitySet new
 ]
 
-{ #category : #testing }
-RsrRetainAnalysis >> isCollection: anObject [
-
-	^anObject isKindOf: Collection
-]
-
-{ #category : #testing }
-RsrRetainAnalysis >> isDictionary: anObject [
-
-	^anObject class == Dictionary
-]
-
-{ #category : #testing }
-RsrRetainAnalysis >> isImmediate: anObject [
-
-	^self encoder isImmediate: anObject
-]
-
-{ #category : #testing }
-RsrRetainAnalysis >> isService: anObject [
-
-	^anObject isKindOf: RsrService
-]
-
 { #category : #accessing }
 RsrRetainAnalysis >> nextOid [
 
@@ -155,10 +131,10 @@ RsrRetainAnalysis >> registry [
 ]
 
 { #category : #actions }
-RsrRetainAnalysis >> retain: anRsrObject [
+RsrRetainAnalysis >> retain: aService [
 
 	| retainCommand |
-	retainCommand := RsrRetainObject object: anRsrObject.
+	retainCommand := RsrRetainObject object: aService.
 	retainCommand encodeUsing: self encoder.
 	self retainCommands add: retainCommand
 ]
