@@ -5,8 +5,8 @@ Class {
 	#name : #RsrService,
 	#superclass : #RsrAbstractService,
 	#instVars : [
-		'rsrId',
-		'rsrConnection',
+		'_id',
+		'_connection',
 		'remoteSelf'
 	],
 	#category : #'RemoteServiceReplication-Public'
@@ -62,28 +62,28 @@ RsrService class >> variablesToReflect [
 RsrService >> _addTo: aRegistry [
 
 	aRegistry
-		at: rsrId
+		at: _id
 		put: self
 ]
 
 { #category : #'private-accessing' }
 RsrService >> _connection [
 
-	^rsrConnection
+	^_connection
 ]
 
 { #category : #'private-accessing' }
 RsrService >> _id [
 
-	^rsrId
+	^_id
 ]
 
 { #category : #'private-accessing' }
 RsrService >> _id: anRsrId
 connection: aConnection [
 
-	rsrId := anRsrId.
-	rsrConnection := aConnection.
+	_id := anRsrId.
+	_connection := aConnection.
 	remoteSelf := aConnection _forwarderClass on: self
 ]
 
@@ -121,7 +121,7 @@ RsrService >> isClient [
 { #category : #'public-testing' }
 RsrService >> isMirrored [
 
-	^rsrConnection ~~ nil
+	^_connection ~~ nil
 ]
 
 { #category : #'public-testing' }
