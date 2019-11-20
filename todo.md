@@ -38,8 +38,8 @@
     - [x] Send and return Service
         - [x] Referencing another service
         - [x] Referencing all data objects
-- [] Collection
-    - [] reference to self in collection
+- [x] Collection
+    - [x] reference to self in collection
 
 ## Needed Functionality
 
@@ -49,3 +49,4 @@
 ## Bugs
 
 - [x] All RsrCommandProcessors should #stop regardless of whether they are waiting on a socket or a queue
+- [] I noticed a failure where a background process did not terminate correctly. They were trying to read sockets which were closed.
