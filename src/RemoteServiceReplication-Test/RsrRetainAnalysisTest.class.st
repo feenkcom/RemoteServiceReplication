@@ -5,6 +5,55 @@ Class {
 }
 
 { #category : #running }
+RsrRetainAnalysisTest >> analyze: anObject [
+
+	| analysis |
+	analysis := RsrRetainAnalysis
+		roots: (Array with: anObject)
+		connection: RsrMockConnection new.
+	analysis perform
+]
+
+{ #category : #running }
+RsrRetainAnalysisTest >> testArrayCycle [
+
+	| array |
+	array := Array new: 1.
+	array
+		at: 1
+		put: array.
+	self
+		should: [self analyze: array]
+		raise: RsrCycleDetected.
+	array
+		at: 1
+		put: { array }.
+	self
+		should: [self analyze: array]
+		raise: RsrCycleDetected
+]
+
+{ #category : #running }
+RsrRetainAnalysisTest >> testDictionaryCycle [
+
+	| dictionary |
+	dictionary := Dictionary new.
+	dictionary
+		at: 1
+		put: dictionary.
+	self
+		should: [self analyze: dictionary]
+		raise: RsrCycleDetected.
+	dictionary removeKey: 1.
+	dictionary
+		at: dictionary
+		put: 1.
+	self
+		should: [self analyze: dictionary]
+		raise: RsrCycleDetected
+]
+
+{ #category : #running }
 RsrRetainAnalysisTest >> testNewServiceInArray [
 	"Ensure a new service in a collection is properly tagged"
 
@@ -45,6 +94,21 @@ RsrRetainAnalysisTest >> testNewServicesInDictionary [
 	self
 		assert: key isMirrored;
 		assert: value isMirrored
+]
+
+{ #category : #running }
+RsrRetainAnalysisTest >> testOrderedCollectionCycle [
+
+	| oc |
+	oc := OrderedCollection new.
+	oc add: oc.
+	self
+		should: [self analyze: oc]
+		raise: RsrCycleDetected.
+	oc := OrderedCollection with: (Array with: oc).
+	self
+		should: [self analyze: oc]
+		raise: RsrCycleDetected
 ]
 
 { #category : #running }
@@ -123,5 +187,21 @@ RsrRetainAnalysisTest >> testServiceWithCycle [
 		connection: RsrMockConnection new.
 	self
 		should: [analysis perform]
+		raise: RsrCycleDetected
+]
+
+{ #category : #running }
+RsrRetainAnalysisTest >> testSetCycle [
+
+	| set |
+	set := Set new.
+	set add: set.
+	self
+		should: [self analyze: set]
+		raise: RsrCycleDetected.
+	set := Set new.
+	set add: (Array with: set).
+	self
+		should: [self analyze: set]
 		raise: RsrCycleDetected
 ]

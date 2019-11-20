@@ -31,19 +31,24 @@ RsrRetainAnalysis >> analyze: anObject [
 { #category : #analysis }
 RsrRetainAnalysis >> analyzeCollection: aCollection [
 
-	aCollection do: [:each | self analyze: each].
+	self
+		analyzing: aCollection
+		during: [	aCollection do: [:each | self analyze: each]].
 	^aCollection
 ]
 
 { #category : #analysis }
 RsrRetainAnalysis >> analyzeDictionary: aDictionary [
 
-	aDictionary
-		keysAndValuesDo:
-			[:key :value |
-			self
-				analyze: key;
-				analyze: value].
+	self
+		analyzing: aDictionary
+		during:
+			[aDictionary
+				keysAndValuesDo:
+					[:key :value |
+					self
+						analyze: key;
+						analyze: value]].
 	^aDictionary
 ]
 
@@ -57,9 +62,11 @@ RsrRetainAnalysis >> analyzeImmediate: anObject [
 { #category : #analysis }
 RsrRetainAnalysis >> analyzeService: aService [
 
+	self ensureRegistered: aService.
 	self
 		analyzing: aService
-		during: [aService _reflectedVariablesDo: [:each | self analyze: each]]
+		during: [aService _reflectedVariablesDo: [:each | self analyze: each]].
+	self retain: aService
 ]
 
 { #category : #analysis }
@@ -69,9 +76,7 @@ during: aBlock [
 	(inFlight includes: anObject)
 		ifTrue: [^RsrCycleDetected signal: anObject].
 	inFlight add: anObject.
-	self ensureRegistered: anObject.
 	aBlock value.
-	self retain: anObject.
 	inFlight remove: anObject
 ]
 
