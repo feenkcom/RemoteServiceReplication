@@ -4,14 +4,23 @@ Class {
 	#category : #'RemoteServiceReplication-Test-TestCases'
 }
 
-{ #category : #running }
+{ #category : #utilities }
 RsrRetainAnalysisTest >> analyze: anObject [
 
 	| analysis |
 	analysis := RsrRetainAnalysis
 		roots: (Array with: anObject)
 		connection: RsrMockConnection new.
-	analysis perform
+	analysis perform.
+	^analysis
+]
+
+{ #category : #utilities }
+RsrRetainAnalysisTest >> assertCycle: anObject [
+
+	self
+		should: [self analyze: anObject]
+		raise: RsrCycleDetected
 ]
 
 { #category : #running }
@@ -22,15 +31,11 @@ RsrRetainAnalysisTest >> testArrayCycle [
 	array
 		at: 1
 		put: array.
-	self
-		should: [self analyze: array]
-		raise: RsrCycleDetected.
+	self assertCycle: array.
 	array
 		at: 1
 		put: { array }.
-	self
-		should: [self analyze: array]
-		raise: RsrCycleDetected
+	self assertCycle: array
 ]
 
 { #category : #running }
@@ -41,16 +46,12 @@ RsrRetainAnalysisTest >> testDictionaryCycle [
 	dictionary
 		at: 1
 		put: dictionary.
-	self
-		should: [self analyze: dictionary]
-		raise: RsrCycleDetected.
+	self assertCycle: dictionary.
 	dictionary removeKey: 1.
 	dictionary
 		at: dictionary
 		put: 1.
-	self
-		should: [self analyze: dictionary]
-		raise: RsrCycleDetected
+	self assertCycle: dictionary
 ]
 
 { #category : #running }
@@ -59,10 +60,7 @@ RsrRetainAnalysisTest >> testNewServiceInArray [
 
 	| service analysis expected |
 	service := RsrServerNoInstVars new.
-	analysis := RsrRetainAnalysis
-		roots: (Array with: (Array with: service))
-		connection: RsrMockConnection new.
-	analysis perform.
+	analysis := self analyze: (Array with: service).
 	expected := OrderedCollection
 		with: (RsrRetainObject object: service encoding: ByteArray new).
 	self
@@ -81,10 +79,7 @@ RsrRetainAnalysisTest >> testNewServicesInDictionary [
 	dictionary := Dictionary new
 		at: key put: value;
 		yourself.
-	analysis := RsrRetainAnalysis
-		roots: (Array with: dictionary)
-		connection: RsrMockConnection new.
-	analysis perform.
+	analysis := self analyze: dictionary.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: key encoding: ByteArray new)
 		with: (RsrRetainObject object: value encoding: ByteArray new).
@@ -102,13 +97,9 @@ RsrRetainAnalysisTest >> testOrderedCollectionCycle [
 	| oc |
 	oc := OrderedCollection new.
 	oc add: oc.
-	self
-		should: [self analyze: oc]
-		raise: RsrCycleDetected.
+	self assertCycle: oc.
 	oc := OrderedCollection with: (Array with: oc).
-	self
-		should: [self analyze: oc]
-		raise: RsrCycleDetected
+	self assertCycle: oc.
 ]
 
 { #category : #running }
@@ -119,10 +110,7 @@ RsrRetainAnalysisTest >> testServiceAllDataObjects [
 	| client registry analysis expected |
 	client := RsrClientAllDataObjects new.
 	registry := RsrMockRegistry new.
-	analysis := RsrRetainAnalysis
-		roots: (Array with: client)
-		connection: RsrMockConnection new.
-	analysis perform.
+	analysis := self analyze: client.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: client encoding: ByteArray new).
 	self
@@ -134,13 +122,9 @@ RsrRetainAnalysisTest >> testServiceAllDataObjects [
 { #category : #running }
 RsrRetainAnalysisTest >> testServiceNoInstVars [
 
-	| client registry analysis expected |
+	| client analysis expected |
 	client := RsrClientNoInstVars new.
-	registry := RsrMockRegistry new.
-	analysis := RsrRetainAnalysis
-		roots: (Array with: client)
-		connection: RsrMockConnection new.
-	analysis perform.
+	analysis := self analyze: client.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: client encoding: ByteArray new).
 	self
@@ -154,14 +138,10 @@ RsrRetainAnalysisTest >> testServiceReferencingAnotherService [
 	"While this code is structurally similar to #testClientNoInstVars, it ensures
 	that Data Objects are actually encoded in-line."
 
-	| referencedService client registry analysis expected |
+	| referencedService client analysis expected |
 	referencedService := RsrClientNoInstVars new.
 	client := RsrClientReferenceService service: referencedService.
-	registry := RsrMockRegistry new.
-	analysis := RsrRetainAnalysis
-		roots: (Array with: client)
-		connection: RsrMockConnection new.
-	analysis perform.
+	analysis := self analyze: client.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: referencedService encoding: ByteArray new)
 		with: (RsrRetainObject object: client encoding: ByteArray new).
@@ -177,17 +157,11 @@ RsrRetainAnalysisTest >> testServiceReferencingAnotherService [
 RsrRetainAnalysisTest >> testServiceWithCycle [
 	"Cycles are disallowed for our POC. Perhaps they will get added later?"
 
-	| rootClient referencedClient registry analysis |
+	| rootClient referencedClient |
 	rootClient := RsrClientReferenceService new.
 	referencedClient := RsrClientReferenceService service: rootClient.
 	rootClient service: referencedClient.
-	registry := RsrMockRegistry new.
-	analysis := RsrRetainAnalysis
-		roots: (Array with: rootClient)
-		connection: RsrMockConnection new.
-	self
-		should: [analysis perform]
-		raise: RsrCycleDetected
+	self assertCycle: rootClient
 ]
 
 { #category : #running }
@@ -196,12 +170,8 @@ RsrRetainAnalysisTest >> testSetCycle [
 	| set |
 	set := Set new.
 	set add: set.
-	self
-		should: [self analyze: set]
-		raise: RsrCycleDetected.
+	self assertCycle: set.
 	set := Set new.
 	set add: (Array with: set).
-	self
-		should: [self analyze: set]
-		raise: RsrCycleDetected
+	self assertCycle: set
 ]
