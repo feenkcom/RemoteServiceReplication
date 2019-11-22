@@ -21,6 +21,19 @@ connection: aConnection [
 		yourself
 ]
 
+{ #category : #'private-accessing' }
+RsrService class >> _variablesToReflect [
+
+	| currentClass variables |
+	variables := OrderedCollection new.
+	currentClass := self superclass.
+	[currentClass == RsrService]
+		whileFalse:
+			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
+			currentClass := currentClass superclass].
+	^variables
+]
+
 { #category : #accessing }
 RsrService class >> clientClass [
 
@@ -43,19 +56,6 @@ RsrService class >> isServerClass [
 RsrService class >> serverClass [
 
 	self subclassResponsibility
-]
-
-{ #category : #'private-accessing' }
-RsrService class >> variablesToReflect [
-
-	| currentClass variables |
-	variables := OrderedCollection new.
-	currentClass := self superclass.
-	[currentClass == RsrService]
-		whileFalse:
-			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
-			currentClass := currentClass superclass].
-	^variables
 ]
 
 { #category : #'private-lifecycle' }
@@ -92,7 +92,7 @@ RsrService >> _reflectedVariableIndecesDo: aBlock [
 
 	| allVariables |
 	allVariables := self class allInstVarNames.
-	self class variablesToReflect
+	self class _variablesToReflect
 		do:
 			[:varName | | index |
 			index := allVariables indexOf: varName.
@@ -110,6 +110,12 @@ RsrService >> _synchronize [
 	"Return self to synchronize with the remote peer"
 
 	^self
+]
+
+{ #category : #'public-accessing' }
+RsrService >> _variablesToReflect [
+
+	^self class _variablesToReflect
 ]
 
 { #category : #'public-accessing' }
@@ -161,10 +167,4 @@ RsrService >> synchronize [
 
 	remoteSelf == nil
 		ifFalse: [remoteSelf _synchronize]
-]
-
-{ #category : #'public-accessing' }
-RsrService >> variablesToReflect [
-
-	^self class variablesToReflect
 ]

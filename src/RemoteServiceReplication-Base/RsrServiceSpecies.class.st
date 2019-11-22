@@ -31,7 +31,7 @@ using: aDecoder [
 				connection: aDecoder connection)
 					yourself].
 	instance _addTo: aDecoder registry.
-	instance variablesToReflect size = instVarCount
+	instance _variablesToReflect size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
 	^instance
@@ -56,7 +56,7 @@ on: aStream [
 	"the name of the remote service to create"
 	"Write the object slots"
 	| reflectedVariables |
-	reflectedVariables := aService variablesToReflect.
+	reflectedVariables := aService _variablesToReflect.
 	anEncoder
 		encodeControlWord: self speciesIdentifier
 		onto: aStream.
