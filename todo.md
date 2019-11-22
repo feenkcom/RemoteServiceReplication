@@ -50,3 +50,7 @@
 
 - [x] All RsrCommandProcessors should #stop regardless of whether they are waiting on a socket or a queue
 - [] I noticed a failure where a background process did not terminate correctly. They were trying to read sockets which were closed.
+
+## Open Questions
+
+- [] Threading Model (Do we fork for each message? Queues based on service?)
