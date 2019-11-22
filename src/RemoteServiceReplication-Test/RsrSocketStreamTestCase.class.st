@@ -51,8 +51,8 @@ RsrSocketStreamTestCase >> testClose [
 		deny: serverStream isConnected;
 		assert: clientStream isConnected.
 	self
-		assert: clientStream next
-		equals: nil.
+		should: [clientStream next]
+		raise: RsrSocketClosed.
 	self
 		deny: clientStream isConnected
 ]

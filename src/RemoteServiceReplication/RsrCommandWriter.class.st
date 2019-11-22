@@ -23,7 +23,7 @@ RsrCommandWriter >> executeCycle [
 	item writeUsing: self.
 	(queue size = 0)
 		ifTrue: [self flush]]
-		on: RsrConnectionClosed
+		on: RsrSocketClosed
 		do:
 			[:ex |
 			self log: ex.

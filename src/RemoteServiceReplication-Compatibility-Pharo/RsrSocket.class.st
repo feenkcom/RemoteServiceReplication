@@ -70,7 +70,7 @@ RsrSocket >> read: aCount [
 	bytes := ByteArray new: aCount.
 	bytesRead := socket receiveDataInto: bytes.
 	bytesRead = aCount
-		ifFalse: [^RsrConnectionClosed signal].
+		ifFalse: [^RsrSocketClosed signal].
 	^bytes
 ]
 

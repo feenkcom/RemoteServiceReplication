@@ -23,7 +23,7 @@ RsrCommandReader >> dispatcher [
 RsrCommandReader >> executeCycle [
 
 	[self dispatcher dispatch: self nextCommand]
-		on: RsrConnectionClosed
+		on: RsrSocketClosed
 		do:
 			[:ex |
 			self log: ex.
