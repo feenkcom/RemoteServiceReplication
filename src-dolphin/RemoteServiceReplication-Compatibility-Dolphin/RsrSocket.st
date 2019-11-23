@@ -50,7 +50,7 @@ read: aCount
 	bytes := ByteArray new: aCount.
 	[socket receive: bytes]
 		on: SocketClosed
-		do: [:ex | socket close.  ex resignalAs: RsrConnectionClosed new].
+		do: [:ex | socket close.  ex resignalAs: RsrSocketClosed new].
 	^bytes!
 
 readAvailable

@@ -80,7 +80,7 @@ RsrSocket >> read: aCount [
 	bytesRead = aCount
 		ifFalse:
 			[socket close. "GemStone doesn't seem to detect a socket closing"
-			RsrConnectionClosed signal].
+			RsrSocketClosed signal].
 	^bytes
 ]
 
