@@ -54,3 +54,15 @@
 ## Open Questions
 
 - [] Threading Model (Do we fork for each message? Queues based on service?)
+
+## Notes
+
+- Supported Targets/Version
+    - GemStone
+        - 3.5
+        - 3.6
+    - Dolphin
+        - 7.1
+    - Pharo
+        - 7
+        - 8
