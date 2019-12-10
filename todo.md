@@ -53,7 +53,10 @@
 
 ## Open Questions
 
-- [] Threading Model (Do we fork for each message? Queues based on service?)
+
+## Threading Model
+
+Each service should have a dispatch queue/process assigned by the framework. Messages sent to a service are delivered via their dispatch queue/process. Should a service wish to share a dispatch queue/process, they can be created with the queue/process of the related service via an instance creation method.
 
 ## Notes
 
