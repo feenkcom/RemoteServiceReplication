@@ -53,6 +53,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrClassResolverTestCase comment: 'This class contains tests'!
 !RsrClassResolverTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
 
 RsrTestCase
@@ -61,6 +62,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrGarbageCollectorTestCase comment: 'This class contains tests'!
 !RsrGarbageCollectorTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
 
 RsrTestCase
@@ -78,6 +80,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrSocketTestCase comment: 'This class contains tests'!
 !RsrSocketTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
 
 RsrTestCase
@@ -86,6 +89,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrTestingConcurrencyTestCase comment: 'This class contains tests'!
 !RsrTestingConcurrencyTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
 
 !RsrSocketPair class methodsFor!
@@ -102,9 +106,6 @@ listenPort	^64455! !
 
 !RsrTestCase class methodsFor!
 isAbstract	^self == RsrTestCase! !
-
-!RsrGarbageCollectorTestCase methodsFor!
-testMaximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
 
 !RsrSocketTestCase methodsFor!
 randomPort	^50123! !
@@ -123,84 +124,6 @@ testHasDataAvailable	| socketPair |	socketPair := RsrSocketPair new.	self de
 
 !RsrSocketTestCase methodsFor!
 testConnectToClosedPort	| socket |	socket := RsrSocket new.	self		should: [socket connectTo: 64752 on: '127.0.0.1']		raise: Error! !
-
-!RsrTestingConcurrencyTestCase methodsFor!
-testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
-
-!RsrTestingConcurrencyTestCase methodsFor!
-testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
-
-!RsrTestingConcurrencyTestCase methodsFor!
-noExceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [sema signal].	sema wait! !
-
-!RsrTestingConcurrencyTestCase methodsFor!
-exceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].	sema wait! !
-
-!RsrRegistryTestCase methodsFor!
-testIncludesKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self deny: (registry includesKey: client _id).	registry		at: client _id		put: client.	self assert: (registry includesKey: client _id)! !
-
-!RsrRegistryTestCase methodsFor!
-testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		at: client _id		put: client.	self		assert: (registry removeKey: client _id)		identicalTo: client! !
-
-!RsrRegistryTestCase methodsFor!
-testAddServer	| id object registry marker |	marker := Object new.	object := RsrMockServer new.	id := object _id.	registry := RsrRegistry new.	registry		at: id		put: object.	object := nil.	self maximumReclamation.	object := registry at: id ifAbsent: [marker].	self		deny: object		equals: marker.	self		assert: object class		equals: RsrMockServer.	self		assert: object _id		equals: id! !
-
-!RsrRegistryTestCase methodsFor!
-testAtAtIfAbsent	| registry server id marker |	registry := RsrRegistry new.	server := RsrMockServer new.	id := server _id.	self		should: [registry at: id]		raise: Error.	marker := Object new.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: marker.	registry		at: id		put: server.	self		assert: (registry at: id)		identicalTo: server.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: server! !
-
-!RsrRegistryTestCase methodsFor!
-testAddClient	| id object registry marker |	marker := Object new.	object := RsrMockClient new.	id := object _id.	registry := RsrRegistry new.	registry		at: id		put: object.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: object.	object := nil.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: marker! !
-
-!RsrClassResolverTestCase methodsFor!
-testSuccessfulResolution	| actual |	actual := RsrClassResolver classNamed: #Object.	self		assert: actual		identicalTo: Object.	actual := RsrClassResolver		classNamed: #Object		ifAbsent: [self assert: false].	self		assert: actual		identicalTo: Object! !
-
-!RsrClassResolverTestCase methodsFor!
-testFailedResolution	| actual marker |	self		should: [RsrClassResolver classNamed: #Xlerb]		raise: RsrUnknownClass.	marker := Object new.	actual := RsrClassResolver		classNamed: #Xlerb		ifAbsent: [marker].	self		assert: actual		identicalTo: marker! !
-
-!RsrClassResolverTestCase methodsFor!
-assert: aClassNameresolvesTo: expectedClass	| actualClass |	actualClass := RsrClassResolver classNamed: aClassName.	self		assert: actualClass		identicalTo: expectedClass! !
-
-!RsrTestingConcurrency methodsFor!
-fork: aBlock	^super fork: (self protect: aBlock)! !
-
-!RsrTestingConcurrency methodsFor!
-protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
-
-!RsrTestingConcurrency methodsFor!
-fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
-
-!RsrTestingConcurrency methodsFor!
-forkedException	^forkedException! !
-
-!RsrMockService methodsFor!
-isServer	^self class == RsrMockServer! !
-
-!RsrMockService methodsFor!
-isClient	^self class == RsrMockClient! !
-
-!RsrMockService methodsFor!
-_id	^1! !
-
-!RsrTestCase methodsFor!
-runCase	| concurrency |	concurrency := RsrTestingConcurrency new.	RsrConcurrency current: concurrency.	super runCase.	RsrConcurrency resetCurrent.	concurrency forkedException ifNotNil: [:ex | ex signal]! !
-
-!RsrTestCase methodsFor!
-hack: aString	"Placeholder for things that need to be fixed"! !
-
-!RsrTestCase methodsFor!
-assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
-
-!RsrTestCase methodsFor!
-deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
-
-!RsrTestCase methodsFor!
-fork: aBlock	^RsrConcurrency fork: aBlock! !
-
-!RsrTestCase methodsFor!
-maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
-
-!RsrTestCase methodsFor!
-defaultTimeLimit	^5 seconds! !
 
 !RsrSocketPair methodsFor!
 secondSocket: anObject	secondSocket := anObject! !
@@ -222,3 +145,84 @@ secondStream	^(RsrClassResolver classNamed: #RsrSocketStream) on: secondSocket
 
 !RsrSocketPair methodsFor!
 secondSocket	^ secondSocket! !
+
+!RsrTestingConcurrencyTestCase methodsFor!
+exceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].	sema wait! !
+
+!RsrTestingConcurrencyTestCase methodsFor!
+testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
+
+!RsrTestingConcurrencyTestCase methodsFor!
+noExceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [sema signal].	sema wait! !
+
+!RsrTestingConcurrencyTestCase methodsFor!
+testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
+
+!RsrRegistryTestCase methodsFor!
+testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		at: client _id		put: client.	self		assert: (registry removeKey: client _id)		identicalTo: client! !
+
+!RsrRegistryTestCase methodsFor!
+testIncludesKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self deny: (registry includesKey: client _id).	registry		at: client _id		put: client.	self assert: (registry includesKey: client _id)! !
+
+!RsrRegistryTestCase methodsFor!
+testAddServer	| id object registry marker |	marker := Object new.	object := RsrMockServer new.	id := object _id.	registry := RsrRegistry new.	registry		at: id		put: object.	object := nil.	self maximumReclamation.	object := registry at: id ifAbsent: [marker].	self		deny: object		equals: marker.	self		assert: object class		equals: RsrMockServer.	self		assert: object _id		equals: id! !
+
+!RsrRegistryTestCase methodsFor!
+testAtAtIfAbsent	| registry server id marker |	registry := RsrRegistry new.	server := RsrMockServer new.	id := server _id.	self		should: [registry at: id]		raise: Error.	marker := Object new.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: marker.	registry		at: id		put: server.	self		assert: (registry at: id)		identicalTo: server.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: server! !
+
+!RsrRegistryTestCase methodsFor!
+testAddClient	| id object registry marker |	marker := Object new.	object := RsrMockClient new.	id := object _id.	registry := RsrRegistry new.	registry		at: id		put: object.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: object.	object := nil.	self maximumReclamation.	self		assert: (registry at: id ifAbsent: [marker])		identicalTo: marker! !
+
+!RsrClassResolverTestCase methodsFor!
+testSuccessfulResolution	| actual |	actual := RsrClassResolver classNamed: #Object.	self		assert: actual		identicalTo: Object.	actual := RsrClassResolver		classNamed: #Object		ifAbsent: [self assert: false].	self		assert: actual		identicalTo: Object! !
+
+!RsrClassResolverTestCase methodsFor!
+testFailedResolution	| actual marker |	self		should: [RsrClassResolver classNamed: #Xlerb]		raise: RsrUnknownClass.	marker := Object new.	actual := RsrClassResolver		classNamed: #Xlerb		ifAbsent: [marker].	self		assert: actual		identicalTo: marker! !
+
+!RsrClassResolverTestCase methodsFor!
+assert: aClassNameresolvesTo: expectedClass	| actualClass |	actualClass := RsrClassResolver classNamed: aClassName.	self		assert: actualClass		identicalTo: expectedClass! !
+
+!RsrTestingConcurrency methodsFor!
+forkedException	^forkedException! !
+
+!RsrTestingConcurrency methodsFor!
+protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
+
+!RsrTestingConcurrency methodsFor!
+fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
+
+!RsrTestingConcurrency methodsFor!
+fork: aBlock	^super fork: (self protect: aBlock)! !
+
+!RsrMockService methodsFor!
+isServer	^self class == RsrMockServer! !
+
+!RsrMockService methodsFor!
+_id	^1! !
+
+!RsrMockService methodsFor!
+isClient	^self class == RsrMockClient! !
+
+!RsrTestCase methodsFor!
+runCase	| concurrency |	concurrency := RsrTestingConcurrency new.	RsrConcurrency current: concurrency.	super runCase.	RsrConcurrency resetCurrent.	concurrency forkedException ifNotNil: [:ex | ex signal]! !
+
+!RsrTestCase methodsFor!
+hack: aString	"Placeholder for things that need to be fixed"! !
+
+!RsrTestCase methodsFor!
+assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
+
+!RsrTestCase methodsFor!
+fork: aBlock	^RsrConcurrency fork: aBlock! !
+
+!RsrTestCase methodsFor!
+deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
+
+!RsrTestCase methodsFor!
+maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
+
+!RsrTestCase methodsFor!
+defaultTimeLimit	^5 seconds! !
+
+!RsrGarbageCollectorTestCase methodsFor!
+testMaximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !

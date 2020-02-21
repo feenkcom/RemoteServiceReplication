@@ -124,6 +124,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrCodecTest comment: 'This class contains tests'!
 !RsrCodecTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrTestCase
@@ -132,6 +133,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrForwarderTest comment: 'This class contains tests'!
 !RsrForwarderTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrEncoder
@@ -148,6 +150,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrNumericSpigotTest comment: 'This class contains tests'!
 !RsrNumericSpigotTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrTestCase
@@ -156,6 +159,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrPromiseTest comment: 'This class contains tests'!
 !RsrPromiseTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrAbstractReferenceAllSpecies
@@ -180,6 +184,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrRetainAnalysisTest comment: 'This class contains tests'!
 !RsrRetainAnalysisTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrServiceAbstractAllDataObjects
@@ -220,6 +225,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrSocketStreamTestCase comment: 'This class contains tests'!
 !RsrSocketStreamTestCase categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrTestCase
@@ -228,6 +234,7 @@ RsrTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrSystemTestCase comment: 'This class contains tests'!
 !RsrSystemTestCase categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrAbstractValueHolderService
@@ -252,6 +259,7 @@ RsrCodecTest
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrDecoderTest comment: 'This class contains tests'!
 !RsrDecoderTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrCodecTest
@@ -260,6 +268,7 @@ RsrCodecTest
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrEncoderTest comment: 'This class contains tests'!
 !RsrEncoderTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrSystemTestCase
@@ -268,6 +277,7 @@ RsrSystemTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrLifetimeTest comment: 'This class contains tests'!
 !RsrLifetimeTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrSystemTestCase
@@ -276,6 +286,7 @@ RsrSystemTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrMessageSendingTest comment: 'This class contains tests'!
 !RsrMessageSendingTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrAbstractReflectedVariableTestServiceB
@@ -300,6 +311,7 @@ RsrSystemTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrServiceTest comment: 'This class contains tests'!
 !RsrServiceTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrSystemTestCase
@@ -308,6 +320,7 @@ RsrSystemTestCase
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrSpeciesReturnEquality comment: 'This class contains tests'!
 !RsrSpeciesReturnEquality categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 RsrNumericSpigotTest
@@ -316,6 +329,7 @@ RsrNumericSpigotTest
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
+RsrThreadSafeNumericSpigotTest comment: 'This class contains tests'!
 !RsrThreadSafeNumericSpigotTest categoriesForClass!RemoteServiceReplication-Test-TestCases! !
 
 !RsrServiceAbstractNoInstVars class methodsFor!
@@ -391,127 +405,10 @@ mirror: aService	(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgu
 newInstance	^RsrClientTestService new! !
 
 !RsrServiceTest methodsFor!
-testReflectedVariableNames	| clientNames serverNames |	clientNames := RsrClientTestService variablesToReflect.	serverNames := RsrServerTestService variablesToReflect.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 1.	self		assert: (clientNames at: 1) asSymbol		equals: #sharedVariable.	clientNames := RsrReflectedVariableTestClient variablesToReflect.	serverNames := RsrReflectedVariableTestServer variablesToReflect.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 2.	self		assert: (clientNames at: 1) asSymbol		equals: #varA.	self		assert: (clientNames at: 2) asSymbol		equals: #varB! !
+testReflectedVariableNames	| clientNames serverNames |	clientNames := RsrClientTestService _variablesToReflect.	serverNames := RsrServerTestService _variablesToReflect.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 1.	self		assert: (clientNames at: 1) asSymbol		equals: #sharedVariable.	clientNames := RsrReflectedVariableTestClient _variablesToReflect.	serverNames := RsrReflectedVariableTestServer _variablesToReflect.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 2.	self		assert: (clientNames at: 1) asSymbol		equals: #varA.	self		assert: (clientNames at: 2) asSymbol		equals: #varB! !
 
 !RsrServiceTest methodsFor!
 testVariableReflection	| localService remoteService |	localService := RsrClientTestService new		sharedVariable: #shared;		privateVariable: #private;		yourself.	self mirror: localService.	remoteService := connectionB registry at: localService _id.	self		assert: localService sharedVariable		identicalTo: remoteService sharedVariable.	self		assert: localService privateVariable		identicalTo: #private.	self		assert: remoteService privateVariable		identicalTo: nil! !
-
-!RsrMockEncoder methodsFor!
-encodeRetainObject: anObject	^ByteArray new! !
-
-!RsrMockEncoder methodsFor!
-encode: anObject	^RsrRetainObject		object: anObject		encoding: ByteArray new! !
-
-!RsrMockEncoder methodsFor!
-encodeObject: anObject	^ByteArray new! !
-
-!RsrServerNoInstVars methodsFor!
-marker	^marker ifNil: [false]! !
-
-!RsrServerNoInstVars methodsFor!
-setMarker	marker := true! !
-
-!RsrServerNoInstVars methodsFor!
-signalError	^Error signal! !
-
-!RsrServerNoInstVars methodsFor!
-returnObjectNew	^Object new! !
-
-!RsrServerNoInstVars methodsFor!
-returnTestSymbol	^#testSymbol! !
-
-!RsrServerNoInstVars methodsFor!
-unaryReturn42	^42! !
-
-!RsrServerNoInstVars methodsFor!
-returnNewService	^RsrServerTestService new! !
-
-!RsrServerNoInstVars methodsFor!
-returnSelf	^self! !
-
-!RsrServerNoInstVars methodsFor!
-returnNewServiceInArray	^Array with: RsrServerTestService new! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client registry analysis expected |	client := RsrClientAllDataObjects new.	registry := RsrMockRegistry new.	analysis := RsrRetainAnalysis		roots: (Array with: client)		connection: RsrMockConnection new.	analysis perform.	expected := OrderedCollection		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: client isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceWithCycle	"Cycles are disallowed for our POC. Perhaps they will get added later?"	| rootClient referencedClient registry analysis |	rootClient := RsrClientReferenceService new.	referencedClient := RsrClientReferenceService service: rootClient.	rootClient service: referencedClient.	registry := RsrMockRegistry new.	analysis := RsrRetainAnalysis		roots: (Array with: rootClient)		connection: RsrMockConnection new.	self		should: [analysis perform]		raise: RsrCycleDetected! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceNoInstVars	| client registry analysis expected |	client := RsrClientNoInstVars new.	registry := RsrMockRegistry new.	analysis := RsrRetainAnalysis		roots: (Array with: client)		connection: RsrMockConnection new.	analysis perform.	expected := OrderedCollection		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: client isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client registry analysis expected |	referencedService := RsrClientNoInstVars new.	client := RsrClientReferenceService service: referencedService.	registry := RsrMockRegistry new.	analysis := RsrRetainAnalysis		roots: (Array with: client)		connection: RsrMockConnection new.	analysis perform.	expected := OrderedCollection		with: (RsrRetainObject object: referencedService encoding: ByteArray new)		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis expected |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := RsrRetainAnalysis		roots: (Array with: dictionary)		connection: RsrMockConnection new.	analysis perform.	expected := OrderedCollection		with: (RsrRetainObject object: key encoding: ByteArray new)		with: (RsrRetainObject object: value encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self		assert: key isMirrored;		assert: value isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testNewServiceInArray	"Ensure a new service in a collection is properly tagged"	| service analysis expected |	service := RsrServerNoInstVars new.	analysis := RsrRetainAnalysis		roots: (Array with: (Array with: service))		connection: RsrMockConnection new.	analysis perform.	expected := OrderedCollection		with: (RsrRetainObject object: service encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: service isMirrored! !
-
-!RsrMessageSendingTest methodsFor!
-testReturnNewService	| service returnedService |	service := connectionA serviceFor: #RsrClientNoInstVars.	returnedService := service sendReturnNewService.	self		assert: returnedService class		equals: RsrClientTestService! !
-
-!RsrMessageSendingTest methodsFor!
-testRemoteError	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		should: [service sendSignalError]		raise: Error! !
-
-!RsrMessageSendingTest methodsFor!
-testReturnInvalidObject	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		should: [service sendReturnObjectNew]		raise: RsrUnsupportedObject! !
-
-!RsrMessageSendingTest methodsFor!
-testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrClientNoInstVars.	server := connectionB registry at: client _id.	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTimeSpecies now.	response := client sendReturnArgument: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client sendReturnArgument: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server sendReturnArgument: each.			self				assert: result				equals: each].	self		assert: (client sendReturnArgument: arguments)		equals: arguments.	self		assert: (server sendReturnArgument: arguments)		equals: arguments.	self		assert: (client sendReturnArgument: client)		identicalTo: client.	self		assert: (server sendReturnArgument: server)		identicalTo: server! !
-
-!RsrMessageSendingTest methodsFor!
-testSendInvalidObject	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		should: [service sendReturnArgument: Object new]		raise: RsrUnsupportedObject! !
-
-!RsrMessageSendingTest methodsFor!
-testReturnNewServiceInArray	| service array returnedService |	service := connectionA serviceFor: #RsrClientNoInstVars.	array := service sendReturnNewServiceInArray.	self		assert: array size		equals: 1.	returnedService := array first.	self		assert: returnedService class		equals: RsrClientTestService! !
-
-!RsrMessageSendingTest methodsFor!
-testSendSetMarker	| service remoteService |	service := connectionA serviceFor: #RsrClientNoInstVars.	remoteService := connectionB registry at: service _id.	self deny: remoteService marker.	service sendSetMarker.	self assert: remoteService marker! !
-
-!RsrMessageSendingTest methodsFor!
-testReturnSymbol	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		assert: service sendReturnTestSymbol		equals: #testSymbol! !
-
-!RsrServiceAbstractNoInstVars methodsFor!
-sendReturnArgument: anObject	^remoteSelf returnArgument: anObject! !
-
-!RsrServiceAbstractNoInstVars methodsFor!
-returnArgument: anObject	^anObject! !
-
-!RsrClientTestService methodsFor!
-privateVariable	^privateVariable! !
-
-!RsrClientTestService methodsFor!
-privateVariable: anObject	privateVariable := anObject! !
-
-!RsrThreadSafeNumericSpigotTest methodsFor!
-spigotClass	^RsrThreadSafeNumericSpigot! !
-
-!RsrServerTestService methodsFor!
-privateVariable	^privateVariable! !
-
-!RsrServerTestService methodsFor!
-privateVariable: anObject	privateVariable := anObject! !
-
-!RsrServiceAbstractReferenceService methodsFor!
-service: anObject	service := anObject! !
-
-!RsrServiceAbstractReferenceService methodsFor!
-service	^ service! !
-
-!RsrSystemTestCase methodsFor!
-tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
-
-!RsrSystemTestCase methodsFor!
-setUp	| socketPair semaphore |	super setUp.	socketPair := RsrSocketPair new.	connectionA := RsrConnection		socket: socketPair firstSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1).	connectionB := RsrConnection		socket: socketPair secondSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	semaphore := Semaphore new.	self fork:		[[connectionA open] ensure: [semaphore signal]].	self fork:		[[connectionB open] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
-
-!RsrAbstractValueHolderService methodsFor!
-value	^value! !
-
-!RsrAbstractValueHolderService methodsFor!
-value: anObject	value := anObject.	self synchronize! !
 
 !RsrSpeciesReturnEquality methodsFor!
 testUnicodeString	self verify: self unicodeString! !
@@ -572,6 +469,141 @@ testSymbol	self		verify: #'';		verify: #symbol! !
 
 !RsrAbstractReferenceAllSpecies methodsFor!
 initialize	super initialize.	emptyService := RsrClientNoInstVars new.	serviceReferenceService := RsrClientReferenceService service: RsrClientNoInstVars new.	emptySymbol := #''.	symbol := #Symbol.	emptyString := ''.	string := 'String'.	largeNegative := -879021356918273469872356.	smallNegative := -1.	zero := 0.	smallPositive := 1.	largePositive := 29183756217893561289745689732456.	asciiCharacter := $e.	unicodeCharacter := Character codePoint: 16r01D4.	undefinedObject := nil.	booleanTrue := true.	booleanFalse := false.	emptyArray := #().	array := {emptyService. serviceReferenceService. emptySymbol. symbol. emptyString. string. largeNegative. smallNegative. zero. smallPositive. largePositive. asciiCharacter. unicodeCharacter. undefinedObject. booleanTrue. booleanFalse. emptyArray.}.	emptyByteArray := #[].	byteArray := #[123 45 67].	emptySet := Set new.	set := Set withAll: array.	emptyOrderedCollection := OrderedCollection new.	orderedCollection := OrderedCollection withAll: array.	emptyDictionary := Dictionary new.	dictionary := Dictionary new.	array doWithIndex: [:each :i | dictionary at: i put: each].	beforeEpoch := (RsrDateAndTimeSpecies fromMicroseconds: -491277642567488). "1954-06-07T14:59:17.432512-07:00"	epoch := RsrDateAndTimeSpecies posixEpoch.	afterEpoch := (RsrDateAndTimeSpecies fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"	arrayWithAllTypes := array, {emptyArray. array. emptyByteArray. byteArray. emptySet. set. emptyOrderedCollection. orderedCollection. emptyDictionary. dictionary. beforeEpoch. epoch. afterEpoch.}.	setWithAllTypes := Set withAll: arrayWithAllTypes.	orderedCollectionWithAllTypes := OrderedCollection withAll: arrayWithAllTypes.	dictionaryWithAllTypes := Dictionary new.	arrayWithAllTypes doWithIndex: [:each :i | dictionaryWithAllTypes at: i put: each]	! !
+
+!RsrRetainAnalysisTest methodsFor!
+testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client registry analysis expected |	client := RsrClientAllDataObjects new.	registry := RsrMockRegistry new.	analysis := self analyze: client.	expected := OrderedCollection		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: client isMirrored! !
+
+!RsrRetainAnalysisTest methodsFor!
+assertCycle: anObject	self		should: [self analyze: anObject]		raise: RsrCycleDetected! !
+
+!RsrRetainAnalysisTest methodsFor!
+testSetCycle	| set |	set := Set new.	set add: set.	self assertCycle: set.	set := Set new.	set add: (Array with: set).	self assertCycle: set! !
+
+!RsrRetainAnalysisTest methodsFor!
+analyze: anObject	| analysis |	analysis := RsrRetainAnalysis		roots: (Array with: anObject)		connection: RsrMockConnection new.	analysis perform.	^analysis! !
+
+!RsrRetainAnalysisTest methodsFor!
+testArrayCycle	| array |	array := Array new: 1.	array		at: 1		put: array.	self assertCycle: array.	array		at: 1		put: { array }.	self assertCycle: array! !
+
+!RsrRetainAnalysisTest methodsFor!
+testNewServiceInArray	"Ensure a new service in a collection is properly tagged"	| service analysis expected |	service := RsrServerNoInstVars new.	analysis := self analyze: (Array with: service).	expected := OrderedCollection		with: (RsrRetainObject object: service encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: service isMirrored! !
+
+!RsrRetainAnalysisTest methodsFor!
+testServiceNoInstVars	| client analysis expected |	client := RsrClientNoInstVars new.	analysis := self analyze: client.	expected := OrderedCollection		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: client isMirrored! !
+
+!RsrRetainAnalysisTest methodsFor!
+testOrderedCollectionCycle	| oc |	oc := OrderedCollection new.	oc add: oc.	self assertCycle: oc.	oc := OrderedCollection with: (Array with: oc).	self assertCycle: oc.! !
+
+!RsrRetainAnalysisTest methodsFor!
+testServiceWithCycle	"Cycles are disallowed for our POC. Perhaps they will get added later?"	| rootClient referencedClient |	rootClient := RsrClientReferenceService new.	referencedClient := RsrClientReferenceService service: rootClient.	rootClient service: referencedClient.	self assertCycle: rootClient! !
+
+!RsrRetainAnalysisTest methodsFor!
+testDictionaryCycle	| dictionary |	dictionary := Dictionary new.	dictionary		at: 1		put: dictionary.	self assertCycle: dictionary.	dictionary removeKey: 1.	dictionary		at: dictionary		put: 1.	self assertCycle: dictionary! !
+
+!RsrRetainAnalysisTest methodsFor!
+testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis expected |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	expected := OrderedCollection		with: (RsrRetainObject object: key encoding: ByteArray new)		with: (RsrRetainObject object: value encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self		assert: key isMirrored;		assert: value isMirrored! !
+
+!RsrRetainAnalysisTest methodsFor!
+testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis expected |	referencedService := RsrClientNoInstVars new.	client := RsrClientReferenceService service: referencedService.	analysis := self analyze: client.	expected := OrderedCollection		with: (RsrRetainObject object: referencedService encoding: ByteArray new)		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
+
+!RsrMessageSendingTest methodsFor!
+testReturnNewService	| service returnedService |	service := connectionA serviceFor: #RsrClientNoInstVars.	returnedService := service sendReturnNewService.	self		assert: returnedService class		equals: RsrClientTestService! !
+
+!RsrMessageSendingTest methodsFor!
+testRemoteError	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		should: [service sendSignalError]		raise: Error! !
+
+!RsrMessageSendingTest methodsFor!
+testReturnInvalidObject	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		should: [service sendReturnObjectNew]		raise: RsrUnsupportedObject! !
+
+!RsrMessageSendingTest methodsFor!
+testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrClientNoInstVars.	server := connectionB registry at: client _id.	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTimeSpecies now.	response := client sendReturnArgument: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client sendReturnArgument: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server sendReturnArgument: each.			self				assert: result				equals: each].	self		assert: (client sendReturnArgument: arguments)		equals: arguments.	self		assert: (server sendReturnArgument: arguments)		equals: arguments.	self		assert: (client sendReturnArgument: client)		identicalTo: client.	self		assert: (server sendReturnArgument: server)		identicalTo: server! !
+
+!RsrMessageSendingTest methodsFor!
+testSendInvalidObject	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		should: [service sendReturnArgument: Object new]		raise: RsrUnsupportedObject! !
+
+!RsrMessageSendingTest methodsFor!
+testReturnNewServiceInArray	| service array returnedService |	service := connectionA serviceFor: #RsrClientNoInstVars.	array := service sendReturnNewServiceInArray.	self		assert: array size		equals: 1.	returnedService := array first.	self		assert: returnedService class		equals: RsrClientTestService! !
+
+!RsrMessageSendingTest methodsFor!
+testSendSetMarker	| service remoteService |	service := connectionA serviceFor: #RsrClientNoInstVars.	remoteService := connectionB registry at: service _id.	self deny: remoteService marker.	service sendSetMarker.	self assert: remoteService marker! !
+
+!RsrMessageSendingTest methodsFor!
+testReturnSymbol	| service |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		assert: service sendReturnTestSymbol		equals: #testSymbol! !
+
+!RsrMockEncoder methodsFor!
+encodeRetainObject: anObject	^ByteArray new! !
+
+!RsrMockEncoder methodsFor!
+encode: anObject	^RsrRetainObject		object: anObject		encoding: ByteArray new! !
+
+!RsrMockEncoder methodsFor!
+encodeObject: anObject	^ByteArray new! !
+
+!RsrClientTestService methodsFor!
+privateVariable	^privateVariable! !
+
+!RsrClientTestService methodsFor!
+privateVariable: anObject	privateVariable := anObject! !
+
+!RsrThreadSafeNumericSpigotTest methodsFor!
+spigotClass	^RsrThreadSafeNumericSpigot! !
+
+!RsrServerTestService methodsFor!
+privateVariable	^privateVariable! !
+
+!RsrServerTestService methodsFor!
+privateVariable: anObject	privateVariable := anObject! !
+
+!RsrServerNoInstVars methodsFor!
+returnTestSymbol	^#testSymbol! !
+
+!RsrServerNoInstVars methodsFor!
+returnNewService	^RsrServerTestService new! !
+
+!RsrServerNoInstVars methodsFor!
+setMarker	marker := true! !
+
+!RsrServerNoInstVars methodsFor!
+signalError	^Error signal! !
+
+!RsrServerNoInstVars methodsFor!
+unaryReturn42	^42! !
+
+!RsrServerNoInstVars methodsFor!
+returnObjectNew	^Object new! !
+
+!RsrServerNoInstVars methodsFor!
+marker	^marker ifNil: [false]! !
+
+!RsrServerNoInstVars methodsFor!
+returnNewServiceInArray	^Array with: RsrServerTestService new! !
+
+!RsrServerNoInstVars methodsFor!
+returnSelf	^self! !
+
+!RsrSystemTestCase methodsFor!
+tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
+
+!RsrSystemTestCase methodsFor!
+setUp	| socketPair semaphore |	super setUp.	socketPair := RsrSocketPair new.	connectionA := RsrConnection		socket: socketPair firstSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1).	connectionB := RsrConnection		socket: socketPair secondSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	semaphore := Semaphore new.	self fork:		[[connectionA open] ensure: [semaphore signal]].	self fork:		[[connectionB open] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
+
+!RsrAbstractValueHolderService methodsFor!
+value	^value! !
+
+!RsrAbstractValueHolderService methodsFor!
+value: anObject	value := anObject.	self synchronize! !
+
+!RsrServiceAbstractNoInstVars methodsFor!
+sendReturnArgument: anObject	^remoteSelf returnArgument: anObject! !
+
+!RsrServiceAbstractNoInstVars methodsFor!
+returnArgument: anObject	^anObject! !
+
+!RsrServiceAbstractReferenceService methodsFor!
+service: anObject	service := anObject! !
+
+!RsrServiceAbstractReferenceService methodsFor!
+service	^ service! !
 
 !RsrCodecTest methodsFor!
 serviceNoInstVarsEncoding	^#[0 0 0 0 0 0 0 0], "type"	#[0 0 0 0 0 0 0 1], "rootService's OID = 1"	#[0 0 0 0 0 0 0 0], "Inst Var Count"	#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"	#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"	#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115] "#RsrServerNoInstVars"! !
@@ -703,34 +735,34 @@ testRemoteReferenceLifetime	| valueServiceLocal valueServiceRemote serviceLoca
 testObjectCreatedViaServiceFactory	"Ensure objects created by the RsrServiceFactory maintain the same	properties as other objects"	| service remoteService |	service := connectionA serviceFor: #RsrClientNoInstVars.	self		assert: (connectionA registry at: service _id)		identicalTo: service.	remoteService := connectionB registry at: service _id.	self		assert: remoteService class		equals: RsrServerNoInstVars.	self		assert: service sendReturnSelf		identicalTo: service! !
 
 !RsrMockConnection methodsFor!
-lastMessage	^[lastMessage]		ensure: [lastMessage := nil]! !
-
-!RsrMockConnection methodsFor!
 _sendMessage: aMessageto: anRsrObject	lastMessage := RsrSendMessage		transaction: 1		receiver: anRsrObject		selector: aMessage selector		arguments: aMessage arguments.	^RsrPromise new		fulfill: nil;		yourself! !
-
-!RsrMockConnection methodsFor!
-registry	^registry ifNil: [registry := RsrRegistry new]! !
-
-!RsrMockConnection methodsFor!
-oidSpigot	^idSpigot ifNil: [idSpigot := RsrThreadSafeNumericSpigot naturals]! !
 
 !RsrMockConnection methodsFor!
 encoder	^RsrMockEncoder new! !
 
 !RsrMockConnection methodsFor!
-forwarderClass: aClass	forwarderClass := aClass! !
+oidSpigot	^idSpigot ifNil: [idSpigot := RsrThreadSafeNumericSpigot naturals]! !
 
 !RsrMockConnection methodsFor!
 _forwarderClass	^forwarderClass ifNil: [RsrMockForwarder]! !
 
 !RsrMockConnection methodsFor!
+lastMessage	^[lastMessage]		ensure: [lastMessage := nil]! !
+
+!RsrMockConnection methodsFor!
+registry	^registry ifNil: [registry := RsrRegistry new]! !
+
+!RsrMockConnection methodsFor!
 releaseOid: anInteger! !
+
+!RsrMockConnection methodsFor!
+forwarderClass: aClass	forwarderClass := aClass! !
+
+!RsrClientNoInstVars methodsFor!
+sendReturnTestSymbol	^remoteSelf returnTestSymbol! !
 
 !RsrClientNoInstVars methodsFor!
 sendSetMarker	^remoteSelf setMarker! !
-
-!RsrClientNoInstVars methodsFor!
-sendReturnSelf	^remoteSelf returnSelf! !
 
 !RsrClientNoInstVars methodsFor!
 sendUnaryReturn42Message	^remoteSelf unaryReturn42! !
@@ -748,7 +780,7 @@ sendReturnNewService	^remoteSelf returnNewService! !
 sendReturnObjectNew	^remoteSelf returnObjectNew! !
 
 !RsrClientNoInstVars methodsFor!
-sendReturnTestSymbol	^remoteSelf returnTestSymbol! !
+sendReturnSelf	^remoteSelf returnSelf! !
 
 !RsrMockForwarder methodsFor!
 rsrObject	^rsrObject! !
@@ -835,7 +867,7 @@ setUp	super setUp.	self initializeStreams! !
 initializeStreams	| listener client server |	listener := RsrSocket new.	client := RsrSocket new.	listener listenOn: self listenPort.	client connectTo: self listenPort on: '127.0.0.1'.	server := listener accept.	listener close.	serverStream := RsrSocketStream on: server.	clientStream := RsrSocketStream on: client! !
 
 !RsrSocketStreamTestCase methodsFor!
-testClose	serverStream close.	self		deny: serverStream isConnected;		assert: clientStream isConnected.	self		assert: clientStream next		equals: nil.	self		deny: clientStream isConnected! !
+testClose	serverStream close.	self		deny: serverStream isConnected;		assert: clientStream isConnected.	self		should: [clientStream next]		raise: RsrSocketClosed.	self		deny: clientStream isConnected! !
 
 !RsrSocketStreamTestCase methodsFor!
 listenPort	^47856! !
