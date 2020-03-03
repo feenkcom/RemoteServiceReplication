@@ -58,5 +58,8 @@ RsrSpecies class >> initializeSpeciesMapping [
 	speciesMapping
 		at: DateAndTime
 		put: RsrDateAndTimeSpecies.
+	speciesMapping
+		at: SmallDateAndTime
+		put: RsrDateAndTimeSpecies.
 	^speciesMapping
 ]
