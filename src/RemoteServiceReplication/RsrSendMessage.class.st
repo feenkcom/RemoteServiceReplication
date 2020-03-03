@@ -67,6 +67,12 @@ RsrSendMessage >> receiver: anObject [
 	receiver := anObject
 ]
 
+{ #category : #reporting }
+RsrSendMessage >> reportOn: aLog [
+
+	aLog debug: 'RsrSendMessage/sending/', self receiver class name, '>>', self selector
+]
+
 { #category : #accessing }
 RsrSendMessage >> roots [
 

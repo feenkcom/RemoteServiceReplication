@@ -40,3 +40,9 @@ RsrReleaseObjects >> oids: anArray [
 
 	oids := anArray
 ]
+
+{ #category : #reporting }
+RsrReleaseObjects >> reportOn: aLog [
+
+	aLog debug: '', self class name, '/releasing/', self oids printString
+]

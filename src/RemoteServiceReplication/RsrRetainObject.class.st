@@ -65,6 +65,12 @@ RsrRetainObject >> object: anObject [
 	object := anObject
 ]
 
+{ #category : #reporting }
+RsrRetainObject >> reportOn: aLog [
+
+	aLog debug: 'RsrRetainObject/retaining/', self object class name
+]
+
 { #category : #lifecycle }
 RsrRetainObject >> writeUsing: aCommandWriter [
 
