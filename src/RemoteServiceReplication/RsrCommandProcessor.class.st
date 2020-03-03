@@ -51,7 +51,9 @@ RsrCommandProcessor >> isActive [
 { #category : #running }
 RsrCommandProcessor >> log [
 
-	^self connection log
+	^RsrLogWithPrefix
+		prefix: self class name asString
+		log: self connection log
 ]
 
 { #category : #running }

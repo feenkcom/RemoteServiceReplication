@@ -70,7 +70,7 @@ RsrSendMessage >> receiver: anObject [
 { #category : #reporting }
 RsrSendMessage >> reportOn: aLog [
 
-	aLog debug: 'RsrSendMessage/sending/', self receiver class name, '>>', self selector
+	aLog debug: 'RsrSendMessage/', self receiver class name, '>>', self selector
 ]
 
 { #category : #accessing }
