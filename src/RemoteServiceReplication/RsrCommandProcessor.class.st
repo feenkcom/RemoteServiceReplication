@@ -55,15 +55,27 @@ RsrCommandProcessor >> log [
 ]
 
 { #category : #running }
-RsrCommandProcessor >> log: anException [
+RsrCommandProcessor >> log: aString [
 
-	self log error: anException description
+	self log debug: aString
 ]
 
 { #category : #accessing }
 RsrCommandProcessor >> priority [
 
 	^Processor lowIOPriority
+]
+
+{ #category : #running }
+RsrCommandProcessor >> report: aCommand [
+
+	aCommand reportOn: self log
+]
+
+{ #category : #running }
+RsrCommandProcessor >> reportException: anException [
+
+	self log: '', self class name, '/', anException description
 ]
 
 { #category : #running }
@@ -75,7 +87,7 @@ RsrCommandProcessor >> runLoop [
 				on: Error
 				do:
 					[:ex |
-					self log: ex.
+					self reportException: ex.
 					self connection unknownError: ex]]
 ]
 

@@ -78,6 +78,12 @@ RsrDeliverResponse >> isError [
 	^errorName notNil
 ]
 
+{ #category : #reporting }
+RsrDeliverResponse >> reportOn: aLog [
+
+	aLog debug: '', self class name, '/delivering/', self response class name
+]
+
 { #category : #accessing }
 RsrDeliverResponse >> response [
 

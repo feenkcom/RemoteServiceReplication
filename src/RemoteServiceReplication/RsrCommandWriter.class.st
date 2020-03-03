@@ -16,17 +16,17 @@ RsrCommandWriter >> enqueue: aCommand [
 { #category : #commands }
 RsrCommandWriter >> executeCycle [
 
-	[| item |
-	item := queue next.
-	item == self stopToken
+	[| command |
+	command := queue next.
+	command == self stopToken
 		ifTrue: [^self].
-	item writeUsing: self.
+	self writeCommand: command.
 	(queue size = 0)
 		ifTrue: [self flush]]
 		on: RsrSocketClosed
 		do:
 			[:ex |
-			self log: ex.
+			self reportException: ex.
 			self connection disconnected]
 ]
 
@@ -60,4 +60,11 @@ RsrCommandWriter >> stopToken [
 RsrCommandWriter >> write: aByteArray [
 
 	self stream nextPutAll: aByteArray
+]
+
+{ #category : #writing }
+RsrCommandWriter >> writeCommand: aCommand [
+
+	self report: aCommand.
+	aCommand writeUsing: self
 ]

@@ -26,7 +26,7 @@ RsrCommandReader >> executeCycle [
 		on: RsrSocketClosed
 		do:
 			[:ex |
-			self log: ex.
+			self reportException: ex.
 			self connection disconnected]
 ]
 

@@ -29,6 +29,12 @@ RsrCommand >> executeFor: aConnection [
 	self subclassResponsibility
 ]
 
+{ #category : #reporting }
+RsrCommand >> reportOn: aLog [
+
+	self subclassResponsibility
+]
+
 { #category : #lifecycle }
 RsrCommand >> sendOver: aConnection [
 	"Do nothing unless a subclass offers a specialization"

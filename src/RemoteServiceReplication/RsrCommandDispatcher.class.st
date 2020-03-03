@@ -10,6 +10,7 @@ Class {
 { #category : #dispatching }
 RsrCommandDispatcher >> dispatch: aCommand [
 
+	self report: aCommand.
 	queue nextPut: aCommand
 ]
 
