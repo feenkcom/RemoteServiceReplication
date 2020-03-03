@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #accessing }
-RsrMockForwarder >> rsrObject [
+RsrMockForwarder >> _object [
 
-	^rsrObject
+	^_object
 ]
