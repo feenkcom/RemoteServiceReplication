@@ -13,12 +13,8 @@ RwComponentLoadConfiguration {
 					#'RemoteServiceReplication-Compatibility-GemStone',
 					#'RemoteServiceReplication'
 				]
-			}
-		},
-		[
-			'test'
-		] : {
-			'core' : {
+			},
+			'test' : {
 				#packageNames : [
 					#'RemoteServiceReplication-Compatibility-Test',
 					#'RemoteServiceReplication-Test'

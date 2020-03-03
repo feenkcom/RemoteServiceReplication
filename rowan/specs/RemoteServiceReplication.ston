@@ -13,7 +13,7 @@ RwComponentSpecification {
 		#'RemoteServiceReplication'
 	],
 	#defaultGroupNames : [
-		'core'
+		'core', 'test'
 	],
 	#projectsPath : 'rowan/projects',
 	#defaultComponentName : 'RemoteServiceReplication'
