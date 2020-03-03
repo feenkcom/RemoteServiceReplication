@@ -11,15 +11,15 @@ Class {
 }
 
 { #category : #accessing }
-RsrServiceAbstractAllDataObjects class >> clientClass [
+RsrServiceAbstractAllDataObjects class >> clientClassName [
 
-	^RsrClientAllDataObjects
+	^#RsrClientAllDataObjects
 ]
 
 { #category : #accessing }
-RsrServiceAbstractAllDataObjects class >> serverClass [
+RsrServiceAbstractAllDataObjects class >> serverClassName [
 
-	^RsrServerAllDataObjects
+	^#RsrServerAllDataObjects
 ]
 
 { #category : #initialization }

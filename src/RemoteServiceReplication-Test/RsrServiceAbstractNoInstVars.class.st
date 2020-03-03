@@ -5,15 +5,15 @@ Class {
 }
 
 { #category : #accessing }
-RsrServiceAbstractNoInstVars class >> clientClass [
+RsrServiceAbstractNoInstVars class >> clientClassName [
 
-	^RsrClientNoInstVars
+	^#RsrClientNoInstVars
 ]
 
 { #category : #accessing }
-RsrServiceAbstractNoInstVars class >> serverClass [
+RsrServiceAbstractNoInstVars class >> serverClassName [
 
-	^RsrServerNoInstVars
+	^#RsrServerNoInstVars
 ]
 
 { #category : #accessing }

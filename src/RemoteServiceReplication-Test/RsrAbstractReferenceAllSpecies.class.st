@@ -40,15 +40,15 @@ Class {
 }
 
 { #category : #accessing }
-RsrAbstractReferenceAllSpecies class >> clientClass [
+RsrAbstractReferenceAllSpecies class >> clientClassName [
 
-	^RsrReferenceAllSpeciesClient
+	^#RsrReferenceAllSpeciesClient
 ]
 
 { #category : #accessing }
-RsrAbstractReferenceAllSpecies class >> serverClass [
+RsrAbstractReferenceAllSpecies class >> serverClassName [
 
-	^RsrReferenceAllSpeciesServer
+	^#RsrReferenceAllSpeciesServer
 ]
 
 { #category : #initialization }

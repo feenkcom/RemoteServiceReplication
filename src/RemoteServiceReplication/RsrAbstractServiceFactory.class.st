@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #accessing }
-RsrAbstractServiceFactory class >> clientClass [
+RsrAbstractServiceFactory class >> clientClassName [
 
-	^RsrServiceFactory
+	^#RsrServiceFactory
 ]
 
 { #category : #accessing }
-RsrAbstractServiceFactory class >> serverClass [
+RsrAbstractServiceFactory class >> serverClassName [
 
-	^RsrServiceFactoryServer
+	^#RsrServiceFactoryServer
 ]

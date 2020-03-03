@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #accessing }
-RsrAbstractReflectedVariableTestServiceB class >> clientClass [
+RsrAbstractReflectedVariableTestServiceB class >> clientClassName [
 
-	^RsrReflectedVariableTestClient
+	^#RsrReflectedVariableTestClient
 ]
 
 { #category : #accessing }
-RsrAbstractReflectedVariableTestServiceB class >> serverClass [
+RsrAbstractReflectedVariableTestServiceB class >> serverClassName [
 
-	^RsrReflectedVariableTestServer
+	^#RsrReflectedVariableTestServer
 ]

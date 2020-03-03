@@ -35,7 +35,7 @@ RsrService class >> _variablesToReflect [
 ]
 
 { #category : #accessing }
-RsrService class >> clientClass [
+RsrService class >> clientClassName [
 
 	self subclassResponsibility
 ]
@@ -43,17 +43,17 @@ RsrService class >> clientClass [
 { #category : #testing }
 RsrService class >> isClientClass [
 
-	^self == self clientClass
+	^self name == self clientClassName
 ]
 
 { #category : #testing }
 RsrService class >> isServerClass [
 
-	^self == self serverClass
+	^self name == self serverClassName
 ]
 
 { #category : #accessing }
-RsrService class >> serverClass [
+RsrService class >> serverClassName [
 
 	self subclassResponsibility
 ]
@@ -143,17 +143,11 @@ RsrService >> isServer [
 ]
 
 { #category : #'public-accessing' }
-RsrService >> remoteServiceClass [
-
-	^self isClient
-		ifTrue: [self class serverClass]
-		ifFalse: [self class clientClass]
-]
-
-{ #category : #'public-accessing' }
 RsrService >> remoteServiceName [
 
-	^self remoteServiceClass name
+	^self isClient
+		ifTrue: [self class serverClassName]
+		ifFalse: [self class clientClassName]
 ]
 
 { #category : #'public-accessing' }

@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #accessing }
-RIAbstractInspector class >> clientClass [
+RIAbstractInspector class >> clientClassName [
 
-	^RIInspectorClient
+	^#RIInspectorClient
 ]
 
 { #category : #accessing }
-RIAbstractInspector class >> serverClass [
+RIAbstractInspector class >> serverClassName [
 
-	^RIInspectorServer
+	^#RIInspectorServer
 ]

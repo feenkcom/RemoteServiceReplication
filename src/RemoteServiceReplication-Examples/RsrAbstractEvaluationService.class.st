@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #accessing }
-RsrAbstractEvaluationService class >> clientClass [
+RsrAbstractEvaluationService class >> clientClassName [
 
-	^RsrEvaluationClient
+	^#RsrEvaluationClient
 ]
 
 { #category : #accessing }
-RsrAbstractEvaluationService class >> serverClass [
+RsrAbstractEvaluationService class >> serverClassName [
 
-	^RsrEvaluationServer
+	^#RsrEvaluationServer
 ]

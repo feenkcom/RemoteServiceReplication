@@ -5,15 +5,15 @@ Class {
 }
 
 { #category : #accessing }
-RFBAbstractDirectory class >> clientClass [
+RFBAbstractDirectory class >> clientClassName [
 
-	^RFBDirectory
+	^#RFBDirectory
 ]
 
 { #category : #accessing }
-RFBAbstractDirectory class >> serverClass [
+RFBAbstractDirectory class >> serverClassName [
 
-	^RFBDirectoryServer
+	^#RFBDirectoryServer
 ]
 
 { #category : #testing }

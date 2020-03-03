@@ -5,13 +5,13 @@ Class {
 }
 
 { #category : #accessing }
-RFTAbstractFileTransferService class >> clientClass [
+RFTAbstractFileTransferService class >> clientClassName [
 
-	^RFTFileTransferClient
+	^#RFTFileTransferClient
 ]
 
 { #category : #accessing }
-RFTAbstractFileTransferService class >> serverClass [
+RFTAbstractFileTransferService class >> serverClassName [
 
-	^RFTFileTransferServer
+	^#RFTFileTransferServer
 ]

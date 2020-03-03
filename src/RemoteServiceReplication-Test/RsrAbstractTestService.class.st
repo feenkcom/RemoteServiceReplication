@@ -8,15 +8,15 @@ Class {
 }
 
 { #category : #accessing }
-RsrAbstractTestService class >> clientClass [
+RsrAbstractTestService class >> clientClassName [
 
-	^RsrClientTestService
+	^#RsrClientTestService
 ]
 
 { #category : #accessing }
-RsrAbstractTestService class >> serverClass [
+RsrAbstractTestService class >> serverClassName [
 
-	^RsrServerTestService
+	^#RsrServerTestService
 ]
 
 { #category : #accessing }

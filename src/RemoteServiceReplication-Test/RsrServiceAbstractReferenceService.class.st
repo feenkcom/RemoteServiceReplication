@@ -8,15 +8,15 @@ Class {
 }
 
 { #category : #accessing }
-RsrServiceAbstractReferenceService class >> clientClass [
+RsrServiceAbstractReferenceService class >> clientClassName [
 
-	^RsrClientReferenceService
+	^#RsrClientReferenceService
 ]
 
 { #category : #accessing }
-RsrServiceAbstractReferenceService class >> serverClass [
+RsrServiceAbstractReferenceService class >> serverClassName [
 
-	^RsrServerReferenceService
+	^#RsrServerReferenceService
 ]
 
 { #category : #'instance creation' }

@@ -8,15 +8,15 @@ Class {
 }
 
 { #category : #accessing }
-RsrAbstractValueHolderService class >> clientClass [
+RsrAbstractValueHolderService class >> clientClassName [
 
-	^RsrValueHolderClient
+	^#RsrValueHolderClient
 ]
 
 { #category : #accessing }
-RsrAbstractValueHolderService class >> serverClass [
+RsrAbstractValueHolderService class >> serverClassName [
 
-	^RsrValueHolderServer
+	^#RsrValueHolderServer
 ]
 
 { #category : #'instance creation' }
