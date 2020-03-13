@@ -7,6 +7,12 @@ Class {
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
+{ #category : #'private-forwarding' }
+RsrForwarder >> _object: anRsrObject [
+
+	_object := anRsrObject
+]
+
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> asBrick [
 
@@ -41,6 +47,16 @@ RsrForwarder >> brickValue: aBrick [
 RsrForwarder >> brickValue: anObject withEnoughArguments: aCollection [
 
 	^_object brickValue: anObject withEnoughArguments: aCollection
+]
+
+{ #category : #'private-forwarding' }
+RsrForwarder >> doesNotUnderstand: aMessage [
+
+	| promise |
+	promise := _object _connection
+		_sendMessage: aMessage
+		to: _object.
+	^promise value
 ]
 
 { #category : #'GT-Debugger' }
