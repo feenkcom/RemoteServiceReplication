@@ -161,6 +161,12 @@ RsrConnection >> initialize [
 ]
 
 { #category : #'public-testing' }
+RsrConnection >> isClosed [
+
+	^self isOpen not
+]
+
+{ #category : #'public-testing' }
 RsrConnection >> isOpen [
 
 	^isOpen
