@@ -1,3 +1,43 @@
+| package |
+package := Package name: 'RemoteServiceReplication-Base'.
+package paxVersion: 1; basicComment: ''.
+
+package classNames
+	add: #RsrConnectionClosed;
+	add: #RsrUnsupportedObject;
+	add: #RsrDictionarySpecies;
+	add: #RsrError;
+	add: #RsrFalseSpecies;
+	add: #RsrUnknownClass;
+	add: #RsrDateAndTimeSpecies;
+	add: #RsrTrueSpecies;
+	add: #RsrUndefinedObjectSpecies;
+	add: #RsrCharacterSpecies;
+	add: #RsrSetSpecies;
+	add: #RsrBooleanSpecies;
+	add: #RsrSymbolSpecies;
+	add: #RsrConcurrency;
+	add: #RsrServiceSpecies;
+	add: #RsrStringSpecies;
+	add: #RsrOrderedCollectionSpecies;
+	add: #RsrCharacterArraySpecies;
+	add: #RsrNullSpecies;
+	add: #RsrSpecies;
+	add: #RsrArraySpecies;
+	add: #RsrByteArraySpecies;
+	add: #RsrPositiveIntegerSpecies;
+	add: #RsrNegativeIntegerSpecies;
+	add: #RsrSocketClosed;
+	add: #RsrIntegerSpecies;
+	yourself.
+
+package methodNames
+	yourself.
+
+package setPrerequisites: #().
+
+package!
+
 Object
 	subclass: #RsrConcurrency
 	instanceVariableNames: ''

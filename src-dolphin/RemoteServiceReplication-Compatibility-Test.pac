@@ -1,3 +1,28 @@
+| package |
+package := Package name: 'RemoteServiceReplication-Compatibility-Test'.
+package paxVersion: 1; basicComment: ''.
+
+package classNames
+	add: #RsrTestCase;
+	add: #RsrSocketTestCase;
+	add: #RsrMockServer;
+	add: #RsrClassResolverTestCase;
+	add: #RsrTestingConcurrencyTestCase;
+	add: #RsrTestingConcurrency;
+	add: #RsrGarbageCollectorTestCase;
+	add: #RsrMockService;
+	add: #RsrSocketPair;
+	add: #RsrRegistryTestCase;
+	add: #RsrMockClient;
+	yourself.
+
+package methodNames
+	yourself.
+
+package setPrerequisites: #().
+
+package!
+
 RsrAbstractService
 	subclass: #RsrMockService
 	instanceVariableNames: ''

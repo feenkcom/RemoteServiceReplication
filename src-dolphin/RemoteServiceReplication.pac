@@ -1,3 +1,49 @@
+| package |
+package := Package name: 'RemoteServiceReplication'.
+package paxVersion: 1; basicComment: ''.
+
+package classNames
+	add: #RsrService;
+	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrEncoder;
+	add: #RsrCommandProcessor;
+	add: #RsrSendMessage;
+	add: #RsrUnknownOID;
+	add: #RsrRetainAnalysis;
+	add: #RsrDecoder;
+	add: #RsrSocketStream;
+	add: #RsrCycleDetected;
+	add: #RsrNumericSpigot;
+	add: #RsrCodec;
+	add: #RsrLogWithPrefix;
+	add: #RsrBufferedSocketStream;
+	add: #RsrLog;
+	add: #RsrPromise;
+	add: #RsrConnection;
+	add: #RsrRetainObject;
+	add: #RsrCommandWriter;
+	add: #RsrServiceFactoryServer;
+	add: #RsrReleaseObjects;
+	add: #RsrCommandReader;
+	add: #RsrServiceFactory;
+	add: #RsrDeliverResponse;
+	add: #RsrObjectCache;
+	add: #RsrCommandDispatcher;
+	add: #RsrAbstractServiceFactory;
+	add: #RsrCommand;
+	add: #RsrStream;
+	yourself.
+
+package methodNames
+	add: #RsrForwarder -> #doesNotUnderstand:;
+	add: #RsrForwarder -> #_service:;
+	add: 'RsrForwarder class' -> #on:;
+	yourself.
+
+package setPrerequisites: #().
+
+package!
+
 RsrObject
 	subclass: #RsrBufferedSocketStream
 	instanceVariableNames: 'stream outBuffer writePosition nextToWrite'

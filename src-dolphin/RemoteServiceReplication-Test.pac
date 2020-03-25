@@ -1,3 +1,56 @@
+| package |
+package := Package name: 'RemoteServiceReplication-Test'.
+package paxVersion: 1; basicComment: ''.
+
+package classNames
+	add: #RsrThreadSafeNumericSpigotTest;
+	add: #RsrDecoderTest;
+	add: #RsrEncoderTest;
+	add: #RsrReflectedVariableTestServer;
+	add: #RsrForwarderTest;
+	add: #RsrMockEncoder;
+	add: #RsrMockConnection;
+	add: #RsrServiceTest;
+	add: #RsrAbstractReflectedVariableTestServiceA;
+	add: #RsrSocketStreamTestCase;
+	add: #RsrClientAllDataObjects;
+	add: #RsrServerNoInstVars;
+	add: #RsrPromiseTest;
+	add: #RsrSpeciesReturnEquality;
+	add: #RsrAbstractTestService;
+	add: #RsrNumericSpigotTest;
+	add: #RsrAbstractReferenceAllSpecies;
+	add: #RsrMockRegistry;
+	add: #RsrMessageSendingTest;
+	add: #RsrAbstractReflectedVariableTestServiceB;
+	add: #RsrSystemTestCase;
+	add: #RsrServerAllDataObjects;
+	add: #RsrValueHolderClient;
+	add: #RsrServiceAbstractReferenceService;
+	add: #RsrClientTestService;
+	add: #RsrReferenceAllSpeciesClient;
+	add: #RsrCodecTest;
+	add: #RsrServerTestService;
+	add: #RsrClientReferenceService;
+	add: #RsrReflectedVariableTestClient;
+	add: #RsrLifetimeTest;
+	add: #RsrServiceAbstractNoInstVars;
+	add: #RsrValueHolderServer;
+	add: #RsrReferenceAllSpeciesServer;
+	add: #RsrRetainAnalysisTest;
+	add: #RsrServiceAbstractAllDataObjects;
+	add: #RsrAbstractValueHolderService;
+	add: #RsrServerReferenceService;
+	add: #RsrClientNoInstVars;
+	yourself.
+
+package methodNames
+	yourself.
+
+package setPrerequisites: #().
+
+package!
+
 RsrObject
 	subclass: #RsrMockConnection
 	instanceVariableNames: 'forwarderClass lastMessage registry idSpigot'
