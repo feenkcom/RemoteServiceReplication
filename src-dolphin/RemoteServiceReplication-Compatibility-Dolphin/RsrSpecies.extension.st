@@ -12,6 +12,9 @@ initializeSpeciesMapping
 		at: Utf8String
 		put: RsrStringSpecies.
 	speciesMapping
+		at: AnsiString
+		put: RsrStringSpecies.
+	speciesMapping
 		at: LargeInteger
 		put: RsrIntegerSpecies.
 	speciesMapping
