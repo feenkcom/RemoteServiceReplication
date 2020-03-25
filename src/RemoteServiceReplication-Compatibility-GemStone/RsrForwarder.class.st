@@ -2,7 +2,7 @@ Class {
 	#name : #RsrForwarder,
 	#superclass : #RsrProtoObject,
 	#instVars : [
-		'_object'
+		'_service'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-Pharo'
+	#category : #'RemoteServiceReplication-Compatibility-GemStone'
 }
