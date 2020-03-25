@@ -1,27 +1,27 @@
 ﻿| packages |
 packages := #(
-	'RemoteServiceReplication-Base'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrProtoObject'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrForwarder'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrObject'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrAbstractService'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrClassResolver'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrEnvironment'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrRegistry'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrGarbageCollector'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrScientist'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrSocket'
-	'RemoteServiceReplication-Compatibility-Dolphin\RsrSpecies.extension'
-	'RemoteServiceReplication-Compatibility-Dolphin\SequenceableCollection.extension'
-	'RemoteServiceReplication-Compatibility-Dolphin\Set.extension'
-	'RemoteServiceReplication-Compatibility-Test'
-	'RemoteServiceReplication'
-	'RemoteServiceReplication-Test'
+	'RemoteServiceReplication-Base.pac'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrProtoObject.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrForwarder.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrObject.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrAbstractService.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrClassResolver.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrEnvironment.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrRegistry.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrGarbageCollector.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrScientist.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrSocket.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\RsrSpecies.extension.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\SequenceableCollection.extension.st'
+	'RemoteServiceReplication-Compatibility-Dolphin\Set.extension.st'
+	'RemoteServiceReplication.pac'
+	'RemoteServiceReplication-Compatibility-Test.pac'
+	'RemoteServiceReplication-Test.pac'
 ).
 packages
 	do:
 		[:packageName | | stream |
-		stream := (File open: packageName, '.st') readWriteStream.
+		stream := (File open: packageNames) readWriteStream.
 		(ChunkSourceFiler on: stream) fileIn.
 		stream close].
 
