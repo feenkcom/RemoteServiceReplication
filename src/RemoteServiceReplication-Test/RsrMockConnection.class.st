@@ -21,7 +21,7 @@ RsrMockConnection class >> forwarderClass: aClass [
 { #category : #accessing }
 RsrMockConnection >> _forwarderClass [
 
-	^forwarderClass ifNil: [RsrMockForwarder]
+	^forwarderClass ifNil: [RsrForwarder]
 ]
 
 { #category : #dispatching }
