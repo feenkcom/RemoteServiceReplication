@@ -1,11 +1,3 @@
-RsrProtoObject
-	subclass: #RsrForwarder
-	instanceVariableNames: 'rsrObject'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrForwarder categoriesForClass!RemoteServiceReplication-Utilities! !
-
 RsrObject
 	subclass: #RsrBufferedSocketStream
 	instanceVariableNames: 'stream outBuffer writePosition nextToWrite'
@@ -53,6 +45,14 @@ RsrObject
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrLog categoriesForClass!RemoteServiceReplication-Debugging! !
+
+RsrObject
+	subclass: #RsrLogWithPrefix
+	instanceVariableNames: 'prefix log'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrLogWithPrefix categoriesForClass!RemoteServiceReplication-Debugging! !
 
 RsrObject
 	subclass: #RsrNumericSpigot
@@ -231,23 +231,32 @@ RsrError
 	classInstanceVariableNames: ''!
 !RsrUnknownOID categoriesForClass!RemoteServiceReplication-Exceptions! !
 
+!RsrForwarder class methodsFor!
+on: anRsrObject	| instance |	instance := self new.	instance _service: anRsrObject.	^instance! !
+
+!RsrForwarder methodsFor!
+doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_sendMessage: aMessage		to: _service.	^promise value! !
+
+!RsrForwarder methodsFor!
+_service: aService	_service := aService! !
+
 !RsrService class methodsFor!
 _id: anIdconnection: aConnection	^super new		_id: anId connection: aConnection;		yourself! !
 
 !RsrService class methodsFor!
-clientClass	self subclassResponsibility! !
+isServerClass	^self name == self serverClassName! !
 
 !RsrService class methodsFor!
-serverClass	self subclassResponsibility! !
+serverClassName	self subclassResponsibility! !
 
 !RsrService class methodsFor!
-isClientClass	^self == self clientClass! !
+isClientClass	^self name == self clientClassName! !
 
 !RsrService class methodsFor!
 _variablesToReflect	| currentClass variables |	variables := OrderedCollection new.	currentClass := self superclass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
 
 !RsrService class methodsFor!
-isServerClass	^self == self serverClass! !
+clientClassName	self subclassResponsibility! !
 
 !RsrDeliverResponse class methodsFor!
 transaction: aTransactionIdresponse: anObject	^self new		transaction: aTransactionId;		response: anObject;		yourself! !
@@ -276,17 +285,14 @@ roots: anArrayconnection: aConnection	^self new		roots: anArray;		connectio
 !RsrSendMessage class methodsFor!
 transaction: aTransactionIdreceiver: aServiceselector: aSelectorarguments: anArray	^self new		transaction: aTransactionId;		receiver: aService;		selector: aSelector;		arguments: anArray;		yourself! !
 
-!RsrForwarder class methodsFor!
-on: anRsrObject	| instance |	instance := self new.	instance _object: anRsrObject.	^instance! !
-
 !RsrReleaseObjects class methodsFor!
 oids: anArray	^self new		oids: anArray;		yourself! !
 
 !RsrAbstractServiceFactory class methodsFor!
-clientClass	^RsrServiceFactory! !
+clientClassName	^#RsrServiceFactory! !
 
 !RsrAbstractServiceFactory class methodsFor!
-serverClass	^RsrServiceFactoryServer! !
+serverClassName	^#RsrServiceFactoryServer! !
 
 !RsrConnection class methodsFor!
 socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
@@ -302,6 +308,12 @@ acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	listene
 
 !RsrConnection class methodsFor!
 connectionTimeout	^2! !
+
+!RsrLogWithPrefix class methodsFor!
+prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
+
+!RsrLogWithPrefix class methodsFor!
+log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
@@ -331,7 +343,7 @@ nextCommand	^self decoder decodeCommand: self stream! !
 dispatcher	^self connection dispatcher! !
 
 !RsrCommandReader methodsFor!
-executeCycle	[self dispatcher dispatch: self nextCommand]		on: RsrSocketClosed		do:			[:ex |			self log: ex.			self connection disconnected]! !
+executeCycle	[self dispatcher dispatch: self nextCommand]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
 
 !RsrNumericSpigot methodsFor!
 step: anIncrement	step := anIncrement! !
@@ -369,12 +381,6 @@ isFulfilled	^value ~~ markerValue! !
 !RsrPromise methodsFor!
 fulfill: anObject	self isFulfilled		ifTrue: [^self error: 'Promise value already set'].	value := anObject.	mutex signal! !
 
-!RsrForwarder methodsFor!
-doesNotUnderstand: aMessage	| promise |	promise := rsrObject _connection		_sendMessage: aMessage		to: rsrObject.	^promise value! !
-
-!RsrForwarder methodsFor!
-_object: anRsrObject	rsrObject := anRsrObject! !
-
 !RsrDeliverResponse methodsFor!
 response	^response! !
 
@@ -397,10 +403,13 @@ response: anObject	response := anObject! !
 isError	^errorName notNil! !
 
 !RsrDeliverResponse methodsFor!
+errorName	^errorName! !
+
+!RsrDeliverResponse methodsFor!
 transaction	^transaction! !
 
 !RsrDeliverResponse methodsFor!
-errorName	^errorName! !
+reportOn: aLog	aLog debug: 'RsrDeliverResponse/', self response class name! !
 
 !RsrDeliverResponse methodsFor!
 sendOver: aConnection	| analysis |	analysis := RsrRetainAnalysis		roots: (Array with: response)		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	aConnection commandWriter enqueue: self! !
@@ -463,13 +472,16 @@ isImmediate: anObject	^self speciesMapping includesKey: anObject class! !
 integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes! !
 
 !RsrReleaseObjects methodsFor!
-encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeReleaseObjects: self! !
+reportOn: aLog	aLog debug: 'RsrReleaseObjects/', self oids printString! !
 
 !RsrReleaseObjects methodsFor!
 executeFor: aConnection	| registry |	registry := aConnection registry.	oids do: [:oid | registry removeKey: oid]! !
 
 !RsrReleaseObjects methodsFor!
 oids	^oids! !
+
+!RsrReleaseObjects methodsFor!
+encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeReleaseObjects: self! !
 
 !RsrReleaseObjects methodsFor!
 oids: anArray	oids := anArray! !
@@ -479,9 +491,6 @@ _reflectedVariablesDo: aBlock	self _reflectedVariableIndecesDo: [:index | aBlo
 
 !RsrService methodsFor!
 isClient	^self class isClientClass! !
-
-!RsrService methodsFor!
-remoteServiceClass	^self isClient		ifTrue: [self class serverClass]		ifFalse: [self class clientClass]! !
 
 !RsrService methodsFor!
 _id	^_id! !
@@ -505,7 +514,7 @@ _synchronize	"Return self to synchronize with the remote peer"	^self! !
 _variablesToReflect	^self class _variablesToReflect! !
 
 !RsrService methodsFor!
-remoteServiceName	^self remoteServiceClass name! !
+remoteServiceName	^self isClient		ifTrue: [self class serverClassName]		ifFalse: [self class clientClassName]! !
 
 !RsrService methodsFor!
 serviceName	^self class name! !
@@ -521,6 +530,9 @@ synchronize	remoteSelf == nil		ifFalse: [remoteSelf _synchronize]! !
 
 !RsrService methodsFor!
 isNotMirrored	^self isMirrored not! !
+
+!RsrRetainObject methodsFor!
+reportOn: aLog	aLog debug: 'RsrRetainObject/', self object class name! !
 
 !RsrRetainObject methodsFor!
 executeFor: aConnection	aConnection objectCache add: object! !
@@ -574,16 +586,34 @@ selector: anObject	selector := anObject! !
 receiver: anObject	receiver := anObject! !
 
 !RsrSendMessage methodsFor!
-sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	aConnection promises		at: transaction		put: promise.	aConnection commandWriter enqueue: self.	^promise! !
+reportOn: aLog	aLog debug: 'RsrSendMessage/', self receiver class name, '>>', self selector! !
 
 !RsrSendMessage methodsFor!
 roots	^(Array with: receiver with: selector) ,  arguments! !
+
+!RsrSendMessage methodsFor!
+sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	aConnection promises		at: transaction		put: promise.	aConnection commandWriter enqueue: self.	^promise! !
 
 !RsrSendMessage methodsFor!
 transaction: anObject	transaction := anObject! !
 
 !RsrServiceFactoryServer methodsFor!
 return: aService	^aService! !
+
+!RsrLogWithPrefix methodsFor!
+prefix	^prefix! !
+
+!RsrLogWithPrefix methodsFor!
+log	^log! !
+
+!RsrLogWithPrefix methodsFor!
+log: aLog	log := aLog! !
+
+!RsrLogWithPrefix methodsFor!
+debug: aString	^self log debug: self prefix, '/', aString! !
+
+!RsrLogWithPrefix methodsFor!
+prefix: aString	prefix := aString! !
 
 !RsrBufferedSocketStream methodsFor!
 next	^self next: 1! !
@@ -781,6 +811,9 @@ stream	^stream! !
 oidSpigot	^oidSpigot! !
 
 !RsrConnection methodsFor!
+isClosed	^self isOpen not! !
+
+!RsrConnection methodsFor!
 objectCache	^objectCache! !
 
 !RsrConnection methodsFor!
@@ -790,7 +823,7 @@ oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
 disconnected	self log info: 'Disconnected'.	self close! !
 
 !RsrConnection methodsFor!
-promises	^promises! !
+commandReader	^commandReader! !
 
 !RsrConnection methodsFor!
 newTransactionId	^transactionSpigot next! !
@@ -802,13 +835,13 @@ commandWriter	^commandWriter! !
 _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| dispatchCommand |	isOpen		ifFalse: [self error: 'Connection is not open'].	dispatchCommand := RsrSendMessage		transaction: self newTransactionId		receiver: aService		selector: aMessage selector		arguments: aMessage arguments.	^dispatchCommand sendOver: self! !
 
 !RsrConnection methodsFor!
-commandReader	^commandReader! !
-
-!RsrConnection methodsFor!
-registry	^registry! !
+promises	^promises! !
 
 !RsrConnection methodsFor!
 dispatcher	^dispatcher! !
+
+!RsrConnection methodsFor!
+registry	^registry! !
 
 !RsrConnection methodsFor!
 unknownError: anException	self close! !
@@ -838,6 +871,9 @@ socket: aSocket	socket := aSocket! !
 write: aByteArray	self stream nextPutAll: aByteArray! !
 
 !RsrCommandWriter methodsFor!
+writeCommand: aCommand	self report: aCommand.	aCommand writeUsing: self! !
+
+!RsrCommandWriter methodsFor!
 flush	self stream flush! !
 
 !RsrCommandWriter methodsFor!
@@ -853,7 +889,7 @@ stop	super stop.	queue nextPut: self stopToken! !
 stopToken	^self stoppedState! !
 
 !RsrCommandWriter methodsFor!
-executeCycle	[| item |	item := queue next.	item == self stopToken		ifTrue: [^self].	item writeUsing: self.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self log: ex.			self connection disconnected]! !
+executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
 
 !RsrThreadSafeNumericSpigot methodsFor!
 initialize	super initialize.	mutex := Semaphore forMutualExclusion! !
@@ -964,13 +1000,16 @@ next: aCount	aCount = 0		ifTrue: [^#[]].	^socket read: aCount! !
 atEnd	^self isConnected! !
 
 !RsrCommand methodsFor!
-sendOver: aConnection	"Do nothing unless a subclass offers a specialization"! !
+reportOn: aLog	self subclassResponsibility! !
 
 !RsrCommand methodsFor!
 encoding	^ encoding! !
 
 !RsrCommand methodsFor!
 executeFor: aConnection	self subclassResponsibility! !
+
+!RsrCommand methodsFor!
+sendOver: aConnection	"Do nothing unless a subclass offers a specialization"! !
 
 !RsrCommand methodsFor!
 writeUsing: aCommandWriter	aCommandWriter write: encoding! !
@@ -994,7 +1033,7 @@ priority	^super priority - 1! !
 stop	super stop.	queue nextPut: self stopToken! !
 
 !RsrCommandDispatcher methodsFor!
-dispatch: aCommand	queue nextPut: aCommand! !
+dispatch: aCommand	self report: aCommand.	queue nextPut: aCommand! !
 
 !RsrCommandDispatcher methodsFor!
 executeCycle	| item |	item := queue next.	item == self stopToken		ifFalse: [item executeFor: connection]! !
@@ -1003,7 +1042,7 @@ executeCycle	| item |	item := queue next.	item == self stopToken		ifFalse: 
 stop	self isActive ifFalse: [^self].	state := self stoppedState.	self connection close.	self stream close! !
 
 !RsrCommandProcessor methodsFor!
-log: anException	self log error: anException description! !
+log: aString	self log debug: aString! !
 
 !RsrCommandProcessor methodsFor!
 executeCycle	self subclassResponsibility! !
@@ -1021,22 +1060,28 @@ initialize	super initialize.	state := self stoppedState! !
 priority	^Processor lowIOPriority! !
 
 !RsrCommandProcessor methodsFor!
-runningState	^#Running! !
-
-!RsrCommandProcessor methodsFor!
 connection: anObject	connection := anObject! !
 
 !RsrCommandProcessor methodsFor!
-runLoop	[self isActive]		whileTrue:			[[self executeCycle]				on: Error				do:					[:ex |					self log: ex.					self connection unknownError: ex]]! !
+runningState	^#Running! !
+
+!RsrCommandProcessor methodsFor!
+report: aCommand	aCommand reportOn: self log! !
+
+!RsrCommandProcessor methodsFor!
+runLoop	[self isActive]		whileTrue:			[[self executeCycle]				on: Error				do:					[:ex |					self reportException: ex.					self connection unknownError: ex]]! !
 
 !RsrCommandProcessor methodsFor!
 isActive	^state == self runningState! !
 
 !RsrCommandProcessor methodsFor!
-log	^self connection log! !
+log	^RsrLogWithPrefix		prefix: self class name asString		log: self connection log! !
 
 !RsrCommandProcessor methodsFor!
-stream	^self connection stream! !
+reportException: anException	self log: '', self class name, '/', anException description! !
 
 !RsrCommandProcessor methodsFor!
 connection	^connection! !
+
+!RsrCommandProcessor methodsFor!
+stream	^self connection stream! !
