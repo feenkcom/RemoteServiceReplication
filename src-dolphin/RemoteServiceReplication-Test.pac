@@ -47,7 +47,13 @@ package classNames
 package methodNames
 	yourself.
 
-package setPrerequisites: #().
+
+package setPrerequisites: #(
+	'RemoteServiceReplication-Base.pac'
+	'RemoteServiceReplication-Compatibility-Dolphin.pac'
+	'RemoteServiceReplication.pac'
+	'RemoteServiceReplication-Compatibility-Test.pac'
+).
 
 package!
 
