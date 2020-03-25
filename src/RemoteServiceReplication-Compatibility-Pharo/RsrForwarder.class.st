@@ -2,60 +2,60 @@ Class {
 	#name : #RsrForwarder,
 	#superclass : #RsrProtoObject,
 	#instVars : [
-		'_object'
+		'_service'
 	],
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
 { #category : #'private-forwarding' }
-RsrForwarder >> _object: anRsrObject [
+RsrForwarder >> _service: aService [
 
-	_object := anRsrObject
+	_service := aService
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> asBrick [
 
-	^_object asBrick
+	^_service asBrick
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> asSpotterCandidateLink [
 
-	^_object asSpotterCandidateLink
+	^_service asSpotterCandidateLink
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> asSpotterProcessorLink [
 
-	^_object asSpotterProcessorLink
+	^_service asSpotterProcessorLink
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> brickAlert [
 
-	^_object brickAlert
+	^_service brickAlert
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> brickValue: aBrick [
 
-	^_object brickValue: aBrick
+	^_service brickValue: aBrick
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> brickValue: anObject withEnoughArguments: aCollection [
 
-	^_object brickValue: anObject withEnoughArguments: aCollection
+	^_service brickValue: anObject withEnoughArguments: aCollection
 ]
 
 { #category : #'private-forwarding' }
 RsrForwarder >> doesNotUnderstand: aMessage [
 
 	| promise |
-	promise := _object _connection
+	promise := _service _connection
 		_sendMessage: aMessage
-		to: _object.
+		to: _service.
 	^promise value
 ]
 
@@ -63,7 +63,7 @@ RsrForwarder >> doesNotUnderstand: aMessage [
 RsrForwarder >> gtConstructDebuggerInspectorIn: composite
 for: aDebugger [
 	
-	^_object
+	^_service
 		gtConstructDebuggerInspectorIn: composite
 		for: aDebugger
 ]
@@ -71,121 +71,121 @@ for: aDebugger [
 { #category : #'GT-Debugger' }
 RsrForwarder >> gtDebuggerEvaluatorIn: composite [
 	
-	^_object gtDebuggerEvaluatorIn: composite
+	^_service gtDebuggerEvaluatorIn: composite
 ]
 
 { #category : #'GT-Debugger' }
 RsrForwarder >> gtDebuggerRawIn: composite [
 
-	^_object gtDebuggerRawIn: composite
+	^_service gtDebuggerRawIn: composite
 ]
 
 { #category : #'GT-SUnitDebugger' }
 RsrForwarder >> gtDebuggerSUnitPrint [
 
-	^_object gtDebuggerSUnitPrint
+	^_service gtDebuggerSUnitPrint
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtDisplayOn: stream [
 
-	^_object gtDisplayOn: stream
+	^_service gtDisplayOn: stream
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtDisplayString [
 
-	^_object gtDisplayString
+	^_service gtDisplayString
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> gtFilter [
 
-	^_object gtFilter
+	^_service gtFilter
 ]
 
 { #category : #'GT-Spotter-UI' }
 RsrForwarder >> gtInspectorActionSpot [
 
-	^_object gtInspectorActionSpot
+	^_service gtInspectorActionSpot
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtInspectorHash [
 
-	^_object gtInspectorHash
+	^_service gtInspectorHash
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtInspectorIcon [
 
-	^_object gtInspectorIcon
+	^_service gtInspectorIcon
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtInspectorInterestingObject [
 
-	^_object gtInspectorInterestingObject
+	^_service gtInspectorInterestingObject
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtInspectorRawIn: composite [
 
-	^_object gtInspectorRawIn: composite
+	^_service gtInspectorRawIn: composite
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtInspectorVariableNodesIn: aCollection [
 
-	^_object gtInspectorVariableNodesIn: aCollection
+	^_service gtInspectorVariableNodesIn: aCollection
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> gtInspectorVariableValuePairs [
 
-	^_object gtInspectorVariableValuePairs
+	^_service gtInspectorVariableValuePairs
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> gtIterator [
 
-	^_object gtIterator
+	^_service gtIterator
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> gtListFilter [
 
-	^_object gtListFilter
+	^_service gtListFilter
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> hasDynamicItems [
 
-	^_object hasDynamicItems
+	^_service hasDynamicItems
 ]
 
 { #category : #'GT-Inspector' }
 RsrForwarder >> inspectInExternalWindow [
 
-	^_object inspectInExternalWindow
+	^_service inspectInExternalWindow
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> phlowValue: anObject [
 
-	^_object phlowValue: anObject
+	^_service phlowValue: anObject
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> phlowValue: anObject value: otherObject [
 
-	^_object phlowValue: anObject value: otherObject
+	^_service phlowValue: anObject value: otherObject
 ]
 
 { #category : #'Glamour-Morphic-Brick' }
 RsrForwarder >> phlowValue: anObject withEnoughArguments: aCollection [
 
-	^_object phlowValue: anObject withEnoughArguments: aCollection
+	^_service phlowValue: anObject withEnoughArguments: aCollection
 ]
 
 { #category : #printing }
@@ -197,47 +197,47 @@ RsrForwarder >> printStringLimitedTo: anInteger [
 { #category : #'Glamour-Helpers' }
 RsrForwarder >> renderGlamorouslyOn: aRenderer [
 
-	^_object renderGlamorouslyOn: aRenderer
+	^_service renderGlamorouslyOn: aRenderer
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> spotterActDefault [
 
-	^_object spotterActDefault
+	^_service spotterActDefault
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> spotterActDefault: aStep [
 
-	^_object spotterActDefault: aStep
+	^_service spotterActDefault: aStep
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> spotterPreviewIn: aComposite inContext: aSpotter [
 
-	^_object spotterPreviewIn: aComposite inContext: aSpotter
+	^_service spotterPreviewIn: aComposite inContext: aSpotter
 ]
 
 { #category : #'GT-Spotter-UI' }
 RsrForwarder >> spotterPreviewRawIn: aComposite [
 
-	^_object spotterPreviewRawIn: aComposite
+	^_service spotterPreviewRawIn: aComposite
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> spotterProcessorsFor: aSpotterStep [
 
-	^_object spotterProcessorsFor: aSpotterStep
+	^_service spotterProcessorsFor: aSpotterStep
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> spotterProcessorsFor: aSpotterStep pragma: aPragma [
 
-	^_object spotterProcessorsFor: aSpotterStep pragma: aPragma
+	^_service spotterProcessorsFor: aSpotterStep pragma: aPragma
 ]
 
 { #category : #'GT-Spotter' }
 RsrForwarder >> spotterRePropertiesFor: aStep [
 
-	^_object spotterRePropertiesFor: aStep
+	^_service spotterRePropertiesFor: aStep
 ]
