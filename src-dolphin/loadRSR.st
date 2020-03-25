@@ -13,6 +13,7 @@ packages := #(
 	'RemoteServiceReplication-Compatibility-Dolphin\RsrSocket'
 	'RemoteServiceReplication-Compatibility-Dolphin\RsrSpecies.extension'
 	'RemoteServiceReplication-Compatibility-Dolphin\SequenceableCollection.extension'
+	'RemoteServiceReplication-Compatibility-Dolphin\Set.extension'
 	'RemoteServiceReplication-Compatibility-Test'
 	'RemoteServiceReplication'
 	'RemoteServiceReplication-Test'
