@@ -19,7 +19,7 @@ package classNames
 package methodNames
 	yourself.
 
-package setPrerequisites: #().
+package setPrerequisites: #('RemoteServiceReplication').
 
 package!
 

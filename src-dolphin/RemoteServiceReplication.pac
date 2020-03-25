@@ -40,7 +40,7 @@ package methodNames
 	add: 'RsrForwarder class' -> #on:;
 	yourself.
 
-package setPrerequisites: #().
+package setPrerequisites: #('RemoteServiceReplication-Compatibility-Dolphin').
 
 package!
 
