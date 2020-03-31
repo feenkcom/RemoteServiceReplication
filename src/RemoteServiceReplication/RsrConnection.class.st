@@ -103,6 +103,7 @@ RsrConnection >> close [
 
 	isOpen
 		ifFalse: [^self].
+	self dumpStack.
 	isOpen := false.
 	commandReader stop.
 	commandWriter stop.
@@ -140,6 +141,17 @@ RsrConnection >> disconnected [
 RsrConnection >> dispatcher [
 
 	^dispatcher
+]
+
+{ #category : #'public-lifecycle' }
+RsrConnection >> dumpStack [
+
+	| context stack |
+	context := thisContext.
+	stack := String streamContents: [:stringStream | context debugStackOn: stringStream].
+	Transcript
+		show: stack;
+		cr
 ]
 
 { #category : #'private-accessing' }
@@ -208,9 +220,9 @@ RsrConnection >> open [
 	(isOpen := socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
 	stream := RsrSocketStream on: socket.
-	dispatcher := RsrCommandDispatcher on: self.
-	commandReader := RsrCommandReader on: self.
-	commandWriter := RsrCommandWriter on: self.
+	dispatcher := RsrDispatchEventLoop on: self.
+	commandReader := RsrCommandSource on: self.
+	commandWriter := RsrCommandSink on: self.
 	dispatcher start.
 	commandReader start.
 	commandWriter start.

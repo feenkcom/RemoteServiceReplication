@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrCommandWriter,
-	#superclass : #RsrCommandProcessor,
+	#name : #RsrCommandSink,
+	#superclass : #RsrEventLoop,
 	#instVars : [
 		'queue'
 	],
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : #commands }
-RsrCommandWriter >> enqueue: aCommand [
+RsrCommandSink >> enqueue: aCommand [
 
 	self isActive ifTrue: [queue nextPut: aCommand]
 ]
 
 { #category : #commands }
-RsrCommandWriter >> executeCycle [
+RsrCommandSink >> executeCycle [
 
 	[| command |
 	command := queue next.
@@ -31,39 +31,39 @@ RsrCommandWriter >> executeCycle [
 ]
 
 { #category : #commands }
-RsrCommandWriter >> flush [
+RsrCommandSink >> flush [
 
 	self stream flush
 ]
 
 { #category : #initialization }
-RsrCommandWriter >> initialize [
+RsrCommandSink >> initialize [
 
 	super initialize.
 	queue := SharedQueue new
 ]
 
 { #category : #commands }
-RsrCommandWriter >> stop [
+RsrCommandSink >> stop [
 
 	super stop.
 	queue nextPut: self stopToken
 ]
 
 { #category : #accessing }
-RsrCommandWriter >> stopToken [
+RsrCommandSink >> stopToken [
 
 	^self stoppedState
 ]
 
 { #category : #writing }
-RsrCommandWriter >> write: aByteArray [
+RsrCommandSink >> write: aByteArray [
 
 	self stream nextPutAll: aByteArray
 ]
 
 { #category : #writing }
-RsrCommandWriter >> writeCommand: aCommand [
+RsrCommandSink >> writeCommand: aCommand [
 
 	self report: aCommand.
 	aCommand writeUsing: self

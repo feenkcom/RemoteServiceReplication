@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrCommandDispatcher,
-	#superclass : #RsrCommandProcessor,
+	#name : #RsrDispatchEventLoop,
+	#superclass : #RsrEventLoop,
 	#instVars : [
 		'queue'
 	],
@@ -8,14 +8,14 @@ Class {
 }
 
 { #category : #dispatching }
-RsrCommandDispatcher >> dispatch: aCommand [
+RsrDispatchEventLoop >> dispatch: aCommand [
 
 	self report: aCommand.
 	queue nextPut: aCommand
 ]
 
 { #category : #running }
-RsrCommandDispatcher >> executeCycle [
+RsrDispatchEventLoop >> executeCycle [
 
 	| item |
 	item := queue next.
@@ -24,27 +24,27 @@ RsrCommandDispatcher >> executeCycle [
 ]
 
 { #category : #initialize }
-RsrCommandDispatcher >> initialize [
+RsrDispatchEventLoop >> initialize [
 
 	super initialize.
 	queue := SharedQueue new
 ]
 
 { #category : #accessing }
-RsrCommandDispatcher >> priority [
+RsrDispatchEventLoop >> priority [
 
 	^super priority - 1
 ]
 
 { #category : #commands }
-RsrCommandDispatcher >> stop [
+RsrDispatchEventLoop >> stop [
 
 	super stop.
 	queue nextPut: self stopToken
 ]
 
 { #category : #accessing }
-RsrCommandDispatcher >> stopToken [
+RsrDispatchEventLoop >> stopToken [
 
 	^self stoppedState
 ]

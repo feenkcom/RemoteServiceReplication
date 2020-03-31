@@ -44,6 +44,19 @@ RsrSendMessage >> encodeUsing: anEncoder [
 { #category : #lifecycle }
 RsrSendMessage >> executeFor: aConnection [
 
+	| messageDispatcher message |
+	messageDispatcher := RsrMessageDispatcher on: aConnection.
+	message := MessageSend
+		receiver: [self primExecuteFor: aConnection]
+		selector: #value.
+	messageDispatcher
+		dispatch: message;
+		start
+]
+
+{ #category : #lifecycle }
+RsrSendMessage >> primExecuteFor: aConnection [
+
 	| result response |
 	[result := receiver
 		perform: selector

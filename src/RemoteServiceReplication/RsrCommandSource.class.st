@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrCommandReader,
-	#superclass : #RsrCommandProcessor,
+	#name : #RsrCommandSource,
+	#superclass : #RsrEventLoop,
 	#instVars : [
 		'decoder'
 	],
@@ -8,19 +8,19 @@ Class {
 }
 
 { #category : #accessing }
-RsrCommandReader >> decoder [
+RsrCommandSource >> decoder [
 
 	^self connection decoder
 ]
 
 { #category : #accessing }
-RsrCommandReader >> dispatcher [
+RsrCommandSource >> dispatcher [
 
 	^self connection dispatcher
 ]
 
 { #category : #commands }
-RsrCommandReader >> executeCycle [
+RsrCommandSource >> executeCycle [
 
 	[self dispatcher dispatch: self nextCommand]
 		on: RsrSocketClosed
@@ -31,7 +31,7 @@ RsrCommandReader >> executeCycle [
 ]
 
 { #category : #commands }
-RsrCommandReader >> nextCommand [
+RsrCommandSource >> nextCommand [
 
 	^self decoder decodeCommand: self stream
 ]

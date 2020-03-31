@@ -1,5 +1,5 @@
 Class {
-	#name : #RsrCommandProcessor,
+	#name : #RsrEventLoop,
 	#superclass : #RsrObject,
 	#instVars : [
 		'process',
@@ -10,7 +10,7 @@ Class {
 }
 
 { #category : #'instance creation' }
-RsrCommandProcessor class >> on: aConnection [
+RsrEventLoop class >> on: aConnection [
 
 	^self new
 		connection: aConnection;
@@ -18,38 +18,38 @@ RsrCommandProcessor class >> on: aConnection [
 ]
 
 { #category : #accessing }
-RsrCommandProcessor >> connection [
+RsrEventLoop >> connection [
 
 	^connection
 ]
 
 { #category : #accessing }
-RsrCommandProcessor >> connection: anObject [
+RsrEventLoop >> connection: anObject [
 
 	connection := anObject
 ]
 
 { #category : #running }
-RsrCommandProcessor >> executeCycle [
+RsrEventLoop >> executeCycle [
 
 	self subclassResponsibility
 ]
 
 { #category : #initialization }
-RsrCommandProcessor >> initialize [
+RsrEventLoop >> initialize [
 
 	super initialize.
 	state := self stoppedState
 ]
 
 { #category : #testing }
-RsrCommandProcessor >> isActive [
+RsrEventLoop >> isActive [
 
 	^state == self runningState
 ]
 
 { #category : #running }
-RsrCommandProcessor >> log [
+RsrEventLoop >> log [
 
 	^RsrLogWithPrefix
 		prefix: self class name asString
@@ -57,31 +57,31 @@ RsrCommandProcessor >> log [
 ]
 
 { #category : #running }
-RsrCommandProcessor >> log: aString [
+RsrEventLoop >> log: aString [
 
 	self log debug: aString
 ]
 
 { #category : #accessing }
-RsrCommandProcessor >> priority [
+RsrEventLoop >> priority [
 
 	^Processor lowIOPriority
 ]
 
 { #category : #running }
-RsrCommandProcessor >> report: aCommand [
+RsrEventLoop >> report: aCommand [
 
 	aCommand reportOn: self log
 ]
 
 { #category : #running }
-RsrCommandProcessor >> reportException: anException [
+RsrEventLoop >> reportException: anException [
 
 	self log: '', self class name, '/', anException description
 ]
 
 { #category : #running }
-RsrCommandProcessor >> runLoop [
+RsrEventLoop >> runLoop [
 
 	[self isActive]
 		whileTrue:
@@ -94,13 +94,13 @@ RsrCommandProcessor >> runLoop [
 ]
 
 { #category : #accessing }
-RsrCommandProcessor >> runningState [
+RsrEventLoop >> runningState [
 
 	^#Running
 ]
 
 { #category : #commands }
-RsrCommandProcessor >> start [
+RsrEventLoop >> start [
 
 	state := self runningState.
 	process := RsrConcurrency
@@ -109,7 +109,7 @@ RsrCommandProcessor >> start [
 ]
 
 { #category : #commands }
-RsrCommandProcessor >> stop [
+RsrEventLoop >> stop [
 
 	self isActive ifFalse: [^self].
 	state := self stoppedState.
@@ -118,13 +118,13 @@ RsrCommandProcessor >> stop [
 ]
 
 { #category : #accessing }
-RsrCommandProcessor >> stoppedState [
+RsrEventLoop >> stoppedState [
 
 	^#Stop
 ]
 
 { #category : #accessing }
-RsrCommandProcessor >> stream [
+RsrEventLoop >> stream [
 
 	^self connection stream
 ]
