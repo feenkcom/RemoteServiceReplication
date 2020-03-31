@@ -18,3 +18,9 @@ RsrMessageDispatcher >> executeCycle [
 	item == self stopToken
 		ifFalse: [item value]
 ]
+
+{ #category : #running }
+RsrMessageDispatcher >> stop [
+
+	self dispatch: self stopToken
+]

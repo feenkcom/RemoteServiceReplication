@@ -47,7 +47,7 @@ RsrSendMessage >> executeFor: aConnection [
 	| messageDispatcher message |
 	messageDispatcher := RsrMessageDispatcher on: aConnection.
 	message := MessageSend
-		receiver: [self primExecuteFor: aConnection]
+		receiver: [self primExecuteFor: aConnection. messageDispatcher stop]
 		selector: #value.
 	messageDispatcher
 		dispatch: message;
