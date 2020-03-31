@@ -103,7 +103,6 @@ RsrConnection >> close [
 
 	isOpen
 		ifFalse: [^self].
-	self dumpStack.
 	isOpen := false.
 	commandReader stop.
 	commandWriter stop.
@@ -141,17 +140,6 @@ RsrConnection >> disconnected [
 RsrConnection >> dispatcher [
 
 	^dispatcher
-]
-
-{ #category : #'public-lifecycle' }
-RsrConnection >> dumpStack [
-
-	| context stack |
-	context := thisContext.
-	stack := String streamContents: [:stringStream | context debugStackOn: stringStream].
-	Transcript
-		show: stack;
-		cr
 ]
 
 { #category : #'private-accessing' }
