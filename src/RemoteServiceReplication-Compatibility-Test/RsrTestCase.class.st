@@ -20,6 +20,12 @@ identicalTo: bObject [
 	self assert: anObject == bObject
 ]
 
+{ #category : #utilities }
+RsrTestCase >> assumption: aString [
+	"This method serves as a marker for assumptions made in the tests.
+	Perhaps some of the senders can be removed in the future."
+]
+
 { #category : #accessing }
 RsrTestCase >> defaultTimeLimit [
 

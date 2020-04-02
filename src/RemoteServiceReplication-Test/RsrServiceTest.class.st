@@ -52,6 +52,39 @@ RsrServiceTest >> testIsMirrored [
 ]
 
 { #category : #running }
+RsrServiceTest >> testMessagesDispatchedEvaluateConcurrently [
+	"Ensure a long-running process in one Service will not cause startvation of other Services"
+
+	| delayClient delayServer client server initialCounter counter delayedResult delaySem immediateResult |
+	delayClient := RsrConcurrentTestClient new.
+	client := RsrConcurrentTestClient new.
+	self mirror: delayClient.
+	self mirror: client.
+	initialCounter := 0.
+	counter := Association key: #counter value: initialCounter.
+	delayServer := connectionB registry at: delayClient _id.
+	server := connectionB registry at: client _id.
+	delaySem := Semaphore new.
+	delayServer
+		counter: counter;
+		semaphore: delaySem.
+	server counter: counter.
+	self
+		assumption: 'The call to #delayedCounter needs to run before the methods continues.';
+		assumption: 'The delay period in #delayedCounter will be enough to ensure #counterWithIncrement processes'.
+	RsrConcurrency fork: [delayedResult := delayClient delayedCounter. delaySem signal].
+	delaySem wait.
+	immediateResult := client counterWithIncrement.
+	self
+		assert: immediateResult
+		equals: initialCounter.
+	delaySem wait.
+	self
+		assert: delayedResult
+		equals: initialCounter + 1.
+]
+
+{ #category : #running }
 RsrServiceTest >> testReflectedVariableNames [
 
 	| clientNames serverNames |
