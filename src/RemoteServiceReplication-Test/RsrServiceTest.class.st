@@ -7,7 +7,7 @@ Class {
 { #category : #'running-utilities' }
 RsrServiceTest >> mirror: aService [
 
-	(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
+	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
 ]
 
 { #category : #accessing }
@@ -49,6 +49,22 @@ RsrServiceTest >> testIsMirrored [
 	self deny: instance isMirrored.
 	self mirror: instance.
 	self assert: instance isMirrored
+]
+
+{ #category : #running }
+RsrServiceTest >> testMessageDispatchedSeriallyForSingleService [
+	"Ensure that when a message is sent to a Service it is always dispatched to the same process"
+
+	| client server process1 process2 |
+	client := self mirror: RsrConcurrentTestClient new.
+	server := connectionB registry at: client _id.
+	client stashProcess.
+	process1 := server stashedProcess.
+	client stashProcess.
+	process2 := server stashedProcess.
+	self
+		assert: process1
+		identicalTo: process2
 ]
 
 { #category : #running }

@@ -15,3 +15,9 @@ RsrConcurrentTestClient >> delayedCounter [
 
 	^remoteSelf delayedCounter
 ]
+
+{ #category : #actions }
+RsrConcurrentTestClient >> stashProcess [
+
+	remoteSelf stashProcess
+]

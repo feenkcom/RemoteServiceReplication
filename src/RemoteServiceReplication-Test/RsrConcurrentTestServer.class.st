@@ -3,7 +3,8 @@ Class {
 	#superclass : #RsrAbstractConcurrentTestService,
 	#instVars : [
 		'counter',
-		'semaphore'
+		'semaphore',
+		'stashedProcess'
 	],
 	#category : #'RemoteServiceReplication-Test-Services'
 }
@@ -38,4 +39,16 @@ RsrConcurrentTestServer >> delayedCounter [
 RsrConcurrentTestServer >> semaphore: aSemaphore [
 
 	semaphore := aSemaphore
+]
+
+{ #category : #actions }
+RsrConcurrentTestServer >> stashProcess [
+
+	stashedProcess := Processor activeProcess
+]
+
+{ #category : #accessing }
+RsrConcurrentTestServer >> stashedProcess [
+
+	^stashedProcess
 ]
