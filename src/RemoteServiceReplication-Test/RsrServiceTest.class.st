@@ -52,7 +52,7 @@ RsrServiceTest >> testIsMirrored [
 ]
 
 { #category : #running }
-RsrServiceTest >> testMessagesDispatchedEvaluateConcurrently [
+RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
 	"Ensure a long-running process in one Service will not cause startvation of other Services"
 
 	| delayClient delayServer client server initialCounter counter delayedResult delaySem immediateResult |
