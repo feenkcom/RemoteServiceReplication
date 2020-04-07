@@ -28,27 +28,12 @@ RsrRegistry class >> reapAction: aBlock [
 ]
 
 { #category : #initialization }
-RsrRegistry >> at: aKey [
-
-	^self at: aKey ifAbsent: [KeyNotFound signal: aKey asString]
-]
-
-{ #category : #initialization }
-RsrRegistry >> at: aKey
-ifAbsent: aBlock [
-
-	^self
-		serviceAt: aKey
-		ifAbsent: aBlock
-]
-
-{ #category : #initialization }
 RsrRegistry >> at: aKey
 put: anEntry [
 	"Store aService into the registry"
 
 	(anEntry isKindOf: RsrService)
-		ifTrue: [^anEntry _addTo: self].
+		ifTrue: [^self error].
 	mutex critical: [map at: aKey put: anEntry]
 ]
 
@@ -117,4 +102,13 @@ ifAbsent: aBlock [
 	^element
 		ifNil: aBlock
 		ifNotNil: [element service]
+]
+
+{ #category : #initialization }
+RsrRegistry >> serviceAt: aKey
+put: anEntry [
+	"Store aService into the registry"
+
+	(anEntry isKindOf: RsrService)
+		ifTrue: [^anEntry _addTo: self]
 ]

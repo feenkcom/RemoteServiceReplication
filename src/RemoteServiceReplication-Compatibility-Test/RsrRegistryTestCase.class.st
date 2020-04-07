@@ -16,7 +16,7 @@ RsrRegistryTestCase >> testAddClient [
 	id := object _id.
 	registry := RsrRegistry new.
 	registry
-		at: id
+		serviceAt: id
 		put: object.
 	self maximumReclamation.
 	self
@@ -38,7 +38,7 @@ RsrRegistryTestCase >> testAddServer [
 	id := object _id.
 	registry := RsrRegistry new.
 	registry
-		at: id
+		serviceAt: id
 		put: object.
 	object := nil.
 	self maximumReclamation.
@@ -69,7 +69,7 @@ RsrRegistryTestCase >> testAtAtIfAbsent [
 		assert: (registry serviceAt: id ifAbsent: [marker])
 		identicalTo: marker.
 	registry
-		at: id
+		serviceAt: id
 		put: server.
 	self
 		assert: (registry serviceAt: id)
@@ -87,7 +87,7 @@ RsrRegistryTestCase >> testIncludesKey [
 	client := RsrMockClient new.
 	self deny: (registry includesKey: client _id).
 	registry
-		at: client _id
+		serviceAt: client _id
 		put: client.
 	self assert: (registry includesKey: client _id)
 ]
@@ -102,7 +102,7 @@ RsrRegistryTestCase >> testRemoveKey [
 		assert: (registry removeKey: client _id)
 		equals: nil.
 	registry
-		at: client _id
+		serviceAt: client _id
 		put: client.
 	self
 		assert: (registry removeKey: client _id)
