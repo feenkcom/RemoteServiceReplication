@@ -1,11 +1,11 @@
 Class {
-	#name : #RsrWeakRegistryElement,
-	#superclass : #RsrRegistryElement,
+	#name : #RsrWeakRegistryEntry,
+	#superclass : #RsrRegistryEntry,
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
 
 { #category : #accessing }
-RsrWeakRegistryElement >> storageClass [
+RsrWeakRegistryEntry >> storageClass [
 	"Return the class of the storage"
 
 	^WeakArray

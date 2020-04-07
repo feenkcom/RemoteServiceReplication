@@ -101,7 +101,7 @@ RsrDecoder >> decodeObjectReference: aStream [
 	| oid |
 	oid := self decodeControlWord: aStream.
 	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
-	^registry at: oid ifAbsent: [self signalUnknownOID]
+	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]
 ]
 
 { #category : #'decoding-commands' }
@@ -132,7 +132,7 @@ RsrDecoder >> decodeSendMessage: aStream [
 	transaction := self decodeControlWord: aStream.
 	argCount := self decodeControlWord: aStream.
 	receiverOID := self decodeControlWord: aStream.
-	receiver := registry at: receiverOID ifAbsent: [^self signalUnknownOID].
+	receiver := registry serviceAt: receiverOID ifAbsent: [^self signalUnknownOID].
 	selector := self decodeObjectReference: aStream.
 	arguments := (1 to: argCount) collect: [:each | self decodeObjectReference: aStream].
 	^RsrSendMessage

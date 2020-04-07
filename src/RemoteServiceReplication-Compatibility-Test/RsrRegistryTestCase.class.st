@@ -10,7 +10,7 @@ Class {
 { #category : #tests }
 RsrRegistryTestCase >> testAddClient [
 
-	| id object registry marker |
+	| id object entry registry marker |
 	marker := Object new.
 	object := RsrMockClient new.
 	id := object _id.
@@ -20,12 +20,12 @@ RsrRegistryTestCase >> testAddClient [
 		put: object.
 	self maximumReclamation.
 	self
-		assert: (registry at: id ifAbsent: [marker])
+		assert: (registry serviceAt: id ifAbsent: [marker])
 		identicalTo: object.
 	object := nil.
 	self maximumReclamation.
 	self
-		assert: (registry at: id ifAbsent: [marker])
+		assert: (registry serviceAt: id ifAbsent: [marker])
 		identicalTo: marker
 ]
 
@@ -42,7 +42,7 @@ RsrRegistryTestCase >> testAddServer [
 		put: object.
 	object := nil.
 	self maximumReclamation.
-	object := registry at: id ifAbsent: [marker].
+	object := registry serviceAt: id ifAbsent: [marker].
 	self
 		deny: object
 		equals: marker.
@@ -62,20 +62,20 @@ RsrRegistryTestCase >> testAtAtIfAbsent [
 	server := RsrMockServer new.
 	id := server _id.
 	self
-		should: [registry at: id]
+		should: [registry serviceAt: id]
 		raise: Error.
 	marker := Object new.
 	self
-		assert: (registry at: id ifAbsent: [marker])
+		assert: (registry serviceAt: id ifAbsent: [marker])
 		identicalTo: marker.
 	registry
 		at: id
 		put: server.
 	self
-		assert: (registry at: id)
+		assert: (registry serviceAt: id)
 		identicalTo: server.
 	self
-		assert: (registry at: id ifAbsent: [marker])
+		assert: (registry serviceAt: id ifAbsent: [marker])
 		identicalTo: server
 ]
 

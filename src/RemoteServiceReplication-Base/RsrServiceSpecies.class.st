@@ -24,7 +24,7 @@ using: aDecoder [
 	instVarCount := aDecoder decodeControlWord: aStream.
 	serviceName := aDecoder decodeObjectReference: aStream.
 	instance := aDecoder registry
-		at: oid
+		serviceAt: oid
 		ifAbsent:
 			[((aDecoder lookupClass: serviceName)
 				_id: oid

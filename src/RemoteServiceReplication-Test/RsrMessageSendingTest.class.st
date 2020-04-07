@@ -19,7 +19,7 @@ RsrMessageSendingTest >> testReturnArgument [
 
 	| client server arguments dt response |
 	client := connectionA serviceFor: #RsrClientNoInstVars.
-	server := connectionB registry at: client _id.
+	server := connectionB registry serviceAt: client _id.
 	arguments := OrderedCollection new
 		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
  		add: (Character codePoint: 16r259F);
@@ -123,7 +123,7 @@ RsrMessageSendingTest >> testSendSetMarker [
 
 	| service remoteService |
 	service := connectionA serviceFor: #RsrClientNoInstVars.
-	remoteService := connectionB registry at: service _id.
+	remoteService := connectionB registry serviceAt: service _id.
 	self deny: remoteService marker.
 	service sendSetMarker.
 	self assert: remoteService marker

@@ -57,7 +57,7 @@ RsrServiceTest >> testMessageDispatchedSeriallyForSingleService [
 
 	| client server process1 process2 |
 	client := self mirror: RsrConcurrentTestClient new.
-	server := connectionB registry at: client _id.
+	server := connectionB registry serviceAt: client _id.
 	client stashProcess.
 	process1 := server stashedProcess.
 	client stashProcess.
@@ -78,8 +78,8 @@ RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
 	self mirror: client.
 	initialCounter := 0.
 	counter := Association key: #counter value: initialCounter.
-	delayServer := connectionB registry at: delayClient _id.
-	server := connectionB registry at: client _id.
+	delayServer := connectionB registry serviceAt: delayClient _id.
+	server := connectionB registry serviceAt: client _id.
 	delaySem := Semaphore new.
 	delayServer
 		counter: counter;
@@ -140,7 +140,7 @@ RsrServiceTest >> testVariableReflection [
 		privateVariable: #private;
 		yourself.
 	self mirror: localService.
-	remoteService := connectionB registry at: localService _id.
+	remoteService := connectionB registry serviceAt: localService _id.
 	self
 		assert: localService sharedVariable
 		identicalTo: remoteService sharedVariable.

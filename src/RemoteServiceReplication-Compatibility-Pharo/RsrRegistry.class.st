@@ -37,28 +37,19 @@ RsrRegistry >> at: aKey [
 RsrRegistry >> at: aKey
 ifAbsent: aBlock [
 
-	| element |
-	element := mutex critical: [map at: aKey ifAbsent: []].
-	^element
-		ifNil: aBlock
-		ifNotNil: [element value]
+	^self
+		serviceAt: aKey
+		ifAbsent: aBlock
 ]
 
 { #category : #initialization }
 RsrRegistry >> at: aKey
-put: aService [
+put: anEntry [
 	"Store aService into the registry"
 
-	| element |
-	element := aService isServer
-		ifTrue: [RsrRegistryElement value: aService]
-		ifFalse:
-			[aService
-				toFinalizeSend: #reap:
-				to: self reaper
-				with: aKey.
-			RsrWeakRegistryElement value: aService].
-	mutex critical: [map at: aKey put: element]
+	(anEntry isKindOf: RsrService)
+		ifTrue: [^anEntry _addTo: self].
+	mutex critical: [map at: aKey put: anEntry]
 ]
 
 { #category : #initialization }
@@ -107,4 +98,23 @@ RsrRegistry >> removeKey: aKey [
 	| element |
 	element := mutex critical: [map removeKey: aKey ifAbsent: [nil]].
 	^element ifNotNil: [element value]
+]
+
+{ #category : #initialization }
+RsrRegistry >> serviceAt: aKey [
+
+	^self
+		serviceAt: aKey
+		ifAbsent: [KeyNotFound signal: aKey asString]
+]
+
+{ #category : #initialization }
+RsrRegistry >> serviceAt: aKey
+ifAbsent: aBlock [
+
+	| element |
+	element := mutex critical: [map at: aKey ifAbsent: []].
+	^element
+		ifNil: aBlock
+		ifNotNil: [element service]
 ]
