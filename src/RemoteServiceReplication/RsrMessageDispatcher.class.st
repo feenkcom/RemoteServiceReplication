@@ -4,6 +4,14 @@ Class {
 	#category : #'RemoteServiceReplication-Communications'
 }
 
+{ #category : #'instance creation' }
+RsrMessageDispatcher class >> startOn: aConnection [
+
+	^(self on: aConnection)
+		start;
+		yourself
+]
+
 { #category : #dispatching }
 RsrMessageDispatcher >> dispatch: aMessageSend [
 

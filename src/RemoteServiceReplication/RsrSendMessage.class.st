@@ -45,10 +45,8 @@ RsrSendMessage >> encodeUsing: anEncoder [
 RsrSendMessage >> executeFor: aConnection [
 
 	| messageDispatcher |
-	messageDispatcher := RsrMessageDispatcher on: aConnection.
-	messageDispatcher
-		dispatch: [self primExecuteFor: aConnection. messageDispatcher stop];
-		start
+	messageDispatcher := aConnection registry dispatcherAt: self receiver _id.
+	messageDispatcher dispatch: [self primExecuteFor: aConnection]
 ]
 
 { #category : #lifecycle }

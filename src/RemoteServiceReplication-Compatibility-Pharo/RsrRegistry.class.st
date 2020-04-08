@@ -38,6 +38,25 @@ put: anEntry [
 ]
 
 { #category : #initialization }
+RsrRegistry >> dispatcherAt: aKey [
+
+	^self
+		dispatcherAt: aKey
+		ifAbsent: [KeyNotFound signal: aKey asString]
+]
+
+{ #category : #initialization }
+RsrRegistry >> dispatcherAt: aKey
+ifAbsent: aBlock [
+
+	| element |
+	element := mutex critical: [map at: aKey ifAbsent: []].
+	^element
+		ifNil: aBlock
+		ifNotNil: [element dispatcher]
+]
+
+{ #category : #initialization }
 RsrRegistry >> includesKey: aKey [
 
 	^mutex critical: [map includesKey: aKey]

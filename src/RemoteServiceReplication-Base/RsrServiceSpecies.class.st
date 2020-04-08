@@ -30,7 +30,8 @@ using: aDecoder [
 				_id: oid
 				connection: aDecoder connection)
 					yourself].
-	instance _addTo: aDecoder registry.
+	(aDecoder registry includesKey: oid)
+		ifFalse: [instance _addTo: aDecoder registry].
 	instance _variablesToReflect size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].

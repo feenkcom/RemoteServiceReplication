@@ -62,7 +62,7 @@ RsrService class >> serverClassName [
 RsrService >> _addTo: aRegistry [
 
 	| dispatcher entry |
-	dispatcher := RsrMessageDispatcher on: _connection.
+	dispatcher := RsrMessageDispatcher startOn: _connection.
 	entry := self isServer
 		ifTrue: [RsrRegistryEntry new service: self; dispatcher: dispatcher; yourself]
 		ifFalse:
