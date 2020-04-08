@@ -17,6 +17,20 @@ RsrServiceTest >> newInstance [
 ]
 
 { #category : #running }
+RsrServiceTest >> testEnsureServersAreCachedAndReused [
+
+	| client service1 service2 |
+	client := RsrClientTestService new.
+	self mirror: client.
+	service1 := connectionB registry serviceAt: client _id.
+	self mirror: client.
+	service2 := connectionB registry serviceAt: client _id.
+	self
+		assert: service1
+		identicalTo: service2
+]
+
+{ #category : #running }
 RsrServiceTest >> testHasRemoteSelf [
 
 	| service |
