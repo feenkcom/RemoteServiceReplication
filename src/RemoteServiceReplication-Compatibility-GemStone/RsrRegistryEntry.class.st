@@ -23,9 +23,9 @@ RsrRegistryElement >> dispatcher [
 ]
 
 { #category : #accessing }
-RsrRegistryElement >> dispacter: aMessageDispacter [
+RsrRegistryElement >> dispatcher: aMessageDispatcher [
 
-	dispatcher := aMessageDispacter
+	dispatcher := aMessageDispatcher
 ]
 
 { #category : #accessing }

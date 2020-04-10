@@ -117,6 +117,17 @@ RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"
 
-	aService _addTo: self.
+	| dispatcher entry |
+	dispatcher := (RsrClassResolver classNamed: #RsrMessageDispatcher) startOn: aService _connection.
+	entry := aService isServer
+			ifTrue: [RsrRegistryEntry with: aService]
+			ifFalse:
+					[RsrWeakRegistryEntry
+							with: aService
+							mournAction:
+									[self removeKey: aKey.
+									reapAction value: aKey]].
+	entry dispatcher: dispatcher.
+	mutex critical: [map at: aKey put: entry].
 	^aService
 ]
