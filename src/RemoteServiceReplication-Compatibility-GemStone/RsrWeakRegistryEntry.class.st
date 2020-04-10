@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrWeakRegistryElement,
-	#superclass : #RsrRegistryElement,
+	#name : #RsrWeakRegistryEntry,
+	#superclass : #RsrRegistryEntry,
 	#instVars : [
 		'mournAction'
 	],
@@ -27,5 +27,5 @@ RsrWeakRegistryElement >> mournAction: aBlock [
 RsrWeakRegistryElement >> mourn [
 
 	mournAction value.
-    value := mournAction := nil
+    service := mournAction := nil
 ]

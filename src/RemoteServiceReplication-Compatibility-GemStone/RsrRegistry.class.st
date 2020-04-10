@@ -26,44 +26,33 @@ RsrRegistry class >> reapAction: aBlock [
 		yourself
 ]
 
-{ #category : #initialization }
-RsrRegistry >> at: aKey [
-
-	^self
-		at: aKey
-		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
-]
-
-{ #category : #initialization }
+{ #category : #accessing }
 RsrRegistry >> at: aKey
-ifAbsent: aBlock [
+put: anEntry [
 
-	| element |
-	element := mutex
-		critical:
-			[map
-				at: aKey
-				ifAbsent: [nil]].
-	^element
-		ifNil: aBlock
-		ifNotNil: [element value]
+	(anEntry isKindOf: RsrService)
+		ifTrue: [self error].
+	mutex critical: [map at: aKey put: anEntry].
+	^anEntry
 ]
 
 { #category : #accessing }
-RsrRegistry >> at: aKey
-put: aService [
+RsrRegistry >> dispatcherAt: aKey [
+
+	^self
+		dispatcherAt: aKey
+		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
+]
+
+{ #category : #accessing }
+RsrRegistry >> dispatcherAt: aKey
+ifAbsent: aBlock [
 
 	| element |
-	element := aService isServer
-		ifTrue: [RsrRegistryElement with: aService]
-		ifFalse:
-			[RsrWeakRegistryElement
-				with: aService
-				mournAction:
-					[self removeKey: aKey.
-					reapAction value: aKey]].
-	mutex critical: [map at: aKey put: element].
-	^aService
+	element := mutex critical: [map at: aKey ifAbsent: []].
+	^element
+		ifNil: aBlock
+		ifNotNil: [element dispatcher]
 ]
 
 { #category : #initialization }
@@ -102,4 +91,32 @@ RsrRegistry >> removeKey: anRsrId [
 				removeKey: anRsrId
 				ifAbsent: [nil]].
 	^element ifNotNil: [element value]
+]
+
+{ #category : #'accessing' }
+RsrRegistry >> serviceAt: aKey [
+
+	^self
+		serviceAt: aKey
+		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
+]
+
+{ #category : #'accessing' }
+RsrRegistry >> serviceAt: aKey
+ifAbsent: aBlock [
+
+	| element |
+	element := mutex critical: [map at: aKey ifAbsent: []].
+	^element
+		ifNil: aBlock
+		ifNotNil: [element service]
+]
+
+{ #category : #'adding/removing' }
+RsrRegistry >> serviceAt: aKey
+put: aService [
+	"Store aService into the registry"
+
+	aService _addTo: self.
+	^aService
 ]
