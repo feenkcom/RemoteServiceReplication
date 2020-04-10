@@ -61,19 +61,9 @@ RsrService class >> serverClassName [
 { #category : #'private-lifecycle' }
 RsrService >> _addTo: aRegistry [
 
-	| dispatcher entry |
-	dispatcher := RsrMessageDispatcher startOn: _connection.
-	entry := self isServer
-		ifTrue: [RsrRegistryEntry new service: self; dispatcher: dispatcher; yourself]
-		ifFalse:
-			[self
-				toFinalizeSend: #reap:
-				to: aRegistry reaper
-				with: _id.
-			RsrWeakRegistryEntry new service: self; dispatcher: dispatcher; yourself].
 	aRegistry
-		at: _id
-		put: entry
+		serviceAt: _id
+		put: self
 ]
 
 { #category : #'private-accessing' }

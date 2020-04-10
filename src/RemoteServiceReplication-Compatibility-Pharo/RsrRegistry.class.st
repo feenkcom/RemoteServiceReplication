@@ -125,9 +125,20 @@ ifAbsent: aBlock [
 
 { #category : #initialization }
 RsrRegistry >> serviceAt: aKey
-put: anEntry [
+put: aService [
 	"Store aService into the registry"
 
-	(anEntry isKindOf: RsrService)
-		ifTrue: [^anEntry _addTo: self]
+	| dispatcher entry |
+	dispatcher := RsrMessageDispatcher startOn: aService _connection.
+	entry := aService isServer
+		ifTrue: [RsrRegistryEntry new service: aService; dispatcher: dispatcher; yourself]
+		ifFalse:
+			[aService
+				toFinalizeSend: #reap:
+				to: self reaper
+				with: aKey.
+			RsrWeakRegistryEntry new service: aService; dispatcher: dispatcher; yourself].
+	self
+		at: aKey
+		put: entry
 ]
