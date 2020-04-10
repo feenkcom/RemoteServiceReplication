@@ -388,6 +388,9 @@ naturals	^self		start: 1		step: 1! !
 !RsrNumericSpigot class methodsFor!
 start: aNumberstep: anIncrement	^super new		start: aNumber;		step: anIncrement;		yourself! !
 
+!RsrMessageDispatcher class methodsFor!
+startOn: aConnection	^(self on: aConnection)		start;		yourself! !
+
 !RsrPromise methodsFor!
 value	self waitForFulfillment.	error isNil		ifFalse: [error copy signal].	^value! !
 
@@ -569,7 +572,7 @@ _reflectedVariableIndecesDo: aBlock	| allVariables |	allVariables := self cla
 _id: anRsrIdconnection: aConnection	_id := anRsrId.	_connection := aConnection.	remoteSelf := aConnection _forwarderClass on: self! !
 
 !RsrService methodsFor!
-_addTo: aRegistry	aRegistry		at: _id		put: self! !
+_addTo: aRegistry	aRegistry		serviceAt: _id		put: self! !
 
 !RsrService methodsFor!
 isMirrored	^_connection ~~ nil! !
@@ -647,7 +650,7 @@ encodeUsing: anEncoder	encoding := anEncoder encodeSendMessage: self! !
 arguments: anObject	arguments := anObject! !
 
 !RsrSendMessage methodsFor!
-executeFor: aConnection	| messageDispatcher |	messageDispatcher := RsrMessageDispatcher on: aConnection.	messageDispatcher		dispatch: [self primExecuteFor: aConnection. messageDispatcher stop];		start! !
+executeFor: aConnection	| messageDispatcher |	messageDispatcher := aConnection registry dispatcherAt: self receiver _id.	messageDispatcher dispatch: [self primExecuteFor: aConnection]! !
 
 !RsrSendMessage methodsFor!
 selector	^ selector! !
@@ -1070,10 +1073,10 @@ decodeDeliverResponse: aStream	| transaction errorName response |	transaction
 connection: aConnection	connection := aConnection! !
 
 !RsrDecoder methodsFor!
-decodeObjectReference: aStream	| oid |	oid := self decodeControlWord: aStream.	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].	^registry at: oid ifAbsent: [self signalUnknownOID]! !
+decodeObjectReference: aStream	| oid |	oid := self decodeControlWord: aStream.	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]! !
 
 !RsrDecoder methodsFor!
-decodeSendMessage: aStream	| transaction argCount receiverOID receiver selector arguments |	transaction := self decodeControlWord: aStream.	argCount := self decodeControlWord: aStream.	receiverOID := self decodeControlWord: aStream.	receiver := registry at: receiverOID ifAbsent: [^self signalUnknownOID].	selector := self decodeObjectReference: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeObjectReference: aStream].	^RsrSendMessage		transaction: transaction		receiver: receiver		selector: selector		arguments: arguments! !
+decodeSendMessage: aStream	| transaction argCount receiverOID receiver selector arguments |	transaction := self decodeControlWord: aStream.	argCount := self decodeControlWord: aStream.	receiverOID := self decodeControlWord: aStream.	receiver := registry serviceAt: receiverOID ifAbsent: [^self signalUnknownOID].	selector := self decodeObjectReference: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeObjectReference: aStream].	^RsrSendMessage		transaction: transaction		receiver: receiver		selector: selector		arguments: arguments! !
 
 !RsrDecoder methodsFor!
 decodeCommandMap	^decodeCommandMap ifNil: [self initializeDecodeCommandMap]! !

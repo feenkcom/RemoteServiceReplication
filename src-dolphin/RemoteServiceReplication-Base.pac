@@ -253,7 +253,7 @@ decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the de
 speciesIdentifier	^0! !
 
 !RsrServiceSpecies class methodsFor!
-decode: aStreamusing: aDecoder	"Decode a Service from the stream"	| species oid instVarCount serviceName instance |	species := aDecoder decodeControlWord: aStream.	oid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := aDecoder decodeObjectReference: aStream.	instance := aDecoder registry		at: oid		ifAbsent:			[((aDecoder lookupClass: serviceName)				_id: oid				connection: aDecoder connection)					yourself].	instance _addTo: aDecoder registry.	instance _variablesToReflect size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].	^instance! !
+decode: aStreamusing: aDecoder	"Decode a Service from the stream"	| species oid instVarCount serviceName instance |	species := aDecoder decodeControlWord: aStream.	oid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := aDecoder decodeObjectReference: aStream.	instance := aDecoder registry		serviceAt: oid		ifAbsent:			[((aDecoder lookupClass: serviceName)				_id: oid				connection: aDecoder connection)					yourself].	(aDecoder registry includesKey: oid)		ifFalse: [instance _addTo: aDecoder registry].	instance _variablesToReflect size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].	^instance! !
 
 !RsrServiceSpecies class methodsFor!
 encodeReference: aServiceusing: anEncoderonto: aStream	anEncoder		encodeControlWord: aService _id		onto: aStream! !
@@ -299,6 +299,9 @@ analyze: anObjectusing: anAnalyzer	"A method that works in conjunction with Rs
 
 !RsrIntegerSpecies class methodsFor!
 encodeReference: anIntegerusing: anEncoderonto: aStream	| bytes |	bytes := self integerAsByteArray: anInteger abs.	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+
+!RsrIntegerSpecies class methodsFor!
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	^aDecoder bytesAsInteger: bytes! !
 
 !RsrIntegerSpecies class methodsFor!
 speciesIdentifier	^self subclassResponsibility! !
@@ -433,13 +436,10 @@ decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the de
 speciesIdentifier	^7! !
 
 !RsrPositiveIntegerSpecies class methodsFor!
-decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	^aDecoder bytesAsInteger: bytes! !
-
-!RsrPositiveIntegerSpecies class methodsFor!
 speciesIdentifier	^3! !
 
 !RsrNegativeIntegerSpecies class methodsFor!
-decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^(RsrPositiveIntegerSpecies decodeReference: aStream using: aDecoder) negated! !
+decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^(super decodeReference: aStream using: aDecoder) negated! !
 
 !RsrNegativeIntegerSpecies class methodsFor!
 speciesIdentifier	^4! !
