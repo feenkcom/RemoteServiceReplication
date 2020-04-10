@@ -9,7 +9,7 @@ RsrNegativeIntegerSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
 
-	^(RsrPositiveIntegerSpecies decodeReference: aStream using: aDecoder) negated
+	^(super decodeReference: aStream using: aDecoder) negated
 ]
 
 { #category : #accessing }

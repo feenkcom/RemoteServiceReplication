@@ -5,6 +5,17 @@ Class {
 }
 
 { #category : #coding }
+RsrIntegerSpecies class >> decodeReference: aStream
+using: aDecoder [
+	"Decode the provided bytes into the default native class for this species"
+
+	| length bytes |
+	length := aDecoder decodeControlWord: aStream.
+	bytes := aStream next: length.
+	^aDecoder bytesAsInteger: bytes
+]
+
+{ #category : #coding }
 RsrIntegerSpecies class >> encodeReference: anInteger
 using: anEncoder
 onto: aStream [
