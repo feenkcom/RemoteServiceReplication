@@ -16,15 +16,15 @@ RsrConcurrentTestServer class >> initialCounter [
 ]
 
 { #category : #accessing }
-RsrConcurrentTestServer >> counter: anAssoc [
+RsrConcurrentTestServer >> counter: anArray [
 
-	counter := anAssoc
+	counter := anArray
 ]
 
 { #category : #accessing }
 RsrConcurrentTestServer >> counterWithIncrement [
 
-	^[counter value] ensure: [counter value: counter value + 1]
+	^[counter at: 1] ensure: [counter at: 1 put: (counter at: 1) + 1]
 ]
 
 { #category : #accessing }
@@ -32,7 +32,7 @@ RsrConcurrentTestServer >> delayedCounter [
 
 	semaphore signal.
 	(Delay forSeconds: 2) wait.
-	^counter value
+	^counter at: 1
 ]
 
 { #category : #accessing }

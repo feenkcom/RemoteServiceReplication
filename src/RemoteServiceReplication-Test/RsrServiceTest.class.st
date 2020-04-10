@@ -91,7 +91,7 @@ RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
 	self mirror: delayClient.
 	self mirror: client.
 	initialCounter := 0.
-	counter := Association key: #counter value: initialCounter.
+	counter := Array with: initialCounter.
 	delayServer := connectionB registry serviceAt: delayClient _id.
 	server := connectionB registry serviceAt: client _id.
 	delaySem := Semaphore new.
