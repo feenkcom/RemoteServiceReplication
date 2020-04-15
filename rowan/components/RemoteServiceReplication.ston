@@ -1,36 +1,14 @@
-RwComponentLoadConfiguration {
+RwSimpleProjectLoadComponentV2 {
 	#name : 'RemoteServiceReplication',
-	#comment : '',
-	#projectName : 'RemoteServiceReplication',
-	#version : '0.0.1',
-	#conditionalPackages : {
-		[
-			'common'
-		] : {
-			'core' : {
-				#packageNames : [
-					#'RemoteServiceReplication-Base',
-					#'RemoteServiceReplication-Compatibility-GemStone',
-					#'RemoteServiceReplication'
-				]
-			},
-			'test' : {
-				#packageNames : [
-					#'RemoteServiceReplication-Compatibility-Test',
-					#'RemoteServiceReplication-Test'
-				]
-			}
-		}
-	},
-	#conditionalPackageMapSpecs : {
-		'gemstone' : {
-			'SystemUser' : {
-				#packageNameToPlatformPropertiesMap : {
-					'RemoteServiceReplication' : {
-						'symbolDictName' : 'UserGlobals'
-					}
-				}
-			}
-		}
-	}
+	#condition : 'common',
+	#projectNames : [ ],
+	#componentNames : [
+		'gemstone/RemoteServiceReplication',
+		'tests/RemoteServiceReplication'
+	],
+	#packageNames : [
+		'RemoteServiceReplication-Base',
+		'RemoteServiceReplication'
+	],
+	#comment : 'core packages for RSR'
 }

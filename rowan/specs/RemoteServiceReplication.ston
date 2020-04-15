@@ -1,20 +1,15 @@
-RwComponentSpecification {
+RwLoadSpecificationV2 {
 	#specName : 'RemoteServiceReplication',
-	#version : '0.0.1',
-	#projectUrl : '',
-	#configsPath : 'rowan/components',
-	#specsPath : 'rowan/specs',
-	#repoSpec : RwDiskRepositorySpecification {
-		
-	},
-	#repoPath : 'src',
-	#comment : '',
-	#defaultConfigurationNames : [
-		#'RemoteServiceReplication'
+	#projectName : 'RemoteServiceReplication',
+	#projectAlias : 'rsr-proto',
+	#gitUrl : 'git@git.gemtalksystems.com:rsr-proto.git',
+	#revision : 'master',
+	#projectSpecFile : 'rowan/project.ston',
+	#componentNames : [
+		'RemoteServiceReplication'
 	],
-	#defaultGroupNames : [
-		'core', 'test'
+	#customConditionalAttributes : [
+		'tests'
 	],
-	#projectsPath : 'rowan/projects',
-	#defaultComponentName : 'RemoteServiceReplication'
+	#comment : 'RemoteServiceReplication development load spec'
 }

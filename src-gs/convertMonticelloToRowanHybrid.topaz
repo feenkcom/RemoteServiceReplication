@@ -1,0 +1,26 @@
+
+! Topaz format...
+
+run
+	| rsrRoot loadSpecFile loadSpec resolvedProject |
+	Rowan projectTools trace startTracing.
+	rsrRoot := '$RSR_ROOT' asFileReference.
+	loadSpecFile := rsrRoot / 'rowan'/ 'specs' / 'RemoteServiceReplication', 'ston'.
+	loadSpec := (Rowan projectTools load loadProjectSpecFromFile: loadSpecFile)
+		projectsHome: rsrRoot parent;
+		yourself.
+	resolvedProject := loadSpec resolve.
+	resolvedProject packages do: [:packageDef | 
+		| category extensionProtocol |
+		category := packageDef name.
+		extensionProtocol := '*', category asLowercase.
+		packageDef classDefinitions do: [:classDef |
+			classDef category: category ].
+		packageDef classExtensions do: [:classExtDef |
+			classExtDef instanceMethodDefinitions do: [:methodDef |
+				methodDef protocol: extensionProtocol ].
+			classExtDef classMethodDefinitions do: [:methodDef |
+				methodDef protocol: extensionProtocol  ].] ].
+
+	resolvedProject export.
+%
