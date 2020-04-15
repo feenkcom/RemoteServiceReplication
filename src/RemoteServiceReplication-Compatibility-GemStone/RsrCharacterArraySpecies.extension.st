@@ -1,13 +1,13 @@
-Extension { #name : #RsrCharacterArraySpecies }
+Extension { #name : 'RsrCharacterArraySpecies' }
 
-{ #category : #'*RemoteServiceReplication-Compatibility-GemStone' }
-RsrCharacterArraySpecies class >> toBytes: aCharacterArray [
-
-	^aCharacterArray encodeAsUTF8
-]
-
-{ #category : #'*RemoteServiceReplication-Compatibility-GemStone' }
+{ #category : '*remoteservicereplication-compatibility-gemstone' }
 RsrCharacterArraySpecies class >> fromBytes: aByteArray [
 
 	^aByteArray decodeFromUTF8ToString
+]
+
+{ #category : '*remoteservicereplication-compatibility-gemstone' }
+RsrCharacterArraySpecies class >> toBytes: aCharacterArray [
+
+	^aCharacterArray encodeAsUTF8
 ]

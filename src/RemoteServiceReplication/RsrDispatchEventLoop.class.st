@@ -1,20 +1,20 @@
 Class {
-	#name : #RsrDispatchEventLoop,
-	#superclass : #RsrEventLoop,
+	#name : 'RsrDispatchEventLoop',
+	#superclass : 'RsrEventLoop',
 	#instVars : [
 		'queue'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #dispatching }
+{ #category : 'dispatching' }
 RsrDispatchEventLoop >> dispatch: aCommand [
 
 	self report: aCommand.
 	queue nextPut: aCommand
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDispatchEventLoop >> executeCycle [
 
 	| item |
@@ -23,27 +23,27 @@ RsrDispatchEventLoop >> executeCycle [
 		ifFalse: [item executeFor: connection]
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 RsrDispatchEventLoop >> initialize [
 
 	super initialize.
 	queue := SharedQueue new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDispatchEventLoop >> priority [
 
 	^super priority - 1
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrDispatchEventLoop >> stop [
 
 	super stop.
 	queue nextPut: self stopToken
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDispatchEventLoop >> stopToken [
 
 	^self stoppedState

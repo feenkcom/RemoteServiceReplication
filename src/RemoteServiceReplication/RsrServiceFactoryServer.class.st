@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrServiceFactoryServer,
-	#superclass : #RsrAbstractServiceFactory,
-	#category : #'RemoteServiceReplication-Public-Examples'
+	#name : 'RsrServiceFactoryServer',
+	#superclass : 'RsrAbstractServiceFactory',
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #mirroring }
+{ #category : 'mirroring' }
 RsrServiceFactoryServer >> return: aService [
 
 	^aService

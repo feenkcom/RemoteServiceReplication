@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrClassResolverTestCase,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
+	#name : 'RsrClassResolverTestCase',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrClassResolverTestCase >> assert: aClassName
 resolvesTo: expectedClass [
 
@@ -15,7 +15,7 @@ resolvesTo: expectedClass [
 		identicalTo: expectedClass
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrClassResolverTestCase >> testFailedResolution [
 
 	| actual marker |
@@ -31,7 +31,7 @@ RsrClassResolverTestCase >> testFailedResolution [
 		identicalTo: marker
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrClassResolverTestCase >> testSuccessfulResolution [
 
 	| actual |

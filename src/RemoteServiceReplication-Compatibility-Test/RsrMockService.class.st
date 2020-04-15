@@ -1,41 +1,41 @@
 Class {
-	#name : #RsrMockService,
-	#superclass : #RsrService,
-	#category : #'RemoteServiceReplication-Compatibility-Test-Support'
+	#name : 'RsrMockService',
+	#superclass : 'RsrService',
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockService class >> clientClassName [
 
 	^#RsrMockClient
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockService class >> serverClassName [
 
 	^#RsrMockServer
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 RsrMockService >> initialize [
 
 	super initialize.
 	_id := 1
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrMockService >> isClient [
 
 	^self class == RsrMockClient
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrMockService >> isServer [
 
 	^self class == RsrMockServer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockService >> service [
 
 	^self

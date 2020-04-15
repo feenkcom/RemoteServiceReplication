@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrReleaseObjects,
-	#superclass : #RsrCommand,
+	#name : 'RsrReleaseObjects',
+	#superclass : 'RsrCommand',
 	#instVars : [
 		'oids'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrReleaseObjects class >> oids: anArray [
 
 	^self new
@@ -15,13 +15,13 @@ RsrReleaseObjects class >> oids: anArray [
 		yourself
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrReleaseObjects >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeReleaseObjects: self
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrReleaseObjects >> executeFor: aConnection [
 
 	| registry |
@@ -29,19 +29,19 @@ RsrReleaseObjects >> executeFor: aConnection [
 	oids do: [:oid | registry removeKey: oid]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrReleaseObjects >> oids [
 
 	^oids
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrReleaseObjects >> oids: anArray [
 
 	oids := anArray
 ]
 
-{ #category : #reporting }
+{ #category : 'reporting' }
 RsrReleaseObjects >> reportOn: aLog [
 
 	aLog debug: 'RsrReleaseObjects/', self oids printString

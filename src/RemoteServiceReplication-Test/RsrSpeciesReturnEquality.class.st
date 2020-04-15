@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrSpeciesReturnEquality,
-	#superclass : #RsrSystemTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrSpeciesReturnEquality',
+	#superclass : 'RsrSystemTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSpeciesReturnEquality >> basicExamples [
 	"Give a samples of each species to ensure Collection classes are able to encode each type successfully."
 
@@ -34,7 +34,7 @@ RsrSpeciesReturnEquality >> basicExamples [
 	RsrDateAndTimeSpecies fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testArray [
 
 	self
@@ -42,7 +42,7 @@ RsrSpeciesReturnEquality >> testArray [
 		verify: (Array withAll: self basicExamples)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testBoolean [
 
 	self
@@ -50,7 +50,7 @@ RsrSpeciesReturnEquality >> testBoolean [
 		verify: false
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testByteArray [
 
 	self
@@ -59,7 +59,7 @@ RsrSpeciesReturnEquality >> testByteArray [
 		verify: (ByteArray new: 1024)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testCharacter [
 
 	self
@@ -70,7 +70,7 @@ RsrSpeciesReturnEquality >> testCharacter [
 		verify: (Character codePoint: 16r8334)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testDateAndTime [
 
 	self
@@ -78,7 +78,7 @@ RsrSpeciesReturnEquality >> testDateAndTime [
 		verify: (RsrDateAndTimeSpecies fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testDictionary [
 
 	| example |
@@ -89,7 +89,7 @@ RsrSpeciesReturnEquality >> testDictionary [
 	self verify: example
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testInteger [
 
 	self
@@ -104,7 +104,7 @@ RsrSpeciesReturnEquality >> testInteger [
 		verify: -13750198234577893465
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testOrderedCollection [
 
 	self
@@ -112,7 +112,7 @@ RsrSpeciesReturnEquality >> testOrderedCollection [
 		verify: (OrderedCollection withAll: self basicExamples)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testService [
 
 	self
@@ -122,7 +122,7 @@ RsrSpeciesReturnEquality >> testService [
 		verify: (RsrReferenceAllSpeciesClient new)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testServiceWithUnsupportedObject [
 
 	| service |
@@ -132,7 +132,7 @@ RsrSpeciesReturnEquality >> testServiceWithUnsupportedObject [
 		raise: RsrUnsupportedObject
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testSet [
 
 	self
@@ -140,7 +140,7 @@ RsrSpeciesReturnEquality >> testSet [
 		verify: (Set withAll: self basicExamples)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testString [
 
 	self
@@ -148,7 +148,7 @@ RsrSpeciesReturnEquality >> testString [
 		verify: 'string'
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testSymbol [
 
 	self
@@ -156,25 +156,25 @@ RsrSpeciesReturnEquality >> testSymbol [
 		verify: #symbol
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testUndefinedObject [
 
 	self verify: nil
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testUnicodeString [
 
 	self verify: self unicodeString
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> testUnicodeSymbol [
 
 	self verify: self unicodeString asSymbol
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSpeciesReturnEquality >> unicodeString [
 
 	^String
@@ -183,7 +183,7 @@ RsrSpeciesReturnEquality >> unicodeString [
 		with: (Character codePoint: 16r10E60)
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrSpeciesReturnEquality >> verify: anObject [
 	"Send <anObject> through RSR and have it returned. Assert it is equivalent."
 

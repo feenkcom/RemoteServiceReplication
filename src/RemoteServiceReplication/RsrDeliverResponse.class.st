@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrDeliverResponse,
-	#superclass : #RsrCommand,
+	#name : 'RsrDeliverResponse',
+	#superclass : 'RsrCommand',
 	#instVars : [
 		'transaction',
 		'errorName',
 		'response',
 		'retainList'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
 error: anException [
 
@@ -21,7 +21,7 @@ error: anException [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
 response: anObject [
 
@@ -31,13 +31,13 @@ response: anObject [
 		yourself
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeDeliverResponse: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> error [
 
 	^(RsrClassResolver classNamed: errorName ifAbsent: [RsrError]) new
@@ -45,19 +45,19 @@ RsrDeliverResponse >> error [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> errorName [
 
 	^errorName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> errorName: aSymbol [
 
 	errorName := aSymbol
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| promise |
@@ -72,31 +72,31 @@ RsrDeliverResponse >> executeFor: aConnection [
 	
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrDeliverResponse >> isError [
 
 	^errorName notNil
 ]
 
-{ #category : #reporting }
+{ #category : 'reporting' }
 RsrDeliverResponse >> reportOn: aLog [
 
 	aLog debug: 'RsrDeliverResponse/', self response class name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> response [
 
 	^response
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> response: anObject [
 
 	response := anObject
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrDeliverResponse >> sendOver: aConnection [
 
 	| analysis |
@@ -109,19 +109,19 @@ RsrDeliverResponse >> sendOver: aConnection [
 	aConnection commandWriter enqueue: self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> transaction [
 
 	^transaction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDeliverResponse >> transaction: aTransactionId [
 
 	transaction := aTransactionId
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrDeliverResponse >> writeUsing: aCommandWriter [
 
 	retainList do: [:each | each writeUsing: aCommandWriter].

@@ -1,19 +1,19 @@
 Class {
-	#name : #RsrTestingConcurrency,
-	#superclass : #RsrConcurrency,
+	#name : 'RsrTestingConcurrency',
+	#superclass : 'RsrConcurrency',
 	#instVars : [
 		'forkedException'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-Test-Support'
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #'managing-concurrency' }
+{ #category : 'managing-concurrency' }
 RsrTestingConcurrency >> fork: aBlock [
 
 	^super fork: (self protect: aBlock)
 ]
 
-{ #category : #'managing-concurrency' }
+{ #category : 'managing-concurrency' }
 RsrTestingConcurrency >> fork: aBlock
 at: aPriority [
 
@@ -22,13 +22,13 @@ at: aPriority [
 		at: aPriority
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrTestingConcurrency >> forkedException [
 
 	^forkedException
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrTestingConcurrency >> protect: aBlock [
 
 	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]

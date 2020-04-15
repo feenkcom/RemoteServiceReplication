@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrIntegerSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrIntegerSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrIntegerSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -15,7 +15,7 @@ using: aDecoder [
 	^aDecoder bytesAsInteger: bytes
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrIntegerSpecies class >> encodeReference: anInteger
 using: anEncoder
 onto: aStream [
@@ -34,7 +34,7 @@ onto: aStream [
 	aStream nextPutAll: bytes
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RsrIntegerSpecies class >> integerAsByteArray: anInteger [
 	"Return a ByteArray representing <anInteger> in big endian format."
 
@@ -50,7 +50,7 @@ RsrIntegerSpecies class >> integerAsByteArray: anInteger [
 	^stream contents reverse
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrIntegerSpecies class >> speciesIdentifier [
 
 	^self subclassResponsibility

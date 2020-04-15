@@ -1,14 +1,14 @@
 Class {
-	#name : #RsrSocketPair,
-	#superclass : #RsrObject,
+	#name : 'RsrSocketPair',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'firstSocket',
 		'secondSocket'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-Test-Utilities'
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrSocketPair class >> firstSocket: firstSocket
 secondSocket: secondSocket [
 
@@ -18,13 +18,13 @@ secondSocket: secondSocket [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair class >> listenPort [
 
 	^64455
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrSocketPair class >> new [
 
 	| listener firstSocket secondSocket |
@@ -43,46 +43,46 @@ RsrSocketPair class >> new [
 		secondSocket: secondSocket
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair class >> timeout [
 
 	^2
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> close [
 
 	firstSocket close.
 	secondSocket close
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> firstSocket [
 	^ firstSocket
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> firstSocket: anObject [
 	firstSocket := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> firstStream [
 
 	^(RsrClassResolver classNamed: #RsrSocketStream) on: firstSocket
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> secondSocket [
 	^ secondSocket
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> secondSocket: anObject [
 	secondSocket := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketPair >> secondStream [
 
 	^(RsrClassResolver classNamed: #RsrSocketStream) on: secondSocket

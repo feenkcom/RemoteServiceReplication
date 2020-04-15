@@ -1,37 +1,37 @@
 Class {
-	#name : #RsrAbstractTestService,
-	#superclass : #RsrService,
+	#name : 'RsrAbstractTestService',
+	#superclass : 'RsrService',
 	#instVars : [
 		'sharedVariable'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractTestService class >> clientClassName [
 
 	^#RsrClientTestService
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractTestService class >> serverClassName [
 
 	^#RsrServerTestService
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractTestService >> remoteSelf [
 
 	^remoteSelf
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractTestService >> sharedVariable [
 
 	^sharedVariable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractTestService >> sharedVariable: anObject [
 
 	sharedVariable := anObject

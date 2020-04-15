@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrAbstractReferenceAllSpecies,
-	#superclass : #RsrService,
+	#name : 'RsrAbstractReferenceAllSpecies',
+	#superclass : 'RsrService',
 	#instVars : [
 		'emptyService',
 		'serviceReferenceService',
@@ -36,22 +36,22 @@ Class {
 		'dictionaryWithAllTypes',
 		'unicodeCharacter'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractReferenceAllSpecies class >> clientClassName [
 
 	^#RsrReferenceAllSpeciesClient
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractReferenceAllSpecies class >> serverClassName [
 
 	^#RsrReferenceAllSpeciesServer
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrAbstractReferenceAllSpecies >> initialize [
 
 	super initialize.

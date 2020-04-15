@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrEncoder,
-	#superclass : #RsrCodec,
-	#category : #'RemoteServiceReplication-Communications'
+	#name : 'RsrEncoder',
+	#superclass : 'RsrCodec',
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeControlWord: anInteger
 onto: aStream [
 
@@ -20,7 +20,7 @@ onto: aStream [
 	aStream nextPutAll: encodedBytes
 ]
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 
 	^ByteArray
@@ -40,7 +40,7 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 				onto: stream]
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 RsrEncoder >> encodeObject: anObject [
 
 	^ByteArray
@@ -51,7 +51,7 @@ RsrEncoder >> encodeObject: anObject [
 				onto: stream]
 ]
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeObject: anObject
 onto: aStream [
 
@@ -61,7 +61,7 @@ onto: aStream [
 		on: aStream
 ]
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeReferenceOf: anObject
 onto: aStream [
 
@@ -73,7 +73,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeReleaseObjects: aReleaseObject [
 
 	^ByteArray
@@ -93,7 +93,7 @@ RsrEncoder >> encodeReleaseObjects: aReleaseObject [
 						onto: stream]]
 ]
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeRetainObject: aRetainObject [
 
 	^ByteArray
@@ -107,7 +107,7 @@ RsrEncoder >> encodeRetainObject: aRetainObject [
 				onto: stream]
 ]
 
-{ #category : #'private-encoding' }
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeSendMessage: aSendMessage [
 
 	^ByteArray
@@ -136,7 +136,7 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 						onto: stream]]
 ]
 
-{ #category : #converting }
+{ #category : 'converting' }
 RsrEncoder >> integerAsByteArray: anInteger
 ofSize: aNumberOfBytes [
 
@@ -156,38 +156,38 @@ ofSize: aNumberOfBytes [
 	^bytes
 ]
 
-{ #category : #'private-testing' }
+{ #category : 'private-testing' }
 RsrEncoder >> isImmediate: anObject [
 
 	^self speciesMapping includesKey: anObject class
 ]
 
-{ #category : #'private-testing' }
+{ #category : 'private-testing' }
 RsrEncoder >> isService: anObject [
 
 	^anObject isKindOf: RsrService
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrEncoder >> retainObjectIdentifier [
 
 	^0
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrEncoder >> sendMessageIdentifier [
 
 	^1
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrEncoder >> speciesMapping [
 	"Return a mapping between the native class and their associated RsrSpecies"
 
 	^RsrSpecies speciesMapping
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEncoder >> speciesOf: anObject [
 
 	(self isService: anObject)

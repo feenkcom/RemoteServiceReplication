@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrForwarderTest,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrForwarderTest',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RsrForwarderTest >> testForwarding [
 
 	| rsrObject id remoteInterface forwarder message |

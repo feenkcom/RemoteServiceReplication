@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrCycleDetected,
-	#superclass : #RsrError,
+	#name : 'RsrCycleDetected',
+	#superclass : 'RsrError',
 	#instVars : [
 		'object'
 	],
-	#category : #'RemoteServiceReplication-Exceptions'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #signaling }
+{ #category : 'signaling' }
 RsrCycleDetected class >> signal: anObject [
 
 	^self new
@@ -15,13 +15,13 @@ RsrCycleDetected class >> signal: anObject [
 		signal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCycleDetected >> messageText [
 
 	^'Cycle detected on: ', object printString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCycleDetected >> object: anObject [
 
 	object := anObject

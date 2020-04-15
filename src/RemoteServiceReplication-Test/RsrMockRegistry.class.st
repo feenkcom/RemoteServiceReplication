@@ -1,64 +1,64 @@
 Class {
-	#name : #RsrMockRegistry,
-	#superclass : #RsrObject,
+	#name : 'RsrMockRegistry',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'objects',
 		'idSpigot'
 	],
-	#category : #'RemoteServiceReplication-Test-Mocks'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 RsrMockRegistry >> at: aKey
 put: aService [
 
 	self objects add: aService
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockRegistry >> connection [
 
 	^RsrMockConnection new
 ]
 
-{ #category : #initializing }
+{ #category : 'initializing' }
 RsrMockRegistry >> initialize [
 
 	super initialize.
 	objects := OrderedCollection new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockRegistry >> newId [
 
 	^idSpigot next
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockRegistry >> objects [
 
 	^objects
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockRegistry >> objects: anObject [
 
 	objects := anObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RsrMockRegistry >> register: anRsrObject [
 
 	self objects add: anRsrObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RsrMockRegistry >> remember: anRsrObject [
 
 	self objects add: anRsrObject
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 RsrMockRegistry >> retain: anRsrObject [
 
 	self objects add: anRsrObject

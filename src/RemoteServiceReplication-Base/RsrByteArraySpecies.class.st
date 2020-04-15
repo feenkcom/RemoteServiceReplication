@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrByteArraySpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrByteArraySpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrByteArraySpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -14,7 +14,7 @@ using: aDecoder [
 	^aStream next: size
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrByteArraySpecies class >> encodeReference: aByteArray
 using: anEncoder
 onto: aStream [
@@ -31,7 +31,7 @@ onto: aStream [
 	aStream nextPutAll: aByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrByteArraySpecies class >> speciesIdentifier [
 
 	^10

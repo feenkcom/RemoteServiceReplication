@@ -1,14 +1,14 @@
 Class {
-	#name : #RsrSocketStreamTestCase,
-	#superclass : #RsrTestCase,
+	#name : 'RsrSocketStreamTestCase',
+	#superclass : 'RsrTestCase',
 	#instVars : [
 		'serverStream',
 		'clientStream'
 	],
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrSocketStreamTestCase >> initializeStreams [
 
 	| listener client server |
@@ -22,20 +22,20 @@ RsrSocketStreamTestCase >> initializeStreams [
 	clientStream := RsrSocketStream on: client
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketStreamTestCase >> listenPort [
 
 	^47856
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketStreamTestCase >> setUp [
 
 	super setUp.
 	self initializeStreams
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketStreamTestCase >> tearDown [
 
 	serverStream close.
@@ -43,7 +43,7 @@ RsrSocketStreamTestCase >> tearDown [
 	super tearDown
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketStreamTestCase >> testClose [
 
 	serverStream close.

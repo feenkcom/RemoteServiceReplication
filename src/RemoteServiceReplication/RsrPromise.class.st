@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrPromise,
-	#superclass : #RsrObject,
+	#name : 'RsrPromise',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'mutex',
 		'value',
 		'error',
 		'markerValue'
 	],
-	#category : #'RemoteServiceReplication-Utilities'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #fulfillment }
+{ #category : 'fulfillment' }
 RsrPromise >> error: anException [
 
 	self isFulfilled
@@ -21,7 +21,7 @@ RsrPromise >> error: anException [
 	
 ]
 
-{ #category : #fulfillment }
+{ #category : 'fulfillment' }
 RsrPromise >> fulfill: anObject [
 
 	self isFulfilled
@@ -30,7 +30,7 @@ RsrPromise >> fulfill: anObject [
 	mutex signal
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrPromise >> initialize [
 
 	super initialize.
@@ -38,13 +38,13 @@ RsrPromise >> initialize [
 	mutex := Semaphore new
 ]
 
-{ #category : #'private-waiting' }
+{ #category : 'private-waiting' }
 RsrPromise >> isFulfilled [
 
 	^value ~~ markerValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrPromise >> value [
 
 	self waitForFulfillment.
@@ -53,7 +53,7 @@ RsrPromise >> value [
 	^value
 ]
 
-{ #category : #'private-waiting' }
+{ #category : 'private-waiting' }
 RsrPromise >> waitForFulfillment [
 
 	self isFulfilled

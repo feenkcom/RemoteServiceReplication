@@ -1,5 +1,5 @@
 Class {
-	#name : #RsrClientAllDataObjects,
-	#superclass : #RsrServiceAbstractAllDataObjects,
-	#category : #'RemoteServiceReplication-Test-Services'
+	#name : 'RsrClientAllDataObjects',
+	#superclass : 'RsrServiceAbstractAllDataObjects',
+	#category : 'RemoteServiceReplication-Test'
 }

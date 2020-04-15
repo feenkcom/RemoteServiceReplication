@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrSetSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrSetSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #'object analysis' }
+{ #category : 'object analysis' }
 RsrSetSpecies class >> analyze: aSet
 using: anAnalyzer [
 	"A method that works in conjunction with RsrRetainAnalysis to analyze
@@ -13,7 +13,7 @@ using: anAnalyzer [
 	^anAnalyzer analyzeCollection: aSet
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrSetSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -25,7 +25,7 @@ using: aDecoder [
 	^set
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrSetSpecies class >> encodeReference: aSet
 using: anEncoder
 onto: aStream [
@@ -47,7 +47,7 @@ onto: aStream [
 				onto: aStream]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSetSpecies class >> speciesIdentifier [
 
 	^11

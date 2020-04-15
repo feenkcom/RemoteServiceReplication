@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrSpecies,
-	#superclass : #Object,
+	#name : 'RsrSpecies',
+	#superclass : 'Object',
 	#classInstVars : [
 		'speciesMapping'
 	],
-	#category : #'RemoteServiceReplication-Base-Species'
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #'object analysis' }
+{ #category : 'object analysis' }
 RsrSpecies class >> analyze: anObject
 using: anAnalyzer [
 	"A method that works in conjunction with RsrRetainAnalysis to analyze
@@ -16,7 +16,7 @@ using: anAnalyzer [
 	^anAnalyzer analyzeImmediate: anObject
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -24,7 +24,7 @@ using: aDecoder [
 	self subclassResponsibility
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrSpecies class >> encode: anObject
 using: anEncoder
 on: aStream [
@@ -33,7 +33,7 @@ on: aStream [
 	self shouldNotImplement
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrSpecies class >> encodeReference: anObject
 using: anEncoder
 onto: aStream [
@@ -42,19 +42,19 @@ onto: aStream [
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSpecies class >> nullSpecies [
 
 	^RsrNullSpecies
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSpecies class >> speciesIdentifier [
 
 	^self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSpecies class >> speciesList [
 
 	^{RsrServiceSpecies.
@@ -74,7 +74,7 @@ RsrSpecies class >> speciesList [
 	RsrDateAndTimeSpecies.}
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSpecies class >> speciesMapping [
 	"Return a mapping between the native class and their associated RsrSpecies"
 

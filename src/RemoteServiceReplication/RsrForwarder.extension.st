@@ -1,12 +1,21 @@
-Extension { #name : #RsrForwarder }
+Extension { #name : 'RsrForwarder' }
 
-{ #category : #'*RemoteServiceReplication' }
+{ #category : '*remoteservicereplication' }
+RsrForwarder class >> on: anRsrObject [
+
+	| instance |
+	instance := self new.
+	instance _service: anRsrObject.
+	^instance
+]
+
+{ #category : '*remoteservicereplication' }
 RsrForwarder >> _service: aService [
 
 	_service := aService
 ]
 
-{ #category : #'*RemoteServiceReplication' }
+{ #category : '*remoteservicereplication' }
 RsrForwarder >> doesNotUnderstand: aMessage [
 
 	| promise |
@@ -14,13 +23,4 @@ RsrForwarder >> doesNotUnderstand: aMessage [
 		_sendMessage: aMessage
 		to: _service.
 	^promise value
-]
-
-{ #category : #'*RemoteServiceReplication' }
-RsrForwarder class >> on: anRsrObject [
-
-	| instance |
-	instance := self new.
-	instance _service: anRsrObject.
-	^instance
 ]

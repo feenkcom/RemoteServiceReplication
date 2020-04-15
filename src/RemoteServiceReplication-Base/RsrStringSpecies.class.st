@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrStringSpecies,
-	#superclass : #RsrCharacterArraySpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrStringSpecies',
+	#superclass : 'RsrCharacterArraySpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStringSpecies class >> speciesIdentifier [
 
 	^2

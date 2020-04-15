@@ -1,15 +1,15 @@
 Class {
-	#name : #RsrEventLoop,
-	#superclass : #RsrObject,
+	#name : 'RsrEventLoop',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'process',
 		'connection',
 		'state'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrEventLoop class >> on: aConnection [
 
 	^self new
@@ -17,38 +17,38 @@ RsrEventLoop class >> on: aConnection [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEventLoop >> connection [
 
 	^connection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEventLoop >> connection: anObject [
 
 	connection := anObject
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEventLoop >> executeCycle [
 
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrEventLoop >> initialize [
 
 	super initialize.
 	state := self stoppedState
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrEventLoop >> isActive [
 
 	^state == self runningState
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEventLoop >> log [
 
 	^RsrLogWithPrefix
@@ -56,31 +56,31 @@ RsrEventLoop >> log [
 		log: self connection log
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEventLoop >> log: aString [
 
 	self log debug: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEventLoop >> priority [
 
 	^Processor lowIOPriority
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEventLoop >> report: aCommand [
 
 	aCommand reportOn: self log
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEventLoop >> reportException: anException [
 
 	self log: '', self class name, '/', anException description
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEventLoop >> runLoop [
 
 	[self isActive]
@@ -93,13 +93,13 @@ RsrEventLoop >> runLoop [
 					self connection unknownError: ex]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEventLoop >> runningState [
 
 	^#Running
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrEventLoop >> start [
 
 	state := self runningState.
@@ -108,7 +108,7 @@ RsrEventLoop >> start [
 		at: self priority
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrEventLoop >> stop [
 
 	self isActive ifFalse: [^self].
@@ -117,13 +117,13 @@ RsrEventLoop >> stop [
 	self stream close
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEventLoop >> stoppedState [
 
 	^#Stop
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEventLoop >> stream [
 
 	^self connection stream

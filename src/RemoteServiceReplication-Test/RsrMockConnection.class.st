@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrMockConnection,
-	#superclass : #RsrObject,
+	#name : 'RsrMockConnection',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'forwarderClass',
 		'lastMessage',
 		'registry',
 		'idSpigot'
 	],
-	#category : #'RemoteServiceReplication-Test-Mocks'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrMockConnection class >> forwarderClass: aClass [ 
 
 	^self new
@@ -18,13 +18,13 @@ RsrMockConnection class >> forwarderClass: aClass [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockConnection >> _forwarderClass [
 
 	^forwarderClass ifNil: [RsrForwarder]
 ]
 
-{ #category : #dispatching }
+{ #category : 'dispatching' }
 RsrMockConnection >> _sendMessage: aMessage
 to: anRsrObject [
 
@@ -38,37 +38,37 @@ to: anRsrObject [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockConnection >> encoder [
 
 	^RsrMockEncoder new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockConnection >> forwarderClass: aClass [
 
 	forwarderClass := aClass
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockConnection >> lastMessage [
 
 	^[lastMessage]
 		ensure: [lastMessage := nil]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockConnection >> oidSpigot [
 
 	^idSpigot ifNil: [idSpigot := RsrThreadSafeNumericSpigot naturals]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrMockConnection >> registry [
 
 	^registry ifNil: [registry := RsrRegistry new]
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrMockConnection >> releaseOid: anInteger [
 ]

@@ -1,15 +1,15 @@
 Class {
-	#name : #RsrDecoder,
-	#superclass : #RsrCodec,
+	#name : 'RsrDecoder',
+	#superclass : 'RsrCodec',
 	#instVars : [
 		'registry',
 		'connection',
 		'decodeCommandMap'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrDecoder class >> registry: anRsrRegistry
 connection: aConnection [
 
@@ -19,7 +19,7 @@ connection: aConnection [
 		yourself
 ]
 
-{ #category : #'private-converting' }
+{ #category : 'private-converting' }
 RsrDecoder >> bytesAsInteger: bytes [
 
 	| res |
@@ -28,19 +28,19 @@ RsrDecoder >> bytesAsInteger: bytes [
 	^res
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDecoder >> connection [
 
 	^connection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDecoder >> connection: aConnection [
 
 	connection := aConnection
 ]
 
-{ #category : #'decoding-commands' }
+{ #category : 'decoding-commands' }
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
 
@@ -54,13 +54,13 @@ RsrDecoder >> decodeCommand: aStream [
 		with: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDecoder >> decodeCommandMap [
 
 	^decodeCommandMap ifNil: [self initializeDecodeCommandMap]
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 RsrDecoder >> decodeControlWord: aStream [
 
 	| bytes unsignedResult |
@@ -71,7 +71,7 @@ RsrDecoder >> decodeControlWord: aStream [
 		ifFalse: [unsignedResult]
 ]
 
-{ #category : #'decoding-commands' }
+{ #category : 'decoding-commands' }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
 	| transaction errorName response |
@@ -85,7 +85,7 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 		yourself
 ]
 
-{ #category : #'decoding-services' }
+{ #category : 'decoding-services' }
 RsrDecoder >> decodeImmediateObject: aStream [
 
 	| species |
@@ -95,7 +95,7 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		using: self
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 RsrDecoder >> decodeObjectReference: aStream [
 
 	| oid |
@@ -104,7 +104,7 @@ RsrDecoder >> decodeObjectReference: aStream [
 	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]
 ]
 
-{ #category : #'decoding-commands' }
+{ #category : 'decoding-commands' }
 RsrDecoder >> decodeReleaseObjects: aStream [
 
 	| count oids |
@@ -119,13 +119,13 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 	^RsrReleaseObjects oids: oids
 ]
 
-{ #category : #'decoding-commands' }
+{ #category : 'decoding-commands' }
 RsrDecoder >> decodeRetainObject: aStream [
 
 	^RsrRetainObject object: (self decodeService: aStream)
 ]
 
-{ #category : #'decoding-commands' }
+{ #category : 'decoding-commands' }
 RsrDecoder >> decodeSendMessage: aStream [
 
 	| transaction argCount receiverOID receiver selector arguments |
@@ -142,7 +142,7 @@ RsrDecoder >> decodeSendMessage: aStream [
 		arguments: arguments
 ]
 
-{ #category : #'decoding-services' }
+{ #category : 'decoding-services' }
 RsrDecoder >> decodeService: aStream [
 
 	^RsrServiceSpecies
@@ -150,7 +150,7 @@ RsrDecoder >> decodeService: aStream [
 		using: self
 ]
 
-{ #category : #'private-initialization' }
+{ #category : 'private-initialization' }
 RsrDecoder >> initializeDecodeCommandMap [
 
 	decodeCommandMap := Dictionary new.
@@ -162,25 +162,25 @@ RsrDecoder >> initializeDecodeCommandMap [
 	^decodeCommandMap
 ]
 
-{ #category : #utility }
+{ #category : 'utility' }
 RsrDecoder >> lookupClass: aClassName [
 
 	^RsrClassResolver classNamed: aClassName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDecoder >> registry [
 
 	^registry
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDecoder >> registry: anRsrRegistry [
 
 	registry := anRsrRegistry
 ]
 
-{ #category : #'error handling' }
+{ #category : 'error handling' }
 RsrDecoder >> signalUnknownOID [
 
 	RsrUnknownOID signal

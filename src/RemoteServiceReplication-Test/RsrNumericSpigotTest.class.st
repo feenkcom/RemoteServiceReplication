@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrNumericSpigotTest,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrNumericSpigotTest',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrNumericSpigotTest >> spigotClass [
 
 	^RsrNumericSpigot
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrNumericSpigotTest >> testDefault [
 
 	| spigot |
@@ -23,7 +23,7 @@ RsrNumericSpigotTest >> testDefault [
 		equals: 1
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrNumericSpigotTest >> testFloat [
 
 	| spigot |
@@ -41,7 +41,7 @@ RsrNumericSpigotTest >> testFloat [
 		equals: 1.0.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrNumericSpigotTest >> testNaturals [
 
 	| spigot |
@@ -54,7 +54,7 @@ RsrNumericSpigotTest >> testNaturals [
 		equals: 2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrNumericSpigotTest >> testNegativeStep [
 
 	| spigot |
@@ -72,7 +72,7 @@ RsrNumericSpigotTest >> testNegativeStep [
 		equals: -2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrNumericSpigotTest >> testNext [
 
 	| spigot |

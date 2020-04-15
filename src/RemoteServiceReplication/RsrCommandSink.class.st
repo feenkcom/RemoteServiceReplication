@@ -1,19 +1,19 @@
 Class {
-	#name : #RsrCommandSink,
-	#superclass : #RsrEventLoop,
+	#name : 'RsrCommandSink',
+	#superclass : 'RsrEventLoop',
 	#instVars : [
 		'queue'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrCommandSink >> enqueue: aCommand [
 
 	self isActive ifTrue: [queue nextPut: aCommand]
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrCommandSink >> executeCycle [
 
 	[| command |
@@ -30,39 +30,39 @@ RsrCommandSink >> executeCycle [
 			self connection disconnected]
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrCommandSink >> flush [
 
 	self stream flush
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrCommandSink >> initialize [
 
 	super initialize.
 	queue := SharedQueue new
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrCommandSink >> stop [
 
 	super stop.
 	queue nextPut: self stopToken
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCommandSink >> stopToken [
 
 	^self stoppedState
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 RsrCommandSink >> write: aByteArray [
 
 	self stream nextPutAll: aByteArray
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 RsrCommandSink >> writeCommand: aCommand [
 
 	self report: aCommand.

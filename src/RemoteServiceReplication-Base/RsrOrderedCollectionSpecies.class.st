@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrOrderedCollectionSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrOrderedCollectionSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #'object analysis' }
+{ #category : 'object analysis' }
 RsrOrderedCollectionSpecies class >> analyze: anOrderedCollection
 using: anAnalyzer [
 	"A method that works in conjunction with RsrRetainAnalysis to analyze
@@ -13,7 +13,7 @@ using: anAnalyzer [
 	^anAnalyzer analyzeCollection: anOrderedCollection
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrOrderedCollectionSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -25,7 +25,7 @@ using: aDecoder [
 	^oc
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrOrderedCollectionSpecies class >> encodeReference: anOrderedCollection
 using: anEncoder
 onto: aStream [
@@ -47,7 +47,7 @@ onto: aStream [
 				onto: aStream]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrOrderedCollectionSpecies class >> speciesIdentifier [
 
 	^12

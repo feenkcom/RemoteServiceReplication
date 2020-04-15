@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrConnectionClosed,
-	#superclass : #RsrError,
-	#category : #'RemoteServiceReplication-Base-Errors'
+	#name : 'RsrConnectionClosed',
+	#superclass : 'RsrError',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConnectionClosed >> messageText [
 
 	^'The connection has closed'

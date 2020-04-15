@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrMessageSendingTest,
-	#superclass : #RsrSystemTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrMessageSendingTest',
+	#superclass : 'RsrSystemTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testRemoteError [
 
 	| service |
@@ -14,7 +14,7 @@ RsrMessageSendingTest >> testRemoteError [
 		raise: Error
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testReturnArgument [
 
 	| client server arguments dt response |
@@ -62,7 +62,7 @@ RsrMessageSendingTest >> testReturnArgument [
 		identicalTo: server
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testReturnInvalidObject [
 
 	| service |
@@ -72,7 +72,7 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 		raise: RsrUnsupportedObject
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testReturnNewService [
 
 	| service returnedService |
@@ -83,7 +83,7 @@ RsrMessageSendingTest >> testReturnNewService [
 		equals: RsrClientTestService
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testReturnNewServiceInArray [
 
 	| service array returnedService |
@@ -98,7 +98,7 @@ RsrMessageSendingTest >> testReturnNewServiceInArray [
 		equals: RsrClientTestService
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testReturnSymbol [
 
 	| service |
@@ -108,7 +108,7 @@ RsrMessageSendingTest >> testReturnSymbol [
 		equals: #testSymbol
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testSendInvalidObject [
 
 	| service |
@@ -118,7 +118,7 @@ RsrMessageSendingTest >> testSendInvalidObject [
 		raise: RsrUnsupportedObject
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageSendingTest >> testSendSetMarker [
 
 	| service remoteService |

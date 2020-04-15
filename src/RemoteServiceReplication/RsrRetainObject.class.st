@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrRetainObject,
-	#superclass : #RsrCommand,
+	#name : 'RsrRetainObject',
+	#superclass : 'RsrCommand',
 	#instVars : [
 		'object'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrRetainObject class >> object: anRsrObject [
 
 	^self new
@@ -15,7 +15,7 @@ RsrRetainObject class >> object: anRsrObject [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrRetainObject class >> object: anRsrObject
 encoding: aByteArray [
 
@@ -25,7 +25,7 @@ encoding: aByteArray [
 		yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 RsrRetainObject >> = anEncodedObject [
 
 	self == anEncodedObject
@@ -36,42 +36,42 @@ RsrRetainObject >> = anEncodedObject [
 		and: [self encoding = anEncodedObject encoding]
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrRetainObject >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeRetainObject: self
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrRetainObject >> executeFor: aConnection [
 
 	aConnection objectCache add: object
 ]
 
-{ #category : #hashing }
+{ #category : 'hashing' }
 RsrRetainObject >> hash [
 
 	^self object hash
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainObject >> object [
 	^ object
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainObject >> object: anObject [
 
 	object := anObject
 ]
 
-{ #category : #reporting }
+{ #category : 'reporting' }
 RsrRetainObject >> reportOn: aLog [
 
 	aLog debug: 'RsrRetainObject/', self object class name
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrRetainObject >> writeUsing: aCommandWriter [
 
 	super writeUsing: aCommandWriter

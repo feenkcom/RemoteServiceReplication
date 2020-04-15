@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrRetainAnalysisTest,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrRetainAnalysisTest',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RsrRetainAnalysisTest >> analyze: anObject [
 
 	| analysis |
@@ -15,7 +15,7 @@ RsrRetainAnalysisTest >> analyze: anObject [
 	^analysis
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RsrRetainAnalysisTest >> assertCycle: anObject [
 
 	self
@@ -23,7 +23,7 @@ RsrRetainAnalysisTest >> assertCycle: anObject [
 		raise: RsrCycleDetected
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testArrayCycle [
 
 	| array |
@@ -38,7 +38,7 @@ RsrRetainAnalysisTest >> testArrayCycle [
 	self assertCycle: array
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testDictionaryCycle [
 
 	| dictionary |
@@ -54,7 +54,7 @@ RsrRetainAnalysisTest >> testDictionaryCycle [
 	self assertCycle: dictionary
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testNewServiceInArray [
 	"Ensure a new service in a collection is properly tagged"
 
@@ -69,7 +69,7 @@ RsrRetainAnalysisTest >> testNewServiceInArray [
 	self assert: service isMirrored
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testNewServicesInDictionary [
 	"Ensure a new service in a collection is properly tagged"
 
@@ -91,7 +91,7 @@ RsrRetainAnalysisTest >> testNewServicesInDictionary [
 		assert: value isMirrored
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testOrderedCollectionCycle [
 
 	| oc |
@@ -102,7 +102,7 @@ RsrRetainAnalysisTest >> testOrderedCollectionCycle [
 	self assertCycle: oc.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testServiceAllDataObjects [
 	"While this code is structurally similar to #testClientNoInstVars, it ensures
 	that Data Objects are actually encoded in-line."
@@ -119,7 +119,7 @@ RsrRetainAnalysisTest >> testServiceAllDataObjects [
 	self assert: client isMirrored
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testServiceNoInstVars [
 
 	| client analysis expected |
@@ -133,7 +133,7 @@ RsrRetainAnalysisTest >> testServiceNoInstVars [
 	self assert: client isMirrored
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testServiceReferencingAnotherService [
 	"While this code is structurally similar to #testClientNoInstVars, it ensures
 	that Data Objects are actually encoded in-line."
@@ -153,7 +153,7 @@ RsrRetainAnalysisTest >> testServiceReferencingAnotherService [
 		assert: referencedService isMirrored
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testServiceWithCycle [
 	"Cycles are disallowed for our POC. Perhaps they will get added later?"
 
@@ -164,7 +164,7 @@ RsrRetainAnalysisTest >> testServiceWithCycle [
 	self assertCycle: rootClient
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrRetainAnalysisTest >> testSetCycle [
 
 	| set |

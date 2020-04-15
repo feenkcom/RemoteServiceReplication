@@ -2,17 +2,17 @@
 I represent a class of Objects that know offer Rsr Services.
 "
 Class {
-	#name : #RsrService,
-	#superclass : #RsrAbstractService,
+	#name : 'RsrService',
+	#superclass : 'RsrAbstractService',
 	#instVars : [
 		'_id',
 		'_connection',
 		'remoteSelf'
 	],
-	#category : #'RemoteServiceReplication-Public'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrService class >> _id: anId
 connection: aConnection [
 
@@ -21,7 +21,7 @@ connection: aConnection [
 		yourself
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrService class >> _variablesToReflect [
 
 	| currentClass variables |
@@ -34,31 +34,31 @@ RsrService class >> _variablesToReflect [
 	^variables
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrService class >> clientClassName [
 
 	self subclassResponsibility
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrService class >> isClientClass [
 
 	^self name == self clientClassName
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrService class >> isServerClass [
 
 	^self name == self serverClassName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrService class >> serverClassName [
 
 	self subclassResponsibility
 ]
 
-{ #category : #'private-lifecycle' }
+{ #category : 'private-lifecycle' }
 RsrService >> _addTo: aRegistry [
 
 	aRegistry
@@ -66,19 +66,19 @@ RsrService >> _addTo: aRegistry [
 		put: self
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrService >> _connection [
 
 	^_connection
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrService >> _id [
 
 	^_id
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrService >> _id: anRsrId
 connection: aConnection [
 
@@ -87,7 +87,7 @@ connection: aConnection [
 	remoteSelf := aConnection _forwarderClass on: self
 ]
 
-{ #category : #'private-enumerating' }
+{ #category : 'private-enumerating' }
 RsrService >> _reflectedVariableIndecesDo: aBlock [
 
 	| allVariables |
@@ -99,50 +99,50 @@ RsrService >> _reflectedVariableIndecesDo: aBlock [
 			aBlock value: index]
 ]
 
-{ #category : #'private-enumerating' }
+{ #category : 'private-enumerating' }
 RsrService >> _reflectedVariablesDo: aBlock [
 
 	self _reflectedVariableIndecesDo: [:index | aBlock value: (self instVarAt: index)]
 ]
 
-{ #category : #'private-synchronization' }
+{ #category : 'private-synchronization' }
 RsrService >> _synchronize [
 	"Return self to synchronize with the remote peer"
 
 	^self
 ]
 
-{ #category : #'public-accessing' }
+{ #category : 'public-accessing' }
 RsrService >> _variablesToReflect [
 
 	^self class _variablesToReflect
 ]
 
-{ #category : #'public-accessing' }
+{ #category : 'public-accessing' }
 RsrService >> isClient [
 
 	^self class isClientClass
 ]
 
-{ #category : #'public-testing' }
+{ #category : 'public-testing' }
 RsrService >> isMirrored [
 
 	^_connection ~~ nil
 ]
 
-{ #category : #'public-testing' }
+{ #category : 'public-testing' }
 RsrService >> isNotMirrored [
 
 	^self isMirrored not
 ]
 
-{ #category : #'public-accessing' }
+{ #category : 'public-accessing' }
 RsrService >> isServer [
 
 	^self class isServerClass
 ]
 
-{ #category : #'public-accessing' }
+{ #category : 'public-accessing' }
 RsrService >> remoteServiceName [
 
 	^self isClient
@@ -150,13 +150,13 @@ RsrService >> remoteServiceName [
 		ifFalse: [self class clientClassName]
 ]
 
-{ #category : #'public-accessing' }
+{ #category : 'public-accessing' }
 RsrService >> serviceName [
 
 	^self class name
 ]
 
-{ #category : #'public-synchronization' }
+{ #category : 'public-synchronization' }
 RsrService >> synchronize [
 
 	remoteSelf == nil

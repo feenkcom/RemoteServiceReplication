@@ -1,71 +1,71 @@
 Class {
-	#name : #RsrLog,
-	#superclass : #RsrObject,
+	#name : 'RsrLog',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'verbosity'
 	],
-	#category : #'RemoteServiceReplication-Debugging'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> debug: aString [
 
 	self verbosity >= self levelDebug
 		ifTrue: [	self log: 'DEBUG: ', aString]
 ]
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> error: aString [
 
 	self verbosity >= self levelError
 		ifTrue: [self log: 'ERROR: ', aString]
 ]
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> info: aString [
 
 	self verbosity >= self levelInfo
 		ifTrue: [self log: 'INFO: ', aString]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrLog >> initialize [
 
 	super initialize.
 	verbosity := self levelTrace
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> levelDebug [
 
 	^4
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> levelError [
 
 	^1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> levelInfo [
 
 	^3
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> levelTrace [
 
 	^5
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> levelWarn [
 
 	^2
 ]
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> log: aString [
 
 	Transcript
@@ -73,7 +73,7 @@ RsrLog >> log: aString [
 		cr
 ]
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> log: aMessage
 level: aLevelString [
 
@@ -82,26 +82,26 @@ level: aLevelString [
 		cr
 ]
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> trace: aString [
 
 	self verbosity >= self levelTrace
 		ifTrue: [self log: 'TRACE: ', aString]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> verbosity [
 
 	^verbosity
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrLog >> verbosity: aLogLevel [
 
 	verbosity := aLogLevel
 ]
 
-{ #category : #logging }
+{ #category : 'logging' }
 RsrLog >> warn: aString [
 
 	self verbosity >= self levelDebug

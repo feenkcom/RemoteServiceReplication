@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrSendMessage,
-	#superclass : #RsrCommand,
+	#name : 'RsrSendMessage',
+	#superclass : 'RsrCommand',
 	#instVars : [
 		'transaction',
 		'receiver',
@@ -8,10 +8,10 @@ Class {
 		'arguments',
 		'retainList'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrSendMessage class >> transaction: aTransactionId
 receiver: aService
 selector: aSelector
@@ -25,23 +25,23 @@ arguments: anArray [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> arguments [
 	^ arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> arguments: anObject [
 	arguments := anObject
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSendMessage >> encodeUsing: anEncoder [
 
 	encoding := anEncoder encodeSendMessage: self
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSendMessage >> executeFor: aConnection [
 
 	| messageDispatcher |
@@ -49,7 +49,7 @@ RsrSendMessage >> executeFor: aConnection [
 	messageDispatcher dispatch: [self primExecuteFor: aConnection]
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSendMessage >> primExecuteFor: aConnection [
 
 	| result response |
@@ -65,39 +65,39 @@ RsrSendMessage >> primExecuteFor: aConnection [
 		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex) sendOver: aConnection]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> receiver [
 	^ receiver
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> receiver: anObject [
 	receiver := anObject
 ]
 
-{ #category : #reporting }
+{ #category : 'reporting' }
 RsrSendMessage >> reportOn: aLog [
 
 	aLog debug: 'RsrSendMessage/', self receiver class name, '>>', self selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> roots [
 
 	^(Array with: receiver with: selector) ,  arguments
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> selector [
 	^ selector
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> selector: anObject [
 	selector := anObject
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSendMessage >> sendOver: aConnection [
 
 	| analysis promise |
@@ -115,17 +115,17 @@ RsrSendMessage >> sendOver: aConnection [
 	^promise
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> transaction [
 	^ transaction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSendMessage >> transaction: anObject [
 	transaction := anObject
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSendMessage >> writeUsing: aCommandWriter [
 
 	retainList do: [:each | each writeUsing: aCommandWriter].

@@ -1,6 +1,6 @@
 Class {
-	#name : #RsrConnection,
-	#superclass : #RsrObject,
+	#name : 'RsrConnection',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'isOpen',
 		'transactionSpigot',
@@ -16,10 +16,10 @@ Class {
 		'serviceFactory',
 		'log'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrConnection class >> acceptOn: aPortNumber [
 
 	| listener socket |
@@ -33,7 +33,13 @@ RsrConnection class >> acceptOn: aPortNumber [
 		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1)) open
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
+RsrConnection class >> connectionTimeout [
+
+	^2
+]
+
+{ #category : 'instance creation' }
 RsrConnection class >> connectTo: aPortNumber
 on: aHostname [
 
@@ -48,19 +54,13 @@ on: aHostname [
 		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated) open
 ]
 
-{ #category : #'instance creation' }
-RsrConnection class >> connectionTimeout [
-
-	^2
-]
-
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrConnection class >> new [
 
 	self error: 'Instance creation via #new is unsupported'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrConnection class >> socket: aSocket
 transactionSpigot: aNumericSpigot
 oidSpigot: anOidSpigot [
@@ -72,13 +72,13 @@ oidSpigot: anOidSpigot [
 		yourself
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> _forwarderClass [
 
 	^RsrForwarder
 ]
 
-{ #category : #'private-sending' }
+{ #category : 'private-sending' }
 RsrConnection >> _sendMessage: aMessage
 to: aService [
 
@@ -98,7 +98,7 @@ to: aService [
 	^dispatchCommand sendOver: self
 ]
 
-{ #category : #'public-lifecycle' }
+{ #category : 'public-lifecycle' }
 RsrConnection >> close [
 
 	isOpen
@@ -111,44 +111,44 @@ RsrConnection >> close [
 	objectCache reset
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> commandReader [
 
 	^commandReader
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> commandWriter [
 
 	^commandWriter
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> decoder [
 
 	^RsrDecoder registry: registry connection: self
 ]
 
-{ #category : #'private-events' }
+{ #category : 'private-events' }
 RsrConnection >> disconnected [
 
 	self log info: 'Disconnected'.
 	self close
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> dispatcher [
 
 	^dispatcher
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> encoder [
 
 	^RsrEncoder new
 ]
 
-{ #category : #'private-initialization' }
+{ #category : 'private-initialization' }
 RsrConnection >> initialize [
 
 	super initialize.
@@ -160,49 +160,49 @@ RsrConnection >> initialize [
 	log := RsrLog new
 ]
 
-{ #category : #'public-testing' }
+{ #category : 'public-testing' }
 RsrConnection >> isClosed [
 
 	^self isOpen not
 ]
 
-{ #category : #'public-testing' }
+{ #category : 'public-testing' }
 RsrConnection >> isOpen [
 
 	^isOpen
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> log [
 
 	^log
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> newTransactionId [
 
 	^transactionSpigot next
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> objectCache [
 
 	^objectCache
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> oidSpigot [
 
 	^oidSpigot
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> oidSpigot: anIntegerSpigot [
 
 	oidSpigot := anIntegerSpigot
 ]
 
-{ #category : #'public-lifecycle' }
+{ #category : 'public-lifecycle' }
 RsrConnection >> open [
 
 	(isOpen := socket isConnected)
@@ -220,19 +220,19 @@ RsrConnection >> open [
 	serviceFactory _addTo: registry
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> promises [
 
 	^promises
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> registry [
 
 	^registry
 ]
 
-{ #category : #'private-coordination' }
+{ #category : 'private-coordination' }
 RsrConnection >> releaseOid: anOid [
 
 	| command |
@@ -243,37 +243,37 @@ RsrConnection >> releaseOid: anOid [
 	commandWriter enqueue: command
 ]
 
-{ #category : #'public-service factory' }
+{ #category : 'public-service factory' }
 RsrConnection >> serviceFor: aResponsibility [
 
 	^serviceFactory serviceFor: aResponsibility
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> socket: aSocket [
 
 	socket := aSocket
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> stream [
 
 	^stream
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> transactionSpigot [
 
 	^transactionSpigot
 ]
 
-{ #category : #'private-accessing' }
+{ #category : 'private-accessing' }
 RsrConnection >> transactionSpigot: anObject [
 
 	transactionSpigot := anObject
 ]
 
-{ #category : #'private-events' }
+{ #category : 'private-events' }
 RsrConnection >> unknownError: anException [
 
 	self close

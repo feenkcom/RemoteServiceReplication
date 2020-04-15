@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrBooleanSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrBooleanSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrBooleanSpecies class >> encodeReference: aBoolean
 using: anEncoder
 onto: aStream [
@@ -17,7 +17,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrBooleanSpecies class >> speciesIdentifier [
 
 	^self subclassResponsibility

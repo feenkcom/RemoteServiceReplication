@@ -1,28 +1,28 @@
 Class {
-	#name : #RsrServiceAbstractAllDataObjects,
-	#superclass : #RsrService,
+	#name : 'RsrServiceAbstractAllDataObjects',
+	#superclass : 'RsrService',
 	#instVars : [
 		'positiveSmallInteger',
 		'negativeSmallInteger',
 		'integerZero',
 		'string'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceAbstractAllDataObjects class >> clientClassName [
 
 	^#RsrClientAllDataObjects
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceAbstractAllDataObjects class >> serverClassName [
 
 	^#RsrServerAllDataObjects
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrServiceAbstractAllDataObjects >> initialize [
 
 	super initialize.

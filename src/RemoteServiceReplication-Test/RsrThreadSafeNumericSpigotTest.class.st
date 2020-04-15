@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrThreadSafeNumericSpigotTest,
-	#superclass : #RsrNumericSpigotTest,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrThreadSafeNumericSpigotTest',
+	#superclass : 'RsrNumericSpigotTest',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrThreadSafeNumericSpigotTest >> spigotClass [
 
 	^RsrThreadSafeNumericSpigot

@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrLifetimeTest,
-	#superclass : #RsrSystemTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrLifetimeTest',
+	#superclass : 'RsrSystemTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RsrLifetimeTest >> testCloseWithDanglingObject [
 	"It is possible that the connection could disconnect between when an object
 	is received and when the upcoming SendMessage or DeliverResponse message is received.
@@ -32,7 +32,7 @@ RsrLifetimeTest >> testCloseWithDanglingObject [
 	self assert: RsrClientNoInstVars allInstances isEmpty
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 	"Ensure objects created by the RsrServiceFactory maintain the same
 	properties as other objects"
@@ -51,7 +51,7 @@ RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 		identicalTo: service
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrLifetimeTest >> testRemoteReferenceLifetime [
 
 	| valueServiceLocal valueServiceRemote serviceLocal serviceRemote id marker actual |

@@ -1,20 +1,20 @@
 Class {
-	#name : #RsrSystemTestCase,
-	#superclass : #RsrTestCase,
+	#name : 'RsrSystemTestCase',
+	#superclass : 'RsrTestCase',
 	#instVars : [
 		'connectionA',
 		'connectionB'
 	],
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrSystemTestCase class >> isAbstract [
 
 	^self == RsrSystemTestCase
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrSystemTestCase >> setUp [
 
 	| socketPair semaphore |
@@ -39,7 +39,7 @@ RsrSystemTestCase >> setUp [
 		assert: connectionB isOpen
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrSystemTestCase >> tearDown [
 
 	connectionA ifNotNil: [:conn | conn close].

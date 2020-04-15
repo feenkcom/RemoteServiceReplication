@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrSocketTestCase,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
+	#name : 'RsrSocketTestCase',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketTestCase >> assertWriting: bytes
 to: writingSocket
 isReadableOn: readSocket [
@@ -17,13 +17,13 @@ isReadableOn: readSocket [
 		equals: bytes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketTestCase >> randomPort [
 
 	^50123
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketTestCase >> testConnectLocalSockets [
 
 	| listener server client port |
@@ -47,7 +47,7 @@ RsrSocketTestCase >> testConnectLocalSockets [
 		isReadableOn: server
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketTestCase >> testConnectToClosedPort [
 
 	| socket |
@@ -57,7 +57,7 @@ RsrSocketTestCase >> testConnectToClosedPort [
 		raise: Error
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketTestCase >> testHasDataAvailable [
 
 	| socketPair |
@@ -67,7 +67,7 @@ RsrSocketTestCase >> testHasDataAvailable [
 	self assert: socketPair firstSocket dataAvailable.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrSocketTestCase >> testReadAvailable [
 
 	| pair a b bytes readBytes writingProcess |

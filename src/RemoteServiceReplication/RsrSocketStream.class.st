@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrSocketStream,
-	#superclass : #RsrObject,
+	#name : 'RsrSocketStream',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'socket'
 	],
-	#category : #'RemoteServiceReplication-Utilities'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrSocketStream class >> on: anRsrSocket [
 
 	^self new
@@ -15,37 +15,37 @@ RsrSocketStream class >> on: anRsrSocket [
 		yourself
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrSocketStream >> atEnd [
 
 	^self isConnected
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSocketStream >> close [
 
 	socket close
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 RsrSocketStream >> flush [
 
 	"NOP"
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrSocketStream >> isConnected [
 
 	^socket isConnected
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 RsrSocketStream >> next [
 
 	^self next: 1
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 RsrSocketStream >> next: aCount [
 
 	aCount = 0
@@ -53,13 +53,13 @@ RsrSocketStream >> next: aCount [
 	^socket read: aCount
 ]
 
-{ #category : #writing }
+{ #category : 'writing' }
 RsrSocketStream >> nextPutAll: bytes [
 
 	socket write: bytes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocketStream >> socket: anRsrSocket [
 
 	socket := anRsrSocket

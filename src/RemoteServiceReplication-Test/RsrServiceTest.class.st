@@ -1,22 +1,22 @@
 Class {
-	#name : #RsrServiceTest,
-	#superclass : #RsrSystemTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrServiceTest',
+	#superclass : 'RsrSystemTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #'running-utilities' }
+{ #category : 'running-utilities' }
 RsrServiceTest >> mirror: aService [
 
 	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceTest >> newInstance [
 
 	^RsrClientTestService new
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
@@ -30,7 +30,7 @@ RsrServiceTest >> testEnsureServersAreCachedAndReused [
 		identicalTo: service2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testHasRemoteSelf [
 
 	| service |
@@ -39,7 +39,7 @@ RsrServiceTest >> testHasRemoteSelf [
 	self deny: nil == service remoteSelf
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testInitialization [
 
 	| instance |
@@ -55,7 +55,7 @@ RsrServiceTest >> testInitialization [
 		equals: nil
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testIsMirrored [
 
 	| instance |
@@ -65,7 +65,7 @@ RsrServiceTest >> testIsMirrored [
 	self assert: instance isMirrored
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testMessageDispatchedSeriallyForSingleService [
 	"Ensure that when a message is sent to a Service it is always dispatched to the same process"
 
@@ -81,7 +81,7 @@ RsrServiceTest >> testMessageDispatchedSeriallyForSingleService [
 		identicalTo: process2
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
 	"Ensure a long-running process in one Service will not cause startvation of other Services"
 
@@ -114,7 +114,7 @@ RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
 		equals: initialCounter + 1.
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testReflectedVariableNames [
 
 	| clientNames serverNames |
@@ -145,7 +145,7 @@ RsrServiceTest >> testReflectedVariableNames [
 		equals: #varB
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrServiceTest >> testVariableReflection [
 
 	| localService remoteService |

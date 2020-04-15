@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrEncoderTest,
-	#superclass : #RsrCodecTest,
+	#name : 'RsrEncoderTest',
+	#superclass : 'RsrCodecTest',
 	#instVars : [
 		'connection'
 	],
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #registration }
+{ #category : 'registration' }
 RsrEncoderTest >> register: aService [
 
 	aService
@@ -18,7 +18,7 @@ RsrEncoderTest >> register: aService [
 		put: aService
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEncoderTest >> setUp [
 
 	super setUp.
@@ -26,14 +26,14 @@ RsrEncoderTest >> setUp [
 	connection := RsrMockConnection new
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEncoderTest >> tearDown [
 
 	registry := connection := nil.
 	super setUp
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrEncoderTest >> testDeliverResponse [
 
 	| response command expectedEncoding |
@@ -56,7 +56,7 @@ RsrEncoderTest >> testDeliverResponse [
 		equals: expectedEncoding
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrEncoderTest >> testReleaseObjects [
 
 	| command expectedEncoding |
@@ -75,7 +75,7 @@ RsrEncoderTest >> testReleaseObjects [
 		equals: expectedEncoding
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrEncoderTest >> testRetainObject [
 
 	| service command expectedEncoding |
@@ -97,7 +97,7 @@ RsrEncoderTest >> testRetainObject [
 		equals: expectedEncoding
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrEncoderTest >> testSendMessage [
 
 	| service command expectedEncoding |
@@ -123,7 +123,7 @@ RsrEncoderTest >> testSendMessage [
 		equals: expectedEncoding
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEncoderTest >> testServiceNoInstVars [
 
 	| rootService encodedBytes expectedEncoding |
@@ -136,7 +136,7 @@ RsrEncoderTest >> testServiceNoInstVars [
 		equals: expectedEncoding
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEncoderTest >> testServiceReferenceService [
 
 	| rootService referencedService encodedObject expectedEncoding |
@@ -172,7 +172,7 @@ RsrEncoderTest >> testServiceReferenceService [
 		equals: expectedEncoding
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrEncoderTest >> testUnsupportedObject [
 
 	self
@@ -183,7 +183,7 @@ RsrEncoderTest >> testUnsupportedObject [
 		raise: RsrUnsupportedObject
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrEncoderTest >> verifyControlWord: anInteger
 encoding: expected [
 
@@ -194,7 +194,7 @@ encoding: expected [
 		equals: expected
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrEncoderTest >> verifyImmediate: anObject
 encoding: expected [
 

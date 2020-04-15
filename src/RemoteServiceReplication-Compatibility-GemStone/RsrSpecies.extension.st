@@ -1,6 +1,6 @@
-Extension { #name : #RsrSpecies }
+Extension { #name : 'RsrSpecies' }
 
-{ #category : #'*RemoteServiceReplication-Compatibility-GemStone' }
+{ #category : '*remoteservicereplication-compatibility-gemstone' }
 RsrSpecies class >> initializeSpeciesMapping [
 
 	speciesMapping := Dictionary new.

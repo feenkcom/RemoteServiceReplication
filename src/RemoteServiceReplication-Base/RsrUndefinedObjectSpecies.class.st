@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrUndefinedObjectSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrUndefinedObjectSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrUndefinedObjectSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -12,7 +12,7 @@ using: aDecoder [
 	^nil
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrUndefinedObjectSpecies class >> encodeReference: nilArgument
 using: anEncoder
 onto: aStream [
@@ -25,7 +25,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrUndefinedObjectSpecies class >> speciesIdentifier [
 
 	^6

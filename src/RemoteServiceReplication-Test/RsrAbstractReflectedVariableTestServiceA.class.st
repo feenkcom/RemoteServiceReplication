@@ -1,8 +1,8 @@
 Class {
-	#name : #RsrAbstractReflectedVariableTestServiceA,
-	#superclass : #RsrService,
+	#name : 'RsrAbstractReflectedVariableTestServiceA',
+	#superclass : 'RsrService',
 	#instVars : [
 		'varA'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }

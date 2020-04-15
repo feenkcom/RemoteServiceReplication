@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrServiceSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrServiceSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #'object analysis' }
+{ #category : 'object analysis' }
 RsrServiceSpecies class >> analyze: aService
 using: anAnalyzer [
 	"A method that works in conjunction with RsrRetainAnalysis to analyze
@@ -13,7 +13,7 @@ using: anAnalyzer [
 	^anAnalyzer analyzeService: aService
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrServiceSpecies class >> decode: aStream
 using: aDecoder [
 	"Decode a Service from the stream"
@@ -38,7 +38,7 @@ using: aDecoder [
 	^instance
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrServiceSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -46,7 +46,7 @@ using: aDecoder [
 	self shouldNotImplement
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrServiceSpecies class >> encode: aService
 using: anEncoder
 on: aStream [
@@ -74,7 +74,7 @@ on: aStream [
 	aService _reflectedVariablesDo: [:each | anEncoder encodeReferenceOf: each onto: aStream]
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrServiceSpecies class >> encodeReference: aService
 using: anEncoder
 onto: aStream [
@@ -84,7 +84,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceSpecies class >> speciesIdentifier [
 
 	^0

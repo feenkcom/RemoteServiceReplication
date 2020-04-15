@@ -2,12 +2,12 @@
 I represent tests for the RsrRegistry.
 "
 Class {
-	#name : #RsrRegistryTestCase,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
+	#name : 'RsrRegistryTestCase',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #tests }
+{ #category : 'tests' }
 RsrRegistryTestCase >> testAddClient [
 
 	| id object entry registry marker |
@@ -29,7 +29,7 @@ RsrRegistryTestCase >> testAddClient [
 		identicalTo: marker
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RsrRegistryTestCase >> testAddServer [
 
 	| id object registry marker |
@@ -54,7 +54,7 @@ RsrRegistryTestCase >> testAddServer [
 		equals: id
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RsrRegistryTestCase >> testAtAtIfAbsent [
 
 	| registry server id marker |
@@ -79,7 +79,7 @@ RsrRegistryTestCase >> testAtAtIfAbsent [
 		identicalTo: server
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RsrRegistryTestCase >> testIncludesKey [
 
 	| registry client |
@@ -92,7 +92,7 @@ RsrRegistryTestCase >> testIncludesKey [
 	self assert: (registry includesKey: client _id)
 ]
 
-{ #category : #tests }
+{ #category : 'tests' }
 RsrRegistryTestCase >> testRemoveKey [
 
 	| registry client |

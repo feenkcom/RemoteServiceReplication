@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrDecoderTest,
-	#superclass : #RsrCodecTest,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrDecoderTest',
+	#superclass : 'RsrCodecTest',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrDecoderTest >> assertReference: bytes
 decodesTo: expected [
 
@@ -15,13 +15,13 @@ decodesTo: expected [
 		equals: expected
 ]
 
-{ #category : #decoding }
+{ #category : 'decoding' }
 RsrDecoderTest >> decodeService: anObjectBytes [
 
 	^self decoder decodeService: anObjectBytes readStream
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testDeliverResponse [
 
 	| response encoding command |
@@ -47,7 +47,7 @@ RsrDecoderTest >> testDeliverResponse [
 		equals: response
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testReleaseObjects [
 
 	| command encoding |
@@ -65,7 +65,7 @@ RsrDecoderTest >> testReleaseObjects [
 		equals: #(1 2 3 4 5)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testRetainObject [
 
 	| encoding command |
@@ -88,7 +88,7 @@ RsrDecoderTest >> testRetainObject [
 	self assert: (registry includesKey: command object _id)
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testSendMessage [
 
 	| service encoding command |
@@ -124,7 +124,7 @@ RsrDecoderTest >> testSendMessage [
 		equals: #()
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testServiceDecodeIdentity [
 	"Ensure that decoding an object multiple times results in
 	a single object getting created."
@@ -137,7 +137,7 @@ RsrDecoderTest >> testServiceDecodeIdentity [
 		identicalTo: secondService
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testServiceNoInstVars [
 
 	| decodedService |
@@ -150,7 +150,7 @@ RsrDecoderTest >> testServiceNoInstVars [
 		equals: 1
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrDecoderTest >> testServiceReferenceService [
 
 	| rootService referencedService |
@@ -170,7 +170,7 @@ RsrDecoderTest >> testServiceReferenceService [
 		equals: referencedService
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrDecoderTest >> verifyControlWord: expected
 encoding: bytes [
 
@@ -181,7 +181,7 @@ encoding: bytes [
 		equals: expected
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrDecoderTest >> verifyImmediate: expected
 encoding: encoding [
 

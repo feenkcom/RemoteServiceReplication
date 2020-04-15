@@ -1,46 +1,46 @@
 Class {
-	#name : #RsrCommand,
-	#superclass : #RsrObject,
+	#name : 'RsrCommand',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'encoding'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrCommand >> encodeUsing: anRsrEncoder [
 
 	self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCommand >> encoding [
 	^ encoding
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCommand >> encoding: anObject [
 	encoding := anObject
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrCommand >> executeFor: aConnection [
 
 	self subclassResponsibility
 ]
 
-{ #category : #reporting }
+{ #category : 'reporting' }
 RsrCommand >> reportOn: aLog [
 
 	self subclassResponsibility
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrCommand >> sendOver: aConnection [
 	"Do nothing unless a subclass offers a specialization"
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrCommand >> writeUsing: aCommandWriter [
 
 	aCommandWriter write: encoding

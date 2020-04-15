@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrCharacterSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrCharacterSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrCharacterSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -14,7 +14,7 @@ using: aDecoder [
 	^Character codePoint: codePoint
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrCharacterSpecies class >> encodeReference: aCharacter
 using: anEncoder
 onto: aStream [
@@ -30,7 +30,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCharacterSpecies class >> speciesIdentifier [
 
 	^5

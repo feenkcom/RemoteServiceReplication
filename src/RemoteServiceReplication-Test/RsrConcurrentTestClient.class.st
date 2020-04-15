@@ -1,22 +1,22 @@
 Class {
-	#name : #RsrConcurrentTestClient,
-	#superclass : #RsrAbstractConcurrentTestService,
-	#category : #'RemoteServiceReplication-Test-Services'
+	#name : 'RsrConcurrentTestClient',
+	#superclass : 'RsrAbstractConcurrentTestService',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestClient >> counterWithIncrement [
 
 	^remoteSelf counterWithIncrement
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestClient >> delayedCounter [
 
 	^remoteSelf delayedCounter
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RsrConcurrentTestClient >> stashProcess [
 
 	remoteSelf stashProcess

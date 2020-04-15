@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrPromiseTest,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#name : 'RsrPromiseTest',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RsrPromiseTest >> testError [
 
 	| promise semaphore |
@@ -25,7 +25,7 @@ RsrPromiseTest >> testError [
 		raise: Error
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrPromiseTest >> testFulfillment [
 
 	| promise expected semaphore |

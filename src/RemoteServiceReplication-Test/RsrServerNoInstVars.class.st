@@ -1,61 +1,61 @@
 Class {
-	#name : #RsrServerNoInstVars,
-	#superclass : #RsrServiceAbstractNoInstVars,
+	#name : 'RsrServerNoInstVars',
+	#superclass : 'RsrServiceAbstractNoInstVars',
 	#instVars : [
 		'marker'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServerNoInstVars >> marker [
 
 	^marker ifNil: [false]
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> returnNewService [
 
 	^RsrServerTestService new
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> returnNewServiceInArray [
 
 	^Array with: RsrServerTestService new
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> returnObjectNew [
 
 	^Object new
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> returnSelf [
 
 	^self
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> returnTestSymbol [
 
 	^#testSymbol
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServerNoInstVars >> setMarker [
 
 	marker := true
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> signalError [
 
 	^Error signal
 ]
 
-{ #category : #'testing-methods' }
+{ #category : 'testing-methods' }
 RsrServerNoInstVars >> unaryReturn42 [
 
 	^42

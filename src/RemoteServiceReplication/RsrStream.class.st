@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrStream,
-	#superclass : #RsrObject,
+	#name : 'RsrStream',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'stream'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrStream class >> on: aStream [
 
 	^self new
@@ -15,31 +15,31 @@ RsrStream class >> on: aStream [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> binary [
 
 	stream binary
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> close [
 
 	stream close
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> flush [
 
 	stream flush
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> next [
 
 	^self next: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> next: aLength [
 
 	| bytes |
@@ -49,13 +49,13 @@ RsrStream >> next: aLength [
 	^bytes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> nextPutAll: aByteArray [
 
 	^stream nextPutAll: aByteArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrStream >> stream: aStream [
 
 	stream := aStream

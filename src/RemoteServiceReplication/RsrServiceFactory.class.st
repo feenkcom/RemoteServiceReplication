@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrServiceFactory,
-	#superclass : #RsrAbstractServiceFactory,
-	#category : #'RemoteServiceReplication-Public-Examples'
+	#name : 'RsrServiceFactory',
+	#superclass : 'RsrAbstractServiceFactory',
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'public-manufacturing' }
+{ #category : 'public-manufacturing' }
 RsrServiceFactory >> mirror: aService [
 
 	remoteSelf return: aService
 ]
 
-{ #category : #'public-manufacturing' }
+{ #category : 'public-manufacturing' }
 RsrServiceFactory >> serviceFor: aResponsibility [
 
 	| instance |

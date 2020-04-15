@@ -1,33 +1,33 @@
 Class {
-	#name : #RsrConcurrentTestServer,
-	#superclass : #RsrAbstractConcurrentTestService,
+	#name : 'RsrConcurrentTestServer',
+	#superclass : 'RsrAbstractConcurrentTestService',
 	#instVars : [
 		'counter',
 		'semaphore',
 		'stashedProcess'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestServer class >> initialCounter [
 
 	^0
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestServer >> counter: anArray [
 
 	counter := anArray
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestServer >> counterWithIncrement [
 
 	^[counter at: 1] ensure: [counter at: 1 put: (counter at: 1) + 1]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestServer >> delayedCounter [
 
 	semaphore signal.
@@ -35,20 +35,20 @@ RsrConcurrentTestServer >> delayedCounter [
 	^counter at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestServer >> semaphore: aSemaphore [
 
 	semaphore := aSemaphore
 ]
 
-{ #category : #actions }
-RsrConcurrentTestServer >> stashProcess [
-
-	stashedProcess := Processor activeProcess
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrConcurrentTestServer >> stashedProcess [
 
 	^stashedProcess
+]
+
+{ #category : 'actions' }
+RsrConcurrentTestServer >> stashProcess [
+
+	stashedProcess := Processor activeProcess
 ]

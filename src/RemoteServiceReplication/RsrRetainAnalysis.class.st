@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrRetainAnalysis,
-	#superclass : #RsrObject,
+	#name : 'RsrRetainAnalysis',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'roots',
 		'retainCommands',
 		'inFlight',
 		'connection'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrRetainAnalysis class >> roots: anArray
 connection: aConnection [
 
@@ -20,7 +20,7 @@ connection: aConnection [
 		yourself
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 RsrRetainAnalysis >> analyze: anObject [
 
 	^(self speciesOf: anObject)
@@ -28,7 +28,7 @@ RsrRetainAnalysis >> analyze: anObject [
 		using: self
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 RsrRetainAnalysis >> analyzeCollection: aCollection [
 
 	self
@@ -37,7 +37,7 @@ RsrRetainAnalysis >> analyzeCollection: aCollection [
 	^aCollection
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 RsrRetainAnalysis >> analyzeDictionary: aDictionary [
 
 	self
@@ -52,14 +52,14 @@ RsrRetainAnalysis >> analyzeDictionary: aDictionary [
 	^aDictionary
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 RsrRetainAnalysis >> analyzeImmediate: anObject [
 	"Nothing to do for a generic immediate"
 
 	^anObject
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 RsrRetainAnalysis >> analyzeService: aService [
 
 	self ensureRegistered: aService.
@@ -69,7 +69,7 @@ RsrRetainAnalysis >> analyzeService: aService [
 	self retain: aService
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 RsrRetainAnalysis >> analyzing: anObject
 during: aBlock [
 
@@ -80,25 +80,25 @@ during: aBlock [
 	inFlight remove: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> connection [
 
 	^connection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> connection: aConnection [
 
 	connection := aConnection
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> encoder [
 
 	^self connection encoder
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RsrRetainAnalysis >> ensureRegistered: anRsrObject [
 
 	anRsrObject isMirrored
@@ -109,7 +109,7 @@ RsrRetainAnalysis >> ensureRegistered: anRsrObject [
 	anRsrObject _addTo: self registry
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrRetainAnalysis >> initialize [
 
 	super initialize.
@@ -117,25 +117,25 @@ RsrRetainAnalysis >> initialize [
 	inFlight := IdentitySet new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> nextOid [
 
 	^self connection oidSpigot next
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RsrRetainAnalysis >> perform [
 
 	roots do: [:each | self analyze: each]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> registry [
 
 	^connection registry
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RsrRetainAnalysis >> retain: aService [
 
 	| retainCommand |
@@ -144,25 +144,25 @@ RsrRetainAnalysis >> retain: aService [
 	self retainCommands add: retainCommand
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 RsrRetainAnalysis >> retainCommands [
 
 	^retainCommands
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> roots [
 
 	^roots
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> roots: anObject [
 
 	roots := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> speciesOf: anObject [
 
 	^self encoder speciesOf: anObject

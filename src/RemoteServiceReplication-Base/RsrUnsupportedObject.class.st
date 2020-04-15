@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrUnsupportedObject,
-	#superclass : #RsrError,
+	#name : 'RsrUnsupportedObject',
+	#superclass : 'RsrError',
 	#instVars : [
 		'object'
 	],
-	#category : #'RemoteServiceReplication-Base-Errors'
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #exceptioninstantiator }
+{ #category : 'exceptioninstantiator' }
 RsrUnsupportedObject class >> signal: anObject [
 
 	^self new
@@ -15,19 +15,19 @@ RsrUnsupportedObject class >> signal: anObject [
 		signal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrUnsupportedObject >> messageText [
 
 	^'Unsupported native class (', object class name, ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrUnsupportedObject >> object [
 
 	^object
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrUnsupportedObject >> object: anObject [
 
 	object := anObject

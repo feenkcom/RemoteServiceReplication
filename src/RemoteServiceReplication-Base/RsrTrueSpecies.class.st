@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrTrueSpecies,
-	#superclass : #RsrBooleanSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrTrueSpecies',
+	#superclass : 'RsrBooleanSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrTrueSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -12,7 +12,7 @@ using: aDecoder [
 	^true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrTrueSpecies class >> speciesIdentifier [
 
 	^7

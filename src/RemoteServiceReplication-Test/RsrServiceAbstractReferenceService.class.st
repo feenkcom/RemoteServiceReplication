@@ -1,25 +1,25 @@
 Class {
-	#name : #RsrServiceAbstractReferenceService,
-	#superclass : #RsrService,
+	#name : 'RsrServiceAbstractReferenceService',
+	#superclass : 'RsrService',
 	#instVars : [
 		'service'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceAbstractReferenceService class >> clientClassName [
 
 	^#RsrClientReferenceService
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceAbstractReferenceService class >> serverClassName [
 
 	^#RsrServerReferenceService
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrServiceAbstractReferenceService class >> service: aService [
 
 	^self new
@@ -27,12 +27,12 @@ RsrServiceAbstractReferenceService class >> service: aService [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceAbstractReferenceService >> service [
 	^ service
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceAbstractReferenceService >> service: anObject [
 	service := anObject
 ]

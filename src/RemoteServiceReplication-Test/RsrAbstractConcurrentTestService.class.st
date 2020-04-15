@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrAbstractConcurrentTestService,
-	#superclass : #RsrService,
-	#category : #'RemoteServiceReplication-Test-Services'
+	#name : 'RsrAbstractConcurrentTestService',
+	#superclass : 'RsrService',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractConcurrentTestService class >> clientClassName [
 
 	^#RsrConcurrentTestClient
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractConcurrentTestService class >> serverClassName [
 
 	^#RsrConcurrentTestServer

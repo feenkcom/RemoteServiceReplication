@@ -2,61 +2,61 @@
 An abstract test class which contains utility methods
 "
 Class {
-	#name : #RsrTestCase,
-	#superclass : #TestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
+	#name : 'RsrTestCase',
+	#superclass : 'TestCase',
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrTestCase class >> isAbstract [
 
 	^self == RsrTestCase
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrTestCase >> assert: anObject
 identicalTo: bObject [
 
 	self assert: anObject == bObject
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RsrTestCase >> assumption: aString [
 	"This method serves as a marker for assumptions made in the tests.
 	Perhaps some of the senders can be removed in the future."
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrTestCase >> defaultTimeLimit [
 
 	^5 seconds
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrTestCase >> deny: anObject
 identicalTo: bObject [
 
 	self assert: anObject ~~ bObject
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RsrTestCase >> fork: aBlock [
 
 	^RsrConcurrency fork: aBlock
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RsrTestCase >> hack: aString [
 	"Placeholder for things that need to be fixed"
 ]
 
-{ #category : #utilities }
+{ #category : 'utilities' }
 RsrTestCase >> maximumReclamation [
 
 	self assert: RsrGarbageCollector maximumReclamation
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrTestCase >> runCase [
 
 	| concurrency |

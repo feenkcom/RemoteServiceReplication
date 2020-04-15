@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrNegativeIntegerSpecies,
-	#superclass : #RsrIntegerSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrNegativeIntegerSpecies',
+	#superclass : 'RsrIntegerSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrNegativeIntegerSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -12,7 +12,7 @@ using: aDecoder [
 	^(super decodeReference: aStream using: aDecoder) negated
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrNegativeIntegerSpecies class >> speciesIdentifier [
 
 	^4

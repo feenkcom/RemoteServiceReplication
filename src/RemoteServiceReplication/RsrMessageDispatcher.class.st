@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrMessageDispatcher,
-	#superclass : #RsrDispatchEventLoop,
-	#category : #'RemoteServiceReplication-Communications'
+	#name : 'RsrMessageDispatcher',
+	#superclass : 'RsrDispatchEventLoop',
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrMessageDispatcher class >> startOn: aConnection [
 
 	^(self on: aConnection)
@@ -12,13 +12,13 @@ RsrMessageDispatcher class >> startOn: aConnection [
 		yourself
 ]
 
-{ #category : #dispatching }
+{ #category : 'dispatching' }
 RsrMessageDispatcher >> dispatch: aMessageSend [
 
 	queue nextPut: aMessageSend
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageDispatcher >> executeCycle [
 
 	| item |
@@ -27,7 +27,7 @@ RsrMessageDispatcher >> executeCycle [
 		ifFalse: [item value]
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrMessageDispatcher >> stop [
 
 	self dispatch: self stopToken

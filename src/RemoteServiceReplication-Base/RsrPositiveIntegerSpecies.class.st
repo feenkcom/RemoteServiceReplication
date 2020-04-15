@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrPositiveIntegerSpecies,
-	#superclass : #RsrIntegerSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrPositiveIntegerSpecies',
+	#superclass : 'RsrIntegerSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrPositiveIntegerSpecies class >> speciesIdentifier [
 
 	^3

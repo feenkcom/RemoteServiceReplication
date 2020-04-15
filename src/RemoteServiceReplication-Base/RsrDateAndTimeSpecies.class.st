@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrDateAndTimeSpecies,
-	#superclass : #RsrSpecies,
-	#category : #'RemoteServiceReplication-Base-Species'
+	#name : 'RsrDateAndTimeSpecies',
+	#superclass : 'RsrSpecies',
+	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrDateAndTimeSpecies class >> decodeReference: aStream
 using: aDecoder [
 	"Decode the provided bytes into the default native class for this species"
@@ -14,7 +14,7 @@ using: aDecoder [
 	^self fromMicroseconds: microseconds
 ]
 
-{ #category : #coding }
+{ #category : 'coding' }
 RsrDateAndTimeSpecies class >> encodeReference: aDateAndTime
 using: anEncoder
 onto: aStream [
@@ -32,7 +32,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDateAndTimeSpecies class >> speciesIdentifier [
 
 	^14

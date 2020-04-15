@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrTestingConcurrencyTestCase,
-	#superclass : #RsrTestCase,
-	#category : #'RemoteServiceReplication-Compatibility-Test-TestCases'
+	#name : 'RsrTestingConcurrencyTestCase',
+	#superclass : 'RsrTestCase',
+	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
-{ #category : #running }
+{ #category : 'running' }
 RsrTestingConcurrencyTestCase >> exceptionCase [
 
 	| sema |
@@ -13,7 +13,7 @@ RsrTestingConcurrencyTestCase >> exceptionCase [
 	sema wait
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrTestingConcurrencyTestCase >> noExceptionCase [
 
 	| sema |
@@ -22,7 +22,7 @@ RsrTestingConcurrencyTestCase >> noExceptionCase [
 	sema wait
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrTestingConcurrencyTestCase >> testException [
 
 	| testCase |
@@ -32,7 +32,7 @@ RsrTestingConcurrencyTestCase >> testException [
 		raise: Exception
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrTestingConcurrencyTestCase >> testNoException [
 
 	| testCase |

@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrMockEncoder,
-	#superclass : #RsrEncoder,
-	#category : #'RemoteServiceReplication-Test-Mocks'
+	#name : 'RsrMockEncoder',
+	#superclass : 'RsrEncoder',
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 RsrMockEncoder >> encode: anObject [
 
 	^RsrRetainObject
@@ -12,13 +12,13 @@ RsrMockEncoder >> encode: anObject [
 		encoding: ByteArray new
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 RsrMockEncoder >> encodeObject: anObject [
 
 	^ByteArray new
 ]
 
-{ #category : #encoding }
+{ #category : 'encoding' }
 RsrMockEncoder >> encodeRetainObject: anObject [
 
 	^ByteArray new

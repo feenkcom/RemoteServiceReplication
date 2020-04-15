@@ -1,25 +1,25 @@
 Class {
-	#name : #RsrCommandSource,
-	#superclass : #RsrEventLoop,
+	#name : 'RsrCommandSource',
+	#superclass : 'RsrEventLoop',
 	#instVars : [
 		'decoder'
 	],
-	#category : #'RemoteServiceReplication-Communications'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCommandSource >> decoder [
 
 	^self connection decoder
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCommandSource >> dispatcher [
 
 	^self connection dispatcher
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrCommandSource >> executeCycle [
 
 	[self dispatcher dispatch: self nextCommand]
@@ -30,7 +30,7 @@ RsrCommandSource >> executeCycle [
 			self connection disconnected]
 ]
 
-{ #category : #commands }
+{ #category : 'commands' }
 RsrCommandSource >> nextCommand [
 
 	^self decoder decodeCommand: self stream

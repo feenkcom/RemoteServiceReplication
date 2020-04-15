@@ -1,44 +1,44 @@
 Class {
-	#name : #RsrCodecTest,
-	#superclass : #RsrTestCase,
+	#name : 'RsrCodecTest',
+	#superclass : 'RsrTestCase',
 	#instVars : [
 		'registry',
 		'decoder'
 	],
-	#category : #'RemoteServiceReplication-Test-TestCases'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrCodecTest class >> isAbstract [
 
 	^self == RsrCodecTest
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCodecTest >> decoder [
 
 	^decoder ifNil: [decoder := RsrDecoder registry: (registry := RsrRegistry new) connection: RsrMockConnection new]
 ]
 
-{ #category : #'encode/decode' }
-RsrCodecTest >> encodeReferenceOf: anObject [
-
-	^ByteArray streamContents: [:stream | self encoder encodeReferenceOf: anObject onto: stream]
-]
-
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrCodecTest >> encoder [
 
 	^RsrEncoder new
 ]
 
-{ #category : #'running-symbol' }
+{ #category : 'encode/decode' }
+RsrCodecTest >> encodeReferenceOf: anObject [
+
+	^ByteArray streamContents: [:stream | self encoder encodeReferenceOf: anObject onto: stream]
+]
+
+{ #category : 'running-symbol' }
 RsrCodecTest >> genericSymbol [
 
 	^#genericSymbol
 ]
 
-{ #category : #'running-symbol' }
+{ #category : 'running-symbol' }
 RsrCodecTest >> genericSymbolEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "OID = 0"
@@ -47,7 +47,7 @@ RsrCodecTest >> genericSymbolEncoding [
 	#[103 101 110 101 114 105 99 83 121 109 98 111 108]	"#genericSymbol"
 ]
 
-{ #category : #'accessing-objects' }
+{ #category : 'accessing-objects' }
 RsrCodecTest >> referencedServiceEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "type"
@@ -59,7 +59,7 @@ RsrCodecTest >> referencedServiceEncoding [
 	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"
 ]
 
-{ #category : #'accessing-objects' }
+{ #category : 'accessing-objects' }
 RsrCodecTest >> rootServiceEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "type"
@@ -72,7 +72,7 @@ RsrCodecTest >> rootServiceEncoding [
 	#[0 0 0 0 0 0 0 2]. "#RsrServerReferenceService"
 ]
 
-{ #category : #running }
+{ #category : 'running' }
 RsrCodecTest >> serviceNoInstVarsEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "type"
@@ -84,7 +84,7 @@ RsrCodecTest >> serviceNoInstVarsEncoding [
 	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115] "#RsrServerNoInstVars"
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrCodecTest >> testArray [
 
 	| array encoding |
@@ -116,7 +116,7 @@ RsrCodecTest >> testArray [
 		encoding: encoding
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrCodecTest >> testByteArray [
 
 	| bytes encoding |
@@ -140,7 +140,7 @@ RsrCodecTest >> testByteArray [
 		encoding: encoding
 ]
 
-{ #category : #'running-control words' }
+{ #category : 'running-control words' }
 RsrCodecTest >> testControlWord [
 	
 	self
@@ -160,7 +160,7 @@ RsrCodecTest >> testControlWord [
 		encoding: #[128 0 0 0 0 0 0 0]
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrCodecTest >> testDateTime [
 
 	| dt encoding |
@@ -198,7 +198,7 @@ RsrCodecTest >> testDateTime [
 		encoding: encoding
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrCodecTest >> testDictionary [
 
 	| dictionary encoding result |
@@ -241,7 +241,7 @@ RsrCodecTest >> testDictionary [
 		encoding: encoding"
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrCodecTest >> testOrderedCollection [
 
 	| oc encoding |
@@ -273,7 +273,7 @@ RsrCodecTest >> testOrderedCollection [
 		encoding: encoding
 ]
 
-{ #category : #'running-immediates' }
+{ #category : 'running-immediates' }
 RsrCodecTest >> testSet [
 
 	| set encoding result |
@@ -310,7 +310,7 @@ RsrCodecTest >> testSet [
 		encoding: encoding"
 ]
 
-{ #category : #'running-symbol' }
+{ #category : 'running-symbol' }
 RsrCodecTest >> testString [
 
 	| encoding |
@@ -332,7 +332,7 @@ RsrCodecTest >> testString [
 		encoding: encoding
 ]
 
-{ #category : #'running-symbol' }
+{ #category : 'running-symbol' }
 RsrCodecTest >> testSymbol [
 
 	self
@@ -340,14 +340,14 @@ RsrCodecTest >> testSymbol [
 		encoding: self genericSymbolEncoding
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrCodecTest >> verifyControlWord: anInteger
 encoding: bytes [
 
 	self subclassResponsibility
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 RsrCodecTest >> verifyImmediate: anImmediateObject
 encoding: encoding [
 

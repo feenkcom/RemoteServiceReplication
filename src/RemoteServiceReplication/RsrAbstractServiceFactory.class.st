@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrAbstractServiceFactory,
-	#superclass : #RsrService,
-	#category : #'RemoteServiceReplication-Public-Examples'
+	#name : 'RsrAbstractServiceFactory',
+	#superclass : 'RsrService',
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractServiceFactory class >> clientClassName [
 
 	^#RsrServiceFactory
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractServiceFactory class >> serverClassName [
 
 	^#RsrServiceFactoryServer

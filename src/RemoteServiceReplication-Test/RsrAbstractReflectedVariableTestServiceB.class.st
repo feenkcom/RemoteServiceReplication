@@ -1,19 +1,19 @@
 Class {
-	#name : #RsrAbstractReflectedVariableTestServiceB,
-	#superclass : #RsrAbstractReflectedVariableTestServiceA,
+	#name : 'RsrAbstractReflectedVariableTestServiceB',
+	#superclass : 'RsrAbstractReflectedVariableTestServiceA',
 	#instVars : [
 		'varB'
 	],
-	#category : #'RemoteServiceReplication-Test-Services'
+	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractReflectedVariableTestServiceB class >> clientClassName [
 
 	^#RsrReflectedVariableTestClient
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrAbstractReflectedVariableTestServiceB class >> serverClassName [
 
 	^#RsrReflectedVariableTestServer

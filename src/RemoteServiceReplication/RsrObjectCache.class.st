@@ -1,26 +1,26 @@
 Class {
-	#name : #RsrObjectCache,
-	#superclass : #RsrObject,
+	#name : 'RsrObjectCache',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'storage'
 	],
-	#category : #'RemoteServiceReplication-Utilities'
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 RsrObjectCache >> add: anObject [
 
 	storage add: anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrObjectCache >> initialize [
 
 	super initialize.
 	self reset
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 RsrObjectCache >> reset [
 
 	storage := IdentitySet new
