@@ -1,5 +1,15 @@
 
 ! Topaz format...
-input $RSR_ROOT/src-gs/RsrLoader.gs
 
-send RsrLoader load: 'RemoteServiceReplication'
+run
+	| rsrRoot loadSpecFile loadSpec resolvedProject |
+	Rowan projectTools trace startTracing.
+	rsrRoot := '$RSR_ROOT' asFileReference.
+	loadSpecFile := rsrRoot / 'rowan'/ 'specs' / 'RemoteServiceReplication', 'ston'.
+	loadSpec := (Rowan projectTools load loadProjectSpecFromFile: loadSpecFile)
+		projectsHome: rsrRoot parent;
+		yourself.
+	resolvedProject := loadSpec resolve.
+
+	resolvedProject load.
+%
