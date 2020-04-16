@@ -1,22 +1,22 @@
 Class {
-	#name : #RsrObject,
-	#superclass : #Object,
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#name : 'RsrObject',
+	#superclass : 'Object',
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #reflection }
+{ #category : 'reflection' }
 RsrObject class >> allInstances [
 
 	^self instancesInMemory
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrObject class >> new [
 
 	^super new initialize
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrObject >> initialize [
 
 	^self

@@ -10,12 +10,6 @@ RsrServiceTest >> mirror: aService [
 	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
 ]
 
-{ #category : 'accessing' }
-RsrServiceTest >> newInstance [
-
-	^RsrClientTestService new
-]
-
 { #category : 'running' }
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 

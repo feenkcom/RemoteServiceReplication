@@ -1,16 +1,16 @@
 Class {
-	#name : #RsrDateAndTimeInterface,
-	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#name : 'RsrDateAndTimeInterface',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDateAndTimeInterface class >> dateAndTimeClass [
 
 	^DateAndTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrDateAndTimeInterface class >> fromString: aString [
 
 	^self dateAndTimeClass fromString: aString

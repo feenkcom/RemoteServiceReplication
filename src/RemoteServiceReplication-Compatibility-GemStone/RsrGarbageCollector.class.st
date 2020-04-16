@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrGarbageCollector,
-	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#name : 'RsrGarbageCollector',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #cleaning }
+{ #category : 'cleaning' }
 RsrGarbageCollector class >> maximumReclamation [
 
 	| object ephemeron sema |

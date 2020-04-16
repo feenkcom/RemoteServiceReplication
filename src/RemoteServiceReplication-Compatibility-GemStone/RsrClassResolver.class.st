@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrClassResolver,
-	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#name : 'RsrClassResolver',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrClassResolver class >> classNamed: aSymbol [
 
 	^self
@@ -12,7 +12,7 @@ RsrClassResolver class >> classNamed: aSymbol [
 		ifAbsent: [RsrUnknownClass signal: aSymbol]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrClassResolver class >> classNamed: aSymbol
 ifAbsent: aBlock [
 

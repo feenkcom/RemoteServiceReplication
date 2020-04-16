@@ -1,14 +1,14 @@
 Class {
-	#name : #RsrEphemeron,
-	#superclass : #RsrObject,
+	#name : 'RsrEphemeron',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'key',
 		'mournAction'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #'instance-creation' }
+{ #category : 'instance-creation' }
 RsrEphemeron class >> on: anObject
 mournAction: aBlock [
 
@@ -19,27 +19,27 @@ mournAction: aBlock [
         yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEphemeron >> key [
 
 	^key
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrEphemeron >> key: anObject [
 
 	key := anObject
 ]
 
-{ #category : #accessing }
-RsrEphemeron >> mournAction: aBlock [
-
-	mournAction := aBlock
-]
-
-{ #category : #mourning }
+{ #category : 'mourning' }
 RsrEphemeron >> mourn [
 
 	mournAction value.
     key := mournAction := nil
+]
+
+{ #category : 'accessing' }
+RsrEphemeron >> mournAction: aBlock [
+
+	mournAction := aBlock
 ]

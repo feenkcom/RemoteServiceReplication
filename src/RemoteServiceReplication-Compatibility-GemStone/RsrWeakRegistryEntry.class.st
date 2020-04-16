@@ -1,14 +1,14 @@
 Class {
-	#name : #RsrWeakRegistryEntry,
-	#superclass : #RsrRegistryEntry,
+	#name : 'RsrWeakRegistryEntry',
+	#superclass : 'RsrRegistryEntry',
 	#instVars : [
 		'mournAction'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #'instance-creation' }
-RsrWeakRegistryElement class >> with: anObject
+{ #category : 'instance-creation' }
+RsrWeakRegistryEntry class >> with: anObject
 mournAction: aBlock [
 
 	^(self with: anObject)
@@ -17,15 +17,15 @@ mournAction: aBlock [
         yourself
 ]
 
-{ #category : #accessing }
-RsrWeakRegistryElement >> mournAction: aBlock [
-
-	mournAction := aBlock
-]
-
-{ #category : #mourning }
-RsrWeakRegistryElement >> mourn [
+{ #category : 'mourning' }
+RsrWeakRegistryEntry >> mourn [
 
 	mournAction value.
     service := mournAction := nil
+]
+
+{ #category : 'accessing' }
+RsrWeakRegistryEntry >> mournAction: aBlock [
+
+	mournAction := aBlock
 ]

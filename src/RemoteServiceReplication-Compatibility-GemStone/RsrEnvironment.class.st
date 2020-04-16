@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrEnvironment,
-	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#name : 'RsrEnvironment',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #branching }
+{ #category : 'branching' }
 RsrEnvironment class >> ifPharo: aPharoBlock
 ifGemStone: aGemStoneBlock
 ifDolphin: aDolphinBlock [

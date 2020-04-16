@@ -2,23 +2,23 @@
 I maintain the associations between locally stored objects and their remote counterparts.
 "
 Class {
-	#name : #RsrRegistry,
-	#superclass : #RsrObject,
+	#name : 'RsrRegistry',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'mutex',
 		'map',
 		'reapAction'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrRegistry class >> new [
 
 	^self reapAction: [:key |]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrRegistry class >> reapAction: aBlock [
 
 	^super new
@@ -26,7 +26,7 @@ RsrRegistry class >> reapAction: aBlock [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistry >> at: aKey
 put: anEntry [
 
@@ -36,7 +36,7 @@ put: anEntry [
 	^anEntry
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistry >> dispatcherAt: aKey [
 
 	^self
@@ -44,7 +44,7 @@ RsrRegistry >> dispatcherAt: aKey [
 		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistry >> dispatcherAt: aKey
 ifAbsent: aBlock [
 
@@ -55,13 +55,13 @@ ifAbsent: aBlock [
 		ifNotNil: [element dispatcher]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrRegistry >> includesKey: aKey [
 
 	^mutex critical: [map includesKey: aKey]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrRegistry >> initialize [
 
 	super initialize.
@@ -69,19 +69,19 @@ RsrRegistry >> initialize [
 	map := Dictionary new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistry >> reapAction [
 
 	^reapAction
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistry >> reapAction: aBlock [
 
 	reapAction := aBlock
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 RsrRegistry >> removeKey: anRsrId [
 
 	| element |
@@ -93,7 +93,7 @@ RsrRegistry >> removeKey: anRsrId [
 	^element ifNotNil: [element value]
 ]
 
-{ #category : #'accessing' }
+{ #category : 'accessing' }
 RsrRegistry >> serviceAt: aKey [
 
 	^self
@@ -101,7 +101,7 @@ RsrRegistry >> serviceAt: aKey [
 		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
 ]
 
-{ #category : #'accessing' }
+{ #category : 'accessing' }
 RsrRegistry >> serviceAt: aKey
 ifAbsent: aBlock [
 
@@ -112,7 +112,7 @@ ifAbsent: aBlock [
 		ifNotNil: [element service]
 ]
 
-{ #category : #'adding/removing' }
+{ #category : 'adding/removing' }
 RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"

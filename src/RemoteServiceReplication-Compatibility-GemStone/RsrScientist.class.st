@@ -1,24 +1,24 @@
 Class {
-	#name : #RsrScientist,
-	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#name : 'RsrScientist',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #instrumenting }
+{ #category : 'instrumenting' }
 RsrScientist >> instrument: aBlock
 label: aString [
 
 	^aBlock value
 ]
 
-{ #category : #instrumenting }
+{ #category : 'instrumenting' }
 RsrScientist >> profile: aBlock
 label: aString [
 
 	^aBlock value
 ]
 
-{ #category : #instrumenting }
+{ #category : 'instrumenting' }
 RsrScientist >> profile: aBlock
 label: aString
 if: aCondition [

@@ -1,19 +1,19 @@
 Class {
-	#name : #RsrSocket,
-	#superclass : #RsrObject,
+	#name : 'RsrSocket',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'socket'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrSocket class >> new [
 
 	^super new initialize
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrSocket class >> on: aSocket [
 
 	^self new
@@ -21,19 +21,19 @@ RsrSocket class >> on: aSocket [
 		yourself
 ]
 
-{ #category : #listening }
+{ #category : 'listening' }
 RsrSocket >> accept [
 
 	^self class on: socket accept
 ]
 
-{ #category : #lifecycle }
+{ #category : 'lifecycle' }
 RsrSocket >> close [
 
 	socket close
 ]
 
-{ #category : #'opening connection' }
+{ #category : 'opening connection' }
 RsrSocket >> connectTo: aPort
 on: aHostname [
 
@@ -42,26 +42,26 @@ on: aHostname [
 		on: aHostname
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrSocket >> dataAvailable [
 
 	^socket readWillNotBlock
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrSocket >> initialize [
 
 	super initialize.
 	socket := GsSignalingSocket new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrSocket >> isConnected [
 
 	^socket isConnected
 ]
 
-{ #category : #listening }
+{ #category : 'listening' }
 RsrSocket >> listenOn: aPort [
 
 	socket
@@ -69,7 +69,7 @@ RsrSocket >> listenOn: aPort [
 		atPort: aPort
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 RsrSocket >> read: aCount [
 
 	| bytes bytesRead |
@@ -84,7 +84,7 @@ RsrSocket >> read: aCount [
 	^bytes
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 RsrSocket >> readAvailable [
 
 	| bytes totalBytesRead bytesRead |
@@ -104,14 +104,14 @@ RsrSocket >> readAvailable [
 	^bytes copyFrom: 1 to: totalBytesRead
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrSocket >> socket: aSocket [
 
 	aSocket option: 'NODELAY' put: true.
 	socket := aSocket
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 RsrSocket >> write: bytes [
 
 	socket write: bytes
