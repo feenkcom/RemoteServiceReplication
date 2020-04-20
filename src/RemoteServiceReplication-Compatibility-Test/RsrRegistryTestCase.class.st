@@ -105,6 +105,6 @@ RsrRegistryTestCase >> testRemoveKey [
 		serviceAt: client _id
 		put: client.
 	self
-		assert: (registry removeKey: client _id)
+		assert: (registry removeKey: client _id) service
 		identicalTo: client
 ]

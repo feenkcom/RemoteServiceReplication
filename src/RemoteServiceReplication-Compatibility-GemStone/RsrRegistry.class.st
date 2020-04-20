@@ -36,6 +36,15 @@ put: anEntry [
 	^anEntry
 ]
 
+{ #category : 'adding/removing' }
+RsrRegistry >> cleanupEntryFor: aKey [
+
+	| entry |
+	entry := self removeKey: aKey.
+	RsrLog new debug: 'Cleanup entry for(', aKey printString, ')'.
+	entry ifNotNil: [entry dispatcher stop. RsrLog new debug: 'Stopped dispatcher']
+]
+
 { #category : 'accessing' }
 RsrRegistry >> dispatcherAt: aKey [
 
@@ -84,13 +93,13 @@ RsrRegistry >> reapAction: aBlock [
 { #category : 'adding/removing' }
 RsrRegistry >> removeKey: anRsrId [
 
-	| element |
-	element := mutex
+	| entry |
+	entry := mutex
 		critical:
 			[map
 				removeKey: anRsrId
 				ifAbsent: [nil]].
-	^element ifNotNil: [element value]
+	^entry
 ]
 
 { #category : 'accessing' }
@@ -125,7 +134,7 @@ put: aService [
 					[RsrWeakRegistryEntry
 							with: aService
 							mournAction:
-									[self removeKey: aKey.
+									[self cleanupEntryFor: aKey.
 									reapAction value: aKey]].
 	entry dispatcher: dispatcher.
 	mutex critical: [map at: aKey put: entry].

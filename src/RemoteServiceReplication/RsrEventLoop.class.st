@@ -48,6 +48,12 @@ RsrEventLoop >> isActive [
 	^state == self runningState
 ]
 
+{ #category : 'testing' }
+RsrEventLoop >> isProcessActive [
+
+	^process ~~ nil
+]
+
 { #category : 'running' }
 RsrEventLoop >> log [
 
@@ -104,7 +110,8 @@ RsrEventLoop >> start [
 
 	state := self runningState.
 	process := RsrConcurrency
-		fork: [self runLoop]
+		fork: [self runLoop.
+				process := nil]
 		at: self priority
 ]
 

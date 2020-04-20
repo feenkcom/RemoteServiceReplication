@@ -30,5 +30,7 @@ RsrMessageDispatcher >> executeCycle [
 { #category : 'running' }
 RsrMessageDispatcher >> stop [
 
+	self isActive ifFalse: [^self].
+	state := self stoppedState.
 	self dispatch: self stopToken
 ]

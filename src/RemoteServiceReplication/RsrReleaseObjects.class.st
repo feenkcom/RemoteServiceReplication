@@ -26,7 +26,7 @@ RsrReleaseObjects >> executeFor: aConnection [
 
 	| registry |
 	registry := aConnection registry.
-	oids do: [:oid | registry removeKey: oid]
+	oids do: [:oid | registry cleanupEntryFor: oid]
 ]
 
 { #category : 'accessing' }

@@ -11,6 +11,28 @@ RsrServiceTest >> mirror: aService [
 ]
 
 { #category : 'running' }
+RsrServiceTest >> testCleanupServiceDispatcher [
+
+	| client clientDispatcher serverDispatcher |
+	client := self mirror: RsrConcurrentTestClient new.
+	clientDispatcher := connectionA registry dispatcherAt: client _id.
+	serverDispatcher := connectionB registry dispatcherAt: client _id.
+	self maximumReclamation.
+	self
+		assert: clientDispatcher isActive;
+		assert: clientDispatcher isProcessActive;
+		assert: serverDispatcher isActive;
+		assert: serverDispatcher isProcessActive.
+	client := nil.
+	self maximumReclamation.
+	self
+		deny: clientDispatcher isActive;
+		deny: clientDispatcher isProcessActive;
+		deny: serverDispatcher isActive;
+		deny: serverDispatcher isProcessActive
+]
+
+{ #category : 'running' }
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
