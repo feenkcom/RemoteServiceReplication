@@ -37,6 +37,14 @@ put: anEntry [
 	mutex critical: [map at: aKey put: anEntry]
 ]
 
+{ #category : #reaping }
+RsrRegistry >> cleanupEntryFor: aKey [
+
+	| entry |
+	entry := self removeKey: aKey.
+	entry ifNotNil: [entry dispatcher stop]
+]
+
 { #category : #initialization }
 RsrRegistry >> dispatcherAt: aKey [
 
@@ -73,8 +81,8 @@ RsrRegistry >> initialize [
 
 { #category : #reaping }
 RsrRegistry >> reap: aKey [
-
-	self removeKey: aKey.
+	
+	self cleanupEntryFor: aKey.
 	self reapAction value: aKey
 ]
 
@@ -99,9 +107,9 @@ RsrRegistry >> reaper [
 { #category : #'adding/removing' }
 RsrRegistry >> removeKey: aKey [
 
-	| element |
-	element := mutex critical: [map removeKey: aKey ifAbsent: [nil]].
-	^element ifNotNil: [element value]
+	| entry |
+	entry := mutex critical: [map removeKey: aKey ifAbsent: [nil]].
+	^entry
 ]
 
 { #category : #initialization }
