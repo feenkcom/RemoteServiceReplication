@@ -27,6 +27,12 @@ RsrMessageDispatcher >> executeCycle [
 		ifFalse: [item value]
 ]
 
+{ #category : 'accessing' }
+RsrMessageDispatcher >> priority [
+
+	^Processor userSchedulingPriority
+]
+
 { #category : 'running' }
 RsrMessageDispatcher >> stop [
 
