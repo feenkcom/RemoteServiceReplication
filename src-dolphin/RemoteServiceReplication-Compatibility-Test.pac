@@ -29,7 +29,7 @@ RsrObject
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrSocketPair categoriesForClass!RemoteServiceReplication-Compatibility-Test-Utilities! !
+!RsrSocketPair categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrConcurrency
 	subclass: #RsrTestingConcurrency
@@ -37,7 +37,7 @@ RsrConcurrency
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrTestingConcurrency categoriesForClass!RemoteServiceReplication-Compatibility-Test-Support! !
+!RsrTestingConcurrency categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrService
 	subclass: #RsrMockService
@@ -45,7 +45,7 @@ RsrService
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrMockService categoriesForClass!RemoteServiceReplication-Compatibility-Test-Support! !
+!RsrMockService categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 TestCase
 	subclass: #RsrTestCase
@@ -54,7 +54,7 @@ TestCase
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrTestCase comment: 'An abstract test class which contains utility methods'!
-!RsrTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
+!RsrTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrTestCase
 	subclass: #RsrClassResolverTestCase
@@ -63,7 +63,7 @@ RsrTestCase
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrClassResolverTestCase comment: 'This class contains tests'!
-!RsrClassResolverTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
+!RsrClassResolverTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrTestCase
 	subclass: #RsrGarbageCollectorTestCase
@@ -72,7 +72,7 @@ RsrTestCase
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrGarbageCollectorTestCase comment: 'This class contains tests'!
-!RsrGarbageCollectorTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
+!RsrGarbageCollectorTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrMockService
 	subclass: #RsrMockClient
@@ -80,7 +80,7 @@ RsrMockService
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrMockClient categoriesForClass!RemoteServiceReplication-Compatibility-Test-Support! !
+!RsrMockClient categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrMockService
 	subclass: #RsrMockServer
@@ -88,7 +88,7 @@ RsrMockService
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrMockServer categoriesForClass!RemoteServiceReplication-Compatibility-Test-Support! !
+!RsrMockServer categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrTestCase
 	subclass: #RsrRegistryTestCase
@@ -97,7 +97,7 @@ RsrTestCase
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrRegistryTestCase comment: 'I represent tests for the RsrRegistry.'!
-!RsrRegistryTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
+!RsrRegistryTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrTestCase
 	subclass: #RsrSocketTestCase
@@ -106,7 +106,7 @@ RsrTestCase
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrSocketTestCase comment: 'This class contains tests'!
-!RsrSocketTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
+!RsrSocketTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrTestCase
 	subclass: #RsrTestingConcurrencyTestCase
@@ -115,13 +115,13 @@ RsrTestCase
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrTestingConcurrencyTestCase comment: 'This class contains tests'!
-!RsrTestingConcurrencyTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test-TestCases! !
-
-!RsrSocketPair class methodsFor!
-firstSocket: firstSocketsecondSocket: secondSocket	^super new		firstSocket: firstSocket;		secondSocket: secondSocket;		yourself! !
+!RsrTestingConcurrencyTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 !RsrSocketPair class methodsFor!
 new	| listener firstSocket secondSocket |	listener := RsrSocket new.	secondSocket := RsrSocket new.	listener listenOn: self listenPort.	secondSocket		connectTo: self listenPort		on: '127.0.0.1'.	firstSocket := listener accept.	listener close.	(firstSocket isConnected and: [secondSocket isConnected])		ifFalse: [self error: 'Failed to create socket pair'].	^self		firstSocket: firstSocket		secondSocket: secondSocket! !
+
+!RsrSocketPair class methodsFor!
+firstSocket: firstSocketsecondSocket: secondSocket	^super new		firstSocket: firstSocket;		secondSocket: secondSocket;		yourself! !
 
 !RsrSocketPair class methodsFor!
 timeout	^2! !
@@ -181,16 +181,16 @@ secondSocket	^ secondSocket! !
 exceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].	sema wait! !
 
 !RsrTestingConcurrencyTestCase methodsFor!
-testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
+testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
 
 !RsrTestingConcurrencyTestCase methodsFor!
 noExceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [sema signal].	sema wait! !
 
 !RsrTestingConcurrencyTestCase methodsFor!
-testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
+testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
 
 !RsrRegistryTestCase methodsFor!
-testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		serviceAt: client _id		put: client.	self		assert: (registry removeKey: client _id)		identicalTo: client! !
+testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		serviceAt: client _id		put: client.	self		assert: (registry removeKey: client _id) service		identicalTo: client! !
 
 !RsrRegistryTestCase methodsFor!
 testIncludesKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self deny: (registry includesKey: client _id).	registry		serviceAt: client _id		put: client.	self assert: (registry includesKey: client _id)! !
@@ -214,7 +214,7 @@ testFailedResolution	| actual marker |	self		should: [RsrClassResolver class
 assert: aClassNameresolvesTo: expectedClass	| actualClass |	actualClass := RsrClassResolver classNamed: aClassName.	self		assert: actualClass		identicalTo: expectedClass! !
 
 !RsrTestingConcurrency methodsFor!
-forkedException	^forkedException! !
+fork: aBlock	^super fork: (self protect: aBlock)! !
 
 !RsrTestingConcurrency methodsFor!
 protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
@@ -223,19 +223,19 @@ protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. 
 fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
 
 !RsrTestingConcurrency methodsFor!
-fork: aBlock	^super fork: (self protect: aBlock)! !
+forkedException	^forkedException! !
+
+!RsrMockService methodsFor!
+isServer	^self class == RsrMockServer! !
+
+!RsrMockService methodsFor!
+initialize	super initialize.	_id := 1! !
 
 !RsrMockService methodsFor!
 isClient	^self class == RsrMockClient! !
 
 !RsrMockService methodsFor!
 service	^self! !
-
-!RsrMockService methodsFor!
-initialize	super initialize.	_id := 1! !
-
-!RsrMockService methodsFor!
-isServer	^self class == RsrMockServer! !
 
 !RsrTestCase methodsFor!
 runCase	| concurrency |	concurrency := RsrTestingConcurrency new.	RsrConcurrency current: concurrency.	super runCase.	RsrConcurrency resetCurrent.	concurrency forkedException ifNotNil: [:ex | ex signal]! !
@@ -250,13 +250,13 @@ assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
 fork: aBlock	^RsrConcurrency fork: aBlock! !
 
 !RsrTestCase methodsFor!
-deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
+assumption: aString	"This method serves as a marker for assumptions made in the tests.	Perhaps some of the senders can be removed in the future."! !
 
 !RsrTestCase methodsFor!
 maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
 
 !RsrTestCase methodsFor!
-assumption: aString	"This method serves as a marker for assumptions made in the tests.	Perhaps some of the senders can be removed in the future."! !
+deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
 
 !RsrTestCase methodsFor!
 defaultTimeLimit	^5 seconds! !
