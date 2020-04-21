@@ -83,7 +83,7 @@ RsrServiceTest >> testIsMirrored [
 ]
 
 { #category : 'running' }
-RsrServiceTest >> testMessageDispatchedSeriallyForSingleService [
+RsrServiceTest >> testMessageDispatchedSeriallyAndToSameProcessForSingleService [
 	"Ensure that when a message is sent to a Service it is always dispatched to the same process"
 
 	| client server process1 process2 |
