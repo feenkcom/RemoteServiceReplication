@@ -334,6 +334,13 @@ at: aKey put: anEntry
 
 	mutex critical: [map at: aKey put: anEntry]!
 
+cleanupEntryFor: aKey
+
+	| entry |
+	entry := self removeKey: aKey.
+	entry ifNotNil: [entry dispatcher stop].
+	!
+
 dispatcherAt: aKey
 
 	^self
@@ -372,7 +379,7 @@ initialize
 
 reap: aKey
 
-	self removeKey: aKey.
+	self cleanupEntryFor: aKey.
 	self reapAction value: aKey!
 
 reapAction
@@ -385,11 +392,7 @@ reapAction: aBlock
 
 removeKey: aKey
 
-	| element value |
-	element := mutex critical: [map removeKey: aKey ifAbsent: [nil]].
-	^self
-		elementValue: element
-		ifNil: [nil]!
+	^mutex critical: [map removeKey: aKey ifAbsent: [nil]]!
 
 serviceAt: aKey
 
@@ -425,6 +428,7 @@ put: aService
 		put: entry.
 	^aService! !
 !RsrRegistry categoriesFor: #at:put:!public! !
+!RsrRegistry categoriesFor: #cleanupEntryFor:!public! !
 !RsrRegistry categoriesFor: #dispatcherAt:!public! !
 !RsrRegistry categoriesFor: #dispatcherAt:ifAbsent:!public! !
 !RsrRegistry categoriesFor: #elementValue:ifNil:!public! !
