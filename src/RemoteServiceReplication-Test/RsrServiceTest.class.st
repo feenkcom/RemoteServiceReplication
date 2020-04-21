@@ -25,6 +25,7 @@ RsrServiceTest >> testCleanupServiceDispatcher [
 		assert: serverDispatcher isProcessActive.
 	client := nil.
 	self maximumReclamation.
+	(Delay forSeconds: 1) wait. "Ensure ReleaseObject has time to be processed on the server-side."
 	self
 		deny: clientDispatcher isActive;
 		deny: clientDispatcher isProcessActive;
