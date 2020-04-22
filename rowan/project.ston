@@ -7,5 +7,5 @@ RwProjectSpecificationV2 {
 	#specsPath : 'rowan/specs',
 	#packageFormat : 'tonel',
 	#packageConvention : 'RowanHybrid',
-	#comment : 'rsr-proto project specification'
+	#comment : 'Remote Service Replication project specification'
 }

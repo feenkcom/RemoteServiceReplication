@@ -1,8 +1,7 @@
 RwLoadSpecificationV2 {
 	#specName : 'RemoteServiceReplication',
 	#projectName : 'RemoteServiceReplication',
-	#projectAlias : 'rsr-proto',
-	#gitUrl : 'git@git.gemtalksystems.com:rsr-proto.git',
+	#gitUrl : 'git@git.gemtalksystems.com:RemoteServiceReplication.git',
 	#revision : 'master',
 	#projectSpecFile : 'rowan/project.ston',
 	#componentNames : [
