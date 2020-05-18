@@ -1,5 +1,5 @@
 Class {
-	#name : #RsrProtoObject,
+	#name : 'RsrProtoObject',
 	#superclass : 'nil',
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }

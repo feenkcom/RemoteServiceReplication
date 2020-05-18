@@ -1,8 +1,8 @@
 Class {
-	#name : #RsrForwarder,
-	#superclass : #RsrProtoObject,
+	#name : 'RsrForwarder',
+	#superclass : 'RsrProtoObject',
 	#instVars : [
 		'_service'
 	],
-	#category : #'RemoteServiceReplication-Compatibility-GemStone'
+	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
