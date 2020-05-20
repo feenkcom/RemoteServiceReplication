@@ -23,7 +23,7 @@ RsrSystemTestCase >> setUp [
 	connectionA := RsrConnection
 		socket: socketPair firstSocket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1).
+		oidSpigot: RsrThreadSafeNumericSpigot naturals.
 	connectionB := RsrConnection
 		socket: socketPair secondSocket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
