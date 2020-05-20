@@ -11,8 +11,8 @@ package classNames
 	add: #RsrForwarderTest;
 	add: #RsrReflectedVariableTestServer;
 	add: #RsrMockEncoder;
-	add: #RsrMockConnection;
 	add: #RsrServiceTest;
+	add: #RsrMockConnection;
 	add: #RsrAbstractReflectedVariableTestServiceA;
 	add: #RsrSocketStreamTestCase;
 	add: #RsrClientAllDataObjects;
@@ -39,6 +39,7 @@ package classNames
 	add: #RsrLifetimeTest;
 	add: #RsrServiceAbstractNoInstVars;
 	add: #RsrValueHolderServer;
+	add: #RsrStressTest;
 	add: #RsrReferenceAllSpeciesServer;
 	add: #RsrRetainAnalysisTest;
 	add: #RsrServiceAbstractAllDataObjects;
@@ -395,6 +396,15 @@ RsrSystemTestCase
 RsrSpeciesReturnEquality comment: 'This class contains tests'!
 !RsrSpeciesReturnEquality categoriesForClass!RemoteServiceReplication-Test! !
 
+RsrSystemTestCase
+	subclass: #RsrStressTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrStressTest comment: 'This class contains tests'!
+!RsrStressTest categoriesForClass!RemoteServiceReplication-Test! !
+
 RsrNumericSpigotTest
 	subclass: #RsrThreadSafeNumericSpigotTest
 	instanceVariableNames: ''
@@ -489,16 +499,16 @@ testIsMirrored	| instance |	instance := RsrClientTestService new.	self deny:
 testReflectedVariableNames	| clientNames serverNames |	clientNames := RsrClientTestService _variablesToReflect.	serverNames := RsrServerTestService _variablesToReflect.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 1.	self		assert: (clientNames at: 1) asSymbol		equals: #sharedVariable.	clientNames := RsrReflectedVariableTestClient _variablesToReflect.	serverNames := RsrReflectedVariableTestServer _variablesToReflect.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 2.	self		assert: (clientNames at: 1) asSymbol		equals: #varA.	self		assert: (clientNames at: 2) asSymbol		equals: #varB! !
 
 !RsrServiceTest methodsFor!
-testMessageDispatchedSeriallyForSingleService	"Ensure that when a message is sent to a Service it is always dispatched to the same process"	| client server process1 process2 |	client := self mirror: RsrConcurrentTestClient new.	server := connectionB registry serviceAt: client _id.	client stashProcess.	process1 := server stashedProcess.	client stashProcess.	process2 := server stashedProcess.	self		assert: process1		identicalTo: process2! !
+testHasRemoteSelf	| service |	service := RsrClientTestService new.	self mirror: service.	self deny: nil == service remoteSelf! !
 
 !RsrServiceTest methodsFor!
 testInitialization	| instance |	instance := RsrClientTestService new.	self		assert: instance isMirrored		equals: false.	self		assert: instance _id		equals: nil.	self		assert: instance _connection		equals: nil! !
 
 !RsrServiceTest methodsFor!
-testHasRemoteSelf	| service |	service := RsrClientTestService new.	self mirror: service.	self deny: nil == service remoteSelf! !
+testCleanupServiceDispatcher	| client clientDispatcher serverDispatcher |	client := self mirror: RsrConcurrentTestClient new.	clientDispatcher := connectionA registry dispatcherAt: client _id.	serverDispatcher := connectionB registry dispatcherAt: client _id.	self maximumReclamation.	self		assert: clientDispatcher isActive;		assert: clientDispatcher isProcessActive;		assert: serverDispatcher isActive;		assert: serverDispatcher isProcessActive.	client := nil.	self maximumReclamation.	(Delay forSeconds: 1) wait. "Ensure ReleaseObject has time to be processed on the server-side."	self		deny: clientDispatcher isActive;		deny: clientDispatcher isProcessActive;		deny: serverDispatcher isActive;		deny: serverDispatcher isProcessActive! !
 
 !RsrServiceTest methodsFor!
-testCleanupServiceDispatcher	| client clientDispatcher serverDispatcher |	client := self mirror: RsrConcurrentTestClient new.	clientDispatcher := connectionA registry dispatcherAt: client _id.	serverDispatcher := connectionB registry dispatcherAt: client _id.	self maximumReclamation.	self		assert: clientDispatcher isActive;		assert: clientDispatcher isProcessActive;		assert: serverDispatcher isActive;		assert: serverDispatcher isProcessActive.	client := nil.	self maximumReclamation.	(Delay forSeconds: 1) wait. "Ensure ReleaseObject has time to be processed on the server-side."	self		deny: clientDispatcher isActive;		deny: clientDispatcher isProcessActive;		deny: serverDispatcher isActive;		deny: serverDispatcher isProcessActive! !
+testMessageDispatchedSeriallyAndToSameProcessForSingleService	"Ensure that when a message is sent to a Service it is always dispatched to the same process"	| client server process1 process2 |	client := self mirror: RsrConcurrentTestClient new.	server := connectionB registry serviceAt: client _id.	client stashProcess.	process1 := server stashedProcess.	client stashProcess.	process2 := server stashedProcess.	self		assert: process1		identicalTo: process2! !
 
 !RsrSpeciesReturnEquality methodsFor!
 testUnicodeString	self verify: self unicodeString! !
@@ -654,7 +664,7 @@ returnArgument: anObject	^anObject! !
 tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
 
 !RsrSystemTestCase methodsFor!
-setUp	| socketPair semaphore |	super setUp.	socketPair := RsrSocketPair new.	connectionA := RsrConnection		socket: socketPair firstSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1).	connectionB := RsrConnection		socket: socketPair secondSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	semaphore := Semaphore new.	self fork:		[[connectionA open] ensure: [semaphore signal]].	self fork:		[[connectionB open] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
+setUp	| socketPair semaphore |	super setUp.	socketPair := RsrSocketPair new.	connectionA := RsrConnection		socket: socketPair firstSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		socket: socketPair secondSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	semaphore := Semaphore new.	self fork:		[[connectionA open] ensure: [semaphore signal]].	self fork:		[[connectionB open] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
 
 !RsrAbstractValueHolderService methodsFor!
 value	^value! !
@@ -985,3 +995,18 @@ testClose	serverStream close.	self		deny: serverStream isConnected;		assert
 
 !RsrSocketStreamTestCase methodsFor!
 listenPort	^47856! !
+
+!RsrStressTest methodsFor!
+testRepeatedSendReceive1KBytes	| client bytes |	client := connectionA serviceFor: #RsrChattyClient.	bytes := ByteArray new: 1024.	self repetitions timesRepeat: [client returnArgument:  bytes].	self assert: true. "If we get to this point, the sends have all successed"! !
+
+!RsrStressTest methodsFor!
+testRepeatedSendReceive2KBytes	| client bytes |	client := connectionA serviceFor: #RsrChattyClient.	bytes := ByteArray new: 1024 * 2.	self repetitions timesRepeat: [client returnArgument:  bytes].	self assert: true. "If we get to this point, the sends have all successed"! !
+
+!RsrStressTest methodsFor!
+testRepeatedUnarySends	| client |	client := connectionA serviceFor: #RsrChattyClient.	self repetitions timesRepeat: [client returnSelf].	self assert: true. "If we get to this point, the sends have all successed"! !
+
+!RsrStressTest methodsFor!
+repetitions	^1000! !
+
+!RsrStressTest methodsFor!
+testRepeatedSendReceive1MBytes	| client bytes |	client := connectionA serviceFor: #RsrChattyClient.	bytes := ByteArray new: 1024 squared.	RsrLog new debug: 'About to start writing bytes'.	self repetitions timesRepeat: [client returnArgument:  bytes].	self assert: true. "If we get to this point, the sends have all successed"! !

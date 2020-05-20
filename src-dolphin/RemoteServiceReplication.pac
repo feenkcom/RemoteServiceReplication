@@ -4,17 +4,19 @@ package paxVersion: 1; basicComment: ''.
 
 package classNames
 	add: #RsrService;
-	add: #RsrEventLoop;
+	add: #RsrChattyServer;
 	add: #RsrEncoder;
-	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrStream;
 	add: #RsrSendMessage;
+	add: #RsrChattyClient;
 	add: #RsrUnknownOID;
 	add: #RsrRetainAnalysis;
+	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrDecoder;
-	add: #RsrSocketStream;
 	add: #RsrCycleDetected;
 	add: #RsrNumericSpigot;
 	add: #RsrCodec;
+	add: #RsrSocketStream;
 	add: #RsrLogWithPrefix;
 	add: #RsrBufferedSocketStream;
 	add: #RsrLog;
@@ -24,15 +26,16 @@ package classNames
 	add: #RsrCommandSink;
 	add: #RsrServiceFactoryServer;
 	add: #RsrReleaseObjects;
+	add: #RsrAbstractChattyService;
 	add: #RsrCommandSource;
 	add: #RsrServiceFactory;
 	add: #RsrDeliverResponse;
-	add: #RsrObjectCache;
 	add: #RsrMessageDispatcher;
+	add: #RsrObjectCache;
 	add: #RsrAbstractServiceFactory;
 	add: #RsrDispatchEventLoop;
 	add: #RsrCommand;
-	add: #RsrStream;
+	add: #RsrEventLoop;
 	yourself.
 
 package methodNames
@@ -159,6 +162,14 @@ RsrObject
 !RsrStream categoriesForClass!RemoteServiceReplication! !
 
 RsrService
+	subclass: #RsrAbstractChattyService
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrAbstractChattyService categoriesForClass!RemoteServiceReplication! !
+
+RsrService
 	subclass: #RsrAbstractServiceFactory
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -246,6 +257,22 @@ RsrNumericSpigot
 	classInstanceVariableNames: ''!
 !RsrThreadSafeNumericSpigot categoriesForClass!RemoteServiceReplication! !
 
+RsrAbstractChattyService
+	subclass: #RsrChattyClient
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrChattyClient categoriesForClass!RemoteServiceReplication! !
+
+RsrAbstractChattyService
+	subclass: #RsrChattyServer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrChattyServer categoriesForClass!RemoteServiceReplication! !
+
 RsrError
 	subclass: #RsrCycleDetected
 	instanceVariableNames: 'object'
@@ -294,6 +321,12 @@ doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_se
 
 !RsrForwarder methodsFor!
 _service: aService	_service := aService! !
+
+!RsrAbstractChattyService class methodsFor!
+clientClassName	^#RsrChattyClient! !
+
+!RsrAbstractChattyService class methodsFor!
+serverClassName	^#RsrChattyServer! !
 
 !RsrService class methodsFor!
 _id: anIdconnection: aConnection	^super new		_id: anId connection: aConnection;		yourself! !
@@ -636,6 +669,18 @@ dispatch: aMessageSend	queue nextPut: aMessageSend! !
 
 !RsrMessageDispatcher methodsFor!
 executeCycle	| item |	item := queue next.	item == self stopToken		ifFalse: [item value]! !
+
+!RsrChattyServer methodsFor!
+returnSelf	^self! !
+
+!RsrChattyServer methodsFor!
+returnArgument: anObject	^anObject! !
+
+!RsrChattyClient methodsFor!
+returnSelf	^remoteSelf returnSelf! !
+
+!RsrChattyClient methodsFor!
+returnArgument: anObject	^remoteSelf returnArgument: anObject! !
 
 !RsrSendMessage methodsFor!
 receiver	^ receiver! !
