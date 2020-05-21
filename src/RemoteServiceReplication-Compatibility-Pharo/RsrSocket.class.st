@@ -18,7 +18,13 @@ RsrSocket class >> on: aSocket [
 { #category : #listening }
 RsrSocket >> accept [
 
-	^self class on: socket accept
+	^self class on: (socket waitForAcceptFor: self acceptTimeout ifTimedOut: [^nil])
+]
+
+{ #category : #accessing }
+RsrSocket >> acceptTimeout [
+
+	^1
 ]
 
 { #category : #lifecycle }
