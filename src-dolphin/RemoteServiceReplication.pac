@@ -3,8 +3,8 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrService;
 	add: #RsrChattyServer;
+	add: #RsrService;
 	add: #RsrEncoder;
 	add: #RsrStream;
 	add: #RsrSendMessage;
@@ -30,10 +30,9 @@ package classNames
 	add: #RsrCommandSource;
 	add: #RsrServiceFactory;
 	add: #RsrDeliverResponse;
-	add: #RsrMessageDispatcher;
 	add: #RsrObjectCache;
-	add: #RsrAbstractServiceFactory;
 	add: #RsrDispatchEventLoop;
+	add: #RsrAbstractServiceFactory;
 	add: #RsrCommand;
 	add: #RsrEventLoop;
 	yourself.
@@ -281,14 +280,6 @@ RsrError
 	classInstanceVariableNames: ''!
 !RsrCycleDetected categoriesForClass!RemoteServiceReplication! !
 
-RsrDispatchEventLoop
-	subclass: #RsrMessageDispatcher
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrMessageDispatcher categoriesForClass!RemoteServiceReplication! !
-
 RsrAbstractServiceFactory
 	subclass: #RsrServiceFactory
 	instanceVariableNames: ''
@@ -321,12 +312,6 @@ doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_se
 
 !RsrForwarder methodsFor!
 _service: aService	_service := aService! !
-
-!RsrAbstractChattyService class methodsFor!
-clientClassName	^#RsrChattyClient! !
-
-!RsrAbstractChattyService class methodsFor!
-serverClassName	^#RsrChattyServer! !
 
 !RsrService class methodsFor!
 _id: anIdconnection: aConnection	^super new		_id: anId connection: aConnection;		yourself! !
@@ -379,8 +364,11 @@ roots: anArrayconnection: aConnection	^self new		roots: anArray;		connectio
 !RsrReleaseObjects class methodsFor!
 oids: anArray	^self new		oids: anArray;		yourself! !
 
-!RsrMessageDispatcher class methodsFor!
-startOn: aConnection	^(self on: aConnection)		start;		yourself! !
+!RsrLogWithPrefix class methodsFor!
+prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
+
+!RsrLogWithPrefix class methodsFor!
+log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrConnection class methodsFor!
 socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
@@ -397,17 +385,17 @@ acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	listene
 !RsrConnection class methodsFor!
 connectionTimeout	^2! !
 
-!RsrLogWithPrefix class methodsFor!
-prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
-
-!RsrLogWithPrefix class methodsFor!
-log: aLog	^self new		log: aLog;		yourself! !
-
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
 
 !RsrStream class methodsFor!
 on: aStream	^self new		stream: aStream;		yourself! !
+
+!RsrAbstractServiceFactory class methodsFor!
+clientClassName	^#RsrServiceFactory! !
+
+!RsrAbstractServiceFactory class methodsFor!
+serverClassName	^#RsrServiceFactoryServer! !
 
 !RsrNumericSpigot class methodsFor!
 new	^self		start: 0		step: 1! !
@@ -418,11 +406,11 @@ naturals	^self		start: 1		step: 1! !
 !RsrNumericSpigot class methodsFor!
 start: aNumberstep: anIncrement	^super new		start: aNumber;		step: anIncrement;		yourself! !
 
-!RsrAbstractServiceFactory class methodsFor!
-clientClassName	^#RsrServiceFactory! !
+!RsrAbstractChattyService class methodsFor!
+clientClassName	^#RsrChattyClient! !
 
-!RsrAbstractServiceFactory class methodsFor!
-serverClassName	^#RsrServiceFactoryServer! !
+!RsrAbstractChattyService class methodsFor!
+serverClassName	^#RsrChattyServer! !
 
 !RsrNumericSpigot methodsFor!
 step: anIncrement	step := anIncrement! !
@@ -658,18 +646,6 @@ synchronize	remoteSelf == nil		ifFalse: [remoteSelf _synchronize]! !
 !RsrService methodsFor!
 isNotMirrored	^self isMirrored not! !
 
-!RsrMessageDispatcher methodsFor!
-stop	self isActive ifFalse: [^self].	state := self stoppedState.	self dispatch: self stopToken! !
-
-!RsrMessageDispatcher methodsFor!
-priority	^Processor userSchedulingPriority! !
-
-!RsrMessageDispatcher methodsFor!
-dispatch: aMessageSend	queue nextPut: aMessageSend! !
-
-!RsrMessageDispatcher methodsFor!
-executeCycle	| item |	item := queue next.	item == self stopToken		ifFalse: [item value]! !
-
 !RsrChattyServer methodsFor!
 returnSelf	^self! !
 
@@ -698,7 +674,7 @@ encodeUsing: anEncoder	encoding := anEncoder encodeSendMessage: self! !
 arguments: anObject	arguments := anObject! !
 
 !RsrSendMessage methodsFor!
-executeFor: aConnection	| messageDispatcher |	messageDispatcher := aConnection registry dispatcherAt: self receiver _id.	messageDispatcher dispatch: [self primExecuteFor: aConnection]! !
+executeFor: aConnection	self primExecuteFor: aConnection! !
 
 !RsrSendMessage methodsFor!
 selector	^ selector! !
