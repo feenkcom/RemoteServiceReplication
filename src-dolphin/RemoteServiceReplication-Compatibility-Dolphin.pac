@@ -336,10 +336,7 @@ at: aKey put: anEntry
 
 cleanupEntryFor: aKey
 
-	| entry |
-	entry := self removeKey: aKey.
-	entry ifNotNil: [entry dispatcher stop].
-	!
+	self removeKey: aKey!
 
 dispatcherAt: aKey
 
@@ -411,8 +408,7 @@ serviceAt: aKey
 put: aService
 	"Store aService into the registry"
 
-	| dispatcher entry |
-	dispatcher := (RsrClassResolver classNamed: #RsrMessageDispatcher) startOn: aService _connection.
+	| entry |
 	entry := aService isServer
 				ifTrue: [RsrRegistryEntry value: aService]
 				ifFalse: 
@@ -422,7 +418,6 @@ put: aService
 								selector: #reap:
 								argument: aKey.
 					RsrWeakRegistryEntry value: aService toFinalizeEvaluate: finalizeSend].
-	entry dispatcher: dispatcher.
 	self
 		at: aKey
 		put: entry.
