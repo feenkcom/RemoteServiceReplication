@@ -377,10 +377,10 @@ socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^supe
 new	self error: 'Instance creation via #new is unsupported'! !
 
 !RsrConnection class methodsFor!
-connectTo: aPortNumberon: aHostname	| socket |	socket := RsrSocket new.	socket		connectTo: aPortNumber		on: aHostname.	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated) open! !
+connectTo: aPortNumberon: aHostname	| socket |	socket := RsrSocket new.	socket		connectTo: aPortNumber		on: aHostname.	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated) open! !
 
 !RsrConnection class methodsFor!
-acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	listener listenOn: aPortNumber.	socket := listener accept.	listener close.	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1)) open! !
+acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	[listener listenOn: aPortNumber.	socket := listener accept]		ensure: [listener close].	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals) open! !
 
 !RsrConnection class methodsFor!
 connectionTimeout	^2! !

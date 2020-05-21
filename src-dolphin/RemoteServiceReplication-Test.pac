@@ -661,7 +661,7 @@ returnArgument: anObject	^anObject! !
 tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
 
 !RsrSystemTestCase methodsFor!
-setUp	| socketPair semaphore |	super setUp.	socketPair := RsrSocketPair new.	connectionA := RsrConnection		socket: socketPair firstSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		socket: socketPair secondSocket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	semaphore := Semaphore new.	self fork:		[[connectionA open] ensure: [semaphore signal]].	self fork:		[[connectionB open] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
+setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := RsrConnection acceptOn: port] ensure: [semaphore signal]];		fork: [[connectionB := RsrConnection connectTo: port on: '127.0.0.1'] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
 
 !RsrAbstractValueHolderService methodsFor!
 value	^value! !
