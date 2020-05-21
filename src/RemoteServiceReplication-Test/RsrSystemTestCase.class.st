@@ -17,22 +17,13 @@ RsrSystemTestCase class >> isAbstract [
 { #category : 'initialization' }
 RsrSystemTestCase >> setUp [
 
-	| socketPair semaphore |
+	| port semaphore |
 	super setUp.
-	socketPair := RsrSocketPair new.
-	connectionA := RsrConnection
-		socket: socketPair firstSocket
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: RsrThreadSafeNumericSpigot naturals.
-	connectionB := RsrConnection
-		socket: socketPair secondSocket
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
-		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
+	port := 64455.
 	semaphore := Semaphore new.
-	self fork:
-		[[connectionA open] ensure: [semaphore signal]].
-	self fork:
-		[[connectionB open] ensure: [semaphore signal]].
+	self
+		fork: [[connectionA := RsrConnection acceptOn: port] ensure: [semaphore signal]];
+		fork: [[connectionB := RsrConnection connectTo: port on: '127.0.0.1'] ensure: [semaphore signal]].
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;

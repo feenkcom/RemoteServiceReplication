@@ -30,7 +30,7 @@ RsrConnection class >> acceptOn: aPortNumber [
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1)) open
+		oidSpigot: RsrThreadSafeNumericSpigot naturals) open
 ]
 
 { #category : 'instance creation' }
@@ -51,7 +51,7 @@ on: aHostname [
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
-		oidSpigot: (RsrThreadSafeNumericSpigot start: 2 step: 1) negated) open
+		oidSpigot: RsrThreadSafeNumericSpigot naturals negated) open
 ]
 
 { #category : 'instance creation' }
