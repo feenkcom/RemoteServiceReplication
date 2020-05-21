@@ -2,8 +2,7 @@ Class {
 	#name : #RsrRegistryEntry,
 	#superclass : #RsrObject,
 	#instVars : [
-		'storage',
-		'dispatcher'
+		'storage'
 	],
 	#category : #'RemoteServiceReplication-Compatibility-Pharo'
 }
@@ -14,18 +13,6 @@ RsrRegistryEntry class >> value: anObject [
 	^self new
 		value: anObject;
 		yourself
-]
-
-{ #category : #accessing }
-RsrRegistryEntry >> dispatcher [
-
-	^dispatcher
-]
-
-{ #category : #accessing }
-RsrRegistryEntry >> dispatcher: aMessageDispatcher [
-
-	dispatcher := aMessageDispatcher
 ]
 
 { #category : #initializing }

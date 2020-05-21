@@ -40,9 +40,7 @@ put: anEntry [
 { #category : #reaping }
 RsrRegistry >> cleanupEntryFor: aKey [
 
-	| entry |
-	entry := self removeKey: aKey.
-	entry ifNotNil: [entry dispatcher stop]
+	self removeKey: aKey.
 ]
 
 { #category : #initialization }
@@ -136,16 +134,15 @@ RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"
 
-	| dispatcher entry |
-	dispatcher := RsrMessageDispatcher startOn: aService _connection.
+	| entry |
 	entry := aService isServer
-		ifTrue: [RsrRegistryEntry new service: aService; dispatcher: dispatcher; yourself]
+		ifTrue: [RsrRegistryEntry value: aService]
 		ifFalse:
 			[aService
 				toFinalizeSend: #reap:
 				to: self reaper
 				with: aKey.
-			RsrWeakRegistryEntry new service: aService; dispatcher: dispatcher; yourself].
+			RsrWeakRegistryEntry value: aService].
 	self
 		at: aKey
 		put: entry
