@@ -42,7 +42,6 @@ RsrRegistry >> cleanupEntryFor: aKey [
 	| entry |
 	entry := self removeKey: aKey.
 	RsrLog new debug: 'Cleanup entry for(', aKey printString, ')'.
-	entry ifNotNil: [entry dispatcher stop. RsrLog new debug: 'Stopped dispatcher']
 ]
 
 { #category : 'accessing' }
@@ -126,8 +125,7 @@ RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"
 
-	| dispatcher entry |
-	dispatcher := (RsrClassResolver classNamed: #RsrMessageDispatcher) startOn: aService _connection.
+	| entry |
 	entry := aService isServer
 			ifTrue: [RsrRegistryEntry with: aService]
 			ifFalse:
@@ -136,7 +134,6 @@ put: aService [
 							mournAction:
 									[self cleanupEntryFor: aKey.
 									reapAction value: aKey]].
-	entry dispatcher: dispatcher.
 	mutex critical: [map at: aKey put: entry].
 	^aService
 ]

@@ -11,29 +11,6 @@ RsrServiceTest >> mirror: aService [
 ]
 
 { #category : 'running' }
-RsrServiceTest >> testCleanupServiceDispatcher [
-
-	| client clientDispatcher serverDispatcher |
-	client := self mirror: RsrConcurrentTestClient new.
-	clientDispatcher := connectionA registry dispatcherAt: client _id.
-	serverDispatcher := connectionB registry dispatcherAt: client _id.
-	self maximumReclamation.
-	self
-		assert: clientDispatcher isActive;
-		assert: clientDispatcher isProcessActive;
-		assert: serverDispatcher isActive;
-		assert: serverDispatcher isProcessActive.
-	client := nil.
-	self maximumReclamation.
-	(Delay forSeconds: 1) wait. "Ensure ReleaseObject has time to be processed on the server-side."
-	self
-		deny: clientDispatcher isActive;
-		deny: clientDispatcher isProcessActive;
-		deny: serverDispatcher isActive;
-		deny: serverDispatcher isProcessActive
-]
-
-{ #category : 'running' }
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
@@ -99,7 +76,7 @@ RsrServiceTest >> testMessageDispatchedSeriallyAndToSameProcessForSingleService 
 ]
 
 { #category : 'running' }
-RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
+RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
 	"Ensure a long-running process in one Service will not cause startvation of other Services"
 
 	| delayClient delayServer client server initialCounter counter delayedResult delaySem immediateResult |
@@ -128,7 +105,7 @@ RsrServiceTest >> testMessagesDispatchedConcurrentlyForMultipleServices [
 	delaySem wait.
 	self
 		assert: delayedResult
-		equals: initialCounter + 1.
+		equals: initialCounter
 ]
 
 { #category : 'running' }

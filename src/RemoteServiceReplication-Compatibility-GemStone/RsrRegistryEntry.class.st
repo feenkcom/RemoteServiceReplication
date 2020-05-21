@@ -2,8 +2,7 @@ Class {
 	#name : 'RsrRegistryEntry',
 	#superclass : 'RsrObject',
 	#instVars : [
-		'service',
-		'dispatcher'
+		'service'
 	],
 	#category : 'RemoteServiceReplication-Compatibility-GemStone'
 }
@@ -14,18 +13,6 @@ RsrRegistryEntry class >> with: anObject [
 	^self new
         value: anObject;
         yourself
-]
-
-{ #category : 'accessing' }
-RsrRegistryEntry >> dispatcher [
-
-	^dispatcher
-]
-
-{ #category : 'accessing' }
-RsrRegistryEntry >> dispatcher: aMessageDispatcher [
-
-	dispatcher := aMessageDispatcher
 ]
 
 { #category : 'accessing' }
