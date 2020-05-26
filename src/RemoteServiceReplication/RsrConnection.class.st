@@ -244,9 +244,15 @@ RsrConnection >> releaseOid: anOid [
 ]
 
 { #category : 'public-service factory' }
+RsrConnection >> serviceFactory [
+
+	^serviceFactory
+]
+
+{ #category : 'public-service factory' }
 RsrConnection >> serviceFor: aResponsibility [
 
-	^serviceFactory serviceFor: aResponsibility
+	^self serviceFactory serviceFor: aResponsibility
 ]
 
 { #category : 'private-accessing' }

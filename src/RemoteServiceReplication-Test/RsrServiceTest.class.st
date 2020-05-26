@@ -10,6 +10,28 @@ RsrServiceTest >> mirror: aService [
 	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
 ]
 
+{ #category : 'accessing' }
+RsrServiceTest >> serviceFactoryA [
+
+	^connectionA serviceFactory
+]
+
+{ #category : 'accessing' }
+RsrServiceTest >> serviceFactoryB [
+
+	^connectionB serviceFactory
+]
+
+{ #category : 'running' }
+RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
+
+	| client |
+	client := self serviceFactoryA serviceFor: #RsrAbstractTestService.
+	self
+		assert: client class
+		equals: RsrClientTestService
+]
+
 { #category : 'running' }
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 

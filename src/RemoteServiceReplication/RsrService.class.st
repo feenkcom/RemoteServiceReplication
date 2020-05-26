@@ -35,6 +35,24 @@ RsrService class >> _variablesToReflect [
 ]
 
 { #category : 'accessing' }
+RsrService class >> abstractClass [
+
+	^RsrClassResolver classNamed: self abstractClassName
+]
+
+{ #category : 'accessing' }
+RsrService class >> abstractClassName [
+
+	self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RsrService class >> clientClass [
+
+	^RsrClassResolver classNamed: self clientClassName
+]
+
+{ #category : 'accessing' }
 RsrService class >> clientClassName [
 
 	self subclassResponsibility
@@ -50,6 +68,12 @@ RsrService class >> isClientClass [
 RsrService class >> isServerClass [
 
 	^self name == self serverClassName
+]
+
+{ #category : 'accessing' }
+RsrService class >> serverClass [
+
+	^RsrClassResolver classNamed: self serverClassName
 ]
 
 { #category : 'accessing' }

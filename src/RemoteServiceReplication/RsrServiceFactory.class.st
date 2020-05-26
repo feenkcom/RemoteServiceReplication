@@ -13,8 +13,9 @@ RsrServiceFactory >> mirror: aService [
 { #category : 'public-manufacturing' }
 RsrServiceFactory >> serviceFor: aResponsibility [
 
-	| instance |
-	instance := (RsrClassResolver classNamed: aResponsibility) basicNew.
+	| abstractClass instance |
+	abstractClass := RsrClassResolver classNamed: aResponsibility.
+	instance := abstractClass clientClass new.
 	self mirror: instance.
 	^instance
 ]
