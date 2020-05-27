@@ -37,7 +37,11 @@ package binaryGlobalNames: (Set new
 package globalAliases: (Set new
 	yourself).
 
-package setPrerequisites: #('RemoteServiceReplication-Base').
+package setPrerequisites: #(
+	'..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin'
+	'..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Deprecated\Dolphin Base (Deprecated)'
+	'..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Sockets\Dolphin Sockets'
+	'RemoteServiceReplication-Base').
 
 package!
 
@@ -659,5 +663,36 @@ RsrProtoObject comment: ''!
 RsrForwarder guid: (GUID fromString: '{63d391a4-77f2-42aa-82a9-31cb9e9ed808}')!
 RsrForwarder comment: ''!
 !RsrForwarder categoriesForClass!Unclassified! !
+!RsrForwarder methodsFor!
+
+aspectDisplayOn: aStream
+
+	aStream
+		nextPutAll: 'RsrForwarder(';
+		print: _service;
+		nextPutAll: ')'!
+
+class
+
+	^RsrForwarder!
+
+icon
+
+	^self class icon!
+
+newAspect: each
+class: aspectClass
+
+	^aspectClass name: each!
+
+respondsTo: aSelector
+
+	^self class canUnderstand: aSelector! !
+!RsrForwarder categoriesFor: #aspectDisplayOn:!private! !
+!RsrForwarder categoriesFor: #class!private! !
+!RsrForwarder categoriesFor: #icon!private! !
+!RsrForwarder categoriesFor: #newAspect:class:!private! !
+!RsrForwarder categoriesFor: #respondsTo:!private! !
+
 "Binary Globals"!
 
