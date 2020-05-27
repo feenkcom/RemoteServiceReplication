@@ -40,7 +40,8 @@ RsrEncoderTest >> testDeliverResponse [
 	response := #responseSymbol.
 	command := RsrDeliverResponse
 		transaction: 1
-		response: response.
+		response: response
+		roots: (Array with: response).
 	command encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"

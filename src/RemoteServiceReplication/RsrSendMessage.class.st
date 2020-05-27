@@ -57,10 +57,11 @@ RsrSendMessage >> primExecuteFor: aConnection [
 	aConnection objectCache reset.
 	response := RsrDeliverResponse
 		transaction: transaction
-		response: result.
+		response: result
+		roots: (Array with: receiver with: result).
 	response sendOver: aConnection]
 		on: Error
-		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex) sendOver: aConnection]
+		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex roots: (Array with: receiver)) sendOver: aConnection]
 ]
 
 { #category : 'accessing' }

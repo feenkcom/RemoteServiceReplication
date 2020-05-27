@@ -15,6 +15,39 @@ RsrMessageSendingTest >> testRemoteError [
 ]
 
 { #category : 'running' }
+RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
+	"Ensure that when the remote peer service returns a value,
+	that it is also sent to update the local service."
+
+	| client server value response |
+	client := self serviceFactoryA serviceFor: #RsrAbstractReflectedVariableTestServiceB.
+	server := connectionB registry serviceAt: client _id.
+	value := 42.
+	self
+		deny: client varA
+		equals: value.
+	self
+		deny: client varB
+		equals: value.
+	response := client setVarsToAndReturn: value.
+	self
+		assert: response
+		equals: value.
+	self
+		assert: server varA
+		equals: value.
+	self
+		assert: server varB
+		equals: value.
+	self
+		assert: client varA
+		equals: value.
+	self
+		assert: client varB
+		equals: value
+]
+
+{ #category : 'running' }
 RsrMessageSendingTest >> testReturnArgument [
 
 	| client server arguments dt response |

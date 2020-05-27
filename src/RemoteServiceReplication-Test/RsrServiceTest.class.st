@@ -10,18 +10,6 @@ RsrServiceTest >> mirror: aService [
 	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
 ]
 
-{ #category : 'accessing' }
-RsrServiceTest >> serviceFactoryA [
-
-	^connectionA serviceFactory
-]
-
-{ #category : 'accessing' }
-RsrServiceTest >> serviceFactoryB [
-
-	^connectionB serviceFactory
-]
-
 { #category : 'running' }
 RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
 

@@ -191,7 +191,7 @@ RsrCodec
 
 RsrCommand
 	subclass: #RsrDeliverResponse
-	instanceVariableNames: 'transaction errorName response retainList'
+	instanceVariableNames: 'transaction errorName response roots retainList'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -320,10 +320,10 @@ serverClassName	self subclassResponsibility! !
 isAbstractClass	^self name == self abstractClassName! !
 
 !RsrDeliverResponse class methodsFor!
-transaction: aTransactionIdresponse: anObject	^self new		transaction: aTransactionId;		response: anObject;		yourself! !
+transaction: aTransactionIderror: anExceptionroots: anArray	^self new		transaction: aTransactionId;		errorName: anException class name;		response: anException messageText;		roots: anArray;		yourself! !
 
 !RsrDeliverResponse class methodsFor!
-transaction: aTransactionIderror: anException	^self new		transaction: aTransactionId;		errorName: anException class name;		response: anException messageText;		yourself! !
+transaction: aTransactionIdresponse: anObjectroots: anArray	^self new		transaction: aTransactionId;		response: anObject;		roots: anArray;		yourself! !
 
 !RsrBufferedSocketStream class methodsFor!
 on: aSocketStream	^self new		stream: aSocketStream;		yourself! !
@@ -434,6 +434,9 @@ isFulfilled	^value ~~ markerValue! !
 fulfill: anObject	self isFulfilled		ifTrue: [^self error: 'Promise value already set'].	value := anObject.	mutex signal! !
 
 !RsrDeliverResponse methodsFor!
+roots: anArray	roots := anArray! !
+
+!RsrDeliverResponse methodsFor!
 response	^response! !
 
 !RsrDeliverResponse methodsFor!
@@ -464,13 +467,16 @@ errorName	^errorName! !
 reportOn: aLog	aLog debug: 'RsrDeliverResponse/', self response class name! !
 
 !RsrDeliverResponse methodsFor!
-sendOver: aConnection	| analysis |	analysis := RsrRetainAnalysis		roots: (Array with: response)		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	aConnection commandWriter enqueue: self! !
+sendOver: aConnection	| analysis |	analysis := RsrRetainAnalysis		roots: roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	aConnection commandWriter enqueue: self! !
 
 !RsrDeliverResponse methodsFor!
 error	^(RsrClassResolver classNamed: errorName ifAbsent: [RsrError]) new		messageText: response;		yourself! !
 
 !RsrDeliverResponse methodsFor!
 transaction: aTransactionId	transaction := aTransactionId! !
+
+!RsrDeliverResponse methodsFor!
+roots	^roots! !
 
 !RsrEncoder methodsFor!
 encodeObject: anObject	^ByteArray		streamContents:			[:stream |			self				encodeObject: anObject				onto: stream]! !
@@ -671,7 +677,7 @@ transaction: anObject	transaction := anObject! !
 sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	aConnection promises		at: transaction		put: promise.	aConnection commandWriter enqueue: self.	^promise! !
 
 !RsrSendMessage methodsFor!
-primExecuteFor: aConnection	| result response |	[result := receiver		perform: selector		withArguments: arguments.	aConnection objectCache reset.	response := RsrDeliverResponse		transaction: transaction		response: result.	response sendOver: aConnection]		on: Error		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex) sendOver: aConnection]! !
+primExecuteFor: aConnection	| result response |	[result := receiver		perform: selector		withArguments: arguments.	aConnection objectCache reset.	response := RsrDeliverResponse		transaction: transaction		response: result		roots: (Array with: receiver with: result).	response sendOver: aConnection]		on: Error		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex roots: (Array with: receiver)) sendOver: aConnection]! !
 
 !RsrServiceFactoryServer methodsFor!
 create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !

@@ -6,3 +6,9 @@ Class {
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
+
+{ #category : 'accessing' }
+RsrAbstractReflectedVariableTestServiceA >> varA [
+
+	^varA
+]

@@ -24,3 +24,9 @@ RsrAbstractReflectedVariableTestServiceB class >> serverClassName [
 
 	^#RsrReflectedVariableTestServer
 ]
+
+{ #category : 'accessing' }
+RsrAbstractReflectedVariableTestServiceB >> varB [
+
+	^varB
+]

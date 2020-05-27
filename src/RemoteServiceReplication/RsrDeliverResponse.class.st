@@ -5,6 +5,7 @@ Class {
 		'transaction',
 		'errorName',
 		'response',
+		'roots',
 		'retainList'
 	],
 	#category : 'RemoteServiceReplication'
@@ -12,22 +13,26 @@ Class {
 
 { #category : 'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
-error: anException [
+error: anException
+roots: anArray [
 
 	^self new
 		transaction: aTransactionId;
 		errorName: anException class name;
 		response: anException messageText;
+		roots: anArray;
 		yourself
 ]
 
 { #category : 'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
-response: anObject [
+response: anObject
+roots: anArray [
 
 	^self new
 		transaction: aTransactionId;
 		response: anObject;
+		roots: anArray;
 		yourself
 ]
 
@@ -96,12 +101,24 @@ RsrDeliverResponse >> response: anObject [
 	response := anObject
 ]
 
+{ #category : 'accessing' }
+RsrDeliverResponse >> roots [
+
+	^roots
+]
+
+{ #category : 'accessing' }
+RsrDeliverResponse >> roots: anArray [
+
+	roots := anArray
+]
+
 { #category : 'lifecycle' }
 RsrDeliverResponse >> sendOver: aConnection [
 
 	| analysis |
 	analysis := RsrRetainAnalysis
-		roots: (Array with: response)
+		roots: roots
 		connection: aConnection.
 	analysis perform.
 	retainList := analysis retainCommands.

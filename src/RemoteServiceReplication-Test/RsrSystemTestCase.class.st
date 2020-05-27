@@ -14,6 +14,18 @@ RsrSystemTestCase class >> isAbstract [
 	^self == RsrSystemTestCase
 ]
 
+{ #category : 'accessing' }
+RsrSystemTestCase >> serviceFactoryA [
+
+	^connectionA serviceFactory
+]
+
+{ #category : 'accessing' }
+RsrSystemTestCase >> serviceFactoryB [
+
+	^connectionB serviceFactory
+]
+
 { #category : 'initialization' }
 RsrSystemTestCase >> setUp [
 
