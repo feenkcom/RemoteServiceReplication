@@ -542,10 +542,7 @@ enqueue: aCommand	self isActive ifTrue: [queue nextPut: aCommand]! !
 executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
 
 !RsrServiceFactory methodsFor!
-serviceFor: aResponsibility	| abstractClass instance |	abstractClass := RsrClassResolver classNamed: aResponsibility.	instance := abstractClass clientClass new.	self mirror: instance.	^instance! !
-
-!RsrServiceFactory methodsFor!
-mirror: aService	remoteSelf return: aService! !
+serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
 
 !RsrReleaseObjects methodsFor!
 reportOn: aLog	aLog debug: 'RsrReleaseObjects/', self oids printString! !
@@ -677,7 +674,7 @@ sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		ro
 primExecuteFor: aConnection	| result response |	[result := receiver		perform: selector		withArguments: arguments.	aConnection objectCache reset.	response := RsrDeliverResponse		transaction: transaction		response: result.	response sendOver: aConnection]		on: Error		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex) sendOver: aConnection]! !
 
 !RsrServiceFactoryServer methodsFor!
-return: aService	^aService! !
+create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !
 
 !RsrEventLoop methodsFor!
 stop	self isActive ifFalse: [^self].	state := self stoppedState.	self connection close.	self stream close! !

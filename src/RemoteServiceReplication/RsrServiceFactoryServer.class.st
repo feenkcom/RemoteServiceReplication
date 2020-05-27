@@ -5,7 +5,9 @@ Class {
 }
 
 { #category : 'mirroring' }
-RsrServiceFactoryServer >> return: aService [
+RsrServiceFactoryServer >> create: aResponsibility [
 
-	^aService
+	| abstractClass |
+	abstractClass := RsrClassResolver classNamed: aResponsibility.
+	^abstractClass serverClass new
 ]
