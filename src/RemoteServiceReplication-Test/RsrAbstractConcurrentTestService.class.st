@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrAbstractConcurrentTestService class >> abstractClassName [
+
+	^#RsrAbstractConcurrentTestService
+]
+
+{ #category : 'accessing' }
 RsrAbstractConcurrentTestService class >> clientClassName [
 
 	^#RsrConcurrentTestClient

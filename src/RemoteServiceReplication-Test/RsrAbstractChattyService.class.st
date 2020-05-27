@@ -1,8 +1,14 @@
 Class {
 	#name : 'RsrAbstractChattyService',
 	#superclass : 'RsrService',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Test'
 }
+
+{ #category : 'accessing' }
+RsrAbstractChattyService class >> abstractClassName [
+
+	^#RsrAbstractChattyService
+]
 
 { #category : 'accessing' }
 RsrAbstractChattyService class >> clientClassName [

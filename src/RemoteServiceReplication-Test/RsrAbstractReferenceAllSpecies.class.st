@@ -40,6 +40,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrAbstractReferenceAllSpecies class >> abstractClassName [
+
+	^#RsrAbstractReferenceAllSpecies
+]
+
+{ #category : 'accessing' }
 RsrAbstractReferenceAllSpecies class >> clientClassName [
 
 	^#RsrReferenceAllSpeciesClient

@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrAbstractServiceFactory class >> abstractClassName [
+
+	^#RsrServiceFactory
+]
+
+{ #category : 'accessing' }
 RsrAbstractServiceFactory class >> clientClassName [
 
 	^#RsrServiceFactory

@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrAbstractReflectedVariableTestServiceB class >> abstractClassName [
+
+	^#RsrAbstractReflectedVariableTestServiceB
+]
+
+{ #category : 'accessing' }
 RsrAbstractReflectedVariableTestServiceB class >> clientClassName [
 
 	^#RsrReflectedVariableTestClient

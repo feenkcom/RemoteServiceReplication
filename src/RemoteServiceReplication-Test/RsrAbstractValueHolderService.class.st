@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrAbstractValueHolderService class >> abstractClassName [
+
+	^#RsrAbstractValueHolderService
+]
+
+{ #category : 'accessing' }
 RsrAbstractValueHolderService class >> clientClassName [
 
 	^#RsrValueHolderClient

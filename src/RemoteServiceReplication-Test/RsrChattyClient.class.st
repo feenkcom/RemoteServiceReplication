@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrChattyClient',
 	#superclass : 'RsrAbstractChattyService',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessor' }

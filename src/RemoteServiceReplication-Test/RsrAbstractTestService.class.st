@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrAbstractTestService class >> abstractClassName [
+
+	^#RsrAbstractTestService
+]
+
+{ #category : 'accessing' }
 RsrAbstractTestService class >> clientClassName [
 
 	^#RsrClientTestService

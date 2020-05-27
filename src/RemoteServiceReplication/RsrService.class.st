@@ -26,7 +26,7 @@ RsrService class >> _variablesToReflect [
 
 	| currentClass variables |
 	variables := OrderedCollection new.
-	currentClass := self superclass.
+	currentClass := self abstractClass.
 	[currentClass == RsrService]
 		whileFalse:
 			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
@@ -56,6 +56,12 @@ RsrService class >> clientClass [
 RsrService class >> clientClassName [
 
 	self subclassResponsibility
+]
+
+{ #category : 'testing' }
+RsrService class >> isAbstractClass [
+
+	^self name == self abstractClassName
 ]
 
 { #category : 'testing' }

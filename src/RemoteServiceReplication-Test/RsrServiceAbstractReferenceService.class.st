@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrServiceAbstractReferenceService class >> abstractClassName [
+
+	^#RsrServiceAbstractReferenceService
+]
+
+{ #category : 'accessing' }
 RsrServiceAbstractReferenceService class >> clientClassName [
 
 	^#RsrClientReferenceService

@@ -11,6 +11,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrServiceAbstractAllDataObjects class >> abstractClassName [
+
+	^#RsrServiceAbstractAllDataObjects
+]
+
+{ #category : 'accessing' }
 RsrServiceAbstractAllDataObjects class >> clientClassName [
 
 	^#RsrClientAllDataObjects

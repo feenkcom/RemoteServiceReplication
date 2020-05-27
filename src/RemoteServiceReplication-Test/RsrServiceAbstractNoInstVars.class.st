@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrServiceAbstractNoInstVars class >> abstractClassName [
+
+	^#RsrServiceAbstractNoInstVars
+]
+
+{ #category : 'accessing' }
 RsrServiceAbstractNoInstVars class >> clientClassName [
 
 	^#RsrClientNoInstVars

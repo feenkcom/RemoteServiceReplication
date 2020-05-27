@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrChattyServer',
 	#superclass : 'RsrAbstractChattyService',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
