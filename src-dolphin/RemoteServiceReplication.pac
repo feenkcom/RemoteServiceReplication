@@ -3,20 +3,18 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrChattyServer;
 	add: #RsrService;
-	add: #RsrEncoder;
 	add: #RsrStream;
+	add: #RsrEncoder;
+	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrSendMessage;
-	add: #RsrChattyClient;
 	add: #RsrUnknownOID;
 	add: #RsrRetainAnalysis;
-	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrDecoder;
+	add: #RsrSocketStream;
 	add: #RsrCycleDetected;
 	add: #RsrNumericSpigot;
 	add: #RsrCodec;
-	add: #RsrSocketStream;
 	add: #RsrLogWithPrefix;
 	add: #RsrBufferedSocketStream;
 	add: #RsrLog;
@@ -26,7 +24,6 @@ package classNames
 	add: #RsrCommandSink;
 	add: #RsrServiceFactoryServer;
 	add: #RsrReleaseObjects;
-	add: #RsrAbstractChattyService;
 	add: #RsrCommandSource;
 	add: #RsrServiceFactory;
 	add: #RsrDeliverResponse;
@@ -161,14 +158,6 @@ RsrObject
 !RsrStream categoriesForClass!RemoteServiceReplication! !
 
 RsrService
-	subclass: #RsrAbstractChattyService
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrAbstractChattyService categoriesForClass!RemoteServiceReplication! !
-
-RsrService
 	subclass: #RsrAbstractServiceFactory
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -256,22 +245,6 @@ RsrNumericSpigot
 	classInstanceVariableNames: ''!
 !RsrThreadSafeNumericSpigot categoriesForClass!RemoteServiceReplication! !
 
-RsrAbstractChattyService
-	subclass: #RsrChattyClient
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrChattyClient categoriesForClass!RemoteServiceReplication! !
-
-RsrAbstractChattyService
-	subclass: #RsrChattyServer
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrChattyServer categoriesForClass!RemoteServiceReplication! !
-
 RsrError
 	subclass: #RsrCycleDetected
 	instanceVariableNames: 'object'
@@ -314,13 +287,16 @@ doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_se
 _service: aService	_service := aService! !
 
 !RsrService class methodsFor!
+clientClassName	self subclassResponsibility! !
+
+!RsrService class methodsFor!
 _id: anIdconnection: aConnection	^super new		_id: anId connection: aConnection;		yourself! !
 
 !RsrService class methodsFor!
-_variablesToReflect	| currentClass variables |	variables := OrderedCollection new.	currentClass := self superclass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
+_variablesToReflect	| currentClass variables |	variables := OrderedCollection new.	currentClass := self abstractClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
 
 !RsrService class methodsFor!
-serverClassName	self subclassResponsibility! !
+abstractClass	^RsrClassResolver classNamed: self abstractClassName! !
 
 !RsrService class methodsFor!
 isClientClass	^self name == self clientClassName! !
@@ -329,7 +305,19 @@ isClientClass	^self name == self clientClassName! !
 isServerClass	^self name == self serverClassName! !
 
 !RsrService class methodsFor!
-clientClassName	self subclassResponsibility! !
+abstractClassName	self subclassResponsibility! !
+
+!RsrService class methodsFor!
+serverClass	^RsrClassResolver classNamed: self serverClassName! !
+
+!RsrService class methodsFor!
+clientClass	^RsrClassResolver classNamed: self clientClassName! !
+
+!RsrService class methodsFor!
+serverClassName	self subclassResponsibility! !
+
+!RsrService class methodsFor!
+isAbstractClass	^self name == self abstractClassName! !
 
 !RsrDeliverResponse class methodsFor!
 transaction: aTransactionIdresponse: anObject	^self new		transaction: aTransactionId;		response: anObject;		yourself! !
@@ -395,6 +383,9 @@ on: aStream	^self new		stream: aStream;		yourself! !
 clientClassName	^#RsrServiceFactory! !
 
 !RsrAbstractServiceFactory class methodsFor!
+abstractClassName	^#RsrServiceFactory! !
+
+!RsrAbstractServiceFactory class methodsFor!
 serverClassName	^#RsrServiceFactoryServer! !
 
 !RsrNumericSpigot class methodsFor!
@@ -405,12 +396,6 @@ naturals	^self		start: 1		step: 1! !
 
 !RsrNumericSpigot class methodsFor!
 start: aNumberstep: anIncrement	^super new		start: aNumber;		step: anIncrement;		yourself! !
-
-!RsrAbstractChattyService class methodsFor!
-clientClassName	^#RsrChattyClient! !
-
-!RsrAbstractChattyService class methodsFor!
-serverClassName	^#RsrChattyServer! !
 
 !RsrNumericSpigot methodsFor!
 step: anIncrement	step := anIncrement! !
@@ -557,7 +542,7 @@ enqueue: aCommand	self isActive ifTrue: [queue nextPut: aCommand]! !
 executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
 
 !RsrServiceFactory methodsFor!
-serviceFor: aResponsibility	| instance |	instance := (RsrClassResolver classNamed: aResponsibility) basicNew.	self mirror: instance.	^instance! !
+serviceFor: aResponsibility	| abstractClass instance |	abstractClass := RsrClassResolver classNamed: aResponsibility.	instance := abstractClass clientClass new.	self mirror: instance.	^instance! !
 
 !RsrServiceFactory methodsFor!
 mirror: aService	remoteSelf return: aService! !
@@ -645,18 +630,6 @@ synchronize	remoteSelf == nil		ifFalse: [remoteSelf _synchronize]! !
 
 !RsrService methodsFor!
 isNotMirrored	^self isMirrored not! !
-
-!RsrChattyServer methodsFor!
-returnSelf	^self! !
-
-!RsrChattyServer methodsFor!
-returnArgument: anObject	^anObject! !
-
-!RsrChattyClient methodsFor!
-returnSelf	^remoteSelf returnSelf! !
-
-!RsrChattyClient methodsFor!
-returnArgument: anObject	^remoteSelf returnArgument: anObject! !
 
 !RsrSendMessage methodsFor!
 receiver	^ receiver! !
@@ -956,7 +929,7 @@ analyzeService: aService	self ensureRegistered: aService.	self		analyzing: a
 retain: aService	| retainCommand |	retainCommand := RsrRetainObject object: aService.	retainCommand encodeUsing: self encoder.	self retainCommands add: retainCommand! !
 
 !RsrConnection methodsFor!
-serviceFor: aResponsibility	^serviceFactory serviceFor: aResponsibility! !
+serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
 close	isOpen		ifFalse: [^self].	isOpen := false.	commandReader stop.	commandWriter stop.	dispatcher stop.	self promises do: [:each | each error: RsrConnectionClosed new].	objectCache reset! !
@@ -1023,6 +996,9 @@ releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	command := Rsr
 
 !RsrConnection methodsFor!
 _forwarderClass	^RsrForwarder! !
+
+!RsrConnection methodsFor!
+serviceFactory	^serviceFactory! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !

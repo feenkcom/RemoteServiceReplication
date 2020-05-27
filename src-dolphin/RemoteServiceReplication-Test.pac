@@ -6,11 +6,12 @@ package classNames
 	add: #RsrConcurrentTestServer;
 	add: #RsrThreadSafeNumericSpigotTest;
 	add: #RsrEncoderTest;
-	add: #RsrDecoderTest;
+	add: #RsrReflectedVariableTestServer;
 	add: #RsrAbstractConcurrentTestService;
 	add: #RsrForwarderTest;
-	add: #RsrReflectedVariableTestServer;
+	add: #RsrChattyServer;
 	add: #RsrMockEncoder;
+	add: #RsrAbstractValueHolderService;
 	add: #RsrServiceTest;
 	add: #RsrMockConnection;
 	add: #RsrAbstractReflectedVariableTestServiceA;
@@ -22,9 +23,12 @@ package classNames
 	add: #RsrAbstractTestService;
 	add: #RsrNumericSpigotTest;
 	add: #RsrAbstractReferenceAllSpecies;
+	add: #RsrSameAbstractAndClientService;
+	add: #RsrDifferentServerService;
 	add: #RsrMockRegistry;
 	add: #RsrMessageSendingTest;
 	add: #RsrAbstractReflectedVariableTestServiceB;
+	add: #RsrAbstractChattyService;
 	add: #RsrSystemTestCase;
 	add: #RsrServerAllDataObjects;
 	add: #RsrValueHolderClient;
@@ -32,10 +36,11 @@ package classNames
 	add: #RsrClientTestService;
 	add: #RsrReferenceAllSpeciesClient;
 	add: #RsrCodecTest;
-	add: #RsrServerTestService;
 	add: #RsrClientReferenceService;
+	add: #RsrServerTestService;
 	add: #RsrConcurrentTestClient;
 	add: #RsrReflectedVariableTestClient;
+	add: #RsrChattyClient;
 	add: #RsrLifetimeTest;
 	add: #RsrServiceAbstractNoInstVars;
 	add: #RsrValueHolderServer;
@@ -43,9 +48,9 @@ package classNames
 	add: #RsrReferenceAllSpeciesServer;
 	add: #RsrRetainAnalysisTest;
 	add: #RsrServiceAbstractAllDataObjects;
-	add: #RsrAbstractValueHolderService;
 	add: #RsrServerReferenceService;
 	add: #RsrClientNoInstVars;
+	add: #RsrDecoderTest;
 	yourself.
 
 package methodNames
@@ -70,6 +75,14 @@ RsrObject
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrMockRegistry categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrService
+	subclass: #RsrAbstractChattyService
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrAbstractChattyService categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
 	subclass: #RsrAbstractConcurrentTestService
@@ -112,6 +125,14 @@ RsrService
 !RsrAbstractValueHolderService categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
+	subclass: #RsrSameAbstractAndClientService
+	instanceVariableNames: 'replicated1 replicated2'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrSameAbstractAndClientService categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrService
 	subclass: #RsrServiceAbstractAllDataObjects
 	instanceVariableNames: 'positiveSmallInteger negativeSmallInteger integerZero string'
 	classVariableNames: ''
@@ -142,6 +163,22 @@ RsrAbstractReflectedVariableTestServiceA
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrAbstractReflectedVariableTestServiceB categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrAbstractChattyService
+	subclass: #RsrChattyClient
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrChattyClient categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrAbstractChattyService
+	subclass: #RsrChattyServer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrChattyServer categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrServiceAbstractAllDataObjects
 	subclass: #RsrClientAllDataObjects
@@ -199,6 +236,14 @@ RsrAbstractConcurrentTestService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrConcurrentTestServer categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrSameAbstractAndClientService
+	subclass: #RsrDifferentServerService
+	instanceVariableNames: 'private1'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrDifferentServerService categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrTestCase
 	subclass: #RsrForwarderTest
@@ -414,6 +459,24 @@ RsrNumericSpigotTest
 RsrThreadSafeNumericSpigotTest comment: 'This class contains tests'!
 !RsrThreadSafeNumericSpigotTest categoriesForClass!RemoteServiceReplication-Test! !
 
+!RsrAbstractChattyService class methodsFor!
+clientClassName	^#RsrChattyClient! !
+
+!RsrAbstractChattyService class methodsFor!
+abstractClassName	^#RsrAbstractChattyService! !
+
+!RsrAbstractChattyService class methodsFor!
+serverClassName	^#RsrChattyServer! !
+
+!RsrSameAbstractAndClientService class methodsFor!
+clientClassName	^#RsrSameAbstractAndClientService! !
+
+!RsrSameAbstractAndClientService class methodsFor!
+abstractClassName	^#RsrSameAbstractAndClientService! !
+
+!RsrSameAbstractAndClientService class methodsFor!
+serverClassName	^#RsrDifferentServerService! !
+
 !RsrConcurrentTestServer class methodsFor!
 initialCounter	^0! !
 
@@ -421,10 +484,16 @@ initialCounter	^0! !
 clientClassName	^#RsrClientNoInstVars! !
 
 !RsrServiceAbstractNoInstVars class methodsFor!
+abstractClassName	^#RsrServiceAbstractNoInstVars! !
+
+!RsrServiceAbstractNoInstVars class methodsFor!
 serverClassName	^#RsrServerNoInstVars! !
 
 !RsrAbstractConcurrentTestService class methodsFor!
 clientClassName	^#RsrConcurrentTestClient! !
+
+!RsrAbstractConcurrentTestService class methodsFor!
+abstractClassName	^#RsrAbstractConcurrentTestService! !
 
 !RsrAbstractConcurrentTestService class methodsFor!
 serverClassName	^#RsrConcurrentTestServer! !
@@ -436,6 +505,9 @@ isAbstract	^self == RsrSystemTestCase! !
 clientClassName	^#RsrReferenceAllSpeciesClient! !
 
 !RsrAbstractReferenceAllSpecies class methodsFor!
+abstractClassName	^#RsrAbstractReferenceAllSpecies! !
+
+!RsrAbstractReferenceAllSpecies class methodsFor!
 serverClassName	^#RsrReferenceAllSpeciesServer! !
 
 !RsrServiceAbstractReferenceService class methodsFor!
@@ -443,6 +515,9 @@ clientClassName	^#RsrClientReferenceService! !
 
 !RsrServiceAbstractReferenceService class methodsFor!
 service: aService	^self new		service: aService;		yourself! !
+
+!RsrServiceAbstractReferenceService class methodsFor!
+abstractClassName	^#RsrServiceAbstractReferenceService! !
 
 !RsrServiceAbstractReferenceService class methodsFor!
 serverClassName	^#RsrServerReferenceService! !
@@ -454,10 +529,16 @@ clientClassName	^#RsrValueHolderClient! !
 value: anRsrObject	^self new		value: anRsrObject;		yourself! !
 
 !RsrAbstractValueHolderService class methodsFor!
+abstractClassName	^#RsrAbstractValueHolderService! !
+
+!RsrAbstractValueHolderService class methodsFor!
 serverClassName	^#RsrValueHolderServer! !
 
 !RsrServiceAbstractAllDataObjects class methodsFor!
 clientClassName	^#RsrClientAllDataObjects! !
+
+!RsrServiceAbstractAllDataObjects class methodsFor!
+abstractClassName	^#RsrServiceAbstractAllDataObjects! !
 
 !RsrServiceAbstractAllDataObjects class methodsFor!
 serverClassName	^#RsrServerAllDataObjects! !
@@ -469,10 +550,16 @@ forwarderClass: aClass 	^self new		forwarderClass: aClass;		yourself! !
 clientClassName	^#RsrClientTestService! !
 
 !RsrAbstractTestService class methodsFor!
+abstractClassName	^#RsrAbstractTestService! !
+
+!RsrAbstractTestService class methodsFor!
 serverClassName	^#RsrServerTestService! !
 
 !RsrAbstractReflectedVariableTestServiceB class methodsFor!
 clientClassName	^#RsrReflectedVariableTestClient! !
+
+!RsrAbstractReflectedVariableTestServiceB class methodsFor!
+abstractClassName	^#RsrAbstractReflectedVariableTestServiceB! !
 
 !RsrAbstractReflectedVariableTestServiceB class methodsFor!
 serverClassName	^#RsrReflectedVariableTestServer! !
@@ -487,7 +574,13 @@ mirror: aService	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArg
 testVariableReflection	| localService remoteService |	localService := RsrClientTestService new		sharedVariable: #shared;		privateVariable: #private;		yourself.	self mirror: localService.	remoteService := connectionB registry serviceAt: localService _id.	self		assert: localService sharedVariable		identicalTo: remoteService sharedVariable.	self		assert: localService privateVariable		identicalTo: #private.	self		assert: remoteService privateVariable		identicalTo: nil! !
 
 !RsrServiceTest methodsFor!
+testCreateServiceWithDistinctClientAbstractService	| client |	client := self serviceFactoryA serviceFor: #RsrAbstractTestService.	self		assert: client class		equals: RsrClientTestService! !
+
+!RsrServiceTest methodsFor!
 testEnsureServersAreCachedAndReused	| client service1 service2 |	client := RsrClientTestService new.	self mirror: client.	service1 := connectionB registry serviceAt: client _id.	self mirror: client.	service2 := connectionB registry serviceAt: client _id.	self		assert: service1		identicalTo: service2! !
+
+!RsrServiceTest methodsFor!
+serviceFactoryB	^connectionB serviceFactory! !
 
 !RsrServiceTest methodsFor!
 testMessagesDispatchedSeriallyForMultipleServices	"Ensure a long-running process in one Service will not cause startvation of other Services"	| delayClient delayServer client server initialCounter counter delayedResult delaySem immediateResult |	delayClient := RsrConcurrentTestClient new.	client := RsrConcurrentTestClient new.	self mirror: delayClient.	self mirror: client.	initialCounter := 0.	counter := Array with: initialCounter.	delayServer := connectionB registry serviceAt: delayClient _id.	server := connectionB registry serviceAt: client _id.	delaySem := Semaphore new.	delayServer		counter: counter;		semaphore: delaySem.	server counter: counter.	self		assumption: 'The call to #delayedCounter needs to run before the methods continues.';		assumption: 'The delay period in #delayedCounter will be enough to ensure #counterWithIncrement processes'.	RsrConcurrency fork: [delayedResult := delayClient delayedCounter. delaySem signal].	delaySem wait.	immediateResult := client counterWithIncrement.	self		assert: immediateResult		equals: initialCounter.	delaySem wait.	self		assert: delayedResult		equals: initialCounter! !
@@ -506,6 +599,12 @@ testInitialization	| instance |	instance := RsrClientTestService new.	self	
 
 !RsrServiceTest methodsFor!
 testMessageDispatchedSeriallyAndToSameProcessForSingleService	"Ensure that when a message is sent to a Service it is always dispatched to the same process"	| client server process1 process2 |	client := self mirror: RsrConcurrentTestClient new.	server := connectionB registry serviceAt: client _id.	client stashProcess.	process1 := server stashedProcess.	client stashProcess.	process2 := server stashedProcess.	self		assert: process1		identicalTo: process2! !
+
+!RsrServiceTest methodsFor!
+serviceFactoryA	^connectionA serviceFactory! !
+
+!RsrServiceTest methodsFor!
+testCreateServiceWithSameClientAbstractService	| client server |	client := self serviceFactoryA serviceFor: #RsrSameAbstractAndClientService.	self		assert: client class		equals: RsrSameAbstractAndClientService.	server := connectionB registry serviceAt: client _id.	self		assert: server replicated1		equals: nil.	self		assert: server replicated2		equals: nil.	client		replicated1: 1;		replicated2: 2;		synchronize.	self		assert: server replicated1		equals: 1.	self		assert: server replicated2		equals: 2.	server		replicated1: 10;		replicated2: 20;		private1: 3;		synchronize.	self		assert: client replicated1		equals: 10.	self		assert: client replicated2		equals: 20! !
 
 !RsrSpeciesReturnEquality methodsFor!
 testUnicodeString	self verify: self unicodeString! !
@@ -758,6 +857,36 @@ testSymbol	self		verifyImmediate: self genericSymbol		encoding: self generic
 
 !RsrCodecTest methodsFor!
 testControlWord		self		verifyControlWord: 0		encoding: #[0 0 0 0 0 0 0 0].	self		verifyControlWord: 1		encoding: #[0 0 0 0 0 0 0 1].	self		verifyControlWord: -1		encoding: #[255 255 255 255 255 255 255 255].	self		verifyControlWord: (2 raisedTo: 63) - 1		encoding: #[127 255 255 255 255 255 255 255].	self		verifyControlWord: (2 raisedTo: 63) negated		encoding: #[128 0 0 0 0 0 0 0]! !
+
+!RsrDifferentServerService methodsFor!
+private1	^private1! !
+
+!RsrDifferentServerService methodsFor!
+private1: anObject	private1 := anObject! !
+
+!RsrSameAbstractAndClientService methodsFor!
+replicated2: anObject	replicated2 := anObject! !
+
+!RsrSameAbstractAndClientService methodsFor!
+replicated1	^replicated1! !
+
+!RsrSameAbstractAndClientService methodsFor!
+replicated1: anObject	replicated1 := anObject! !
+
+!RsrSameAbstractAndClientService methodsFor!
+replicated2	^replicated2! !
+
+!RsrChattyClient methodsFor!
+returnSelf	^remoteSelf returnSelf! !
+
+!RsrChattyClient methodsFor!
+returnArgument: anObject	^remoteSelf returnArgument: anObject! !
+
+!RsrChattyServer methodsFor!
+returnSelf	^self! !
+
+!RsrChattyServer methodsFor!
+returnArgument: anObject	^anObject! !
 
 !RsrServiceAbstractAllDataObjects methodsFor!
 initialize	super initialize.	negativeSmallInteger := -1.	integerZero := 0.	positiveSmallInteger := 1.	string := 'hello, world'! !
