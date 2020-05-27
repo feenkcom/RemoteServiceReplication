@@ -14,7 +14,8 @@ Class {
 		'dispatcher',
 		'oidSpigot',
 		'serviceFactory',
-		'log'
+		'log',
+		'closeSemaphore'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -108,7 +109,8 @@ RsrConnection >> close [
 	commandWriter stop.
 	dispatcher stop.
 	self promises do: [:each | each error: RsrConnectionClosed new].
-	objectCache reset
+	objectCache reset.
+	closeSemaphore signal
 ]
 
 { #category : 'private-accessing' }
@@ -207,6 +209,7 @@ RsrConnection >> open [
 
 	(isOpen := socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
+	closeSemaphore := Semaphore new.
 	stream := RsrSocketStream on: socket.
 	dispatcher := RsrDispatchEventLoop on: self.
 	commandReader := RsrCommandSource on: self.
@@ -283,4 +286,11 @@ RsrConnection >> transactionSpigot: anObject [
 RsrConnection >> unknownError: anException [
 
 	self close
+]
+
+{ #category : 'public-waiting' }
+RsrConnection >> waitUntilClose [
+
+	closeSemaphore wait.
+	closeSemaphore signal
 ]
