@@ -70,7 +70,7 @@ RsrObject
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream promises dispatcher oidSpigot serviceFactory log'
+	instanceVariableNames: 'isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream promises dispatcher oidSpigot serviceFactory log closeSemaphore'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -935,7 +935,7 @@ retain: aService	| retainCommand |	retainCommand := RsrRetainObject object: a
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	isOpen		ifFalse: [^self].	isOpen := false.	commandReader stop.	commandWriter stop.	dispatcher stop.	self promises do: [:each | each error: RsrConnectionClosed new].	objectCache reset! !
+close	isOpen		ifFalse: [^self].	isOpen := false.	commandReader stop.	commandWriter stop.	dispatcher stop.	self promises do: [:each | each error: RsrConnectionClosed new].	objectCache reset.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
@@ -995,6 +995,9 @@ unknownError: anException	self close! !
 encoder	^RsrEncoder new! !
 
 !RsrConnection methodsFor!
+waitUntilClose	closeSemaphore wait.	closeSemaphore signal! !
+
+!RsrConnection methodsFor!
 releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	command := RsrReleaseObjects oids: (Array with: anOid).	command encodeUsing: self encoder.	commandWriter enqueue: command! !
 
 !RsrConnection methodsFor!
@@ -1007,7 +1010,7 @@ serviceFactory	^serviceFactory! !
 transactionSpigot: anObject	transactionSpigot := anObject! !
 
 !RsrConnection methodsFor!
-open	(isOpen := socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	stream := RsrSocketStream on: socket.	dispatcher := RsrDispatchEventLoop on: self.	commandReader := RsrCommandSource on: self.	commandWriter := RsrCommandSink on: self.	dispatcher start.	commandReader start.	commandWriter start.	serviceFactory := RsrServiceFactory		_id: self oidSpigot next		connection: self.	serviceFactory _addTo: registry! !
+open	(isOpen := socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	closeSemaphore := Semaphore new.	stream := RsrSocketStream on: socket.	dispatcher := RsrDispatchEventLoop on: self.	commandReader := RsrCommandSource on: self.	commandWriter := RsrCommandSink on: self.	dispatcher start.	commandReader start.	commandWriter start.	serviceFactory := RsrServiceFactory		_id: self oidSpigot next		connection: self.	serviceFactory _addTo: registry! !
 
 !RsrConnection methodsFor!
 isOpen	^isOpen! !

@@ -35,6 +35,7 @@ package classNames
 	add: #RsrServiceAbstractReferenceService;
 	add: #RsrClientTestService;
 	add: #RsrReferenceAllSpeciesClient;
+	add: #RsrConnectionTestCase;
 	add: #RsrCodecTest;
 	add: #RsrClientReferenceService;
 	add: #RsrServerTestService;
@@ -370,6 +371,15 @@ RsrAbstractValueHolderService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrValueHolderServer categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrSystemTestCase
+	subclass: #RsrConnectionTestCase
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrConnectionTestCase comment: 'This class contains tests'!
+!RsrConnectionTestCase categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrCodecTest
 	subclass: #RsrDecoderTest
@@ -776,6 +786,9 @@ remember: anRsrObject	self objects add: anRsrObject! !
 
 !RsrAbstractReflectedVariableTestServiceB methodsFor!
 varB	^varB! !
+
+!RsrConnectionTestCase methodsFor!
+testWaitUntilClose	| semaphore marker |	semaphore := Semaphore new.	marker := false.	self		fork:			[semaphore signal.			[connectionB waitUntilClose.			marker := true]				ensure: [semaphore signal]].	semaphore wait.	self deny: marker.	connectionA close.	semaphore wait.	self assert: marker! !
 
 !RsrServiceAbstractReferenceService methodsFor!
 service	^ service! !
