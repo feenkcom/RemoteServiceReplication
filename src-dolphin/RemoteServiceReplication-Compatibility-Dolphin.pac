@@ -37,11 +37,7 @@ package binaryGlobalNames: (Set new
 package globalAliases: (Set new
 	yourself).
 
-package setPrerequisites: #(
-	'..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin'
-	'..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Deprecated\Dolphin Base (Deprecated)'
-	'..\..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Sockets\Dolphin Sockets'
-	'RemoteServiceReplication-Base').
+package setPrerequisites: #('RemoteServiceReplication-Base').
 
 package!
 
