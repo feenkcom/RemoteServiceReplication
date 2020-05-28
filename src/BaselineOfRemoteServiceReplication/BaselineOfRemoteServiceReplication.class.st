@@ -13,10 +13,10 @@ BaselineOfRemoteServiceReplication >> baseline: spec [
 				package: 'RemoteServiceReplication-Base';
 				package: 'RemoteServiceReplication-Examples'
 					with: [ spec requires: #('RemoteServiceReplication') ];
-				package: 'RemoteServiceReplicationCompatibility-Test'
+				package: 'RemoteServiceReplication-Compatibility-Test'
 					with: [ spec requires: #('RemoteServiceReplication') ];
 				package: 'RemoteServiceReplication-Test'
-					with: [ spec requires: #('RemoteServiceReplicationCompatibility-Test') ] ];
+					with: [ spec requires: #('RemoteServiceReplication-Compatibility-Test') ] ];
 		for: #pharo
 			do: [ spec
 				package: 'RemoteServiceReplication-Compatibility-Pharo'
