@@ -2,37 +2,45 @@ Class {
 	#name : 'RsrLog',
 	#superclass : 'RsrObject',
 	#instVars : [
-		'verbosity'
+		'verbosity',
+		'sinks'
 	],
 	#category : 'RemoteServiceReplication'
 }
+
+{ #category : 'configuring' }
+RsrLog >> addSink: aLogSink [
+
+	sinks add: aLogSink
+]
 
 { #category : 'logging' }
 RsrLog >> debug: aString [
 
 	self verbosity >= self levelDebug
-		ifTrue: [	self log: 'DEBUG: ', aString]
+		ifTrue: [	self log: aString level: #debug]
 ]
 
 { #category : 'logging' }
 RsrLog >> error: aString [
 
 	self verbosity >= self levelError
-		ifTrue: [self log: 'ERROR: ', aString]
+		ifTrue: [self log: aString level: #error]
 ]
 
 { #category : 'logging' }
 RsrLog >> info: aString [
 
 	self verbosity >= self levelInfo
-		ifTrue: [self log: 'INFO: ', aString]
+		ifTrue: [self log: aString level: #info]
 ]
 
 { #category : 'initialization' }
 RsrLog >> initialize [
 
 	super initialize.
-	verbosity := self levelTrace
+	verbosity := self levelTrace.
+	sinks := OrderedCollection new
 ]
 
 { #category : 'accessing' }
@@ -66,27 +74,19 @@ RsrLog >> levelWarn [
 ]
 
 { #category : 'logging' }
-RsrLog >> log: aString [
-
-	Transcript
-		show: RsrDateAndTimeSpecies now printString, '-', aString;
-		cr
-]
-
-{ #category : 'logging' }
 RsrLog >> log: aMessage
 level: aLevelString [
 
-	Transcript
-		show: RsrDateAndTimeSpecies now printString, '-', aLevelString, '-', aMessage;
-		cr
+	| message |
+	message := RsrDateAndTimeSpecies now printString, '-', aLevelString, '-', aMessage.
+	sinks do: [:each | each write: message]
 ]
 
 { #category : 'logging' }
 RsrLog >> trace: aString [
 
 	self verbosity >= self levelTrace
-		ifTrue: [self log: 'TRACE: ', aString]
+		ifTrue: [self log: aString level: #trace]
 ]
 
 { #category : 'accessing' }
@@ -102,8 +102,8 @@ RsrLog >> verbosity: aLogLevel [
 ]
 
 { #category : 'logging' }
-RsrLog >> warn: aString [
+RsrLog >> warning: aString [
 
 	self verbosity >= self levelDebug
-		ifTrue: [self log: 'WARN: ', aString]
+		ifTrue: [self log: aString level: #warning]
 ]

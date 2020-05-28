@@ -593,7 +593,7 @@ testRepeatedUnarySends	| client |	client := connectionA serviceFor: #RsrChatt
 repetitions	^1000! !
 
 !RsrStressTest methodsFor!
-testRepeatedSendReceive1MBytes	| client bytes |	client := connectionA serviceFor: #RsrChattyClient.	bytes := ByteArray new: 1024 squared.	RsrLog new debug: 'About to start writing bytes'.	self repetitions timesRepeat: [client returnArgument:  bytes].	self assert: true. "If we get to this point, the sends have all successed"! !
+testRepeatedSendReceive1MBytes	| client bytes |	client := connectionA serviceFor: #RsrChattyClient.	bytes := ByteArray new: 1024 squared.	connectionA log debug: 'About to start writing bytes'.	self repetitions timesRepeat: [client returnArgument:  bytes].	self assert: true. "If we get to this point, the sends have all successed"! !
 
 !RsrRetainAnalysisTest methodsFor!
 testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client registry analysis expected |	client := RsrClientAllDataObjects new.	registry := RsrMockRegistry new.	analysis := self analyze: client.	expected := OrderedCollection		with: (RsrRetainObject object: client encoding: ByteArray new).	self		assert: analysis retainCommands		equals: expected.	self assert: client isMirrored! !

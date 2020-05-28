@@ -26,7 +26,7 @@ RsrStressTest >> testRepeatedSendReceive1MBytes [
 	| client bytes |
 	client := connectionA serviceFor: #RsrChattyClient.
 	bytes := ByteArray new: 1024 squared.
-	RsrLog new debug: 'About to start writing bytes'.
+	connectionA log debug: 'About to start writing bytes'.
 	self repetitions timesRepeat: [client returnArgument:  bytes].
 	self assert: true. "If we get to this point, the sends have all successed"
 ]

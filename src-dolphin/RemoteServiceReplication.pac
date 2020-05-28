@@ -20,9 +20,11 @@ package classNames
 	add: #RsrLog;
 	add: #RsrPromise;
 	add: #RsrConnection;
+	add: #RsrTranscriptSink;
 	add: #RsrRetainObject;
 	add: #RsrCommandSink;
 	add: #RsrServiceFactoryServer;
+	add: #RsrLogSink;
 	add: #RsrReleaseObjects;
 	add: #RsrCommandSource;
 	add: #RsrServiceFactory;
@@ -86,11 +88,19 @@ RsrObject
 
 RsrObject
 	subclass: #RsrLog
-	instanceVariableNames: 'verbosity'
+	instanceVariableNames: 'verbosity sinks'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrLog categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
+	subclass: #RsrLogSink
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrLogSink categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrLogWithPrefix
@@ -244,6 +254,14 @@ RsrNumericSpigot
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrThreadSafeNumericSpigot categoriesForClass!RemoteServiceReplication! !
+
+RsrLogSink
+	subclass: #RsrTranscriptSink
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTranscriptSink categoriesForClass!RemoteServiceReplication! !
 
 RsrError
 	subclass: #RsrCycleDetected
@@ -790,6 +808,9 @@ add: anObject	storage add: anObject! !
 !RsrObjectCache methodsFor!
 reset	storage := IdentitySet new! !
 
+!RsrTranscriptSink methodsFor!
+write: aMessageString	Transcript		show: aMessageString;		cr! !
+
 !RsrStream methodsFor!
 nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
 
@@ -812,19 +833,19 @@ stream: aStream	stream := aStream! !
 binary	stream binary! !
 
 !RsrLog methodsFor!
-error: aString	self verbosity >= self levelError		ifTrue: [self log: 'ERROR: ', aString]! !
+error: aString	self verbosity >= self levelError		ifTrue: [self log: aString level: #error]! !
 
 !RsrLog methodsFor!
 levelInfo	^3! !
 
 !RsrLog methodsFor!
-debug: aString	self verbosity >= self levelDebug		ifTrue: [	self log: 'DEBUG: ', aString]! !
+debug: aString	self verbosity >= self levelDebug		ifTrue: [	self log: aString level: #debug]! !
 
 !RsrLog methodsFor!
 levelTrace	^5! !
 
 !RsrLog methodsFor!
-log: aString	Transcript		show: RsrDateAndTimeSpecies now printString, '-', aString;		cr! !
+log: aMessagelevel: aLevelString	| message |	message := RsrDateAndTimeSpecies now printString, '-', aLevelString, '-', aMessage.	sinks do: [:each | each write: message]! !
 
 !RsrLog methodsFor!
 verbosity	^verbosity! !
@@ -833,22 +854,22 @@ verbosity	^verbosity! !
 levelDebug	^4! !
 
 !RsrLog methodsFor!
-warn: aString	self verbosity >= self levelDebug		ifTrue: [self log: 'WARN: ', aString]! !
+initialize	super initialize.	verbosity := self levelTrace.	sinks := OrderedCollection new! !
 
 !RsrLog methodsFor!
-log: aMessagelevel: aLevelString	Transcript		show: RsrDateAndTimeSpecies now printString, '-', aLevelString, '-', aMessage;		cr! !
-
-!RsrLog methodsFor!
-initialize	super initialize.	verbosity := self levelTrace! !
+warning: aString	self verbosity >= self levelDebug		ifTrue: [self log: aString level: #warning]! !
 
 !RsrLog methodsFor!
 verbosity: aLogLevel	verbosity := aLogLevel! !
 
 !RsrLog methodsFor!
-info: aString	self verbosity >= self levelInfo		ifTrue: [self log: 'INFO: ', aString]! !
+addSink: aLogSink	sinks add: aLogSink! !
 
 !RsrLog methodsFor!
-trace: aString	self verbosity >= self levelTrace		ifTrue: [self log: 'TRACE: ', aString]! !
+info: aString	self verbosity >= self levelInfo		ifTrue: [self log: aString level: #info]! !
+
+!RsrLog methodsFor!
+trace: aString	self verbosity >= self levelTrace		ifTrue: [self log: aString level: #trace]! !
 
 !RsrLog methodsFor!
 levelWarn	^2! !
@@ -931,6 +952,9 @@ analyzeService: aService	self ensureRegistered: aService.	self		analyzing: a
 !RsrRetainAnalysis methodsFor!
 retain: aService	| retainCommand |	retainCommand := RsrRetainObject object: aService.	retainCommand encodeUsing: self encoder.	self retainCommands add: retainCommand! !
 
+!RsrLogSink methodsFor!
+write: aMessage	self subclassResponsibility! !
+
 !RsrConnection methodsFor!
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
@@ -998,7 +1022,7 @@ encoder	^RsrEncoder new! !
 waitUntilClose	closeSemaphore wait.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
-releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	command := RsrReleaseObjects oids: (Array with: anOid).	command encodeUsing: self encoder.	commandWriter enqueue: command! !
+releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace: 'Cleaning up OID:', anOid printString.	command := RsrReleaseObjects oids: (Array with: anOid).	command encodeUsing: self encoder.	commandWriter enqueue: command! !
 
 !RsrConnection methodsFor!
 _forwarderClass	^RsrForwarder! !

@@ -39,9 +39,7 @@ put: anEntry [
 { #category : 'adding/removing' }
 RsrRegistry >> cleanupEntryFor: aKey [
 
-	| entry |
-	entry := self removeKey: aKey.
-	RsrLog new debug: 'Cleanup entry for(', aKey printString, ')'.
+	self removeKey: aKey
 ]
 
 { #category : 'accessing' }

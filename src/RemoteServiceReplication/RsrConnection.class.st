@@ -241,6 +241,7 @@ RsrConnection >> releaseOid: anOid [
 	| command |
 	self isOpen
 		ifFalse: [^self].
+	self log trace: 'Cleaning up OID:', anOid printString.
 	command := RsrReleaseObjects oids: (Array with: anOid).
 	command encodeUsing: self encoder.
 	commandWriter enqueue: command
