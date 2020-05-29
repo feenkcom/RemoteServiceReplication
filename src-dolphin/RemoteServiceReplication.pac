@@ -320,9 +320,6 @@ isServerClass	^self name == self serverClassName! !
 isClientClass	^self name == self clientClassName! !
 
 !RsrService class methodsFor!
-_variablesToReflect	| currentClass variables |	variables := OrderedCollection new.	currentClass := self abstractClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
-
-!RsrService class methodsFor!
 abstractClassName	self subclassResponsibility! !
 
 !RsrService class methodsFor!
@@ -584,37 +581,22 @@ encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeReleaseObjects: self!
 oids: anArray	oids := anArray! !
 
 !RsrService methodsFor!
-_reflectedVariablesDo: aBlock	self _reflectedVariableIndecesDo: [:index | aBlock value: (self instVarAt: index)]! !
+isClient	^self class isClientClass! !
 
 !RsrService methodsFor!
-isClient	^self class isClientClass! !
+reflectedVariableNames	^RsrServiceSpecies reflectedVariablesFor: self! !
 
 !RsrService methodsFor!
 _id	^_id! !
 
 !RsrService methodsFor!
-_reflectedVariableIndecesDo: aBlock	| allVariables |	allVariables := self class allInstVarNames.	self class _variablesToReflect		do:			[:varName | | index |			index := allVariables indexOf: varName.			aBlock value: index]! !
-
-!RsrService methodsFor!
 _id: anRsrIdconnection: aConnection	_id := anRsrId.	_connection := aConnection.	remoteSelf := aConnection _forwarderClass on: self! !
-
-!RsrService methodsFor!
-_addTo: aRegistry	aRegistry		serviceAt: _id		put: self! !
 
 !RsrService methodsFor!
 isMirrored	^_connection ~~ nil! !
 
 !RsrService methodsFor!
 _synchronize	"Return self to synchronize with the remote peer"	^self! !
-
-!RsrService methodsFor!
-_variablesToReflect	^self class _variablesToReflect! !
-
-!RsrService methodsFor!
-remoteServiceName	^self isClient		ifTrue: [self class serverClassName]		ifFalse: [self class clientClassName]! !
-
-!RsrService methodsFor!
-serviceName	^self class name! !
 
 !RsrService methodsFor!
 isServer	^self class isServerClass! !
@@ -923,7 +905,7 @@ analyzing: anObjectduring: aBlock	(inFlight includes: anObject)		ifTrue: [^R
 retainCommands	^retainCommands! !
 
 !RsrRetainAnalysis methodsFor!
-ensureRegistered: anRsrObject	anRsrObject isMirrored		ifTrue: [^self].	anRsrObject		_id: self nextOid		connection: self connection.	anRsrObject _addTo: self registry! !
+ensureRegistered: aService	aService isMirrored		ifTrue: [^self].	aService		_id: self nextOid		connection: self connection.	self registry		serviceAt: aService _id		put: aService! !
 
 !RsrRetainAnalysis methodsFor!
 analyzeImmediate: anObject	"Nothing to do for a generic immediate"	^anObject! !
@@ -944,7 +926,7 @@ roots	^roots! !
 analyzeDictionary: aDictionary	self		analyzing: aDictionary		during:			[aDictionary				keysAndValuesDo:					[:key :value |					self						analyze: key;						analyze: value]].	^aDictionary! !
 
 !RsrRetainAnalysis methodsFor!
-analyzeService: aService	self ensureRegistered: aService.	self		analyzing: aService		during: [aService _reflectedVariablesDo: [:each | self analyze: each]].	self retain: aService! !
+analyzeService: aService	self ensureRegistered: aService.	self		analyzing: aService		during:			[RsrServiceSpecies				reflectedVariablesFor: aService				do: [:each | self analyze: each]].	self retain: aService! !
 
 !RsrRetainAnalysis methodsFor!
 analyzeCollection: aCollection	self		analyzing: aCollection		during: [	aCollection do: [:each | self analyze: each]].	^aCollection! !
@@ -1034,7 +1016,7 @@ _forwarderClass	^RsrForwarder! !
 serviceFactory	^serviceFactory! !
 
 !RsrConnection methodsFor!
-open	(isOpen := socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	closeSemaphore := Semaphore new.	stream := RsrSocketStream on: socket.	dispatcher := RsrDispatchEventLoop on: self.	commandReader := RsrCommandSource on: self.	commandWriter := RsrCommandSink on: self.	dispatcher start.	commandReader start.	commandWriter start.	serviceFactory := RsrServiceFactory		_id: self oidSpigot next		connection: self.	serviceFactory _addTo: registry! !
+open	(isOpen := socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	closeSemaphore := Semaphore new.	stream := RsrSocketStream on: socket.	dispatcher := RsrDispatchEventLoop on: self.	commandReader := RsrCommandSource on: self.	commandWriter := RsrCommandSink on: self.	dispatcher start.	commandReader start.	commandWriter start.	serviceFactory := RsrServiceFactory		_id: self oidSpigot next		connection: self.	registry		serviceAt: serviceFactory _id		put: serviceFactory! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !

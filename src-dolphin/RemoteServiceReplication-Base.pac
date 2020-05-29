@@ -250,10 +250,13 @@ RsrError
 decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	self shouldNotImplement! !
 
 !RsrServiceSpecies class methodsFor!
+reflectedVariablesFor: aServicedo: aBlock	self		reflectedVariableIndicesFor: aService		do: [:index | aBlock value: (aService instVarAt: index)]! !
+
+!RsrServiceSpecies class methodsFor!
 speciesIdentifier	^0! !
 
 !RsrServiceSpecies class methodsFor!
-decode: aStreamusing: aDecoder	"Decode a Service from the stream"	| species oid instVarCount serviceName instance |	species := aDecoder decodeControlWord: aStream.	oid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := aDecoder decodeObjectReference: aStream.	instance := aDecoder registry		serviceAt: oid		ifAbsent:			[((aDecoder lookupClass: serviceName)				_id: oid				connection: aDecoder connection)					yourself].	(aDecoder registry includesKey: oid)		ifFalse: [instance _addTo: aDecoder registry].	instance _variablesToReflect size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].	^instance! !
+decode: aStreamusing: aDecoder	"Decode a Service from the stream"	| species oid instVarCount serviceName instance |	species := aDecoder decodeControlWord: aStream.	oid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := aDecoder decodeObjectReference: aStream.	instance := aDecoder registry		serviceAt: oid		ifAbsent:			[((aDecoder lookupClass: serviceName)				_id: oid				connection: aDecoder connection)					yourself].	(aDecoder registry includesKey: oid)		ifFalse:			[aDecoder registry				serviceAt: instance _id				put: instance].	(self reflectedVariablesFor: instance) size = instVarCount		ifFalse: [self error: 'Incorrectly encoded instance detected'].	self		reflectedVariableIndicesFor: instance		do: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].	^instance! !
 
 !RsrServiceSpecies class methodsFor!
 encodeReference: aServiceusing: anEncoderonto: aStream	anEncoder		encodeControlWord: aService _id		onto: aStream! !
@@ -262,7 +265,13 @@ encodeReference: aServiceusing: anEncoderonto: aStream	anEncoder		encodeCon
 analyze: aServiceusing: anAnalyzer	"A method that works in conjunction with RsrRetainAnalysis to analyze	an object"	^anAnalyzer analyzeService: aService! !
 
 !RsrServiceSpecies class methodsFor!
-encode: aServiceusing: anEncoderon: aStream	"Encode this object. This is specifically used by RsrServiceSpecies."	"type"	"the OID for the object"	"the name of the remote service to create"	"Write the object slots"	| reflectedVariables |	reflectedVariables := aService _variablesToReflect.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aService _id		onto: aStream.	anEncoder		encodeControlWord: reflectedVariables size		onto: aStream.	(anEncoder speciesOf: aService remoteServiceName)		encodeReference: aService remoteServiceName		using: anEncoder		onto: aStream.	aService _reflectedVariablesDo: [:each | anEncoder encodeReferenceOf: each onto: aStream]! !
+encode: aServiceusing: anEncoderon: aStream	"Encode this object. This is specifically used by RsrServiceSpecies."	"type"	"the OID for the object"	"the name of the remote service to create"	"Write the object slots"	| reflectedVariables remoteServiceName |	reflectedVariables := self reflectedVariablesFor: aService.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	anEncoder		encodeControlWord: aService _id		onto: aStream.	anEncoder		encodeControlWord: reflectedVariables size		onto: aStream.	remoteServiceName := aService isClient		ifTrue: [aService class serverClassName]		ifFalse: [aService class clientClassName].	(anEncoder speciesOf: remoteServiceName)		encodeReference: remoteServiceName		using: anEncoder		onto: aStream.	RsrServiceSpecies		reflectedVariablesFor: aService		do: [:each | anEncoder encodeReferenceOf: each onto: aStream]! !
+
+!RsrServiceSpecies class methodsFor!
+reflectedVariableIndicesFor: aServicedo: aBlock	| allVariables |	allVariables := aService class allInstVarNames.	(self reflectedVariablesFor: aService)		do:			[:varName | | index |			index := allVariables indexOf: varName.			aBlock value: index]! !
+
+!RsrServiceSpecies class methodsFor!
+reflectedVariablesFor: aService	| currentClass variables |	variables := OrderedCollection new.	currentClass := aService class abstractClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
 
 !RsrStringSpecies class methodsFor!
 speciesIdentifier	^2! !
