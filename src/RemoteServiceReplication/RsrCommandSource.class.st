@@ -22,7 +22,10 @@ RsrCommandSource >> dispatcher [
 { #category : 'commands' }
 RsrCommandSource >> executeCycle [
 
-	[self dispatcher dispatch: self nextCommand]
+	[| command |
+	command := self nextCommand.
+	self report: command.
+	self dispatcher dispatch: command]
 		on: RsrSocketClosed
 		do:
 			[:ex |

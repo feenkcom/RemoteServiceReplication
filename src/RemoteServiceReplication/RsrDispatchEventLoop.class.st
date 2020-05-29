@@ -10,7 +10,6 @@ Class {
 { #category : 'dispatching' }
 RsrDispatchEventLoop >> dispatch: aCommand [
 
-	self report: aCommand.
 	queue nextPut: aCommand
 ]
 
@@ -20,7 +19,9 @@ RsrDispatchEventLoop >> executeCycle [
 	| item |
 	item := queue next.
 	item == self stopToken
-		ifFalse: [item executeFor: connection]
+		ifTrue: [^self].
+	self report: item.
+	item executeFor: connection
 ]
 
 { #category : 'initialize' }

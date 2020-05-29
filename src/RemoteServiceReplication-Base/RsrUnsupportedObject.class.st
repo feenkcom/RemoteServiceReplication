@@ -18,7 +18,7 @@ RsrUnsupportedObject class >> signal: anObject [
 { #category : 'accessing' }
 RsrUnsupportedObject >> messageText [
 
-	^'Unsupported native class (', object class name, ')'
+	^'Instances of ', object class name, ' cannot be serialized'
 ]
 
 { #category : 'accessing' }
