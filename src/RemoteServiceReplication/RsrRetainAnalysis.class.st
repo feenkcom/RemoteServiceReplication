@@ -65,7 +65,10 @@ RsrRetainAnalysis >> analyzeService: aService [
 	self ensureRegistered: aService.
 	self
 		analyzing: aService
-		during: [aService _reflectedVariablesDo: [:each | self analyze: each]].
+		during:
+			[RsrServiceSpecies
+				reflectedVariablesFor: aService
+				do: [:each | self analyze: each]].
 	self retain: aService
 ]
 
@@ -99,14 +102,16 @@ RsrRetainAnalysis >> encoder [
 ]
 
 { #category : 'actions' }
-RsrRetainAnalysis >> ensureRegistered: anRsrObject [
+RsrRetainAnalysis >> ensureRegistered: aService [
 
-	anRsrObject isMirrored
+	aService isMirrored
 		ifTrue: [^self].
-	anRsrObject
+	aService
 		_id: self nextOid
 		connection: self connection.
-	anRsrObject _addTo: self registry
+	self registry
+		serviceAt: aService _id
+		put: aService
 ]
 
 { #category : 'initialization' }

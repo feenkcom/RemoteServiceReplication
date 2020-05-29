@@ -31,10 +31,15 @@ using: aDecoder [
 				connection: aDecoder connection)
 					yourself].
 	(aDecoder registry includesKey: oid)
-		ifFalse: [instance _addTo: aDecoder registry].
-	instance _variablesToReflect size = instVarCount
+		ifFalse:
+			[aDecoder registry
+				serviceAt: instance _id
+				put: instance].
+	(self reflectedVariablesFor: instance) size = instVarCount
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
-	instance _reflectedVariableIndecesDo: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
+	self
+		reflectedVariableIndicesFor: instance
+		do: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
 	^instance
 ]
 
@@ -56,8 +61,8 @@ on: aStream [
 	"the OID for the object"
 	"the name of the remote service to create"
 	"Write the object slots"
-	| reflectedVariables |
-	reflectedVariables := aService _variablesToReflect.
+	| reflectedVariables remoteServiceName |
+	reflectedVariables := self reflectedVariablesFor: aService.
 	anEncoder
 		encodeControlWord: self speciesIdentifier
 		onto: aStream.
@@ -67,11 +72,16 @@ on: aStream [
 	anEncoder
 		encodeControlWord: reflectedVariables size
 		onto: aStream.
-	(anEncoder speciesOf: aService remoteServiceName)
-		encodeReference: aService remoteServiceName
+	remoteServiceName := aService isClient
+		ifTrue: [aService class serverClassName]
+		ifFalse: [aService class clientClassName].
+	(anEncoder speciesOf: remoteServiceName)
+		encodeReference: remoteServiceName
 		using: anEncoder
 		onto: aStream.
-	aService _reflectedVariablesDo: [:each | anEncoder encodeReferenceOf: each onto: aStream]
+	RsrServiceSpecies
+		reflectedVariablesFor: aService
+		do: [:each | anEncoder encodeReferenceOf: each onto: aStream]
 ]
 
 { #category : 'coding' }
@@ -82,6 +92,41 @@ onto: aStream [
 	anEncoder
 		encodeControlWord: aService _id
 		onto: aStream
+]
+
+{ #category : 'enumerating' }
+RsrServiceSpecies class >> reflectedVariableIndicesFor: aService
+do: aBlock [
+
+	| allVariables |
+	allVariables := aService class allInstVarNames.
+	(self reflectedVariablesFor: aService)
+		do:
+			[:varName | | index |
+			index := allVariables indexOf: varName.
+			aBlock value: index]
+]
+
+{ #category : 'accessing' }
+RsrServiceSpecies class >> reflectedVariablesFor: aService [
+
+	| currentClass variables |
+	variables := OrderedCollection new.
+	currentClass := aService class abstractClass.
+	[currentClass == RsrService]
+		whileFalse:
+			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
+			currentClass := currentClass superclass].
+	^variables
+]
+
+{ #category : 'accessing' }
+RsrServiceSpecies class >> reflectedVariablesFor: aService
+do: aBlock [
+
+	self
+		reflectedVariableIndicesFor: aService
+		do: [:index | aBlock value: (aService instVarAt: index)]
 ]
 
 { #category : 'accessing' }

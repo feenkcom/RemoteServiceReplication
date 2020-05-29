@@ -220,7 +220,9 @@ RsrConnection >> open [
 	serviceFactory := RsrServiceFactory
 		_id: self oidSpigot next
 		connection: self.
-	serviceFactory _addTo: registry
+	registry
+		serviceAt: serviceFactory _id
+		put: serviceFactory
 ]
 
 { #category : 'private-accessing' }

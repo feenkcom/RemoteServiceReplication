@@ -159,9 +159,11 @@ RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
 { #category : 'running' }
 RsrServiceTest >> testReflectedVariableNames [
 
-	| clientNames serverNames |
-	clientNames := RsrClientTestService _variablesToReflect.
-	serverNames := RsrServerTestService _variablesToReflect.
+	| client server clientNames serverNames |
+	client := connectionA serviceFor: #RsrAbstractTestService.
+	server := connectionB registry serviceAt: client _id.
+	clientNames := RsrServiceSpecies reflectedVariablesFor: client.
+	serverNames := RsrServiceSpecies reflectedVariablesFor: server.
 	self
 		assert: clientNames
 		equals: serverNames.
@@ -171,8 +173,10 @@ RsrServiceTest >> testReflectedVariableNames [
 	self
 		assert: (clientNames at: 1) asSymbol
 		equals: #sharedVariable.
-	clientNames := RsrReflectedVariableTestClient _variablesToReflect.
-	serverNames := RsrReflectedVariableTestServer _variablesToReflect.
+	client := connectionA serviceFor: #RsrAbstractReflectedVariableTestServiceB.
+	server := connectionB registry serviceAt: client _id.
+	clientNames := RsrServiceSpecies reflectedVariablesFor: client.
+	serverNames := RsrServiceSpecies reflectedVariablesFor: server.
 	self
 		assert: clientNames
 		equals: serverNames.

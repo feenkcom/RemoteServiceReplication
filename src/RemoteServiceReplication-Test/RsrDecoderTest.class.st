@@ -96,7 +96,9 @@ RsrDecoderTest >> testSendMessage [
 		_id: 1
 		connection: RsrMockConnection new.
 	self decoder.
-	service _addTo: registry.
+	registry
+		serviceAt: 1
+		put: service.
 	encoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"
 		#[0 0 0 0 0 0 0 1], "Transaction ID"
