@@ -162,8 +162,8 @@ RsrServiceTest >> testReflectedVariableNames [
 	| client server clientNames serverNames |
 	client := connectionA serviceFor: #RsrAbstractTestService.
 	server := connectionB registry serviceAt: client _id.
-	clientNames := RsrServiceSpecies reflectedVariablesFor: client.
-	serverNames := RsrServiceSpecies reflectedVariablesFor: server.
+	clientNames := client reflectedVariableNames.
+	serverNames := server reflectedVariableNames.
 	self
 		assert: clientNames
 		equals: serverNames.
@@ -175,8 +175,8 @@ RsrServiceTest >> testReflectedVariableNames [
 		equals: #sharedVariable.
 	client := connectionA serviceFor: #RsrAbstractReflectedVariableTestServiceB.
 	server := connectionB registry serviceAt: client _id.
-	clientNames := RsrServiceSpecies reflectedVariablesFor: client.
-	serverNames := RsrServiceSpecies reflectedVariablesFor: server.
+	clientNames := client reflectedVariableNames.
+	serverNames := server reflectedVariableNames.
 	self
 		assert: clientNames
 		equals: serverNames.

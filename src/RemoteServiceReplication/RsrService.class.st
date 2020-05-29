@@ -103,7 +103,7 @@ RsrService >> _synchronize [
 	^self
 ]
 
-{ #category : 'public-accessing' }
+{ #category : 'public-testing' }
 RsrService >> isClient [
 
 	^self class isClientClass
@@ -121,10 +121,16 @@ RsrService >> isNotMirrored [
 	^self isMirrored not
 ]
 
-{ #category : 'public-accessing' }
+{ #category : 'public-testing' }
 RsrService >> isServer [
 
 	^self class isServerClass
+]
+
+{ #category : 'public-accessing' }
+RsrService >> reflectedVariableNames [
+
+	^RsrServiceSpecies reflectedVariablesFor: self
 ]
 
 { #category : 'public-synchronization' }
