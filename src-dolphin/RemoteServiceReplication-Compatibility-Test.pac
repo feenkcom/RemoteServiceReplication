@@ -3,16 +3,16 @@ package := Package name: 'RemoteServiceReplication-Compatibility-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrTestCase;
-	add: #RsrSocketTestCase;
-	add: #RsrMockServer;
 	add: #RsrClassResolverTestCase;
+	add: #RsrMockServer;
+	add: #RsrGarbageCollectorTestCase;
+	add: #RsrSocketPair;
+	add: #RsrSocketTestCase;
+	add: #RsrTestCase;
+	add: #RsrMockService;
+	add: #RsrRegistryTestCase;
 	add: #RsrTestingConcurrencyTestCase;
 	add: #RsrTestingConcurrency;
-	add: #RsrGarbageCollectorTestCase;
-	add: #RsrMockService;
-	add: #RsrSocketPair;
-	add: #RsrRegistryTestCase;
 	add: #RsrMockClient;
 	yourself.
 
@@ -117,23 +117,23 @@ RsrTestCase
 RsrTestingConcurrencyTestCase comment: 'This class contains tests'!
 !RsrTestingConcurrencyTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
-!RsrSocketPair class methodsFor!
-new	| listener firstSocket secondSocket |	listener := RsrSocket new.	secondSocket := RsrSocket new.	listener listenOn: self listenPort.	secondSocket		connectTo: self listenPort		on: '127.0.0.1'.	firstSocket := listener accept.	listener close.	(firstSocket isConnected and: [secondSocket isConnected])		ifFalse: [self error: 'Failed to create socket pair'].	^self		firstSocket: firstSocket		secondSocket: secondSocket! !
+!RsrMockService class methodsFor!
+clientClassName	^#RsrMockClient! !
+
+!RsrMockService class methodsFor!
+serverClassName	^#RsrMockServer! !
 
 !RsrSocketPair class methodsFor!
 firstSocket: firstSocketsecondSocket: secondSocket	^super new		firstSocket: firstSocket;		secondSocket: secondSocket;		yourself! !
+
+!RsrSocketPair class methodsFor!
+new	| listener firstSocket secondSocket |	listener := RsrSocket new.	secondSocket := RsrSocket new.	listener listenOn: self listenPort.	secondSocket		connectTo: self listenPort		on: '127.0.0.1'.	firstSocket := listener accept.	listener close.	(firstSocket isConnected and: [secondSocket isConnected])		ifFalse: [self error: 'Failed to create socket pair'].	^self		firstSocket: firstSocket		secondSocket: secondSocket! !
 
 !RsrSocketPair class methodsFor!
 timeout	^2! !
 
 !RsrSocketPair class methodsFor!
 listenPort	^64455! !
-
-!RsrMockService class methodsFor!
-clientClassName	^#RsrMockClient! !
-
-!RsrMockService class methodsFor!
-serverClassName	^#RsrMockServer! !
 
 !RsrTestCase class methodsFor!
 isAbstract	^self == RsrTestCase! !
@@ -181,13 +181,13 @@ secondSocket	^ secondSocket! !
 exceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].	sema wait! !
 
 !RsrTestingConcurrencyTestCase methodsFor!
-testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
+testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
 
 !RsrTestingConcurrencyTestCase methodsFor!
 noExceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [sema signal].	sema wait! !
 
 !RsrTestingConcurrencyTestCase methodsFor!
-testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
+testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
 
 !RsrRegistryTestCase methodsFor!
 testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		serviceAt: client _id		put: client.	self		assert: (registry removeKey: client _id) service		identicalTo: client! !
@@ -214,7 +214,7 @@ testFailedResolution	| actual marker |	self		should: [RsrClassResolver class
 assert: aClassNameresolvesTo: expectedClass	| actualClass |	actualClass := RsrClassResolver classNamed: aClassName.	self		assert: actualClass		identicalTo: expectedClass! !
 
 !RsrTestingConcurrency methodsFor!
-fork: aBlock	^super fork: (self protect: aBlock)! !
+forkedException	^forkedException! !
 
 !RsrTestingConcurrency methodsFor!
 protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
@@ -223,13 +223,13 @@ protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. 
 fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
 
 !RsrTestingConcurrency methodsFor!
-forkedException	^forkedException! !
-
-!RsrMockService methodsFor!
-isServer	^self class == RsrMockServer! !
+fork: aBlock	^super fork: (self protect: aBlock)! !
 
 !RsrMockService methodsFor!
 initialize	super initialize.	_id := 1! !
+
+!RsrMockService methodsFor!
+isServer	^self class == RsrMockServer! !
 
 !RsrMockService methodsFor!
 isClient	^self class == RsrMockClient! !
@@ -247,6 +247,9 @@ hack: aString	"Placeholder for things that need to be fixed"! !
 assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
 
 !RsrTestCase methodsFor!
+deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
+
+!RsrTestCase methodsFor!
 fork: aBlock	^RsrConcurrency fork: aBlock! !
 
 !RsrTestCase methodsFor!
@@ -254,9 +257,6 @@ assumption: aString	"This method serves as a marker for assumptions made in the
 
 !RsrTestCase methodsFor!
 maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
-
-!RsrTestCase methodsFor!
-deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
 
 !RsrTestCase methodsFor!
 defaultTimeLimit	^5 seconds! !

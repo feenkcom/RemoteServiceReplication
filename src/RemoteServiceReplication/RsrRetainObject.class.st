@@ -68,7 +68,7 @@ RsrRetainObject >> object: anObject [
 { #category : 'reporting' }
 RsrRetainObject >> reportOn: aLog [
 
-	aLog debug: 'RsrRetainObject/', self object class name
+	aLog debug: 'RsrRetainObject(', self object class name, ')'
 ]
 
 { #category : 'lifecycle' }

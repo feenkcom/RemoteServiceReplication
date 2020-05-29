@@ -44,5 +44,5 @@ RsrReleaseObjects >> oids: anArray [
 { #category : 'reporting' }
 RsrReleaseObjects >> reportOn: aLog [
 
-	aLog debug: 'RsrReleaseObjects/', self oids printString
+	aLog debug: 'RsrReleaseObjects(', self oids printString, ')'
 ]

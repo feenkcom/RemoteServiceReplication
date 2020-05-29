@@ -47,6 +47,24 @@ RsrSendMessage >> executeFor: aConnection [
 	self primExecuteFor: aConnection
 ]
 
+{ #category : 'reporting' }
+RsrSendMessage >> logException: anException
+to: aLog [
+
+	| message |
+	message := String
+		streamContents:
+			[:stream |
+			stream
+				nextPutAll: receiver class name;
+				nextPutAll: '>>';
+				nextPutAll: selector;
+				nextPutAll: ' due to: ';
+				nextPutAll: anException class name;
+				nextPut: $(; nextPutAll: anException messageText; nextPut: $)].
+	aLog error: message
+]
+
 { #category : 'lifecycle' }
 RsrSendMessage >> primExecuteFor: aConnection [
 
@@ -61,7 +79,12 @@ RsrSendMessage >> primExecuteFor: aConnection [
 		roots: (Array with: receiver with: result).
 	response sendOver: aConnection]
 		on: Error
-		do: [:ex | (RsrDeliverResponse transaction: transaction error: ex roots: (Array with: receiver)) sendOver: aConnection]
+		do:
+			[:ex |
+			self
+				logException: ex
+				to: aConnection log.
+			(RsrDeliverResponse transaction: transaction error: ex roots: (Array with: receiver)) sendOver: aConnection]
 ]
 
 { #category : 'accessing' }
@@ -77,7 +100,7 @@ RsrSendMessage >> receiver: anObject [
 { #category : 'reporting' }
 RsrSendMessage >> reportOn: aLog [
 
-	aLog debug: 'RsrSendMessage/', self receiver class name, '>>', self selector
+	aLog debug: 'RsrSendMessage(', self receiver class name, '>>', self selector, ')'
 ]
 
 { #category : 'accessing' }

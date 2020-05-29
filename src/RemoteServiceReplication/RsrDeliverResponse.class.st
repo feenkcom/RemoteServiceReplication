@@ -86,7 +86,7 @@ RsrDeliverResponse >> isError [
 { #category : 'reporting' }
 RsrDeliverResponse >> reportOn: aLog [
 
-	aLog debug: 'RsrDeliverResponse/', self response class name
+	aLog debug: 'RsrDeliverResponse(', self response class name, ')'
 ]
 
 { #category : 'accessing' }

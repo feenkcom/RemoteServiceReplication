@@ -10,7 +10,7 @@ using: anAnalyzer [
 	"A method that works in conjunction with RsrRetainAnalysis to analyze
 	an object"
 
-	^RsrUnsupportedObject signal: 'Unsupported object (' , anObject printString , ')'
+	^RsrUnsupportedObject signal: anObject
 ]
 
 { #category : 'coding' }
