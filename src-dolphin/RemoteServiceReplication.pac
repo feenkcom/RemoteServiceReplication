@@ -26,6 +26,7 @@ package classNames
 	add: #RsrObjectCache;
 	add: #RsrServiceFactoryServer;
 	add: #RsrSendMessage;
+	add: #RsrCustomSink;
 	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrServiceFactory;
 	add: #RsrRetainObject;
@@ -193,6 +194,14 @@ RsrEventLoop
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrCommandSource categoriesForClass!RemoteServiceReplication! !
+
+RsrLogSink
+	subclass: #RsrCustomSink
+	instanceVariableNames: 'action'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrCustomSink categoriesForClass!RemoteServiceReplication! !
 
 RsrCodec
 	subclass: #RsrDecoder
@@ -363,6 +372,9 @@ object: anRsrObjectencoding: aByteArray	^self new		object: anRsrObject;		en
 
 !RsrDecoder class methodsFor!
 registry: anRsrRegistryconnection: aConnection	^self new		registry: anRsrRegistry;		connection: aConnection;		yourself! !
+
+!RsrCustomSink class methodsFor!
+action: aBlock	^self new		action: aBlock;		yourself! !
 
 !RsrCycleDetected class methodsFor!
 signal: anObject	^self new		object: anObject;		signal! !
@@ -807,6 +819,15 @@ reset	storage := IdentitySet new! !
 
 !RsrTranscriptSink methodsFor!
 write: aMessageString	Transcript		show: aMessageString;		cr! !
+
+!RsrCustomSink methodsFor!
+action: aBlock	action := aBlock! !
+
+!RsrCustomSink methodsFor!
+action	^action! !
+
+!RsrCustomSink methodsFor!
+write: aMessage	self action value: aMessage! !
 
 !RsrStream methodsFor!
 nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
