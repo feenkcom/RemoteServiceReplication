@@ -39,6 +39,9 @@ package classNames
 package methodNames
 	add: #RsrForwarder -> #doesNotUnderstand:;
 	add: #RsrForwarder -> #_service:;
+	add: 'RsrServiceSpecies class' -> #reflectedVariablesFor:;
+	add: 'RsrServiceSpecies class' -> #reflectedVariableIndicesFor:do:;
+	add: 'RsrServiceSpecies class' -> #reflectedVariablesFor:do:;
 	add: 'RsrForwarder class' -> #on:;
 	yourself.
 
@@ -294,6 +297,15 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrUnknownOID categoriesForClass!RemoteServiceReplication! !
+
+!RsrServiceSpecies class methodsFor!
+reflectedVariablesFor: aService	| currentClass variables |	variables := OrderedCollection new.	currentClass := aService class abstractClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
+
+!RsrServiceSpecies class methodsFor!
+reflectedVariableIndicesFor: aServicedo: aBlock	| allVariables |	allVariables := aService class allInstVarNames.	(self reflectedVariablesFor: aService)		do:			[:varName | | index |			index := allVariables indexOf: varName.			aBlock value: index]! !
+
+!RsrServiceSpecies class methodsFor!
+reflectedVariablesFor: aServicedo: aBlock	self		reflectedVariableIndicesFor: aService		do: [:index | aBlock value: (aService instVarAt: index)]! !
 
 !RsrForwarder class methodsFor!
 on: anRsrObject	| instance |	instance := self new.	instance _service: anRsrObject.	^instance! !
