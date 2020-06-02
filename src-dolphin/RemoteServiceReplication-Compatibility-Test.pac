@@ -127,7 +127,7 @@ serverClassName	^#RsrMockServer! !
 firstSocket: firstSocketsecondSocket: secondSocket	^super new		firstSocket: firstSocket;		secondSocket: secondSocket;		yourself! !
 
 !RsrSocketPair class methodsFor!
-new	| listener firstSocket secondSocket |	listener := RsrSocket new.	secondSocket := RsrSocket new.	listener listenOn: self listenPort.	secondSocket		connectTo: self listenPort		on: '127.0.0.1'.	firstSocket := listener accept.	listener close.	(firstSocket isConnected and: [secondSocket isConnected])		ifFalse: [self error: 'Failed to create socket pair'].	^self		firstSocket: firstSocket		secondSocket: secondSocket! !
+new	| listener firstSocket secondSocket |	listener := RsrSocket new.	secondSocket := RsrSocket new.	listener listenOn: self listenPort.	secondSocket		connectToHost: '127.0.0.1'		port: self listenPort.	firstSocket := listener accept.	listener close.	(firstSocket isConnected and: [secondSocket isConnected])		ifFalse: [self error: 'Failed to create socket pair'].	^self		firstSocket: firstSocket		secondSocket: secondSocket! !
 
 !RsrSocketPair class methodsFor!
 timeout	^2! !
@@ -148,13 +148,13 @@ assertWriting: bytesto: writingSocketisReadableOn: readSocket	| readBytes |
 testReadAvailable	| pair a b bytes readBytes writingProcess |	pair := RsrSocketPair new.	a := pair firstSocket.	b := pair secondSocket.	bytes := #[1].	self deny: a dataAvailable.	self		assert: a readAvailable		equals: #[].	b write: bytes.	self		assert: a readAvailable		equals: bytes.	self deny: a dataAvailable.	bytes := ByteArray withAll: (1 to: 255).	b write: bytes.	self		assert: a readAvailable		equals: bytes! !
 
 !RsrSocketTestCase methodsFor!
-testConnectLocalSockets	| listener server client port |	listener := RsrSocket new.	client := RsrSocket new.	port := self randomPort.	listener listenOn: port.	client connectTo: port on: '127.0.0.1'.	server := listener accept.	listener close.	self		assert: server isConnected;		assert: client isConnected.	self		assertWriting: #(1 2 3 4 5 6 7 8 9 0) asByteArray		to: server		isReadableOn: client.	self		assertWriting: #(0 9 8 7 6 5 4 3 2 1) asByteArray		to: client		isReadableOn: server! !
+testConnectLocalSockets	| listener server client port |	listener := RsrSocket new.	client := RsrSocket new.	port := self randomPort.	listener listenOn: port.	client		connectToHost: '127.0.0.1'		port: port.	server := listener accept.	listener close.	self		assert: server isConnected;		assert: client isConnected.	self		assertWriting: #(1 2 3 4 5 6 7 8 9 0) asByteArray		to: server		isReadableOn: client.	self		assertWriting: #(0 9 8 7 6 5 4 3 2 1) asByteArray		to: client		isReadableOn: server! !
 
 !RsrSocketTestCase methodsFor!
 testHasDataAvailable	| socketPair |	socketPair := RsrSocketPair new.	self deny: socketPair firstSocket dataAvailable.	socketPair secondSocket write: #[1].	self assert: socketPair firstSocket dataAvailable.! !
 
 !RsrSocketTestCase methodsFor!
-testConnectToClosedPort	| socket |	socket := RsrSocket new.	self		should: [socket connectTo: 64752 on: '127.0.0.1']		raise: Error! !
+testConnectToClosedPort	| socket |	socket := RsrSocket new.	self		should: [socket connectToHost: '127.0.0.1' port: 64752]		raise: Error! !
 
 !RsrSocketPair methodsFor!
 secondSocket: anObject	secondSocket := anObject! !
