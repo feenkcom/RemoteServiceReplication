@@ -44,7 +44,23 @@ RsrSendMessage >> encodeUsing: anEncoder [
 { #category : 'lifecycle' }
 RsrSendMessage >> executeFor: aConnection [
 
-	self primExecuteFor: aConnection
+	| result response |
+	[result := receiver
+		perform: selector
+		withArguments: arguments.
+	aConnection objectCache reset.
+	response := RsrDeliverResponse
+		transaction: transaction
+		response: result
+		roots: (Array with: receiver with: result).
+	response sendOver: aConnection]
+		on: Error
+		do:
+			[:ex |
+			self
+				logException: ex
+				to: aConnection log.
+			(RsrDeliverResponse transaction: transaction error: ex roots: #()) sendOver: aConnection]
 ]
 
 { #category : 'reporting' }
@@ -63,28 +79,6 @@ to: aLog [
 				nextPutAll: anException class name;
 				nextPut: $(; nextPutAll: anException messageText; nextPut: $)].
 	aLog error: message
-]
-
-{ #category : 'lifecycle' }
-RsrSendMessage >> primExecuteFor: aConnection [
-
-	| result response |
-	[result := receiver
-		perform: selector
-		withArguments: arguments.
-	aConnection objectCache reset.
-	response := RsrDeliverResponse
-		transaction: transaction
-		response: result
-		roots: (Array with: receiver with: result).
-	response sendOver: aConnection]
-		on: Error
-		do:
-			[:ex |
-			self
-				logException: ex
-				to: aConnection log.
-			(RsrDeliverResponse transaction: transaction error: ex roots: (Array with: receiver)) sendOver: aConnection]
 ]
 
 { #category : 'accessing' }

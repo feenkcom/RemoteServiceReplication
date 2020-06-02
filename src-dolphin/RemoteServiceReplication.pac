@@ -650,9 +650,6 @@ object	^ object! !
 writeUsing: aCommandWriter	super writeUsing: aCommandWriter! !
 
 !RsrSendMessage methodsFor!
-logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				nextPutAll: receiver class name;				nextPutAll: '>>';				nextPutAll: selector;				nextPutAll: ' due to: ';				nextPutAll: anException class name;				nextPut: $(; nextPutAll: anException messageText; nextPut: $)].	aLog error: message! !
-
-!RsrSendMessage methodsFor!
 receiver	^ receiver! !
 
 !RsrSendMessage methodsFor!
@@ -668,13 +665,13 @@ encodeUsing: anEncoder	encoding := anEncoder encodeSendMessage: self! !
 arguments: anObject	arguments := anObject! !
 
 !RsrSendMessage methodsFor!
-executeFor: aConnection	self primExecuteFor: aConnection! !
+executeFor: aConnection	| result response |	[result := receiver		perform: selector		withArguments: arguments.	aConnection objectCache reset.	response := RsrDeliverResponse		transaction: transaction		response: result		roots: (Array with: receiver with: result).	response sendOver: aConnection]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			(RsrDeliverResponse transaction: transaction error: ex roots: #()) sendOver: aConnection]! !
 
 !RsrSendMessage methodsFor!
 selector	^ selector! !
 
 !RsrSendMessage methodsFor!
-primExecuteFor: aConnection	| result response |	[result := receiver		perform: selector		withArguments: arguments.	aConnection objectCache reset.	response := RsrDeliverResponse		transaction: transaction		response: result		roots: (Array with: receiver with: result).	response sendOver: aConnection]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			(RsrDeliverResponse transaction: transaction error: ex roots: (Array with: receiver)) sendOver: aConnection]! !
+transaction	^ transaction! !
 
 !RsrSendMessage methodsFor!
 receiver: anObject	receiver := anObject! !
@@ -692,10 +689,10 @@ selector: anObject	selector := anObject! !
 sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	aConnection promises		at: transaction		put: promise.	aConnection commandWriter enqueue: self.	^promise! !
 
 !RsrSendMessage methodsFor!
-transaction	^ transaction! !
+transaction: anObject	transaction := anObject! !
 
 !RsrSendMessage methodsFor!
-transaction: anObject	transaction := anObject! !
+logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				nextPutAll: receiver class name;				nextPutAll: '>>';				nextPutAll: selector;				nextPutAll: ' due to: ';				nextPutAll: anException class name;				nextPut: $(; nextPutAll: anException messageText; nextPut: $)].	aLog error: message! !
 
 !RsrServiceFactoryServer methodsFor!
 create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !
