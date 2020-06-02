@@ -20,7 +20,7 @@ RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
 	that it is also sent to update the local service."
 
 	| client server value response |
-	client := self serviceFactoryA serviceFor: #RsrAbstractReflectedVariableTestServiceB.
+	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.
 	server := connectionB registry serviceAt: client _id.
 	value := 42.
 	self

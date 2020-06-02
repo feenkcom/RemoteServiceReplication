@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrReflectedVariableTestClient',
-	#superclass : 'RsrAbstractReflectedVariableTestServiceB',
+	#superclass : 'RsrReflectedVariableTestServiceB',
 	#instVars : [
 		'private'
 	],

@@ -22,18 +22,6 @@ connection: aConnection [
 ]
 
 { #category : 'accessing' }
-RsrService class >> abstractClass [
-
-	^RsrClassResolver classNamed: self abstractClassName
-]
-
-{ #category : 'accessing' }
-RsrService class >> abstractClassName [
-
-	self subclassResponsibility
-]
-
-{ #category : 'accessing' }
 RsrService class >> clientClass [
 
 	^RsrClassResolver classNamed: self clientClassName
@@ -43,12 +31,6 @@ RsrService class >> clientClass [
 RsrService class >> clientClassName [
 
 	self subclassResponsibility
-]
-
-{ #category : 'testing' }
-RsrService class >> isAbstractClass [
-
-	^self name == self abstractClassName
 ]
 
 { #category : 'testing' }
@@ -63,6 +45,12 @@ RsrService class >> isServerClass [
 	^self name == self serverClassName
 ]
 
+{ #category : 'testing' }
+RsrService class >> isTemplateClass [
+
+	^self name == self templateClassName
+]
+
 { #category : 'accessing' }
 RsrService class >> serverClass [
 
@@ -71,6 +59,18 @@ RsrService class >> serverClass [
 
 { #category : 'accessing' }
 RsrService class >> serverClassName [
+
+	self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RsrService class >> templateClass [
+
+	^RsrClassResolver classNamed: self templateClassName
+]
+
+{ #category : 'accessing' }
+RsrService class >> templateClassName [
 
 	self subclassResponsibility
 ]

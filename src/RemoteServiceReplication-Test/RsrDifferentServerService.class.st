@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrDifferentServerService',
-	#superclass : 'RsrSameAbstractAndClientService',
+	#superclass : 'RsrSameTemplateAndClientService',
 	#instVars : [
 		'private1'
 	],

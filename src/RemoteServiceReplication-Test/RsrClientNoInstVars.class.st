@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrClientNoInstVars',
-	#superclass : 'RsrServiceAbstractNoInstVars',
+	#superclass : 'RsrServiceNoInstVars',
 	#category : 'RemoteServiceReplication-Test'
 }
 

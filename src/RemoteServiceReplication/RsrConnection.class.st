@@ -217,7 +217,7 @@ RsrConnection >> open [
 	dispatcher start.
 	commandReader start.
 	commandWriter start.
-	serviceFactory := RsrServiceFactory
+	serviceFactory := RsrServiceFactory clientClass
 		_id: self oidSpigot next
 		connection: self.
 	registry

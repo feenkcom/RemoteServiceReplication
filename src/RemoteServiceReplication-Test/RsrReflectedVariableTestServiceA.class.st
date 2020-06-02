@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrAbstractReflectedVariableTestServiceA',
+	#name : 'RsrReflectedVariableTestServiceA',
 	#superclass : 'RsrService',
 	#instVars : [
 		'varA'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : 'accessing' }
-RsrAbstractReflectedVariableTestServiceA >> varA [
+RsrReflectedVariableTestServiceA >> varA [
 
 	^varA
 ]

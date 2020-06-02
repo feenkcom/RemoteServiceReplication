@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrServiceFactoryServer',
-	#superclass : 'RsrAbstractServiceFactory',
+	#superclass : 'RsrServiceFactory',
 	#category : 'RemoteServiceReplication'
 }
 

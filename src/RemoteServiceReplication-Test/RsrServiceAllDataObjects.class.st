@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrServiceAbstractAllDataObjects',
+	#name : 'RsrServiceAllDataObjects',
 	#superclass : 'RsrService',
 	#instVars : [
 		'positiveSmallInteger',
@@ -11,25 +11,25 @@ Class {
 }
 
 { #category : 'accessing' }
-RsrServiceAbstractAllDataObjects class >> abstractClassName [
-
-	^#RsrServiceAbstractAllDataObjects
-]
-
-{ #category : 'accessing' }
-RsrServiceAbstractAllDataObjects class >> clientClassName [
+RsrServiceAllDataObjects class >> clientClassName [
 
 	^#RsrClientAllDataObjects
 ]
 
 { #category : 'accessing' }
-RsrServiceAbstractAllDataObjects class >> serverClassName [
+RsrServiceAllDataObjects class >> serverClassName [
 
 	^#RsrServerAllDataObjects
 ]
 
+{ #category : 'accessing' }
+RsrServiceAllDataObjects class >> templateClassName [
+
+	^#RsrServiceAllDataObjects
+]
+
 { #category : 'initialization' }
-RsrServiceAbstractAllDataObjects >> initialize [
+RsrServiceAllDataObjects >> initialize [
 
 	super initialize.
 	negativeSmallInteger := -1.

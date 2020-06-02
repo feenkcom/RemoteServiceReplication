@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrAbstractReferenceAllSpecies',
+	#name : 'RsrReferenceAllSpecies',
 	#superclass : 'RsrService',
 	#instVars : [
 		'emptyService',
@@ -40,25 +40,25 @@ Class {
 }
 
 { #category : 'accessing' }
-RsrAbstractReferenceAllSpecies class >> abstractClassName [
-
-	^#RsrAbstractReferenceAllSpecies
-]
-
-{ #category : 'accessing' }
-RsrAbstractReferenceAllSpecies class >> clientClassName [
+RsrReferenceAllSpecies class >> clientClassName [
 
 	^#RsrReferenceAllSpeciesClient
 ]
 
 { #category : 'accessing' }
-RsrAbstractReferenceAllSpecies class >> serverClassName [
+RsrReferenceAllSpecies class >> serverClassName [
 
 	^#RsrReferenceAllSpeciesServer
 ]
 
+{ #category : 'accessing' }
+RsrReferenceAllSpecies class >> templateClassName [
+
+	^#RsrReferenceAllSpecies
+]
+
 { #category : 'initialization' }
-RsrAbstractReferenceAllSpecies >> initialize [
+RsrReferenceAllSpecies >> initialize [
 
 	super initialize.
 	emptyService := RsrClientNoInstVars new.

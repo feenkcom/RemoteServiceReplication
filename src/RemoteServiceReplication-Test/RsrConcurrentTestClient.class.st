@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrConcurrentTestClient',
-	#superclass : 'RsrAbstractConcurrentTestService',
+	#superclass : 'RsrConcurrentTestService',
 	#category : 'RemoteServiceReplication-Test'
 }
 

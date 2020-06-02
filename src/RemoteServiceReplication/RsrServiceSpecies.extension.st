@@ -18,7 +18,7 @@ RsrServiceSpecies class >> reflectedVariablesFor: aService [
 
 	| currentClass variables |
 	variables := OrderedCollection new.
-	currentClass := aService class abstractClass.
+	currentClass := aService class templateClass.
 	[currentClass == RsrService]
 		whileFalse:
 			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].

@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrServerNoInstVars',
-	#superclass : 'RsrServiceAbstractNoInstVars',
+	#superclass : 'RsrServiceNoInstVars',
 	#instVars : [
 		'marker'
 	],

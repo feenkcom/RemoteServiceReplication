@@ -1,11 +1,23 @@
 Class {
 	#name : 'RsrServiceFactory',
-	#superclass : 'RsrAbstractServiceFactory',
+	#superclass : 'RsrService',
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'public-manufacturing' }
-RsrServiceFactory >> serviceFor: aResponsibility [
+{ #category : 'accessing' }
+RsrServiceFactory class >> clientClassName [
 
-	^remoteSelf create: aResponsibility
+	^#RsrServiceFactoryClient
+]
+
+{ #category : 'accessing' }
+RsrServiceFactory class >> serverClassName [
+
+	^#RsrServiceFactoryServer
+]
+
+{ #category : 'accessing' }
+RsrServiceFactory class >> templateClassName [
+
+	^#RsrServiceFactory
 ]

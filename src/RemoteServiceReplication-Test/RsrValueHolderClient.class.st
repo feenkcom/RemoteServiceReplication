@@ -1,5 +1,5 @@
 Class {
 	#name : 'RsrValueHolderClient',
-	#superclass : 'RsrAbstractValueHolderService',
+	#superclass : 'RsrValueHolder',
 	#category : 'RemoteServiceReplication-Test'
 }

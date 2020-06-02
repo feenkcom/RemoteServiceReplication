@@ -14,7 +14,7 @@ RsrServiceTest >> mirror: aService [
 RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
 
 	| client |
-	client := self serviceFactoryA serviceFor: #RsrAbstractTestService.
+	client := self serviceFactoryA serviceFor: #RsrTestService.
 	self
 		assert: client class
 		equals: RsrClientTestService
@@ -24,10 +24,10 @@ RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
 RsrServiceTest >> testCreateServiceWithSameClientAbstractService [
 
 	| client server |
-	client := self serviceFactoryA serviceFor: #RsrSameAbstractAndClientService.
+	client := self serviceFactoryA serviceFor: #RsrSameTemplateAndClientService.
 	self
 		assert: client class
-		equals: RsrSameAbstractAndClientService.
+		equals: RsrSameTemplateAndClientService.
 	server := connectionB registry serviceAt: client _id.
 	self
 		assert: server replicated1
@@ -160,7 +160,7 @@ RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
 RsrServiceTest >> testReflectedVariableNames [
 
 	| client server clientNames serverNames |
-	client := connectionA serviceFor: #RsrAbstractTestService.
+	client := connectionA serviceFor: #RsrTestService.
 	server := connectionB registry serviceAt: client _id.
 	clientNames := client reflectedVariableNames.
 	serverNames := server reflectedVariableNames.
@@ -173,7 +173,7 @@ RsrServiceTest >> testReflectedVariableNames [
 	self
 		assert: (clientNames at: 1) asSymbol
 		equals: #sharedVariable.
-	client := connectionA serviceFor: #RsrAbstractReflectedVariableTestServiceB.
+	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.
 	server := connectionB registry serviceAt: client _id.
 	clientNames := client reflectedVariableNames.
 	serverNames := server reflectedVariableNames.

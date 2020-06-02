@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrServerTestService',
-	#superclass : 'RsrAbstractTestService',
+	#superclass : 'RsrTestService',
 	#instVars : [
 		'privateVariable'
 	],

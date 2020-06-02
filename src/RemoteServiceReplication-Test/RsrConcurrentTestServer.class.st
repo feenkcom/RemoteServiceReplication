@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrConcurrentTestServer',
-	#superclass : 'RsrAbstractConcurrentTestService',
+	#superclass : 'RsrConcurrentTestService',
 	#instVars : [
 		'counter',
 		'semaphore',

@@ -4,6 +4,7 @@ package paxVersion: 1; basicComment: ''.
 
 package classNames
 	add: #RsrService;
+	add: #RsrServiceFactoryClient;
 	add: #RsrDeliverResponse;
 	add: #RsrLog;
 	add: #RsrStream;
@@ -31,7 +32,6 @@ package classNames
 	add: #RsrServiceFactory;
 	add: #RsrRetainObject;
 	add: #RsrNumericSpigot;
-	add: #RsrAbstractServiceFactory;
 	add: #RsrLogSink;
 	add: #RsrReleaseObjects;
 	add: #RsrLogWithPrefix;
@@ -171,14 +171,6 @@ RsrObject
 	classInstanceVariableNames: ''!
 !RsrStream categoriesForClass!RemoteServiceReplication! !
 
-RsrService
-	subclass: #RsrAbstractServiceFactory
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrAbstractServiceFactory categoriesForClass!RemoteServiceReplication! !
-
 RsrEventLoop
 	subclass: #RsrCommandSink
 	instanceVariableNames: 'queue'
@@ -259,6 +251,14 @@ RsrCommand
 	classInstanceVariableNames: ''!
 !RsrSendMessage categoriesForClass!RemoteServiceReplication! !
 
+RsrService
+	subclass: #RsrServiceFactory
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrServiceFactory categoriesForClass!RemoteServiceReplication! !
+
 RsrNumericSpigot
 	subclass: #RsrThreadSafeNumericSpigot
 	instanceVariableNames: 'mutex'
@@ -283,15 +283,15 @@ RsrError
 	classInstanceVariableNames: ''!
 !RsrCycleDetected categoriesForClass!RemoteServiceReplication! !
 
-RsrAbstractServiceFactory
-	subclass: #RsrServiceFactory
+RsrServiceFactory
+	subclass: #RsrServiceFactoryClient
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrServiceFactory categoriesForClass!RemoteServiceReplication! !
+!RsrServiceFactoryClient categoriesForClass!RemoteServiceReplication! !
 
-RsrAbstractServiceFactory
+RsrServiceFactory
 	subclass: #RsrServiceFactoryServer
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -308,7 +308,7 @@ RsrError
 !RsrUnknownOID categoriesForClass!RemoteServiceReplication! !
 
 !RsrServiceSpecies class methodsFor!
-reflectedVariablesFor: aService	| currentClass variables |	variables := OrderedCollection new.	currentClass := aService class abstractClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
+reflectedVariablesFor: aService	| currentClass variables |	variables := OrderedCollection new.	currentClass := aService class templateClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
 
 !RsrServiceSpecies class methodsFor!
 reflectedVariableIndicesFor: aServicedo: aBlock	| allVariables |	allVariables := aService class allInstVarNames.	(self reflectedVariablesFor: aService)		do:			[:varName | | index |			index := allVariables indexOf: varName.			aBlock value: index]! !
@@ -329,10 +329,10 @@ _service: aService	_service := aService! !
 clientClassName	self subclassResponsibility! !
 
 !RsrService class methodsFor!
-_id: anIdconnection: aConnection	^super new		_id: anId connection: aConnection;		yourself! !
+isTemplateClass	^self name == self templateClassName! !
 
 !RsrService class methodsFor!
-abstractClass	^RsrClassResolver classNamed: self abstractClassName! !
+_id: anIdconnection: aConnection	^super new		_id: anId connection: aConnection;		yourself! !
 
 !RsrService class methodsFor!
 isServerClass	^self name == self serverClassName! !
@@ -341,19 +341,19 @@ isServerClass	^self name == self serverClassName! !
 isClientClass	^self name == self clientClassName! !
 
 !RsrService class methodsFor!
-abstractClassName	self subclassResponsibility! !
-
-!RsrService class methodsFor!
 serverClass	^RsrClassResolver classNamed: self serverClassName! !
 
 !RsrService class methodsFor!
 clientClass	^RsrClassResolver classNamed: self clientClassName! !
 
 !RsrService class methodsFor!
-isAbstractClass	^self name == self abstractClassName! !
+serverClassName	self subclassResponsibility! !
 
 !RsrService class methodsFor!
-serverClassName	self subclassResponsibility! !
+templateClass	^RsrClassResolver classNamed: self templateClassName! !
+
+!RsrService class methodsFor!
+templateClassName	self subclassResponsibility! !
 
 !RsrDeliverResponse class methodsFor!
 transaction: aTransactionIderror: anExceptionroots: anArray	^self new		transaction: aTransactionId;		errorName: anException class name;		response: anException messageText;		roots: anArray;		yourself! !
@@ -388,17 +388,23 @@ transaction: aTransactionIdreceiver: aServiceselector: aSelectorarguments: an
 !RsrRetainAnalysis class methodsFor!
 roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
 
+!RsrServiceFactory class methodsFor!
+clientClassName	^#RsrServiceFactoryClient! !
+
+!RsrServiceFactory class methodsFor!
+templateClassName	^#RsrServiceFactory! !
+
+!RsrServiceFactory class methodsFor!
+serverClassName	^#RsrServiceFactoryServer! !
+
 !RsrReleaseObjects class methodsFor!
 oids: anArray	^self new		oids: anArray;		yourself! !
 
-!RsrAbstractServiceFactory class methodsFor!
-clientClassName	^#RsrServiceFactory! !
+!RsrLogWithPrefix class methodsFor!
+prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
 
-!RsrAbstractServiceFactory class methodsFor!
-abstractClassName	^#RsrServiceFactory! !
-
-!RsrAbstractServiceFactory class methodsFor!
-serverClassName	^#RsrServiceFactoryServer! !
+!RsrLogWithPrefix class methodsFor!
+log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrConnection class methodsFor!
 socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
@@ -414,12 +420,6 @@ acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	[listen
 
 !RsrConnection class methodsFor!
 connectionTimeout	^2! !
-
-!RsrLogWithPrefix class methodsFor!
-prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
-
-!RsrLogWithPrefix class methodsFor!
-log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
@@ -516,9 +516,6 @@ roots: anArray	roots := anArray! !
 
 !RsrDeliverResponse methodsFor!
 transaction	^transaction! !
-
-!RsrServiceFactory methodsFor!
-serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
 
 !RsrEncoder methodsFor!
 encodeObject: anObject	^ByteArray		streamContents:			[:stream |			self				encodeObject: anObject				onto: stream]! !
@@ -708,6 +705,9 @@ transaction: anObject	transaction := anObject! !
 
 !RsrServiceFactoryServer methodsFor!
 create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !
+
+!RsrServiceFactoryClient methodsFor!
+serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
 
 !RsrEventLoop methodsFor!
 stop	self isActive ifFalse: [^self].	state := self stoppedState.	self connection close.	self stream close! !
@@ -1049,7 +1049,7 @@ _forwarderClass	^RsrForwarder! !
 serviceFactory	^serviceFactory! !
 
 !RsrConnection methodsFor!
-open	(isOpen := socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	closeSemaphore := Semaphore new.	stream := RsrSocketStream on: socket.	dispatcher := RsrDispatchEventLoop on: self.	commandReader := RsrCommandSource on: self.	commandWriter := RsrCommandSink on: self.	dispatcher start.	commandReader start.	commandWriter start.	serviceFactory := RsrServiceFactory		_id: self oidSpigot next		connection: self.	registry		serviceAt: serviceFactory _id		put: serviceFactory! !
+open	(isOpen := socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	closeSemaphore := Semaphore new.	stream := RsrSocketStream on: socket.	dispatcher := RsrDispatchEventLoop on: self.	commandReader := RsrCommandSource on: self.	commandWriter := RsrCommandSink on: self.	dispatcher start.	commandReader start.	commandWriter start.	serviceFactory := RsrServiceFactory clientClass		_id: self oidSpigot next		connection: self.	registry		serviceAt: serviceFactory _id		put: serviceFactory! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !

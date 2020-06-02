@@ -1,5 +1,5 @@
 Class {
 	#name : 'RsrReferenceAllSpeciesServer',
-	#superclass : 'RsrAbstractReferenceAllSpecies',
+	#superclass : 'RsrReferenceAllSpecies',
 	#category : 'RemoteServiceReplication-Test'
 }
