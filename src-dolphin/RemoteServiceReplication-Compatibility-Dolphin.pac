@@ -547,8 +547,8 @@ close
 
 	socket close!
 
-connectTo: aPort
-on: aHostname
+connectToHost: aHostname
+port: aPort
 
 	socket := Socket2
 		port: aPort
@@ -603,7 +603,7 @@ write: aByteArray
 	socket send: aByteArray! !
 !RsrSocket categoriesFor: #accept!public! !
 !RsrSocket categoriesFor: #close!public! !
-!RsrSocket categoriesFor: #connectTo:on:!public! !
+!RsrSocket categoriesFor: #connectToHost:port:!public! !
 !RsrSocket categoriesFor: #dataAvailable!public! !
 !RsrSocket categoriesFor: #isConnected!public! !
 !RsrSocket categoriesFor: #listenOn:!public! !
