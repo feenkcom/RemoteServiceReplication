@@ -15,7 +15,9 @@ RsrSocketStreamTestCase >> initializeStreams [
 	listener := RsrSocket new.
 	client := RsrSocket new.
 	listener listenOn: self listenPort.
-	client connectTo: self listenPort on: '127.0.0.1'.
+	client
+		connectToHost: '127.0.0.1'
+		port: self listenPort.
 	server := listener accept.
 	listener close.
 	serverStream := RsrSocketStream on: server.

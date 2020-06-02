@@ -31,7 +31,9 @@ RsrSocketTestCase >> testConnectLocalSockets [
 	client := RsrSocket new.
 	port := self randomPort.
 	listener listenOn: port.
-	client connectTo: port on: '127.0.0.1'.
+	client
+		connectToHost: '127.0.0.1'
+		port: port.
 	server := listener accept.
 	listener close.
 	self
@@ -53,7 +55,7 @@ RsrSocketTestCase >> testConnectToClosedPort [
 	| socket |
 	socket := RsrSocket new.
 	self
-		should: [socket connectTo: 64752 on: '127.0.0.1']
+		should: [socket connectToHost: '127.0.0.1' port: 64752]
 		raise: Error
 ]
 

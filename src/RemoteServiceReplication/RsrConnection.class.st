@@ -35,20 +35,14 @@ RsrConnection class >> acceptOn: aPortNumber [
 ]
 
 { #category : 'instance creation' }
-RsrConnection class >> connectionTimeout [
-
-	^2
-]
-
-{ #category : 'instance creation' }
-RsrConnection class >> connectTo: aPortNumber
-on: aHostname [
+RsrConnection class >> connectToHost: aHostname
+port: aPortNumber [
 
 	| socket |
 	socket := RsrSocket new.
 	socket
-		connectTo: aPortNumber
-		on: aHostname.
+		connectToHost: aHostname
+		port: aPortNumber.
 	^(self
 		socket: socket
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated

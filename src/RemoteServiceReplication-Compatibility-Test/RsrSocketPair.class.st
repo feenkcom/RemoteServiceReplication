@@ -32,8 +32,8 @@ RsrSocketPair class >> new [
 	secondSocket := RsrSocket new.
 	listener listenOn: self listenPort.
 	secondSocket
-		connectTo: self listenPort
-		on: '127.0.0.1'.
+		connectToHost: '127.0.0.1'
+		port: self listenPort.
 	firstSocket := listener accept.
 	listener close.
 	(firstSocket isConnected and: [secondSocket isConnected])

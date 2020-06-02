@@ -35,7 +35,7 @@ RsrSystemTestCase >> setUp [
 	semaphore := Semaphore new.
 	self
 		fork: [[connectionA := RsrConnection acceptOn: port] ensure: [semaphore signal]];
-		fork: [[connectionB := RsrConnection connectTo: port on: '127.0.0.1'] ensure: [semaphore signal]].
+		fork: [[connectionB := RsrConnection connectToHost: '127.0.0.1' port: port] ensure: [semaphore signal]].
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;

@@ -34,8 +34,8 @@ RsrSocket >> close [
 ]
 
 { #category : 'opening connection' }
-RsrSocket >> connectTo: aPort
-on: aHostname [
+RsrSocket >> connectToHost: aHostname
+port: aPort [
 
 	^socket
 		connectTo: aPort
