@@ -30,7 +30,7 @@ RsrService class >> clientClass [
 { #category : 'accessing' }
 RsrService class >> clientClassName [
 
-	self subclassResponsibility
+	^(self templateClassName, 'Client') asSymbol
 ]
 
 { #category : 'testing' }
@@ -60,7 +60,7 @@ RsrService class >> serverClass [
 { #category : 'accessing' }
 RsrService class >> serverClassName [
 
-	self subclassResponsibility
+	^(self templateClassName, 'Server') asSymbol
 ]
 
 { #category : 'accessing' }

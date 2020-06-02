@@ -326,7 +326,7 @@ doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_se
 _service: aService	_service := aService! !
 
 !RsrService class methodsFor!
-clientClassName	self subclassResponsibility! !
+clientClassName	^(self templateClassName, 'Client') asSymbol! !
 
 !RsrService class methodsFor!
 isTemplateClass	^self name == self templateClassName! !
@@ -347,7 +347,7 @@ serverClass	^RsrClassResolver classNamed: self serverClassName! !
 clientClass	^RsrClassResolver classNamed: self clientClassName! !
 
 !RsrService class methodsFor!
-serverClassName	self subclassResponsibility! !
+serverClassName	^(self templateClassName, 'Server') asSymbol! !
 
 !RsrService class methodsFor!
 templateClass	^RsrClassResolver classNamed: self templateClassName! !
@@ -389,13 +389,7 @@ transaction: aTransactionIdreceiver: aServiceselector: aSelectorarguments: an
 roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
 
 !RsrServiceFactory class methodsFor!
-clientClassName	^#RsrServiceFactoryClient! !
-
-!RsrServiceFactory class methodsFor!
 templateClassName	^#RsrServiceFactory! !
-
-!RsrServiceFactory class methodsFor!
-serverClassName	^#RsrServiceFactoryServer! !
 
 !RsrReleaseObjects class methodsFor!
 oids: anArray	^self new		oids: anArray;		yourself! !
