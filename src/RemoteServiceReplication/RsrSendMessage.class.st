@@ -76,8 +76,7 @@ to: aLog [
 				nextPutAll: '>>';
 				nextPutAll: selector;
 				nextPutAll: ' due to: ';
-				nextPutAll: anException class name;
-				nextPut: $(; nextPutAll: anException messageText asString; nextPut: $)].
+				nextPutAll: anException description].
 	aLog error: message
 ]
 
