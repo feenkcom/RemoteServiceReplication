@@ -599,6 +599,9 @@ isClient	^self class isClientClass! !
 reflectedVariableNames	^RsrServiceSpecies reflectedVariablesFor: self! !
 
 !RsrService methodsFor!
+registerWith: aConnection	aConnection serviceFactory mirror: self! !
+
+!RsrService methodsFor!
 _id	^_id! !
 
 !RsrService methodsFor!
@@ -694,8 +697,14 @@ logException: anExceptionto: aLog	| message |	message := String		streamCont
 !RsrServiceFactoryServer methodsFor!
 create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !
 
+!RsrServiceFactoryServer methodsFor!
+mirror: aService	^aService! !
+
 !RsrServiceFactoryClient methodsFor!
 serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
+
+!RsrServiceFactoryClient methodsFor!
+mirror: aService	^remoteSelf mirror: aService! !
 
 !RsrEventLoop methodsFor!
 stop	self isActive ifFalse: [^self].	state := self stoppedState.	self connection close.	self stream close! !

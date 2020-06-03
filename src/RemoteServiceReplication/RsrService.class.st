@@ -133,6 +133,12 @@ RsrService >> reflectedVariableNames [
 	^RsrServiceSpecies reflectedVariablesFor: self
 ]
 
+{ #category : 'public-registration' }
+RsrService >> registerWith: aConnection [
+
+	aConnection serviceFactory mirror: self
+]
+
 { #category : 'public-synchronization' }
 RsrService >> synchronize [
 

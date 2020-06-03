@@ -192,6 +192,16 @@ RsrServiceTest >> testReflectedVariableNames [
 ]
 
 { #category : 'running' }
+RsrServiceTest >> testRegisterWith [
+
+	| instance |
+	instance := RsrClientTestService new.
+	self deny: instance isMirrored.
+	instance registerWith: connectionA.
+	self assert: instance isMirrored
+]
+
+{ #category : 'running' }
 RsrServiceTest >> testVariableReflection [
 
 	| localService remoteService |
