@@ -10,7 +10,7 @@ RsrMessageSendingTest >> testRemoteError [
 	| client server exception |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	server := connectionB registry serviceAt: client _id.
-	server action: [Error signal].
+	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
 	[client value]
 		on: RsrRemoteError
 		do: [:ex | exception := ex. ex return].
@@ -20,6 +20,15 @@ RsrMessageSendingTest >> testRemoteError [
 	self
 		assert: exception originalClassName
 		equals: #Error.
+	self
+		assert: exception tag
+		equals: 'tag'.
+	self
+		assert: exception messageText
+		equals: 'messageText'.
+	self
+		assert: exception stack
+		equals: nil
 ]
 
 { #category : 'running' }
@@ -122,6 +131,15 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 	self
 		assert: exception originalClassName
 		equals: #RsrUnsupportedObject.
+	self
+		assert: exception tag
+		equals: 'Instances of Object cannot be serialized'.
+	self
+		assert: exception messageText
+		equals: 'Instances of Object cannot be serialized'.
+	self
+		assert: exception stack
+		equals: nil
 ]
 
 { #category : 'running' }
