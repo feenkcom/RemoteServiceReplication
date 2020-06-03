@@ -31,7 +31,19 @@ RsrDecoderTest >> testDeliverErrorResponse [
 		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"
-		#[69 114 114 111 114]. "#Error"
+		#[69 114 114 111 114], "#Error"
+		#[0 0 0 0 0 0 0 0], "OID = 0"
+		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
+		#[0 0 0 0 0 0 0 3], "length"
+		#[116 97 103],	 "tag"
+		#[0 0 0 0 0 0 0 0], "OID = 0"
+		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
+		#[0 0 0 0 0 0 0 12], "length"
+		#[109 101 115 115 97 103 101 32 116 101 120 116],	 "message text"
+		#[0 0 0 0 0 0 0 0], "OID = 0"
+		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
+		#[0 0 0 0 0 0 0 10], "length"
+		#[115 116 97 99 107 32 100 117 109 112].	 "stack dump"
 	command := self decoder decodeCommand: encoding readStream.
 	self
 		assert: command class
@@ -45,7 +57,16 @@ RsrDecoderTest >> testDeliverErrorResponse [
 		equals: RsrRemoteError.
 	self
 		assert: error originalClassName
-		equals: #Error
+		equals: #Error.
+	self
+		assert: error tag
+		equals: 'tag'.
+	self
+		assert: error messageText
+		equals: 'message text'.
+	self
+		assert: error stack
+		equals: 'stack dump'
 ]
 
 { #category : 'running' }

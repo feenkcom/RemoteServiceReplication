@@ -36,6 +36,15 @@ RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse [
 				onto: stream.
 			self
 				encodeReferenceOf: error originalClassName
+				onto: stream.
+			self
+				encodeReferenceOf: error tag
+				onto: stream.
+			self
+				encodeReferenceOf: error messageText
+				onto: stream.
+			self
+				encodeReferenceOf: error stack
 				onto: stream]
 ]
 

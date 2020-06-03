@@ -74,11 +74,17 @@ RsrDecoder >> decodeControlWord: aStream [
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeDeliverErrorResponse: aStream [
 
-	| transaction originalClassName error |
+	| transaction originalClassName tag messageText stack error |
 	transaction := self decodeControlWord: aStream.
 	originalClassName := self decodeObjectReference: aStream.
+	tag := self decodeObjectReference: aStream.
+	messageText := self decodeObjectReference: aStream.
+	stack := self decodeObjectReference: aStream.
 	error := RsrRemoteError new
 		originalClassName: originalClassName;
+		tag: tag;
+		messageText: messageText;
+		stack: stack;
 		yourself.
 	^RsrDeliverErrorResponse new
 		transaction: transaction;
