@@ -72,6 +72,21 @@ RsrDecoder >> decodeControlWord: aStream [
 ]
 
 { #category : 'decoding-commands' }
+RsrDecoder >> decodeDeliverErrorResponse: aStream [
+
+	| transaction originalClassName error |
+	transaction := self decodeControlWord: aStream.
+	originalClassName := self decodeObjectReference: aStream.
+	error := RsrRemoteError new
+		originalClassName: originalClassName;
+		yourself.
+	^RsrDeliverErrorResponse new
+		transaction: transaction;
+		remoteError: error;
+		yourself
+]
+
+{ #category : 'decoding-commands' }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
 	| transaction errorName response |
@@ -158,7 +173,8 @@ RsrDecoder >> initializeDecodeCommandMap [
 		at: self retainObjectCommand put: #decodeRetainObject:;
 		at: self sendMessageCommand put: #decodeSendMessage:;
 		at: self deliverResponseCommand put: #decodeDeliverResponse:;
-		at: self releaseObjectsCommand put: #decodeReleaseObjects:.
+		at: self releaseObjectsCommand put: #decodeReleaseObjects:;
+		at: self deliverErrorResponseCommand put: #decodeDeliverErrorResponse:.
 	^decodeCommandMap
 ]
 

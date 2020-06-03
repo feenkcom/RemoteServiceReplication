@@ -22,6 +22,33 @@ RsrDecoderTest >> decodeService: anObjectBytes [
 ]
 
 { #category : 'running' }
+RsrDecoderTest >> testDeliverErrorResponse [
+
+	| encoding command error |
+	encoding :=
+		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"
+		#[0 0 0 0 0 0 0 1], "Transaction Id"
+		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"
+		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
+		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"
+		#[69 114 114 111 114]. "#Error"
+	command := self decoder decodeCommand: encoding readStream.
+	self
+		assert: command class
+		equals: RsrDeliverErrorResponse.
+	self
+		assert: command transaction
+		equals: 1.
+	error := command remoteError.
+	self
+		assert: error class
+		equals: RsrRemoteError.
+	self
+		assert: error originalClassName
+		equals: #Error
+]
+
+{ #category : 'running' }
 RsrDecoderTest >> testDeliverResponse [
 
 	| response encoding command |

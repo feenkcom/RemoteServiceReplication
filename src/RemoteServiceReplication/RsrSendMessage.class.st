@@ -60,7 +60,7 @@ RsrSendMessage >> executeFor: aConnection [
 			self
 				logException: ex
 				to: aConnection log.
-			(RsrDeliverResponse transaction: transaction error: (RsrRemoteError from: ex) roots: #()) sendOver: aConnection]
+			(RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex)) sendOver: aConnection]
 ]
 
 { #category : 'reporting' }

@@ -21,6 +21,25 @@ onto: aStream [
 ]
 
 { #category : 'private-encoding' }
+RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse [
+
+	| error |
+	error := aDeliverErrorResponse remoteError.
+	^ByteArray
+		streamContents:
+			[:stream |
+			self
+				encodeControlWord: self deliverErrorResponseCommand
+				onto: stream.
+			self
+				encodeControlWord: aDeliverErrorResponse transaction
+				onto: stream.
+			self
+				encodeReferenceOf: error originalClassName
+				onto: stream]
+]
+
+{ #category : 'private-encoding' }
 RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 
 	^ByteArray

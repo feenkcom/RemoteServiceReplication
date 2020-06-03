@@ -7,13 +7,19 @@ Class {
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteError [
 
-	| client server |			
+	| client server exception |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	server := connectionB registry serviceAt: client _id.
 	server action: [Error signal].
+	[client value]
+		on: RsrRemoteError
+		do: [:ex | exception := ex. ex return].
 	self
-		should: [client value]
-		raise: RsrRemoteError
+		assert: exception class
+		equals: RsrRemoteError.
+	self
+		assert: exception originalClassName
+		equals: #Error.
 ]
 
 { #category : 'running' }
@@ -100,13 +106,22 @@ RsrMessageSendingTest >> testReturnArgument [
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testReturnInvalidObject [
 
-	| client server |			
+	| client server exception |			
 	client := connectionA serviceFor: #RsrRemoteAction.
 	server := connectionB registry serviceAt: client _id.
 	server action: [Object new].
 	self
 		should: [client value]
 		raise: RsrRemoteError.
+	[client value]
+		on: RsrRemoteError
+		do: [:ex | exception := ex. ex return].
+	self
+		assert: exception class
+		equals: RsrRemoteError.
+	self
+		assert: exception originalClassName
+		equals: #RsrUnsupportedObject.
 ]
 
 { #category : 'running' }

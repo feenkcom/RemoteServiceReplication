@@ -17,6 +17,12 @@ RsrCodec >> controlWordMin [
 ]
 
 { #category : 'private-accessing-commands' }
+RsrCodec >> deliverErrorResponseCommand [
+
+	^4
+]
+
+{ #category : 'private-accessing-commands' }
 RsrCodec >> deliverResponseCommand [
 
 	^2

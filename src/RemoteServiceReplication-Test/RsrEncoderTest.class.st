@@ -34,6 +34,27 @@ RsrEncoderTest >> tearDown [
 ]
 
 { #category : 'running-immediates' }
+RsrEncoderTest >> testDeliverErrorResponse [
+
+	| error command expectedEncoding |
+	error := RsrRemoteError from: Error new.
+	command := RsrDeliverErrorResponse
+		transaction: 1
+		remoteError: error.
+	command encodeUsing: RsrEncoder new.
+	expectedEncoding :=
+		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"
+		#[0 0 0 0 0 0 0 1], "Transaction Id"
+		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"
+		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
+		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"
+		#[69 114 114 111 114]. "#Error"
+	self
+		assert: command encoding
+		equals: expectedEncoding
+]
+
+{ #category : 'running-immediates' }
 RsrEncoderTest >> testDeliverResponse [
 
 	| response command expectedEncoding |
