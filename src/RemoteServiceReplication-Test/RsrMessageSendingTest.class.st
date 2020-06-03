@@ -4,14 +4,16 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'running' }
+{ #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteError [
 
-	| service |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
+	| client server |			
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [Error signal].
 	self
-		should: [service sendSignalError]
-		raise: Error
+		should: [client value]
+		raise: RsrRemoteError
 ]
 
 { #category : 'running' }
@@ -95,14 +97,16 @@ RsrMessageSendingTest >> testReturnArgument [
 		identicalTo: server
 ]
 
-{ #category : 'running' }
+{ #category : 'running-errors' }
 RsrMessageSendingTest >> testReturnInvalidObject [
 
-	| service |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
+	| client server |			
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [Object new].
 	self
-		should: [service sendReturnObjectNew]
-		raise: RsrUnsupportedObject
+		should: [client value]
+		raise: RsrRemoteError.
 ]
 
 { #category : 'running' }
@@ -141,13 +145,15 @@ RsrMessageSendingTest >> testReturnSymbol [
 		equals: #testSymbol
 ]
 
-{ #category : 'running' }
+{ #category : 'running-errors' }
 RsrMessageSendingTest >> testSendInvalidObject [
 
-	| service |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
+	| client server |			
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [:arg | arg].
 	self
-		should: [service sendReturnArgument: Object new]
+		should: [client value: Object new]
 		raise: RsrUnsupportedObject
 ]
 

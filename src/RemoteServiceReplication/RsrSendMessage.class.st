@@ -60,7 +60,7 @@ RsrSendMessage >> executeFor: aConnection [
 			self
 				logException: ex
 				to: aConnection log.
-			(RsrDeliverResponse transaction: transaction error: ex roots: #()) sendOver: aConnection]
+			(RsrDeliverResponse transaction: transaction error: (RsrRemoteError from: ex) roots: #()) sendOver: aConnection]
 ]
 
 { #category : 'reporting' }
@@ -77,7 +77,7 @@ to: aLog [
 				nextPutAll: selector;
 				nextPutAll: ' due to: ';
 				nextPutAll: anException class name;
-				nextPut: $(; nextPutAll: anException messageText; nextPut: $)].
+				nextPut: $(; nextPutAll: anException messageText asString; nextPut: $)].
 	aLog error: message
 ]
 
