@@ -56,8 +56,6 @@ RsrDecoderTest >> testDeliverResponse [
 	encoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"
 		#[0 0 0 0 0 0 0 1], "Transaction Id"
-		#[0 0 0 0 0 0 0 0], "nil errorName"
-		#[0 0 0 0 0 0 0 6], "nil errorName"
 		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"

@@ -3,7 +3,6 @@ Class {
 	#superclass : 'RsrCommand',
 	#instVars : [
 		'transaction',
-		'errorName',
 		'response',
 		'roots',
 		'retainList'
@@ -42,26 +41,6 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 	encoding := anRsrEncoder encodeDeliverResponse: self
 ]
 
-{ #category : 'accessing' }
-RsrDeliverResponse >> error [
-
-	^(RsrClassResolver classNamed: errorName ifAbsent: [RsrError]) new
-		messageText: response;
-		yourself
-]
-
-{ #category : 'accessing' }
-RsrDeliverResponse >> errorName [
-
-	^errorName
-]
-
-{ #category : 'accessing' }
-RsrDeliverResponse >> errorName: aSymbol [
-
-	errorName := aSymbol
-]
-
 { #category : 'lifecycle' }
 RsrDeliverResponse >> executeFor: aConnection [
 
@@ -70,17 +49,8 @@ RsrDeliverResponse >> executeFor: aConnection [
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	self isError
-		ifTrue: [promise error: self error]
-		ifFalse: [promise fulfill: response].
+	promise fulfill: response.
 	aConnection objectCache reset
-	
-]
-
-{ #category : 'testing' }
-RsrDeliverResponse >> isError [
-
-	^errorName notNil
 ]
 
 { #category : 'reporting' }
