@@ -20,6 +20,7 @@ package classNames
 	yourself.
 
 package methodNames
+	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
 	add: #Set -> #hash;
 	add: 'RsrCharacterArraySpecies class' -> #fromBytes:;
@@ -144,6 +145,13 @@ posixEpoch
 !RsrDateAndTimeSpecies class categoriesFor: #microsecondsSinceEpoch:!public! !
 !RsrDateAndTimeSpecies class categoriesFor: #now!public! !
 !RsrDateAndTimeSpecies class categoriesFor: #posixEpoch!public! !
+
+!RsrProcessModel methodsFor!
+
+currentStackDump
+
+	^Processor activeProcess stackTrace: 1000! !
+!RsrProcessModel categoriesFor: #currentStackDump!public! !
 
 !RsrSpecies class methodsFor!
 
