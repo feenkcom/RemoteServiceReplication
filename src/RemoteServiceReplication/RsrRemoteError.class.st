@@ -19,6 +19,7 @@ RsrRemoteError class >> from: anException [
 		originalClassName: anException class name;
 		tag: tag;
 		messageText: anException messageText;
+		stack: RsrProcessModel currentStackDump;
 		yourself
 ]
 

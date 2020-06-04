@@ -27,8 +27,8 @@ RsrMessageSendingTest >> testRemoteError [
 		assert: exception messageText
 		equals: 'messageText'.
 	self
-		assert: exception stack
-		equals: nil
+		assert: exception stack isString;
+		assert: exception stack size > 0
 ]
 
 { #category : 'running' }
@@ -138,8 +138,8 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 		assert: exception messageText
 		equals: 'Instances of Object cannot be serialized'.
 	self
-		assert: exception stack
-		equals: nil
+		assert: exception stack isString;
+		assert: exception stack size > 0
 ]
 
 { #category : 'running' }
