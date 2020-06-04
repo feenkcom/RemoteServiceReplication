@@ -344,7 +344,7 @@ doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_se
 _service: aService	_service := aService! !
 
 !RsrRemoteError class methodsFor!
-from: anException	| tag |	tag := anException tag.	tag isNil		ifFalse: [tag := tag asString].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		yourself! !
+from: anException	| tag |	tag := anException tag.	tag isNil		ifFalse: [tag := tag asString].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
 !RsrDeliverResponse class methodsFor!
 transaction: aTransactionIderror: anExceptionroots: anArray	^self new		transaction: aTransactionId;		errorName: anException class name;		response: anException messageText;		roots: anArray;		yourself! !
@@ -746,7 +746,7 @@ executeCycle	self subclassResponsibility! !
 isProcessActive	^process ~~ nil! !
 
 !RsrEventLoop methodsFor!
-start	state := self runningState.	process := RsrConcurrency		fork: [self runLoop.				process := nil]		at: self priority! !
+start	state := self runningState.	process := RsrProcessModel		fork: [self runLoop.				process := nil]		at: self priority! !
 
 !RsrEventLoop methodsFor!
 stoppedState	^#Stop! !

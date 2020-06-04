@@ -5,14 +5,14 @@ package paxVersion: 1; basicComment: ''.
 package classNames
 	add: #RsrClassResolverTestCase;
 	add: #RsrMockServer;
+	add: #RsrTestingProcessModelTestCase;
 	add: #RsrGarbageCollectorTestCase;
 	add: #RsrSocketPair;
 	add: #RsrSocketTestCase;
 	add: #RsrTestCase;
 	add: #RsrMockService;
 	add: #RsrRegistryTestCase;
-	add: #RsrTestingConcurrencyTestCase;
-	add: #RsrTestingConcurrency;
+	add: #RsrTestingProcessModel;
 	add: #RsrMockClient;
 	yourself.
 
@@ -31,13 +31,13 @@ RsrObject
 	classInstanceVariableNames: ''!
 !RsrSocketPair categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
-RsrConcurrency
-	subclass: #RsrTestingConcurrency
+RsrProcessModel
+	subclass: #RsrTestingProcessModel
 	instanceVariableNames: 'forkedException'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrTestingConcurrency categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
+!RsrTestingProcessModel categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrService
 	subclass: #RsrMockService
@@ -109,13 +109,13 @@ RsrSocketTestCase comment: 'This class contains tests'!
 !RsrSocketTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 RsrTestCase
-	subclass: #RsrTestingConcurrencyTestCase
+	subclass: #RsrTestingProcessModelTestCase
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrTestingConcurrencyTestCase comment: 'This class contains tests'!
-!RsrTestingConcurrencyTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
+RsrTestingProcessModelTestCase comment: 'This class contains tests'!
+!RsrTestingProcessModelTestCase categoriesForClass!RemoteServiceReplication-Compatibility-Test! !
 
 !RsrMockService class methodsFor!
 clientClassName	^#RsrMockClient! !
@@ -177,17 +177,32 @@ secondStream	^(RsrClassResolver classNamed: #RsrSocketStream) on: secondSocket
 !RsrSocketPair methodsFor!
 secondSocket	^ secondSocket! !
 
-!RsrTestingConcurrencyTestCase methodsFor!
-exceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].	sema wait! !
+!RsrTestingProcessModelTestCase methodsFor!
+testCurrentStackDump	| stack |	stack := RsrProcessModel currentStackDump.	self		assert: stack isString;		assert: stack size > 0! !
 
-!RsrTestingConcurrencyTestCase methodsFor!
+!RsrTestingProcessModelTestCase methodsFor!
+exceptionCase	| sema |	sema := Semaphore new.	RsrProcessModel fork: [[Error signal] ensure: [sema signal]].	sema wait! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+noExceptionCase	| sema |	sema := Semaphore new.	RsrProcessModel fork: [sema signal].	sema wait! !
+
+!RsrTestingProcessModelTestCase methodsFor!
 testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
 
-!RsrTestingConcurrencyTestCase methodsFor!
-noExceptionCase	| sema |	sema := Semaphore new.	RsrConcurrency fork: [sema signal].	sema wait! !
+!RsrTestingProcessModel methodsFor!
+forkedException	^forkedException! !
 
-!RsrTestingConcurrencyTestCase methodsFor!
-testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
+!RsrTestingProcessModel methodsFor!
+protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
+
+!RsrTestingProcessModel methodsFor!
+fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
+
+!RsrTestingProcessModel methodsFor!
+fork: aBlock	^super fork: (self protect: aBlock)! !
 
 !RsrRegistryTestCase methodsFor!
 testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		serviceAt: client _id		put: client.	self		assert: (registry removeKey: client _id) service		identicalTo: client! !
@@ -213,18 +228,6 @@ testFailedResolution	| actual marker |	self		should: [RsrClassResolver class
 !RsrClassResolverTestCase methodsFor!
 assert: aClassNameresolvesTo: expectedClass	| actualClass |	actualClass := RsrClassResolver classNamed: aClassName.	self		assert: actualClass		identicalTo: expectedClass! !
 
-!RsrTestingConcurrency methodsFor!
-forkedException	^forkedException! !
-
-!RsrTestingConcurrency methodsFor!
-protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
-
-!RsrTestingConcurrency methodsFor!
-fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
-
-!RsrTestingConcurrency methodsFor!
-fork: aBlock	^super fork: (self protect: aBlock)! !
-
 !RsrMockService methodsFor!
 initialize	super initialize.	_id := 1! !
 
@@ -238,7 +241,7 @@ isClient	^self class == RsrMockClient! !
 service	^self! !
 
 !RsrTestCase methodsFor!
-runCase	| concurrency |	concurrency := RsrTestingConcurrency new.	RsrConcurrency current: concurrency.	super runCase.	RsrConcurrency resetCurrent.	concurrency forkedException ifNotNil: [:ex | ex signal]! !
+runCase	| pm |	pm := RsrTestingProcessModel new.	RsrProcessModel current: pm.	[super runCase]		ensure:			[RsrProcessModel resetCurrent].	pm forkedException ifNotNil: [:ex | ex signal]! !
 
 !RsrTestCase methodsFor!
 hack: aString	"Placeholder for things that need to be fixed"! !
@@ -250,7 +253,7 @@ assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
 deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
 
 !RsrTestCase methodsFor!
-fork: aBlock	^RsrConcurrency fork: aBlock! !
+fork: aBlock	^RsrProcessModel fork: aBlock! !
 
 !RsrTestCase methodsFor!
 assumption: aString	"This method serves as a marker for assumptions made in the tests.	Perhaps some of the senders can be removed in the future."! !

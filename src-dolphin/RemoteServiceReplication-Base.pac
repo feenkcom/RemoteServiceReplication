@@ -15,6 +15,7 @@ package classNames
 	add: #RsrNegativeIntegerSpecies;
 	add: #RsrConnectionClosed;
 	add: #RsrUndefinedObjectSpecies;
+	add: #RsrProcessModel;
 	add: #RsrError;
 	add: #RsrDictionarySpecies;
 	add: #RsrSetSpecies;
@@ -27,7 +28,6 @@ package classNames
 	add: #RsrSpecies;
 	add: #RsrNullSpecies;
 	add: #RsrTrueSpecies;
-	add: #RsrConcurrency;
 	add: #RsrServiceSpecies;
 	yourself.
 
@@ -39,12 +39,12 @@ package setPrerequisites: #().
 package!
 
 Object
-	subclass: #RsrConcurrency
+	subclass: #RsrProcessModel
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: 'current'!
-!RsrConcurrency categoriesForClass!RemoteServiceReplication-Base! !
+!RsrProcessModel categoriesForClass!RemoteServiceReplication-Base! !
 
 Object
 	subclass: #RsrSpecies
@@ -369,21 +369,6 @@ decodeReference: aStream using: aDecoder	"Decode the provided bytes into the de
 !RsrSymbolSpecies class methodsFor!
 speciesIdentifier	^1! !
 
-!RsrConcurrency class methodsFor!
-fork: aBlock	^self current fork: aBlock! !
-
-!RsrConcurrency class methodsFor!
-current	^current ifNil: [self resetCurrent]! !
-
-!RsrConcurrency class methodsFor!
-resetCurrent	^current := self new! !
-
-!RsrConcurrency class methodsFor!
-current: concurrency	current := concurrency! !
-
-!RsrConcurrency class methodsFor!
-fork: aBlockat: aPriority	^self current		fork: aBlock		at: aPriority! !
-
 !RsrDateAndTimeSpecies class methodsFor!
 encodeReference: aDateAndTimeusing: anEncoderonto: aStream	| microseconds |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream.	microseconds := self microsecondsSinceEpoch: aDateAndTime.	anEncoder		encodeControlWord: microseconds		onto: aStream! !
 
@@ -422,6 +407,24 @@ decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the de
 
 !RsrFalseSpecies class methodsFor!
 speciesIdentifier	^8! !
+
+!RsrProcessModel class methodsFor!
+currentStackDump	^self current currentStackDump! !
+
+!RsrProcessModel class methodsFor!
+fork: aBlock	^self current fork: aBlock! !
+
+!RsrProcessModel class methodsFor!
+current	^current ifNil: [self resetCurrent]! !
+
+!RsrProcessModel class methodsFor!
+resetCurrent	^current := self new! !
+
+!RsrProcessModel class methodsFor!
+current: concurrency	current := concurrency! !
+
+!RsrProcessModel class methodsFor!
+fork: aBlockat: aPriority	^self current		fork: aBlock		at: aPriority! !
 
 !RsrBooleanSpecies class methodsFor!
 encodeReference: aBooleanusing: anEncoderonto: aStream	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self speciesIdentifier		onto: aStream! !
@@ -471,10 +474,10 @@ object	^object! !
 !RsrUnsupportedObject methodsFor!
 object: anObject	object := anObject! !
 
-!RsrConcurrency methodsFor!
+!RsrProcessModel methodsFor!
 fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
 
-!RsrConcurrency methodsFor!
+!RsrProcessModel methodsFor!
 fork: aBlock	^aBlock fork! !
 
 !RsrConnectionClosed methodsFor!
