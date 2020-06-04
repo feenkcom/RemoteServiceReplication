@@ -115,10 +115,13 @@ RsrSpeciesEquality >> testOrderedCollection [
 { #category : 'running' }
 RsrSpeciesEquality >> testService [
 
+	| clientClass serverClass |
+	clientClass := RsrRemoteAction clientClass.
+	serverClass := RsrRemoteAction serverClass.
 	self
-		verify: RsrClientNoInstVars new;
-		verify: (RsrClientReferenceService service: RsrClientNoInstVars new);
-		verify: (RsrServerReferenceService service: RsrClientNoInstVars new)
+		verify: clientClass new;
+		verify: (clientClass sharedVariable: clientClass new);
+		verify: (serverClass sharedVariable: clientClass new)
 ]
 
 { #category : 'running' }

@@ -7,6 +7,14 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'instance creation' }
+RsrRemoteAction class >> sharedVariable: anObject [
+
+	^self new
+		sharedVariable: anObject;
+		yourself
+]
+
 { #category : 'accessing' }
 RsrRemoteAction class >> templateClassName [
 

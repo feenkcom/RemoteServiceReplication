@@ -8,7 +8,7 @@ Class {
 RsrForwarderTest >> testForwarding [
 
 	| rsrObject id remoteInterface forwarder message |
-	rsrObject := RsrClientTestService new.
+	rsrObject := RsrTestService clientClass new.
 	id := 1.
 	remoteInterface := RsrMockConnection forwarderClass: RsrForwarder.
 	rsrObject

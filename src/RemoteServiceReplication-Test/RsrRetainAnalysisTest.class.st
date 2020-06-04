@@ -139,8 +139,8 @@ RsrRetainAnalysisTest >> testServiceReferencingAnotherService [
 	that Data Objects are actually encoded in-line."
 
 	| referencedService client analysis expected |
-	referencedService := RsrClientNoInstVars new.
-	client := RsrClientReferenceService service: referencedService.
+	referencedService := RsrRemoteAction clientClass new.
+	client := RsrRemoteAction clientClass sharedVariable: referencedService.
 	analysis := self analyze: client.
 	expected := OrderedCollection
 		with: (RsrRetainObject object: referencedService encoding: ByteArray new)
@@ -158,9 +158,9 @@ RsrRetainAnalysisTest >> testServiceWithCycle [
 	"Cycles are disallowed for our POC. Perhaps they will get added later?"
 
 	| rootClient referencedClient |
-	rootClient := RsrClientReferenceService new.
-	referencedClient := RsrClientReferenceService service: rootClient.
-	rootClient service: referencedClient.
+	rootClient := RsrRemoteAction new.
+	referencedClient := RsrRemoteAction sharedVariable: rootClient.
+	rootClient sharedVariable: referencedClient.
 	self assertCycle: rootClient
 ]
 

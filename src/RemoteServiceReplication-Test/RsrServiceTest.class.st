@@ -14,10 +14,10 @@ RsrServiceTest >> mirror: aService [
 RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
 
 	| client |
-	client := self serviceFactoryA serviceFor: #RsrTestService.
+	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
 	self
 		assert: client class
-		equals: RsrClientTestService
+		equals: RsrRemoteAction clientClass
 ]
 
 { #category : 'running' }
@@ -62,8 +62,7 @@ RsrServiceTest >> testCreateServiceWithSameClientAbstractService [
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
-	client := RsrClientTestService new.
-	self mirror: client.
+	client := connectionA serviceFor: #RsrRemoteAction.
 	service1 := connectionB registry serviceAt: client _id.
 	self mirror: client.
 	service2 := connectionB registry serviceAt: client _id.
@@ -76,7 +75,7 @@ RsrServiceTest >> testEnsureServersAreCachedAndReused [
 RsrServiceTest >> testHasRemoteSelf [
 
 	| service |
-	service := RsrClientTestService new.
+	service := RsrTestService clientClass new.
 	self mirror: service.
 	self deny: nil == service remoteSelf
 ]
@@ -85,7 +84,7 @@ RsrServiceTest >> testHasRemoteSelf [
 RsrServiceTest >> testInitialization [
 
 	| instance |
-	instance := RsrClientTestService new.
+	instance := RsrRemoteAction clientClass new.
 	self
 		assert: instance isMirrored
 		equals: false.
@@ -101,7 +100,7 @@ RsrServiceTest >> testInitialization [
 RsrServiceTest >> testIsMirrored [
 
 	| instance |
-	instance := RsrClientTestService new.
+	instance := RsrRemoteAction clientClass new.
 	self deny: instance isMirrored.
 	self mirror: instance.
 	self assert: instance isMirrored
@@ -195,7 +194,7 @@ RsrServiceTest >> testReflectedVariableNames [
 RsrServiceTest >> testRegisterWith [
 
 	| instance |
-	instance := RsrClientTestService new.
+	instance := RsrRemoteAction clientClass new.
 	self deny: instance isMirrored.
 	instance registerWith: connectionA.
 	self assert: instance isMirrored
@@ -205,7 +204,7 @@ RsrServiceTest >> testRegisterWith [
 RsrServiceTest >> testVariableReflection [
 
 	| localService remoteService |
-	localService := RsrClientTestService new
+	localService := RsrTestService clientClass new
 		sharedVariable: #shared;
 		privateVariable: #private;
 		yourself.
