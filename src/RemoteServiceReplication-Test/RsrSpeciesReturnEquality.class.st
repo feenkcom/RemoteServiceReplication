@@ -187,9 +187,11 @@ RsrSpeciesReturnEquality >> unicodeString [
 RsrSpeciesReturnEquality >> verify: anObject [
 	"Send <anObject> through RSR and have it returned. Assert it is equivalent."
 
-	| result |
-	result := (connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: anObject.
+	| client server |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [:object | object].
 	self
-		assert: result
+		assert: (client value: anObject)
 		equals: anObject
 ]

@@ -4,6 +4,18 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'running' }
+RsrMessageSendingTest >> testChangeRemoteState [
+
+	| marker client server |
+	marker := false.
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [marker := true].
+	client value.
+	self assert: marker
+]
+
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteError [
 
@@ -68,8 +80,9 @@ RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
 RsrMessageSendingTest >> testReturnArgument [
 
 	| client server arguments dt response |
-	client := connectionA serviceFor: #RsrClientNoInstVars.
+	client := connectionA serviceFor: #RsrRemoteAction.
 	server := connectionB registry serviceAt: client _id.
+	server action: [:object | object].
 	arguments := OrderedCollection new
 		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
  		add: (Character codePoint: 16r259F);
@@ -80,36 +93,33 @@ RsrMessageSendingTest >> testReturnArgument [
 		add: #(1 2 #(nil));
 		yourself.
 	dt := RsrDateAndTimeSpecies now.
-	response := client sendReturnArgument: dt.
+	response := client value: dt.
 	self
 		assert: (dt asSeconds * 1000000) rounded
 		equals: (response asSeconds * 1000000) rounded.
 	arguments
 		do:
 			[:each | | result |
-			result := client sendReturnArgument: each.
+			result := client value: each.
 			self
 				assert: result
 				equals: each].
 	arguments
 		do:
 			[:each | | result |
-			result := server sendReturnArgument: each.
+			result := server value: each.
 			self
 				assert: result
 				equals: each].
 	self
-		assert: (client sendReturnArgument: arguments)
+		assert: (client value: arguments)
 		equals: arguments.
 	self
-		assert: (server sendReturnArgument: arguments)
+		assert: (server value: arguments)
 		equals: arguments.
 	self
-		assert: (client sendReturnArgument: client)
-		identicalTo: client.
-	self
-		assert: (server sendReturnArgument: server)
-		identicalTo: server
+		assert: (client value: client)
+		identicalTo: client
 ]
 
 { #category : 'running-errors' }
@@ -145,37 +155,42 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 { #category : 'running' }
 RsrMessageSendingTest >> testReturnNewService [
 
-	| service returnedService |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
-	returnedService := service sendReturnNewService.
+	| client server returnedService |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [RsrValueHolderServer new].
+	returnedService := client value.
 	self
 		assert: returnedService class
-		equals: RsrClientTestService
+		equals: RsrValueHolderClient
 ]
 
 { #category : 'running' }
 RsrMessageSendingTest >> testReturnNewServiceInArray [
 
-	| service array returnedService |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
-	array := service sendReturnNewServiceInArray.
-	self
-		assert: array size
-		equals: 1.
+	| client server array returnedService |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [Array with: RsrValueHolderServer new].
+	array := client value.
 	returnedService := array first.
 	self
 		assert: returnedService class
-		equals: RsrClientTestService
+		equals: RsrValueHolderClient
 ]
 
 { #category : 'running' }
 RsrMessageSendingTest >> testReturnSymbol [
 
-	| service |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
+	| client server symbol result |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	symbol := #testSymbol.
+	server action: [symbol].
+	result := client value.
 	self
-		assert: service sendReturnTestSymbol
-		equals: #testSymbol
+		assert: result
+		equals: symbol
 ]
 
 { #category : 'running-errors' }
@@ -188,15 +203,4 @@ RsrMessageSendingTest >> testSendInvalidObject [
 	self
 		should: [client value: Object new]
 		raise: RsrUnsupportedObject
-]
-
-{ #category : 'running' }
-RsrMessageSendingTest >> testSendSetMarker [
-
-	| service remoteService |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
-	remoteService := connectionB registry serviceAt: service _id.
-	self deny: remoteService marker.
-	service sendSetMarker.
-	self assert: remoteService marker
 ]

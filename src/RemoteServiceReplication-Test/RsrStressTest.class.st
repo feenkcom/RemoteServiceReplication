@@ -4,6 +4,17 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'running-utilities' }
+RsrStressTest >> repeatedlySend: anObject [
+
+	| client server |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [:object | object].
+	self repetitions timesRepeat: [client value: anObject].
+	self assert: true. "If we get to this point, the sends have all successed"
+]
+
 { #category : 'accessing' }
 RsrStressTest >> repetitions [
 
@@ -13,39 +24,28 @@ RsrStressTest >> repetitions [
 { #category : 'running' }
 RsrStressTest >> testRepeatedSendReceive1KBytes [
 
-	| client bytes |
-	client := connectionA serviceFor: #RsrChattyClient.
-	bytes := ByteArray new: 1024.
-	self repetitions timesRepeat: [client returnArgument:  bytes].
-	self assert: true. "If we get to this point, the sends have all successed"
+	self repeatedlySend: (ByteArray new: 1024)
 ]
 
 { #category : 'running' }
 RsrStressTest >> testRepeatedSendReceive1MBytes [
 
-	| client bytes |
-	client := connectionA serviceFor: #RsrChattyClient.
-	bytes := ByteArray new: 1024 squared.
-	connectionA log debug: 'About to start writing bytes'.
-	self repetitions timesRepeat: [client returnArgument:  bytes].
-	self assert: true. "If we get to this point, the sends have all successed"
+	self repeatedlySend: (ByteArray new: 1024 squared)
 ]
 
 { #category : 'running' }
 RsrStressTest >> testRepeatedSendReceive2KBytes [
 
-	| client bytes |
-	client := connectionA serviceFor: #RsrChattyClient.
-	bytes := ByteArray new: 1024 * 2.
-	self repetitions timesRepeat: [client returnArgument:  bytes].
-	self assert: true. "If we get to this point, the sends have all successed"
+	self repeatedlySend: (ByteArray new: 1024 *2)
 ]
 
 { #category : 'running' }
 RsrStressTest >> testRepeatedUnarySends [
 
-	| client |
-	client := connectionA serviceFor: #RsrChattyClient.
-	self repetitions timesRepeat: [client returnSelf].
+	| client server |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [server].
+	self repetitions timesRepeat: [client value].
 	self assert: true. "If we get to this point, the sends have all successed"
 ]

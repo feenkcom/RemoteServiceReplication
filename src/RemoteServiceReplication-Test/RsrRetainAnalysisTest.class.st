@@ -108,7 +108,7 @@ RsrRetainAnalysisTest >> testServiceAllDataObjects [
 	that Data Objects are actually encoded in-line."
 
 	| client registry analysis expected |
-	client := RsrClientAllDataObjects new.
+	client := RsrRemoteAction clientClass new.
 	registry := RsrMockRegistry new.
 	analysis := self analyze: client.
 	expected := OrderedCollection

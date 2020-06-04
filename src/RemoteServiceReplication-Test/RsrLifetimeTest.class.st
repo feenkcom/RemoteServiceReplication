@@ -37,18 +37,20 @@ RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 	"Ensure objects created by the RsrServiceFactory maintain the same
 	properties as other objects"
 
-	| service remoteService |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
+	| client server remoteService |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	server action: [:object | object].
 	self
-		assert: (connectionA registry serviceAt: service _id)
-		identicalTo: service.
-	remoteService := connectionB registry serviceAt: service _id.
+		assert: (connectionA registry serviceAt: client _id)
+		identicalTo: client.
+	remoteService := connectionB registry serviceAt: client _id.
 	self
 		assert: remoteService class
-		equals: RsrServerNoInstVars.
+		equals: RsrRemoteActionServer.
 	self
-		assert: service sendReturnSelf
-		identicalTo: service
+		assert: (client value: client)
+		identicalTo: client
 ]
 
 { #category : 'running' }
