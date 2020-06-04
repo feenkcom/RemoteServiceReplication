@@ -1,11 +1,11 @@
 Class {
-	#name : 'RsrSpeciesReturnEquality',
+	#name : 'RsrSpeciesEquality',
 	#superclass : 'RsrSystemTestCase',
 	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
-RsrSpeciesReturnEquality >> basicExamples [
+RsrSpeciesEquality >> basicExamples [
 	"Give a samples of each species to ensure Collection classes are able to encode each type successfully."
 
 	^{RsrClientNoInstVars new.
@@ -35,7 +35,7 @@ RsrSpeciesReturnEquality >> basicExamples [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testArray [
+RsrSpeciesEquality >> testArray [
 
 	self
 		verify: #();
@@ -43,7 +43,7 @@ RsrSpeciesReturnEquality >> testArray [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testBoolean [
+RsrSpeciesEquality >> testBoolean [
 
 	self
 		verify: true;
@@ -51,7 +51,7 @@ RsrSpeciesReturnEquality >> testBoolean [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testByteArray [
+RsrSpeciesEquality >> testByteArray [
 
 	self
 		verify: #[];
@@ -60,7 +60,7 @@ RsrSpeciesReturnEquality >> testByteArray [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testCharacter [
+RsrSpeciesEquality >> testCharacter [
 
 	self
 		verify: (Character codePoint: 0);
@@ -71,7 +71,7 @@ RsrSpeciesReturnEquality >> testCharacter [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testDateAndTime [
+RsrSpeciesEquality >> testDateAndTime [
 
 	self
 		verify: (RsrDateAndTimeSpecies fromMicroseconds: -491277642567488); "1954-06-07T14:59:17.432512-07:00"
@@ -79,7 +79,7 @@ RsrSpeciesReturnEquality >> testDateAndTime [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testDictionary [
+RsrSpeciesEquality >> testDictionary [
 
 	| example |
 	example := Dictionary new.
@@ -90,7 +90,7 @@ RsrSpeciesReturnEquality >> testDictionary [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testInteger [
+RsrSpeciesEquality >> testInteger [
 
 	self
 		verify: 0;
@@ -105,7 +105,7 @@ RsrSpeciesReturnEquality >> testInteger [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testOrderedCollection [
+RsrSpeciesEquality >> testOrderedCollection [
 
 	self
 		verify: OrderedCollection new;
@@ -113,17 +113,16 @@ RsrSpeciesReturnEquality >> testOrderedCollection [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testService [
+RsrSpeciesEquality >> testService [
 
 	self
 		verify: RsrClientNoInstVars new;
 		verify: (RsrClientReferenceService service: RsrClientNoInstVars new);
-		verify: (RsrServerReferenceService service: RsrClientNoInstVars new);
-		verify: (RsrReferenceAllSpeciesClient new)
+		verify: (RsrServerReferenceService service: RsrClientNoInstVars new)
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testServiceWithUnsupportedObject [
+RsrSpeciesEquality >> testServiceWithUnsupportedObject [
 
 	| service |
 	service := connectionA serviceFor: #RsrClientNoInstVars.
@@ -133,7 +132,7 @@ RsrSpeciesReturnEquality >> testServiceWithUnsupportedObject [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testSet [
+RsrSpeciesEquality >> testSet [
 
 	self
 		verify: Set new;
@@ -141,7 +140,7 @@ RsrSpeciesReturnEquality >> testSet [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testString [
+RsrSpeciesEquality >> testString [
 
 	self
 		verify: '';
@@ -149,7 +148,7 @@ RsrSpeciesReturnEquality >> testString [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testSymbol [
+RsrSpeciesEquality >> testSymbol [
 
 	self
 		verify: #'';
@@ -157,25 +156,25 @@ RsrSpeciesReturnEquality >> testSymbol [
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testUndefinedObject [
+RsrSpeciesEquality >> testUndefinedObject [
 
 	self verify: nil
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testUnicodeString [
+RsrSpeciesEquality >> testUnicodeString [
 
 	self verify: self unicodeString
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> testUnicodeSymbol [
+RsrSpeciesEquality >> testUnicodeSymbol [
 
 	self verify: self unicodeString asSymbol
 ]
 
 { #category : 'running' }
-RsrSpeciesReturnEquality >> unicodeString [
+RsrSpeciesEquality >> unicodeString [
 
 	^String
 		with: $a
@@ -184,14 +183,17 @@ RsrSpeciesReturnEquality >> unicodeString [
 ]
 
 { #category : 'asserting' }
-RsrSpeciesReturnEquality >> verify: anObject [
+RsrSpeciesEquality >> verify: anObject [
 	"Send <anObject> through RSR and have it returned. Assert it is equivalent."
 
 	| client server |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	server := connectionB registry serviceAt: client _id.
-	server action: [:object | object].
+	server action: [:object | server sharedVariable: object. object].
 	self
 		assert: (client value: anObject)
+		equals: anObject.
+	self
+		assert: client sharedVariable
 		equals: anObject
 ]
