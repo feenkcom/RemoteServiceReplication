@@ -109,7 +109,7 @@ RsrEventLoop >> runningState [
 RsrEventLoop >> start [
 
 	state := self runningState.
-	process := RsrConcurrency
+	process := RsrProcessModel
 		fork: [self runLoop.
 				process := nil]
 		at: self priority

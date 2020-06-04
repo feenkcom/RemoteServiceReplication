@@ -1,29 +1,29 @@
 Class {
-	#name : 'RsrTestingConcurrencyTestCase',
+	#name : 'RsrTestingProcessModelTestCase',
 	#superclass : 'RsrTestCase',
 	#category : 'RemoteServiceReplication-Compatibility-Test'
 }
 
 { #category : 'running' }
-RsrTestingConcurrencyTestCase >> exceptionCase [
+RsrTestingProcessModelTestCase >> exceptionCase [
 
 	| sema |
 	sema := Semaphore new.
-	RsrConcurrency fork: [[Error signal] ensure: [sema signal]].
+	RsrProcessModel fork: [[Error signal] ensure: [sema signal]].
 	sema wait
 ]
 
 { #category : 'running' }
-RsrTestingConcurrencyTestCase >> noExceptionCase [
+RsrTestingProcessModelTestCase >> noExceptionCase [
 
 	| sema |
 	sema := Semaphore new.
-	RsrConcurrency fork: [sema signal].
+	RsrProcessModel fork: [sema signal].
 	sema wait
 ]
 
 { #category : 'running' }
-RsrTestingConcurrencyTestCase >> testException [
+RsrTestingProcessModelTestCase >> testException [
 
 	| testCase |
 	testCase := self class selector: #exceptionCase.
@@ -33,7 +33,7 @@ RsrTestingConcurrencyTestCase >> testException [
 ]
 
 { #category : 'running' }
-RsrTestingConcurrencyTestCase >> testNoException [
+RsrTestingProcessModelTestCase >> testNoException [
 
 	| testCase |
 	testCase := self class selector: #noExceptionCase.

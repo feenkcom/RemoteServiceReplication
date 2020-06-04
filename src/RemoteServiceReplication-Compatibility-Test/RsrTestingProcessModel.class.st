@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrTestingConcurrency',
-	#superclass : 'RsrConcurrency',
+	#name : 'RsrTestingProcessModel',
+	#superclass : 'RsrProcessModel',
 	#instVars : [
 		'forkedException'
 	],
@@ -8,13 +8,13 @@ Class {
 }
 
 { #category : 'managing-concurrency' }
-RsrTestingConcurrency >> fork: aBlock [
+RsrTestingProcessModel >> fork: aBlock [
 
 	^super fork: (self protect: aBlock)
 ]
 
 { #category : 'managing-concurrency' }
-RsrTestingConcurrency >> fork: aBlock
+RsrTestingProcessModel >> fork: aBlock
 at: aPriority [
 
 	^super
@@ -23,13 +23,13 @@ at: aPriority [
 ]
 
 { #category : 'accessing' }
-RsrTestingConcurrency >> forkedException [
+RsrTestingProcessModel >> forkedException [
 
 	^forkedException
 ]
 
 { #category : 'accessing' }
-RsrTestingConcurrency >> protect: aBlock [
+RsrTestingProcessModel >> protect: aBlock [
 
 	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]
 ]

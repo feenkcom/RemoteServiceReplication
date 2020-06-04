@@ -42,7 +42,7 @@ identicalTo: bObject [
 { #category : 'utilities' }
 RsrTestCase >> fork: aBlock [
 
-	^RsrConcurrency fork: aBlock
+	^RsrProcessModel fork: aBlock
 ]
 
 { #category : 'utilities' }
@@ -59,10 +59,11 @@ RsrTestCase >> maximumReclamation [
 { #category : 'running' }
 RsrTestCase >> runCase [
 
-	| concurrency |
-	concurrency := RsrTestingConcurrency new.
-	RsrConcurrency current: concurrency.
-	super runCase.
-	RsrConcurrency resetCurrent.
-	concurrency forkedException ifNotNil: [:ex | ex signal]
+	| pm |
+	pm := RsrTestingProcessModel new.
+	RsrProcessModel current: pm.
+	[super runCase]
+		ensure:
+			[RsrProcessModel resetCurrent].
+	pm forkedException ifNotNil: [:ex | ex signal]
 ]

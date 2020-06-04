@@ -144,7 +144,7 @@ RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
 	self
 		assumption: 'The call to #delayedCounter needs to run before the methods continues.';
 		assumption: 'The delay period in #delayedCounter will be enough to ensure #counterWithIncrement processes'.
-	RsrConcurrency fork: [delayedResult := delayClient delayedCounter. delaySem signal].
+	RsrProcessModel fork: [delayedResult := delayClient delayedCounter. delaySem signal].
 	delaySem wait.
 	immediateResult := client counterWithIncrement.
 	self

@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrConcurrency',
+	#name : 'RsrProcessModel',
 	#superclass : 'Object',
 	#classInstVars : [
 		'current'
@@ -8,25 +8,25 @@ Class {
 }
 
 { #category : 'accessing' }
-RsrConcurrency class >> current [
+RsrProcessModel class >> current [
 
 	^current ifNil: [self resetCurrent]
 ]
 
 { #category : 'accessing' }
-RsrConcurrency class >> current: concurrency [
+RsrProcessModel class >> current: concurrency [
 
 	current := concurrency
 ]
 
 { #category : 'managing-concurrency' }
-RsrConcurrency class >> fork: aBlock [
+RsrProcessModel class >> fork: aBlock [
 
 	^self current fork: aBlock
 ]
 
 { #category : 'managing-concurrency' }
-RsrConcurrency class >> fork: aBlock
+RsrProcessModel class >> fork: aBlock
 at: aPriority [
 
 	^self current
@@ -35,19 +35,19 @@ at: aPriority [
 ]
 
 { #category : 'accessing' }
-RsrConcurrency class >> resetCurrent [
+RsrProcessModel class >> resetCurrent [
 
 	^current := self new
 ]
 
 { #category : 'managing-concurrency' }
-RsrConcurrency >> fork: aBlock [
+RsrProcessModel >> fork: aBlock [
 
 	^aBlock fork
 ]
 
 { #category : 'managing-concurrency' }
-RsrConcurrency >> fork: aBlock
+RsrProcessModel >> fork: aBlock
 at: aPriority [
 
 	^aBlock forkAt: aPriority
