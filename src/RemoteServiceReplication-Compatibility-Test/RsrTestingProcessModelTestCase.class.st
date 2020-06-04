@@ -23,6 +23,16 @@ RsrTestingProcessModelTestCase >> noExceptionCase [
 ]
 
 { #category : 'running' }
+RsrTestingProcessModelTestCase >> testCurrentStackDump [
+
+	| stack |
+	stack := RsrProcessModel currentStackDump.
+	self
+		assert: stack isString;
+		assert: stack size > 0
+]
+
+{ #category : 'running' }
 RsrTestingProcessModelTestCase >> testException [
 
 	| testCase |

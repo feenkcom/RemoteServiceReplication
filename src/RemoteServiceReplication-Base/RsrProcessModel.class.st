@@ -20,6 +20,12 @@ RsrProcessModel class >> current: concurrency [
 ]
 
 { #category : 'managing-concurrency' }
+RsrProcessModel class >> currentStackDump [
+
+	^self current currentStackDump
+]
+
+{ #category : 'managing-concurrency' }
 RsrProcessModel class >> fork: aBlock [
 
 	^self current fork: aBlock
