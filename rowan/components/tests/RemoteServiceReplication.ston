@@ -4,7 +4,7 @@ RwSimpleProjectLoadComponentV2 {
 	#projectNames : [ ],
 	#componentNames : [ ],
 	#packageNames : [
-		'RemoteServiceReplication-Compatibility-Test',
+		'RemoteServiceReplication-Platform-Test',
 		'RemoteServiceReplication-Test'
 	],
 	#comment : 'test packages for RSR'

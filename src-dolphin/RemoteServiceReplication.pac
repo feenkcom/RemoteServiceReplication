@@ -3,40 +3,40 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrService;
-	add: #RsrServiceFactoryClient;
-	add: #RsrDeliverResponse;
-	add: #RsrLog;
+	add: #RsrCommandSource;
+	add: #RsrLogSink;
+	add: #RsrPromise;
+	add: #RsrCommandSink;
+	add: #RsrCycleDetected;
+	add: #RsrSendMessage;
+	add: #RsrObjectCache;
+	add: #RsrEventLoop;
 	add: #RsrStream;
+	add: #RsrRetainObject;
+	add: #RsrDecoder;
+	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrConnection;
+	add: #RsrCodec;
+	add: #RsrReleaseObjects;
+	add: #RsrServiceFactoryServer;
+	add: #RsrNumericSpigot;
+	add: #RsrRetainAnalysis;
+	add: #RsrSocketStream;
+	add: #RsrDeliverResponse;
+	add: #RsrServiceFactoryClient;
+	add: #RsrLogWithPrefix;
+	add: #RsrDispatchEventLoop;
+	add: #RsrServiceFactory;
 	add: #RsrDeliverErrorResponse;
 	add: #RsrCommand;
-	add: #RsrDispatchEventLoop;
-	add: #RsrUnknownOID;
 	add: #RsrEncoder;
+	add: #RsrService;
 	add: #RsrTranscriptSink;
-	add: #RsrCycleDetected;
-	add: #RsrCommandSource;
-	add: #RsrDecoder;
-	add: #RsrCommandSink;
-	add: #RsrSocketStream;
-	add: #RsrCodec;
-	add: #RsrEventLoop;
-	add: #RsrRetainAnalysis;
+	add: #RsrLog;
+	add: #RsrUnknownOID;
 	add: #RsrBufferedSocketStream;
-	add: #RsrConnection;
-	add: #RsrPromise;
-	add: #RsrObjectCache;
-	add: #RsrServiceFactoryServer;
-	add: #RsrSendMessage;
 	add: #RsrCustomSink;
-	add: #RsrThreadSafeNumericSpigot;
-	add: #RsrServiceFactory;
-	add: #RsrRetainObject;
-	add: #RsrNumericSpigot;
-	add: #RsrLogSink;
 	add: #RsrRemoteError;
-	add: #RsrReleaseObjects;
-	add: #RsrLogWithPrefix;
 	yourself.
 
 package methodNames
@@ -48,7 +48,7 @@ package methodNames
 	add: 'RsrForwarder class' -> #on:;
 	yourself.
 
-package setPrerequisites: #('RemoteServiceReplication-Compatibility-Dolphin').
+package setPrerequisites: #('RemoteServiceReplication-Dolphin').
 
 package!
 
@@ -422,10 +422,10 @@ signal: anObject	^self new		object: anObject;		signal! !
 roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
 
 !RsrConnection class methodsFor!
-socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
+new	self error: 'Instance creation via #new is unsupported'! !
 
 !RsrConnection class methodsFor!
-new	self error: 'Instance creation via #new is unsupported'! !
+socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
 
 !RsrConnection class methodsFor!
 acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	[listener listenOn: aPortNumber.	socket := listener accept]		ensure: [listener close].	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals) open! !
@@ -527,10 +527,10 @@ reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')
 sendOver: aConnection	| analysis |	analysis := RsrRetainAnalysis		roots: roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	aConnection commandWriter enqueue: self! !
 
 !RsrDeliverResponse methodsFor!
-roots: anArray	roots := anArray! !
+transaction: aTransactionId	transaction := aTransactionId! !
 
 !RsrDeliverResponse methodsFor!
-transaction: aTransactionId	transaction := aTransactionId! !
+roots: anArray	roots := anArray! !
 
 !RsrEncoder methodsFor!
 encodeObject: anObject	^ByteArray		streamContents:			[:stream |			self				encodeObject: anObject				onto: stream]! !
@@ -548,6 +548,9 @@ encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(a
 encodeRetainObject: aRetainObject	^ByteArray		streamContents:			[:stream |			self				encodeControlWord: self retainObjectIdentifier				onto: stream.			self				encodeObject: aRetainObject object				onto: stream]! !
 
 !RsrEncoder methodsFor!
+encodeDeliverErrorResponse: aDeliverErrorResponse	| error |	error := aDeliverErrorResponse remoteError.	^ByteArray		streamContents:			[:stream |			self				encodeControlWord: self deliverErrorResponseCommand				onto: stream.			self				encodeControlWord: aDeliverErrorResponse transaction				onto: stream.			self				encodeReferenceOf: error originalClassName				onto: stream.			self				encodeReferenceOf: error tag				onto: stream.			self				encodeReferenceOf: error messageText				onto: stream.			self				encodeReferenceOf: error stack				onto: stream]! !
+
+!RsrEncoder methodsFor!
 encodeReferenceOf: anObjectonto: aStream	| species |	species := self speciesOf: anObject.	species		encodeReference: anObject		using: self		onto: aStream! !
 
 !RsrEncoder methodsFor!
@@ -555,9 +558,6 @@ retainObjectIdentifier	^0! !
 
 !RsrEncoder methodsFor!
 speciesOf: anObject	(self isService: anObject)		ifTrue: [^RsrServiceSpecies].	anObject == true		ifTrue: [^RsrTrueSpecies].	anObject == false		ifTrue: [^RsrFalseSpecies].	(anObject isKindOf: Integer)		ifTrue: [^anObject positive ifTrue: [RsrPositiveIntegerSpecies] ifFalse: [RsrNegativeIntegerSpecies]].	^self speciesMapping		at: anObject class		ifAbsent: [RsrSpecies nullSpecies]! !
-
-!RsrEncoder methodsFor!
-encodeDeliverErrorResponse: aDeliverErrorResponse	| error |	error := aDeliverErrorResponse remoteError.	^ByteArray		streamContents:			[:stream |			self				encodeControlWord: self deliverErrorResponseCommand				onto: stream.			self				encodeControlWord: aDeliverErrorResponse transaction				onto: stream.			self				encodeReferenceOf: error originalClassName				onto: stream.			self				encodeReferenceOf: error tag				onto: stream.			self				encodeReferenceOf: error messageText				onto: stream.			self				encodeReferenceOf: error stack				onto: stream]! !
 
 !RsrEncoder methodsFor!
 encodeDeliverResponse: aDeliverResponse	^ByteArray		streamContents:			[:stream |			self				encodeControlWord: self deliverResponseCommand				onto: stream.			self				encodeControlWord: aDeliverResponse transaction				onto: stream.			self				encodeReferenceOf: aDeliverResponse response				onto: stream]! !
@@ -619,6 +619,30 @@ encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeReleaseObjects: self!
 !RsrReleaseObjects methodsFor!
 oids: anArray	oids := anArray! !
 
+!RsrRetainObject methodsFor!
+reportOn: aLog	aLog debug: 'RsrRetainObject(', self object class name, ')'! !
+
+!RsrRetainObject methodsFor!
+executeFor: aConnection	aConnection objectCache add: object! !
+
+!RsrRetainObject methodsFor!
+= anEncodedObject	self == anEncodedObject		ifTrue: [^true].	self class == anEncodedObject class		ifFalse: [^false].	^self object = anEncodedObject object		and: [self encoding = anEncodedObject encoding]! !
+
+!RsrRetainObject methodsFor!
+hash	^self object hash! !
+
+!RsrRetainObject methodsFor!
+object: anObject	object := anObject! !
+
+!RsrRetainObject methodsFor!
+encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeRetainObject: self! !
+
+!RsrRetainObject methodsFor!
+object	^ object! !
+
+!RsrRetainObject methodsFor!
+writeUsing: aCommandWriter	super writeUsing: aCommandWriter! !
+
 !RsrService methodsFor!
 isClient	^self class isClientClass! !
 
@@ -652,30 +676,6 @@ synchronize	remoteSelf == nil		ifFalse: [remoteSelf _synchronize]! !
 !RsrService methodsFor!
 isNotMirrored	^self isMirrored not! !
 
-!RsrRetainObject methodsFor!
-reportOn: aLog	aLog debug: 'RsrRetainObject(', self object class name, ')'! !
-
-!RsrRetainObject methodsFor!
-executeFor: aConnection	aConnection objectCache add: object! !
-
-!RsrRetainObject methodsFor!
-= anEncodedObject	self == anEncodedObject		ifTrue: [^true].	self class == anEncodedObject class		ifFalse: [^false].	^self object = anEncodedObject object		and: [self encoding = anEncodedObject encoding]! !
-
-!RsrRetainObject methodsFor!
-hash	^self object hash! !
-
-!RsrRetainObject methodsFor!
-object: anObject	object := anObject! !
-
-!RsrRetainObject methodsFor!
-encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeRetainObject: self! !
-
-!RsrRetainObject methodsFor!
-object	^ object! !
-
-!RsrRetainObject methodsFor!
-writeUsing: aCommandWriter	super writeUsing: aCommandWriter! !
-
 !RsrSendMessage methodsFor!
 receiver	^ receiver! !
 
@@ -686,7 +686,7 @@ writeUsing: aCommandWriter	retainList do: [:each | each writeUsing: aCommandWr
 arguments	^ arguments! !
 
 !RsrSendMessage methodsFor!
-encodeUsing: anEncoder	encoding := anEncoder encodeSendMessage: self! !
+logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				nextPutAll: receiver class name;				nextPutAll: '>>';				nextPutAll: selector;				nextPutAll: ' due to: ';				nextPutAll: anException description].	aLog error: message! !
 
 !RsrSendMessage methodsFor!
 arguments: anObject	arguments := anObject! !
@@ -698,7 +698,7 @@ executeFor: aConnection	| result response |	[result := receiver		perform: se
 selector	^ selector! !
 
 !RsrSendMessage methodsFor!
-transaction	^ transaction! !
+encodeUsing: anEncoder	encoding := anEncoder encodeSendMessage: self! !
 
 !RsrSendMessage methodsFor!
 receiver: anObject	receiver := anObject! !
@@ -716,10 +716,10 @@ selector: anObject	selector := anObject! !
 sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	aConnection promises		at: transaction		put: promise.	aConnection commandWriter enqueue: self.	^promise! !
 
 !RsrSendMessage methodsFor!
-transaction: anObject	transaction := anObject! !
+transaction	^ transaction! !
 
 !RsrSendMessage methodsFor!
-logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				nextPutAll: receiver class name;				nextPutAll: '>>';				nextPutAll: selector;				nextPutAll: ' due to: ';				nextPutAll: anException description].	aLog error: message! !
+transaction: anObject	transaction := anObject! !
 
 !RsrServiceFactoryServer methodsFor!
 create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !
@@ -728,10 +728,10 @@ create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver c
 mirror: aService	^aService! !
 
 !RsrServiceFactoryClient methodsFor!
-serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
+mirror: aService	^remoteSelf mirror: aService! !
 
 !RsrServiceFactoryClient methodsFor!
-mirror: aService	^remoteSelf mirror: aService! !
+serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
 
 !RsrEventLoop methodsFor!
 stop	self isActive ifFalse: [^self].	state := self stoppedState.	self connection close.	self stream close! !
@@ -817,6 +817,18 @@ next: aCount	^stream next: aCount! !
 !RsrBufferedSocketStream methodsFor!
 checkAutoFlush	nextToWrite > 4096		ifTrue: [ self flush ]! !
 
+!RsrCustomSink methodsFor!
+action: aBlock	action := aBlock! !
+
+!RsrCustomSink methodsFor!
+action	^action! !
+
+!RsrCustomSink methodsFor!
+write: aMessage	self action value: aMessage! !
+
+!RsrTranscriptSink methodsFor!
+write: aMessageString	Transcript		show: aMessageString;		cr! !
+
 !RsrLogWithPrefix methodsFor!
 prefix	^prefix! !
 
@@ -841,18 +853,6 @@ add: anObject	storage add: anObject! !
 !RsrObjectCache methodsFor!
 reset	storage := IdentitySet new! !
 
-!RsrTranscriptSink methodsFor!
-write: aMessageString	Transcript		show: aMessageString;		cr! !
-
-!RsrCustomSink methodsFor!
-action: aBlock	action := aBlock! !
-
-!RsrCustomSink methodsFor!
-action	^action! !
-
-!RsrCustomSink methodsFor!
-write: aMessage	self action value: aMessage! !
-
 !RsrStream methodsFor!
 nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
 
@@ -873,12 +873,6 @@ binary	stream binary! !
 
 !RsrStream methodsFor!
 stream: aStream	stream := aStream! !
-
-!RsrCycleDetected methodsFor!
-messageText	^'Cycle detected on: ', object printString! !
-
-!RsrCycleDetected methodsFor!
-object: anObject	object := anObject! !
 
 !RsrLog methodsFor!
 levelError	^1! !
@@ -908,10 +902,10 @@ initialize	super initialize.	verbosity := self levelTrace.	sinks := OrderedC
 warning: aString	self verbosity >= self levelDebug		ifTrue: [self log: aString level: #warning]! !
 
 !RsrLog methodsFor!
-verbosity: aLogLevel	verbosity := aLogLevel! !
+addSink: aLogSink	sinks add: aLogSink! !
 
 !RsrLog methodsFor!
-addSink: aLogSink	sinks add: aLogSink! !
+verbosity: aLogLevel	verbosity := aLogLevel! !
 
 !RsrLog methodsFor!
 info: aString	self verbosity >= self levelInfo		ifTrue: [self log: aString level: #info]! !
@@ -924,6 +918,9 @@ trace: aString	self verbosity >= self levelTrace		ifTrue: [self log: aString 
 
 !RsrLog methodsFor!
 error: aString	self verbosity >= self levelError		ifTrue: [self log: aString level: #error]! !
+
+!RsrLogSink methodsFor!
+write: aMessage	self subclassResponsibility! !
 
 !RsrCommandSource methodsFor!
 decoder	^self connection decoder! !
@@ -994,8 +991,11 @@ connection	^connection! !
 !RsrRetainAnalysis methodsFor!
 retain: aService	| retainCommand |	retainCommand := RsrRetainObject object: aService.	retainCommand encodeUsing: self encoder.	self retainCommands add: retainCommand! !
 
-!RsrLogSink methodsFor!
-write: aMessage	self subclassResponsibility! !
+!RsrCycleDetected methodsFor!
+messageText	^'Cycle detected on: ', object printString! !
+
+!RsrCycleDetected methodsFor!
+object: anObject	object := anObject! !
 
 !RsrConnection methodsFor!
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !

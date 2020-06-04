@@ -4,7 +4,7 @@ RwSimpleProjectLoadComponentV2 {
 	#projectNames : [ ],
 	#componentNames : [ ],
 	#packageNames : [
-		'RemoteServiceReplication-Compatibility-GemStone'
+		'RemoteServiceReplication-GemStone'
 	],
 	#comment : 'gemstone packages for RSR'
 }

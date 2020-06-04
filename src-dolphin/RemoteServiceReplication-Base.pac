@@ -3,32 +3,32 @@ package := Package name: 'RemoteServiceReplication-Base'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrCharacterSpecies;
-	add: #RsrFalseSpecies;
-	add: #RsrSymbolSpecies;
-	add: #RsrUnsupportedObject;
-	add: #RsrBooleanSpecies;
-	add: #RsrOrderedCollectionSpecies;
-	add: #RsrUnknownClass;
-	add: #RsrPositiveIntegerSpecies;
-	add: #RsrSocketClosed;
-	add: #RsrNegativeIntegerSpecies;
-	add: #RsrConnectionClosed;
-	add: #RsrUndefinedObjectSpecies;
-	add: #RsrProcessModel;
-	add: #RsrError;
-	add: #RsrDictionarySpecies;
-	add: #RsrSetSpecies;
-	add: #RsrStringSpecies;
-	add: #RsrCharacterArraySpecies;
-	add: #RsrDateAndTimeSpecies;
-	add: #RsrArraySpecies;
-	add: #RsrIntegerSpecies;
-	add: #RsrByteArraySpecies;
-	add: #RsrSpecies;
-	add: #RsrNullSpecies;
-	add: #RsrTrueSpecies;
 	add: #RsrServiceSpecies;
+	add: #RsrStringSpecies;
+	add: #RsrOrderedCollectionSpecies;
+	add: #RsrCharacterArraySpecies;
+	add: #RsrNullSpecies;
+	add: #RsrUnsupportedObject;
+	add: #RsrByteArraySpecies;
+	add: #RsrPositiveIntegerSpecies;
+	add: #RsrUnknownClass;
+	add: #RsrTrueSpecies;
+	add: #RsrNegativeIntegerSpecies;
+	add: #RsrSocketClosed;
+	add: #RsrFalseSpecies;
+	add: #RsrIntegerSpecies;
+	add: #RsrConnectionClosed;
+	add: #RsrBooleanSpecies;
+	add: #RsrDictionarySpecies;
+	add: #RsrError;
+	add: #RsrArraySpecies;
+	add: #RsrDateAndTimeSpecies;
+	add: #RsrUndefinedObjectSpecies;
+	add: #RsrSpecies;
+	add: #RsrCharacterSpecies;
+	add: #RsrSetSpecies;
+	add: #RsrProcessModel;
+	add: #RsrSymbolSpecies;
 	yourself.
 
 package methodNames
@@ -465,6 +465,12 @@ decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the de
 !RsrUndefinedObjectSpecies class methodsFor!
 speciesIdentifier	^6! !
 
+!RsrProcessModel methodsFor!
+fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
+
+!RsrProcessModel methodsFor!
+fork: aBlock	^aBlock fork! !
+
 !RsrUnsupportedObject methodsFor!
 messageText	^'Instances of ', object class name, ' cannot be serialized'! !
 
@@ -473,12 +479,6 @@ object	^object! !
 
 !RsrUnsupportedObject methodsFor!
 object: anObject	object := anObject! !
-
-!RsrProcessModel methodsFor!
-fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
-
-!RsrProcessModel methodsFor!
-fork: aBlock	^aBlock fork! !
 
 !RsrConnectionClosed methodsFor!
 messageText	^'The connection has closed'! !
