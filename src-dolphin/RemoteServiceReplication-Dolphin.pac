@@ -20,6 +20,7 @@ package classNames
 	yourself.
 
 package methodNames
+	add: #Object -> #asString;
 	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
 	add: #Set -> #hash;
@@ -109,6 +110,13 @@ RsrProtoObject subclass: #RsrForwarder
 
 
 "Loose Methods"!
+
+!Object methodsFor!
+
+asString
+
+	^self printString! !
+!Object categoriesFor: #asString!converting!public! !
 
 !RsrCharacterArraySpecies class methodsFor!
 
