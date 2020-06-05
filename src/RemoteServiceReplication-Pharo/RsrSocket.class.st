@@ -24,7 +24,7 @@ RsrSocket >> accept [
 { #category : #accessing }
 RsrSocket >> acceptTimeout [
 
-	^1
+	^31536000 "One year -- effectively forever"
 ]
 
 { #category : #lifecycle }
