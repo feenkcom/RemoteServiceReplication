@@ -104,14 +104,7 @@ RsrRetainAnalysis >> encoder [
 { #category : 'actions' }
 RsrRetainAnalysis >> ensureRegistered: aService [
 
-	aService isMirrored
-		ifTrue: [^self].
-	aService
-		_id: self nextOid
-		connection: self connection.
-	self registry
-		serviceAt: aService _id
-		put: aService
+	self connection ensureRegistered: aService
 ]
 
 { #category : 'initialization' }
@@ -122,22 +115,10 @@ RsrRetainAnalysis >> initialize [
 	inFlight := IdentitySet new
 ]
 
-{ #category : 'accessing' }
-RsrRetainAnalysis >> nextOid [
-
-	^self connection oidSpigot next
-]
-
 { #category : 'actions' }
 RsrRetainAnalysis >> perform [
 
 	roots do: [:each | self analyze: each]
-]
-
-{ #category : 'accessing' }
-RsrRetainAnalysis >> registry [
-
-	^connection registry
 ]
 
 { #category : 'actions' }

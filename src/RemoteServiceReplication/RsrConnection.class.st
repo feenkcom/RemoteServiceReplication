@@ -144,6 +144,19 @@ RsrConnection >> encoder [
 	^RsrEncoder new
 ]
 
+{ #category : 'private-registration' }
+RsrConnection >> ensureRegistered: aService [
+
+	aService isMirrored
+		ifTrue: [^self].
+	aService
+		_id: oidSpigot next
+		connection: self.
+	self registry
+		serviceAt: aService _id
+		put: aService
+]
+
 { #category : 'private-initialization' }
 RsrConnection >> initialize [
 

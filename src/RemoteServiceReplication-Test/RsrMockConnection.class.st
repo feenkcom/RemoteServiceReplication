@@ -44,6 +44,16 @@ RsrMockConnection >> encoder [
 	^RsrMockEncoder new
 ]
 
+{ #category : 'registering' }
+RsrMockConnection >> ensureRegistered: aService [
+
+	aService isMirrored
+		ifTrue: [^self].
+	aService
+		_id: self oidSpigot next
+		connection: self
+]
+
 { #category : 'accessing' }
 RsrMockConnection >> forwarderClass: aClass [
 
