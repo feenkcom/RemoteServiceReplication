@@ -344,7 +344,7 @@ doesNotUnderstand: aMessage	| promise |	promise := _service _connection		_se
 _service: aService	_service := aService! !
 
 !RsrRemoteError class methodsFor!
-from: anException	| tag |	tag := anException tag.	tag isNil		ifFalse: [tag := tag asString].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
+from: anException	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
 !RsrDeliverResponse class methodsFor!
 transaction: aTransactionIderror: anExceptionroots: anArray	^self new		transaction: aTransactionId;		errorName: anException class name;		response: anException messageText;		roots: anArray;		yourself! !
@@ -947,19 +947,13 @@ perform	roots do: [:each | self analyze: each]! !
 analyze: anObject	^(self speciesOf: anObject)		analyze: anObject		using: self! !
 
 !RsrRetainAnalysis methodsFor!
-nextOid	^self connection oidSpigot next! !
-
-!RsrRetainAnalysis methodsFor!
-registry	^connection registry! !
-
-!RsrRetainAnalysis methodsFor!
 analyzing: anObjectduring: aBlock	(inFlight includes: anObject)		ifTrue: [^RsrCycleDetected signal: anObject].	inFlight add: anObject.	aBlock value.	inFlight remove: anObject! !
 
 !RsrRetainAnalysis methodsFor!
 retainCommands	^retainCommands! !
 
 !RsrRetainAnalysis methodsFor!
-ensureRegistered: aService	aService isMirrored		ifTrue: [^self].	aService		_id: self nextOid		connection: self connection.	self registry		serviceAt: aService _id		put: aService! !
+ensureRegistered: aService	self connection ensureRegistered: aService! !
 
 !RsrRetainAnalysis methodsFor!
 analyzeImmediate: anObject	"Nothing to do for a generic immediate"	^anObject! !
@@ -1056,6 +1050,9 @@ registry	^registry! !
 
 !RsrConnection methodsFor!
 unknownError: anException	self close! !
+
+!RsrConnection methodsFor!
+ensureRegistered: aService	aService isMirrored		ifTrue: [^self].	aService		_id: oidSpigot next		connection: self.	self registry		serviceAt: aService _id		put: aService! !
 
 !RsrConnection methodsFor!
 encoder	^RsrEncoder new! !
