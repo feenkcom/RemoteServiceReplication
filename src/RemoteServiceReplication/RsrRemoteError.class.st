@@ -12,9 +12,11 @@ Class {
 RsrRemoteError class >> from: anException [
 
 	| tag |
-	tag := anException tag.
-	tag isNil
-		ifFalse: [tag := tag asString].
+	tag := anException tag
+		ifNotNil:
+			[[anException tag asString]
+				on: Error
+				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].
 	^self new
 		originalClassName: anException class name;
 		tag: tag;

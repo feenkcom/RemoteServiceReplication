@@ -43,6 +43,49 @@ RsrMessageSendingTest >> testRemoteError [
 		assert: exception stack size > 0
 ]
 
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testRemoteErrorWithTag [
+
+	| client server tag messageText exception |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	server := connectionB registry serviceAt: client _id.
+	tag := nil.
+	messageText := 'messageText'.
+	server action: [Error new tag: tag; messageText: messageText; signal].
+	exception := [client value]
+		on: RsrRemoteError
+		do: [:ex | ex return: ex].
+	self
+		assert: exception class
+		equals: RsrRemoteError.
+	self
+		assert: exception originalClassName
+		equals: #Error.
+	self
+		assert: exception tag
+		equals: 'messageText'.
+	self
+		assert: exception messageText
+		equals: 'messageText'.
+	self
+		assert: exception stack isString;
+		assert: exception stack size > 0.
+	tag := 42.
+	exception := [client value]
+		on: RsrRemoteError
+		do: [:ex | ex return: ex].
+	self
+		assert: exception tag
+		equals: '42'.
+	tag := RsrSignalErrorInAsString new.
+	exception := [client value]
+		on: RsrRemoteError
+		do: [:ex | ex return: ex].
+	self
+		assert: exception tag
+		equals: 'Unable to pack #tag containing an instance of RsrSignalErrorInAsString'
+]
+
 { #category : 'running' }
 RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
 	"Ensure that when the remote peer service returns a value,
