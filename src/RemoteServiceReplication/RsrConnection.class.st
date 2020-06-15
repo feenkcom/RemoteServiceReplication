@@ -23,30 +23,22 @@ Class {
 { #category : 'instance creation' }
 RsrConnection class >> acceptOn: aPortNumber [
 
-	| listener socket |
-	listener := RsrSocket new.
-	[listener listenOn: aPortNumber.
-	socket := listener accept]
-		ensure: [listener close].
-	^(self
-		socket: socket
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: RsrThreadSafeNumericSpigot naturals) open
+	| acceptor |
+	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.
+	acceptor := RsrAcceptConnection port: aPortNumber.
+	^acceptor connect
 ]
 
 { #category : 'instance creation' }
 RsrConnection class >> connectToHost: aHostname
 port: aPortNumber [
 
-	| socket |
-	socket := RsrSocket new.
-	socket
-		connectToHost: aHostname
+	| initiator |
+	self deprecated: 'RsrConnection class>>#connectToHost:port: replaced by RsrInitiateConnection.'.
+	initiator := RsrInitiateConnection
+		host: aHostname
 		port: aPortNumber.
-	^(self
-		socket: socket
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
-		oidSpigot: RsrThreadSafeNumericSpigot naturals negated) open
+	^initiator connect
 ]
 
 { #category : 'instance creation' }
