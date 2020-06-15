@@ -3,40 +3,43 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrCommandSource;
-	add: #RsrLogSink;
-	add: #RsrPromise;
-	add: #RsrCommandSink;
-	add: #RsrCycleDetected;
-	add: #RsrSendMessage;
-	add: #RsrObjectCache;
-	add: #RsrEventLoop;
-	add: #RsrStream;
-	add: #RsrRetainObject;
-	add: #RsrDecoder;
-	add: #RsrThreadSafeNumericSpigot;
-	add: #RsrConnection;
-	add: #RsrCodec;
-	add: #RsrReleaseObjects;
-	add: #RsrServiceFactoryServer;
-	add: #RsrNumericSpigot;
-	add: #RsrRetainAnalysis;
-	add: #RsrSocketStream;
-	add: #RsrDeliverResponse;
-	add: #RsrServiceFactoryClient;
-	add: #RsrLogWithPrefix;
-	add: #RsrDispatchEventLoop;
-	add: #RsrServiceFactory;
-	add: #RsrDeliverErrorResponse;
-	add: #RsrCommand;
-	add: #RsrEncoder;
-	add: #RsrService;
-	add: #RsrTranscriptSink;
 	add: #RsrLog;
+	add: #RsrCodec;
+	add: #RsrSendMessage;
+	add: #RsrInitiateConnection;
+	add: #RsrConnection;
 	add: #RsrUnknownOID;
-	add: #RsrBufferedSocketStream;
+	add: #RsrServiceFactoryClient;
+	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrStream;
+	add: #RsrDeliverResponse;
+	add: #RsrLogSink;
+	add: #RsrDecoder;
+	add: #RsrService;
+	add: #RsrEventLoop;
+	add: #RsrDispatchEventLoop;
+	add: #RsrEncoder;
+	add: #RsrServiceFactoryServer;
+	add: #RsrObjectCache;
+	add: #RsrCycleDetected;
+	add: #RsrReleaseObjects;
+	add: #RsrAcceptConnection;
+	add: #RsrConnectionSpecification;
 	add: #RsrCustomSink;
+	add: #RsrLogWithPrefix;
+	add: #RsrCommandSink;
+	add: #RsrRetainAnalysis;
+	add: #RsrCommand;
+	add: #RsrBufferedSocketStream;
+	add: #RsrPromise;
 	add: #RsrRemoteError;
+	add: #RsrRetainObject;
+	add: #RsrTranscriptSink;
+	add: #RsrServiceFactory;
+	add: #RsrNumericSpigot;
+	add: #RsrCommandSource;
+	add: #RsrSocketStream;
+	add: #RsrDeliverErrorResponse;
 	yourself.
 
 package methodNames
@@ -83,6 +86,15 @@ RsrObject
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrConnection categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
+	subclass: #RsrConnectionSpecification
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrConnectionSpecification comment: 'This class is abstract and defines the interface for manufacturing RsrConnection instances which are connected to a peer.Specialized subclasses are reponsible for either listening for or initiating connections with a peer.'!
+!RsrConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrEventLoop
@@ -173,6 +185,15 @@ RsrObject
 	classInstanceVariableNames: ''!
 !RsrStream categoriesForClass!RemoteServiceReplication! !
 
+RsrConnectionSpecification
+	subclass: #RsrAcceptConnection
+	instanceVariableNames: 'port'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrAcceptConnection comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.| acceptor |acceptor := RsrAcceptConnection port: 51820.^acceptor connect'!
+!RsrAcceptConnection categoriesForClass!RemoteServiceReplication! !
+
 RsrEventLoop
 	subclass: #RsrCommandSink
 	instanceVariableNames: 'queue'
@@ -236,6 +257,15 @@ RsrCodec
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrEncoder categoriesForClass!RemoteServiceReplication! !
+
+RsrConnectionSpecification
+	subclass: #RsrInitiateConnection
+	instanceVariableNames: 'host port'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInitiateConnection comment: 'This class is responsible for initating a new RsrConnection. Sending #connect will result in an attempt to connect to the specified host and port. #connect is responsible for initating the attempted connection. If successful, an instance of RsrConnection is returned as a result.Example: | initiator |initiator := RsrInitiateConnection	host: ''127.0.0.1''	port: 51820.^initiator connect'!
+!RsrInitiateConnection categoriesForClass!RemoteServiceReplication! !
 
 RsrCommand
 	subclass: #RsrReleaseObjects
@@ -355,6 +385,9 @@ transaction: aTransactionIdresponse: anObjectroots: anArray	^self new		tran
 !RsrServiceFactory class methodsFor!
 templateClassName	^#RsrServiceFactory! !
 
+!RsrInitiateConnection class methodsFor!
+host: aHostnameport: aPortInteger	^self new		host: aHostname;		port: aPortInteger;		yourself! !
+
 !RsrReleaseObjects class methodsFor!
 oids: anArray	^self new		oids: anArray;		yourself! !
 
@@ -412,6 +445,9 @@ prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself
 !RsrLogWithPrefix class methodsFor!
 log: aLog	^self new		log: aLog;		yourself! !
 
+!RsrAcceptConnection class methodsFor!
+port: aPortInteger	^self new		port: aPortInteger;		yourself! !
+
 !RsrStream class methodsFor!
 on: aStream	^self new		stream: aStream;		yourself! !
 
@@ -428,10 +464,10 @@ new	self error: 'Instance creation via #new is unsupported'! !
 socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
 
 !RsrConnection class methodsFor!
-acceptOn: aPortNumber	| listener socket |	listener := RsrSocket new.	[listener listenOn: aPortNumber.	socket := listener accept]		ensure: [listener close].	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals) open! !
+acceptOn: aPortNumber	| acceptor |	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.	acceptor := RsrAcceptConnection port: aPortNumber.	^acceptor connect! !
 
 !RsrConnection class methodsFor!
-connectToHost: aHostnameport: aPortNumber	| socket |	socket := RsrSocket new.	socket		connectToHost: aHostname		port: aPortNumber.	^(self		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated) open! !
+connectToHost: aHostnameport: aPortNumber	| initiator |	self deprecated: 'RsrConnection class>>#connectToHost:port: replaced by RsrInitiateConnection.'.	initiator := RsrInitiateConnection		host: aHostname		port: aPortNumber.	^initiator connect! !
 
 !RsrDeliverErrorResponse class methodsFor!
 transaction: aTransactionIdremoteError: anException	^self new		transaction: aTransactionId;		remoteError: anException;		yourself! !
@@ -603,6 +639,21 @@ stopToken	^self stoppedState! !
 
 !RsrCommandSink methodsFor!
 executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
+
+!RsrInitiateConnection methodsFor!
+port: anInteger	port := anInteger! !
+
+!RsrInitiateConnection methodsFor!
+connect	| socket connection |	socket := RsrSocket new.	socket		connectToHost: self host		port: self port.	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
+
+!RsrInitiateConnection methodsFor!
+port	^port! !
+
+!RsrInitiateConnection methodsFor!
+host: aHostnameString	host := aHostnameString! !
+
+!RsrInitiateConnection methodsFor!
+host	^host! !
 
 !RsrReleaseObjects methodsFor!
 reportOn: aLog	aLog debug: 'RsrReleaseObjects(', self oids printString, ')'! !
@@ -852,6 +903,15 @@ add: anObject	storage add: anObject! !
 
 !RsrObjectCache methodsFor!
 reset	storage := IdentitySet new! !
+
+!RsrAcceptConnection methodsFor!
+port: anInteger	port := anInteger! !
+
+!RsrAcceptConnection methodsFor!
+connect	| listener socket connection |	listener := RsrSocket new.	[listener listenOn: self port.	socket := listener accept]		ensure: [listener close].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+
+!RsrAcceptConnection methodsFor!
+port	^port! !
 
 !RsrStream methodsFor!
 nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
@@ -1239,6 +1299,9 @@ encodeUsing: anRsrEncoder	self subclassResponsibility! !
 
 !RsrCommand methodsFor!
 encoding: anObject	encoding := anObject! !
+
+!RsrConnectionSpecification methodsFor!
+connect	self subclassResponsibility! !
 
 !RsrDispatchEventLoop methodsFor!
 initialize	super initialize.	queue := SharedQueue new! !

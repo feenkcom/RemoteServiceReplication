@@ -14,6 +14,7 @@ package classNames
 	add: #RsrReflectedVariableTestServiceB;
 	add: #RsrServerNoInstVars;
 	add: #RsrServiceTest;
+	add: #RsrConnectionSpecificationTestCase;
 	add: #RsrRemoteActionServer;
 	add: #RsrThreadSafeNumericSpigotTest;
 	add: #RsrStressTest;
@@ -192,6 +193,15 @@ RsrConcurrentTestService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrConcurrentTestServer categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrTestCase
+	subclass: #RsrConnectionSpecificationTestCase
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrConnectionSpecificationTestCase comment: 'This class contains tests'!
+!RsrConnectionSpecificationTestCase categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrSameTemplateAndClientService
 	subclass: #RsrDifferentServerService
@@ -644,7 +654,7 @@ serviceFactoryB	^connectionB serviceFactory! !
 tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
 
 !RsrSystemTestCase methodsFor!
-setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := RsrConnection acceptOn: port] ensure: [semaphore signal]];		fork: [[connectionB := RsrConnection connectToHost: '127.0.0.1' port: port] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
+setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := (RsrAcceptConnection port: port) connect] ensure: [semaphore signal]];		fork: [[connectionB := (RsrInitiateConnection host: '127.0.0.1' port: port) connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
 
 !RsrSystemTestCase methodsFor!
 serviceFactoryA	^connectionA serviceFactory! !
@@ -858,6 +868,15 @@ remoteSelf	^remoteSelf! !
 
 !RsrTestService methodsFor!
 sharedVariable	^sharedVariable! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+localhost	^'127.0.0.1'! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self fork:		[connectionA := acceptor connect.		semaphore signal].	self fork:		[connectionB := initiator connect.		semaphore signal].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+port	^47652! !
 
 !RsrReflectedVariableTestServiceB methodsFor!
 varB	^varB! !
