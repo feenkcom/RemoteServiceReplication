@@ -1,10 +1,10 @@
 Class {
-	#name : #BaselineOfRemoteServiceReplication,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfRemoteServiceReplication
+	#name : 'BaselineOfRemoteServiceReplication',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfRemoteServiceReplication'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfRemoteServiceReplication >> baseline: spec [
 	<baseline>
 	spec
@@ -17,14 +17,14 @@ BaselineOfRemoteServiceReplication >> baseline: spec [
 					with: [ spec requires: #('RemoteServiceReplication-Platform-Test') ] ];
 		for: #pharo
 			do: [ spec
+				package: 'TonelFixes';
 				package: 'RemoteServiceReplication-Pharo'
-					with: [ spec requires: #('RemoteServiceReplication-Base') ];
+					with: [ spec requires: #('TonelFixes' 'RemoteServiceReplication-Base') ];
 				package: 'RemoteServiceReplication'
 					with: [ spec requires: #('RemoteServiceReplication-Pharo') ] ].
 	spec
 		group: 'default' with: #('All');
-		group: 'All'
-			with: #('RemoteServiceReplication-Test');
+		group: 'All' with: #('RemoteServiceReplication-Test');
 		group: 'Core' with: #('RemoteServiceReplication');
 		group: 'Tests' with: #('RemoteServiceReplication-Test')
 ]
