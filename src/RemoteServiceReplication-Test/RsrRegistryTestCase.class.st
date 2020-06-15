@@ -4,17 +4,33 @@ I represent tests for the RsrRegistry.
 Class {
 	#name : 'RsrRegistryTestCase',
 	#superclass : 'RsrTestCase',
-	#category : 'RemoteServiceReplication-Platform-Test'
+	#instVars : [
+		'registry'
+	],
+	#category : 'RemoteServiceReplication-Test'
 }
+
+{ #category : 'running' }
+RsrRegistryTestCase >> setUp [
+
+	super setUp.
+	registry := RsrRegistry new
+]
+
+{ #category : 'running' }
+RsrRegistryTestCase >> tearDown [
+
+	registry := nil.
+	super tearDown
+]
 
 { #category : 'tests' }
 RsrRegistryTestCase >> testAddClient [
 
-	| id object entry registry marker |
+	| id object entry marker |
 	marker := Object new.
 	object := RsrMockClient new.
 	id := object _id.
-	registry := RsrRegistry new.
 	registry
 		serviceAt: id
 		put: object.
@@ -32,11 +48,10 @@ RsrRegistryTestCase >> testAddClient [
 { #category : 'tests' }
 RsrRegistryTestCase >> testAddServer [
 
-	| id object registry marker |
+	| id object marker |
 	marker := Object new.
 	object := RsrMockServer new.
 	id := object _id.
-	registry := RsrRegistry new.
 	registry
 		serviceAt: id
 		put: object.
@@ -57,8 +72,7 @@ RsrRegistryTestCase >> testAddServer [
 { #category : 'tests' }
 RsrRegistryTestCase >> testAtAtIfAbsent [
 
-	| registry server id marker |
-	registry := RsrRegistry new.
+	| server id marker |
 	server := RsrMockServer new.
 	id := server _id.
 	self
@@ -82,8 +96,7 @@ RsrRegistryTestCase >> testAtAtIfAbsent [
 { #category : 'tests' }
 RsrRegistryTestCase >> testIncludesKey [
 
-	| registry client |
-	registry := RsrRegistry new.
+	| client |
 	client := RsrMockClient new.
 	self deny: (registry includesKey: client _id).
 	registry
@@ -95,8 +108,7 @@ RsrRegistryTestCase >> testIncludesKey [
 { #category : 'tests' }
 RsrRegistryTestCase >> testRemoveKey [
 
-	| registry client |
-	registry := RsrRegistry new.
+	| client |
 	client := RsrMockClient new.
 	self
 		assert: (registry removeKey: client _id)
