@@ -3,7 +3,7 @@ Class {
 	#superclass : 'RsrObject',
 	#instVars : [
 		'roots',
-		'retainCommands',
+		'services',
 		'inFlight',
 		'connection'
 	],
@@ -111,7 +111,7 @@ RsrRetainAnalysis >> ensureRegistered: aService [
 RsrRetainAnalysis >> initialize [
 
 	super initialize.
-	retainCommands := OrderedCollection new.
+	services := OrderedCollection new.
 	inFlight := IdentitySet new
 ]
 
@@ -124,16 +124,18 @@ RsrRetainAnalysis >> perform [
 { #category : 'actions' }
 RsrRetainAnalysis >> retain: aService [
 
-	| retainCommand |
-	retainCommand := RsrRetainObject object: aService.
-	retainCommand encodeUsing: self encoder.
-	self retainCommands add: retainCommand
+	services add: aService
 ]
 
-{ #category : 'actions' }
+{ #category : 'accessing' }
 RsrRetainAnalysis >> retainCommands [
 
-	^retainCommands
+	^self services
+		collect:
+			[:service | | command |
+			command := RsrRetainObject object: service.
+			command encodeUsing: self encoder.
+			command]
 ]
 
 { #category : 'accessing' }
@@ -149,7 +151,13 @@ RsrRetainAnalysis >> roots: anObject [
 ]
 
 { #category : 'accessing' }
+RsrRetainAnalysis >> services [
+
+	^services
+]
+
+{ #category : 'accessing' }
 RsrRetainAnalysis >> speciesOf: anObject [
 
-	^self encoder speciesOf: anObject
+	^RsrSpecies speciesOf: anObject
 ]

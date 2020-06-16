@@ -10,7 +10,7 @@ Class {
 		'objectCache',
 		'socket',
 		'stream',
-		'promises',
+		'pendingMessages',
 		'dispatcher',
 		'oidSpigot',
 		'serviceFactory',
@@ -94,8 +94,8 @@ RsrConnection >> close [
 	commandReader stop.
 	commandWriter stop.
 	dispatcher stop.
-	self promises do: [:each | each error: RsrConnectionClosed new].
-	objectCache reset.
+	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
+	commandReader := commandWriter := dispatcher := pendingMessages := objectCache := registry := nil.
 	closeSemaphore signal
 ]
 
@@ -156,7 +156,7 @@ RsrConnection >> initialize [
 	isOpen := false.
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	objectCache := RsrObjectCache new.
-	promises := Dictionary new.
+	pendingMessages := Dictionary new.
 	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
 	log := RsrLog new
 ]
@@ -225,9 +225,9 @@ RsrConnection >> open [
 ]
 
 { #category : 'private-accessing' }
-RsrConnection >> promises [
+RsrConnection >> pendingMessages [
 
-	^promises
+	^pendingMessages
 ]
 
 { #category : 'private-accessing' }

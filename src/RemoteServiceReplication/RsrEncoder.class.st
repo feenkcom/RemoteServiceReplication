@@ -187,12 +187,6 @@ RsrEncoder >> isImmediate: anObject [
 	^self speciesMapping includesKey: anObject class
 ]
 
-{ #category : 'private-testing' }
-RsrEncoder >> isService: anObject [
-
-	^anObject isKindOf: RsrService
-]
-
 { #category : 'private-accessing' }
 RsrEncoder >> retainObjectIdentifier [
 
@@ -215,15 +209,6 @@ RsrEncoder >> speciesMapping [
 { #category : 'accessing' }
 RsrEncoder >> speciesOf: anObject [
 
-	(self isService: anObject)
-		ifTrue: [^RsrServiceSpecies].
-	anObject == true
-		ifTrue: [^RsrTrueSpecies].
-	anObject == false
-		ifTrue: [^RsrFalseSpecies].
-	(anObject isKindOf: Integer)
-		ifTrue: [^anObject positive ifTrue: [RsrPositiveIntegerSpecies] ifFalse: [RsrNegativeIntegerSpecies]].
-	^self speciesMapping
-		at: anObject class
-		ifAbsent: [RsrSpecies nullSpecies]
+	
+	^RsrSpecies speciesOf: anObject
 ]

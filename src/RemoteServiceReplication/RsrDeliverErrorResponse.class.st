@@ -28,11 +28,11 @@ RsrDeliverErrorResponse >> encodeUsing: anRsrEncoder [
 { #category : 'lifecycle' }
 RsrDeliverErrorResponse >> executeFor: aConnection [
 
-	| promise |
-	promise := aConnection promises
+	| pendingMessage |
+	pendingMessage := aConnection pendingMessages
 		removeKey: transaction
 		ifAbsent: [^self error: 'Handle unknown transaction'].
-	promise error: self remoteError
+	pendingMessage promise error: self remoteError
 ]
 
 { #category : 'accessing' }

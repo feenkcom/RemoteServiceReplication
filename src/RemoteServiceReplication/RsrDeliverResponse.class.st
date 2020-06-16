@@ -44,12 +44,12 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 { #category : 'lifecycle' }
 RsrDeliverResponse >> executeFor: aConnection [
 
-	| promise |
-	promise := aConnection promises
+	| pendingMessage |
+	pendingMessage := aConnection pendingMessages
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	promise fulfill: response.
+	pendingMessage promise fulfill: response.
 	aConnection objectCache reset
 ]
 

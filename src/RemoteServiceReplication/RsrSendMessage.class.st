@@ -115,7 +115,7 @@ RsrSendMessage >> selector: anObject [
 { #category : 'lifecycle' }
 RsrSendMessage >> sendOver: aConnection [
 
-	| analysis promise |
+	| analysis promise pendingMessage |
 	analysis := RsrRetainAnalysis
 		roots: self roots
 		connection: aConnection.
@@ -123,9 +123,12 @@ RsrSendMessage >> sendOver: aConnection [
 	retainList := analysis retainCommands.
 	self encodeUsing: aConnection encoder.
 	promise := RsrPromise new.
-	aConnection promises
+	pendingMessage := RsrPendingMessage
+		services: analysis services
+		promise: promise.
+	aConnection pendingMessages
 		at: transaction
-		put: promise.
+		put: pendingMessage.
 	aConnection commandWriter enqueue: self.
 	^promise
 ]
