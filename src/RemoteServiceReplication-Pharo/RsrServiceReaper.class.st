@@ -23,9 +23,15 @@ RsrServiceReaper >> initialize [
 ]
 
 { #category : #reaping }
-RsrServiceReaper >> reap: aKey [
+RsrServiceReaper >> reapClient: aKey [
 
-	self registry ifNotNil: [:registry | registry reap: aKey]
+	self registry ifNotNil: [:registry | registry reapClient: aKey]
+]
+
+{ #category : #reaping }
+RsrServiceReaper >> reapServer: aKey [
+
+	self registry ifNotNil: [:registry | registry reapServer: aKey]
 ]
 
 { #category : #accessing }

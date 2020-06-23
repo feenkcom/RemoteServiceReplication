@@ -2,24 +2,42 @@ Class {
 	#name : #RsrRegistryEntry,
 	#superclass : #RsrObject,
 	#instVars : [
-		'storage'
+		'storage',
+		'strongStorage'
 	],
 	#category : #'RemoteServiceReplication-Pharo'
 }
 
 { #category : #'instance creation' }
-RsrRegistryEntry class >> value: anObject [
+RsrRegistryEntry class >> service: aService [
 
 	^self new
-		value: anObject;
+		service: aService;
 		yourself
+]
+
+{ #category : #transitions }
+RsrRegistryEntry >> becomeStrong [
+
+	strongStorage
+		at: 1
+		put: self service
+]
+
+{ #category : #transitions }
+RsrRegistryEntry >> becomeWeak [
+
+	strongStorage
+		at: 1
+		put: nil
 ]
 
 { #category : #initializing }
 RsrRegistryEntry >> initialize [
 
 	super initialize.
-	storage := self storageClass new: 1
+	storage := WeakArray new: 1.
+	strongStorage := Array new: 1
 ]
 
 { #category : #accessing }
@@ -34,25 +52,4 @@ RsrRegistryEntry >> service: aService [
 	storage
 		at: 1
 		put: aService
-]
-
-{ #category : #accessing }
-RsrRegistryEntry >> storageClass [
-	"Return the class of the storage"
-
-	^Array
-]
-
-{ #category : #accessing }
-RsrRegistryEntry >> value [
-
-	^storage at: 1
-]
-
-{ #category : #accessing }
-RsrRegistryEntry >> value: anObject [
-
-	storage
-		at: 1
-		put: anObject
 ]

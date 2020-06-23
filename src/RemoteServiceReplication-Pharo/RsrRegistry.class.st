@@ -77,13 +77,6 @@ RsrRegistry >> initialize [
 	reaper := RsrServiceReaper for: self
 ]
 
-{ #category : #reaping }
-RsrRegistry >> reap: aKey [
-	
-	self cleanupEntryFor: aKey.
-	self reapAction value: aKey
-]
-
 { #category : #accessing }
 RsrRegistry >> reapAction [
 
@@ -94,6 +87,19 @@ RsrRegistry >> reapAction [
 RsrRegistry >> reapAction: aBlock [
 
 	reapAction := aBlock
+]
+
+{ #category : #reaping }
+RsrRegistry >> reapClient: aKey [
+	
+	self cleanupEntryFor: aKey.
+	self reapAction value: aKey
+]
+
+{ #category : #reaping }
+RsrRegistry >> reapServer: aKey [
+	
+	self cleanupEntryFor: aKey
 ]
 
 { #category : #accessing }
@@ -134,15 +140,16 @@ RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"
 
-	| entry |
-	entry := aService isServer
-		ifTrue: [RsrRegistryEntry value: aService]
-		ifFalse:
-			[aService
-				toFinalizeSend: #reap:
+	| reapSelector entry |
+	reapSelector := aService isServer
+		ifTrue: [#reapServer:]
+		ifFalse: [#reapClient:].
+	entry := RsrRegistryEntry service: aService.
+	aService
+				toFinalizeSend: reapSelector
 				to: self reaper
 				with: aKey.
-			RsrWeakRegistryEntry value: aService].
+	aService isServer ifTrue: [entry becomeStrong].
 	self
 		at: aKey
 		put: entry
