@@ -123,15 +123,17 @@ RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"
 
-	| entry |
-	entry := aService isServer
-			ifTrue: [RsrRegistryEntry with: aService]
-			ifFalse:
-					[RsrWeakRegistryEntry
-							with: aService
-							mournAction:
-									[self cleanupEntryFor: aKey.
-									reapAction value: aKey]].
+	| mournAction entry |
+	mournAction := aService isServer
+		ifTrue: [[self cleanupEntryFor: aKey]]
+		ifFalse:
+			[[self cleanupEntryFor: aKey.
+			reapAction value: aKey]].
+	entry := RsrRegistryEntry
+		service: aService
+		onMourn: mournAction.
+	aService isServer
+		ifTrue: [entry becomeStrong].
 	mutex critical: [map at: aKey put: entry].
 	^aService
 ]

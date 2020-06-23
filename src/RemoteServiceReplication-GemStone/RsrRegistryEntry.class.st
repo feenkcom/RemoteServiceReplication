@@ -2,39 +2,45 @@ Class {
 	#name : 'RsrRegistryEntry',
 	#superclass : 'RsrObject',
 	#instVars : [
-		'service'
+		'ephemeron',
+		'strongStorage'
 	],
 	#category : 'RemoteServiceReplication-GemStone'
 }
 
-{ #category : 'instance-creation' }
-RsrRegistryEntry class >> with: anObject [
+{ #category : 'instance creation' }
+RsrRegistryEntry class >> service: aService
+onMourn: aBlock [
 
+	| ephemeron |
+	ephemeron := RsrServiceEphemeron
+		service: aService
+		action: aBlock.
 	^self new
-        value: anObject;
-        yourself
+		ephemeron: ephemeron;
+		yourself
+]
+
+{ #category : 'transitions' }
+RsrRegistryEntry >> becomeStrong [
+
+	strongStorage := self service
+]
+
+{ #category : 'transitions' }
+RsrRegistryEntry >> becomeWeak [
+
+	strongStorage := nil
+]
+
+{ #category : 'private-accessing' }
+RsrRegistryEntry >> ephemeron: aServiceEphemeron [
+
+	ephemeron := aServiceEphemeron
 ]
 
 { #category : 'accessing' }
 RsrRegistryEntry >> service [
 
-	^service
-]
-
-{ #category : 'accessing' }
-RsrRegistryEntry >> service: anRsrService [
-
-	service := anRsrService
-]
-
-{ #category : 'accessing' }
-RsrRegistryEntry >> value [
-
-	^self service
-]
-
-{ #category : 'accessing' }
-RsrRegistryEntry >> value: anObject [
-
-	self service: anObject
+	^ephemeron service
 ]
