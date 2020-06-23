@@ -16,7 +16,6 @@ package classNames
 	add: #RsrRegistryEntry;
 	add: #RsrScientist;
 	add: #RsrSocket;
-	add: #RsrWeakRegistryEntry;
 	yourself.
 
 package methodNames
@@ -76,7 +75,7 @@ RsrObject subclass: #RsrRegistry
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrObject subclass: #RsrRegistryEntry
-	instanceVariableNames: 'storage dispatcher'
+	instanceVariableNames: 'storage strongReference finalizationAction'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -87,11 +86,6 @@ RsrObject subclass: #RsrScientist
 	classInstanceVariableNames: ''!
 RsrObject subclass: #RsrSocket
 	instanceVariableNames: 'socket'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrRegistryEntry subclass: #RsrWeakRegistryEntry
-	instanceVariableNames: 'finalizationSend'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -329,7 +323,9 @@ maximumReclamation
 	action := 
 			[didFinalize := true.
 			sema signal].
-	element := RsrWeakRegistryEntry value: service toFinalizeEvaluate: action.
+	element := RsrRegistryEntry
+		service: service
+		finalizationAction: action.
 	service := nil.
 	self invokeGarbageCollector.
 	
@@ -390,11 +386,6 @@ initialize
 	map := Dictionary new.
 	mutex := Semaphore forMutualExclusion!
 
-reap: aKey
-
-	self cleanupEntryFor: aKey.
-	self reapAction value: aKey!
-
 reapAction
 
 	^reapAction!
@@ -402,6 +393,15 @@ reapAction
 reapAction: aBlock
 
 	reapAction := aBlock!
+
+reapClient: aKey
+
+	self cleanupEntryFor: aKey.
+	self reapAction value: aKey!
+
+reapServer: aKey
+
+	self cleanupEntryFor: aKey!
 
 removeKey: aKey
 
@@ -424,16 +424,18 @@ serviceAt: aKey
 put: aService
 	"Store aService into the registry"
 
-	| entry |
-	entry := aService isServer
-				ifTrue: [RsrRegistryEntry value: aService]
-				ifFalse: 
-					[| finalizeSend |
-					finalizeSend := MessageSend
-								receiver: self
-								selector: #reap:
-								argument: aKey.
-					RsrWeakRegistryEntry value: aService toFinalizeEvaluate: finalizeSend].
+	| reapSelector finalizeSend entry |
+	reapSelector := aService isServer
+		ifTrue: [#reapServer:]
+		ifFalse: [#reapClient:].
+	finalizeSend := MessageSend
+		receiver: self
+		selector: reapSelector
+		argument: aKey.
+	entry := RsrRegistryEntry
+		service: aService
+		finalizationAction: finalizeSend.
+	aService isServer ifTrue: [entry becomeStrong].
 	self
 		at: aKey
 		put: entry.
@@ -445,9 +447,10 @@ put: aService
 !RsrRegistry categoriesFor: #elementValue:ifNil:!public! !
 !RsrRegistry categoriesFor: #includesKey:!public! !
 !RsrRegistry categoriesFor: #initialize!public! !
-!RsrRegistry categoriesFor: #reap:!public! !
 !RsrRegistry categoriesFor: #reapAction!public! !
 !RsrRegistry categoriesFor: #reapAction:!public! !
+!RsrRegistry categoriesFor: #reapClient:!public! !
+!RsrRegistry categoriesFor: #reapServer:!public! !
 !RsrRegistry categoriesFor: #removeKey:!public! !
 !RsrRegistry categoriesFor: #serviceAt:!public! !
 !RsrRegistry categoriesFor: #serviceAt:ifAbsent:!public! !
@@ -472,13 +475,22 @@ RsrRegistryEntry comment: ''!
 !RsrRegistryEntry categoriesForClass!RemoteServiceReplication-Dolphin! !
 !RsrRegistryEntry methodsFor!
 
-dispatcher
+becomeStrong
 
-	^dispatcher!
+	strongReference := self service!
 
-dispatcher: aMessageDispatcher
+becomeWeak
 
-	dispatcher := aMessageDispatcher!
+	strongReference := nil!
+
+elementsExpired: anInteger
+of: anArray
+
+	finalizationAction ifNotNil: [:action | [action value] fork]!
+
+finalizationAction: anEvaluable
+
+	finalizationAction := anEvaluable!
 
 initialize
 
@@ -487,7 +499,8 @@ initialize
 
 initializeStorage
 
-	storage := Array new: 1!
+	storage := MourningWeakArray new: 1.
+	storage pathologist: self!
 
 service
 
@@ -497,34 +510,26 @@ service: aService
 
 	storage
 		at: 1
-		put: aService!
-
-value
-
-	^storage at: 1!
-
-value: anObject
-
-	storage
-		at: 1
-		put: anObject! !
-!RsrRegistryEntry categoriesFor: #dispatcher!public! !
-!RsrRegistryEntry categoriesFor: #dispatcher:!public! !
+		put: aService! !
+!RsrRegistryEntry categoriesFor: #becomeStrong!public! !
+!RsrRegistryEntry categoriesFor: #becomeWeak!public! !
+!RsrRegistryEntry categoriesFor: #elementsExpired:of:!public! !
+!RsrRegistryEntry categoriesFor: #finalizationAction:!public! !
 !RsrRegistryEntry categoriesFor: #initialize!public! !
 !RsrRegistryEntry categoriesFor: #initializeStorage!public! !
 !RsrRegistryEntry categoriesFor: #service!public! !
 !RsrRegistryEntry categoriesFor: #service:!public! !
-!RsrRegistryEntry categoriesFor: #value!public! !
-!RsrRegistryEntry categoriesFor: #value:!public! !
 
 !RsrRegistryEntry class methodsFor!
 
-value: anObject
+service: aService
+finalizationAction: aBlock
 
 	^self new
-		value: anObject;
+		service: aService;
+		finalizationAction: aBlock;
 		yourself! !
-!RsrRegistryEntry class categoriesFor: #value:!public! !
+!RsrRegistryEntry class categoriesFor: #service:finalizationAction:!public! !
 
 RsrScientist guid: (GUID fromString: '{ca700baf-795f-44da-aef0-cc7d2ad19d68}')!
 RsrScientist comment: ''!
@@ -636,38 +641,6 @@ on: aHostSocket
 		socket: aHostSocket;
 		yourself! !
 !RsrSocket class categoriesFor: #on:!public! !
-
-RsrWeakRegistryEntry guid: (GUID fromString: '{551e557a-1b07-488a-a72a-92a9aee28fdf}')!
-RsrWeakRegistryEntry comment: ''!
-!RsrWeakRegistryEntry categoriesForClass!RemoteServiceReplication-Dolphin! !
-!RsrWeakRegistryEntry methodsFor!
-
-elementsExpired: anInteger
-of: anArray
-
-	finalizationSend ifNotNil: [:action | [action value] fork]!
-
-initializeStorage
-
-	storage := MourningWeakArray new: 1.
-	storage pathologist: self!
-
-toFinalizeEvaluate: anEvaluable
-
-	finalizationSend := anEvaluable! !
-!RsrWeakRegistryEntry categoriesFor: #elementsExpired:of:!public! !
-!RsrWeakRegistryEntry categoriesFor: #initializeStorage!public! !
-!RsrWeakRegistryEntry categoriesFor: #toFinalizeEvaluate:!public! !
-
-!RsrWeakRegistryEntry class methodsFor!
-
-value: aService
-toFinalizeEvaluate: anEvaluable
-
-	^(self value: aService)
-		toFinalizeEvaluate: anEvaluable;
-		yourself! !
-!RsrWeakRegistryEntry class categoriesFor: #value:toFinalizeEvaluate:!public! !
 
 RsrProtoObject guid: (GUID fromString: '{8c807a21-ab7c-4f1d-9c7a-f012b4953ad7}')!
 RsrProtoObject comment: ''!
