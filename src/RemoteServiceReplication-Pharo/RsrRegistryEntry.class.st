@@ -3,7 +3,7 @@ Class {
 	#superclass : #RsrObject,
 	#instVars : [
 		'storage',
-		'strongStorage'
+		'strongReference'
 	],
 	#category : #'RemoteServiceReplication-Pharo'
 }
@@ -19,25 +19,20 @@ RsrRegistryEntry class >> service: aService [
 { #category : #transitions }
 RsrRegistryEntry >> becomeStrong [
 
-	strongStorage
-		at: 1
-		put: self service
+	strongReference := self service
 ]
 
 { #category : #transitions }
 RsrRegistryEntry >> becomeWeak [
 
-	strongStorage
-		at: 1
-		put: nil
+	strongReference := nil
 ]
 
 { #category : #initializing }
 RsrRegistryEntry >> initialize [
 
 	super initialize.
-	storage := WeakArray new: 1.
-	strongStorage := Array new: 1
+	storage := WeakArray new: 1
 ]
 
 { #category : #accessing }
