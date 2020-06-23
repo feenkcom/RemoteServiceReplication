@@ -13,7 +13,6 @@ package classNames
 	add: #RsrTestingProcessModel;
 	add: #RsrGarbageCollectorTestCase;
 	add: #RsrMockClient;
-	add: #RsrRegistryTestCase;
 	yourself.
 
 package methodNames
@@ -89,15 +88,6 @@ RsrMockService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrMockServer categoriesForClass!RemoteServiceReplication-Platform-Test! !
-
-RsrTestCase
-	subclass: #RsrRegistryTestCase
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrRegistryTestCase comment: 'I represent tests for the RsrRegistry.'!
-!RsrRegistryTestCase categoriesForClass!RemoteServiceReplication-Platform-Test! !
 
 RsrTestCase
 	subclass: #RsrSocketTestCase
@@ -203,21 +193,6 @@ secondStream	^(RsrClassResolver classNamed: #RsrSocketStream) on: secondSocket
 
 !RsrSocketPair methodsFor!
 secondSocket	^ secondSocket! !
-
-!RsrRegistryTestCase methodsFor!
-testRemoveKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		serviceAt: client _id		put: client.	self		assert: (registry removeKey: client _id) service		identicalTo: client! !
-
-!RsrRegistryTestCase methodsFor!
-testIncludesKey	| registry client |	registry := RsrRegistry new.	client := RsrMockClient new.	self deny: (registry includesKey: client _id).	registry		serviceAt: client _id		put: client.	self assert: (registry includesKey: client _id)! !
-
-!RsrRegistryTestCase methodsFor!
-testAddServer	| id object registry marker |	marker := Object new.	object := RsrMockServer new.	id := object _id.	registry := RsrRegistry new.	registry		serviceAt: id		put: object.	object := nil.	self maximumReclamation.	object := registry serviceAt: id ifAbsent: [marker].	self		deny: object		equals: marker.	self		assert: object class		equals: RsrMockServer.	self		assert: object _id		equals: id! !
-
-!RsrRegistryTestCase methodsFor!
-testAtAtIfAbsent	| registry server id marker |	registry := RsrRegistry new.	server := RsrMockServer new.	id := server _id.	self		should: [registry serviceAt: id]		raise: Error.	marker := Object new.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: marker.	registry		serviceAt: id		put: server.	self		assert: (registry serviceAt: id)		identicalTo: server.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: server! !
-
-!RsrRegistryTestCase methodsFor!
-testAddClient	| id object entry registry marker |	marker := Object new.	object := RsrMockClient new.	id := object _id.	registry := RsrRegistry new.	registry		serviceAt: id		put: object.	self maximumReclamation.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: object.	object := nil.	self maximumReclamation.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: marker! !
 
 !RsrClassResolverTestCase methodsFor!
 testSuccessfulResolution	| actual |	actual := RsrClassResolver classNamed: #Object.	self		assert: actual		identicalTo: Object.	actual := RsrClassResolver		classNamed: #Object		ifAbsent: [self assert: false].	self		assert: actual		identicalTo: Object! !

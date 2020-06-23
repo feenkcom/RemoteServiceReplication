@@ -9,6 +9,7 @@ package classNames
 	add: #RsrInitiateConnection;
 	add: #RsrConnection;
 	add: #RsrUnknownOID;
+	add: #RsrPendingMessage;
 	add: #RsrServiceFactoryClient;
 	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrStream;
@@ -45,6 +46,7 @@ package classNames
 package methodNames
 	add: #RsrForwarder -> #doesNotUnderstand:;
 	add: #RsrForwarder -> #_service:;
+	add: 'RsrSpecies class' -> #speciesOf:;
 	add: 'RsrServiceSpecies class' -> #reflectedVariablesFor:;
 	add: 'RsrServiceSpecies class' -> #reflectedVariableIndicesFor:do:;
 	add: 'RsrServiceSpecies class' -> #reflectedVariablesFor:do:;
@@ -81,7 +83,7 @@ RsrObject
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream promises dispatcher oidSpigot serviceFactory log closeSemaphore'
+	instanceVariableNames: 'isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -145,6 +147,14 @@ RsrObject
 !RsrObjectCache categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
+	subclass: #RsrPendingMessage
+	instanceVariableNames: 'services promise'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrPendingMessage categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
 	subclass: #RsrPromise
 	instanceVariableNames: 'mutex value error markerValue'
 	classVariableNames: ''
@@ -154,7 +164,7 @@ RsrObject
 
 RsrObject
 	subclass: #RsrRetainAnalysis
-	instanceVariableNames: 'roots retainCommands inFlight connection'
+	instanceVariableNames: 'roots services inFlight connection'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -355,6 +365,9 @@ RsrError
 	classInstanceVariableNames: ''!
 !RsrUnknownOID categoriesForClass!RemoteServiceReplication! !
 
+!RsrSpecies class methodsFor!
+speciesOf: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceSpecies].	anObject == true		ifTrue: [^RsrTrueSpecies].	anObject == false		ifTrue: [^RsrFalseSpecies].	(anObject isKindOf: Integer)		ifTrue: [^anObject positive ifTrue: [RsrPositiveIntegerSpecies] ifFalse: [RsrNegativeIntegerSpecies]].	^self speciesMapping		at: anObject class		ifAbsent: [RsrSpecies nullSpecies]! !
+
 !RsrServiceSpecies class methodsFor!
 reflectedVariablesFor: aService	| currentClass variables |	variables := OrderedCollection new.	currentClass := aService class templateClass.	[currentClass == RsrService]		whileFalse:			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].			currentClass := currentClass superclass].	^variables! !
 
@@ -447,6 +460,9 @@ log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrAcceptConnection class methodsFor!
 port: aPortInteger	^self new		port: aPortInteger;		yourself! !
+
+!RsrPendingMessage class methodsFor!
+services: aListpromise: aPromise	^self new		services: aList;		promise: aPromise;		yourself! !
 
 !RsrStream class methodsFor!
 on: aStream	^self new		stream: aStream;		yourself! !
@@ -545,7 +561,7 @@ writeUsing: aCommandWriter	retainList do: [:each | each writeUsing: aCommandWr
 encodeUsing: anRsrEncoder	encoding := anRsrEncoder encodeDeliverResponse: self! !
 
 !RsrDeliverResponse methodsFor!
-executeFor: aConnection	| promise |	promise := aConnection promises		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	promise fulfill: response.	aConnection objectCache reset! !
+executeFor: aConnection	| pendingMessage |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	pendingMessage promise fulfill: response.	aConnection objectCache reset! !
 
 !RsrDeliverResponse methodsFor!
 response: anObject	response := anObject! !
@@ -572,10 +588,10 @@ roots: anArray	roots := anArray! !
 encodeObject: anObject	^ByteArray		streamContents:			[:stream |			self				encodeObject: anObject				onto: stream]! !
 
 !RsrEncoder methodsFor!
-isService: anObject	^anObject isKindOf: RsrService! !
+speciesMapping	"Return a mapping between the native class and their associated RsrSpecies"	^RsrSpecies speciesMapping! !
 
 !RsrEncoder methodsFor!
-speciesMapping	"Return a mapping between the native class and their associated RsrSpecies"	^RsrSpecies speciesMapping! !
+speciesOf: anObject		^RsrSpecies speciesOf: anObject! !
 
 !RsrEncoder methodsFor!
 encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedInteger := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]).	encodedBytes := self		integerAsByteArray: encodedInteger		ofSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes! !
@@ -591,9 +607,6 @@ encodeReferenceOf: anObjectonto: aStream	| species |	species := self species
 
 !RsrEncoder methodsFor!
 retainObjectIdentifier	^0! !
-
-!RsrEncoder methodsFor!
-speciesOf: anObject	(self isService: anObject)		ifTrue: [^RsrServiceSpecies].	anObject == true		ifTrue: [^RsrTrueSpecies].	anObject == false		ifTrue: [^RsrFalseSpecies].	(anObject isKindOf: Integer)		ifTrue: [^anObject positive ifTrue: [RsrPositiveIntegerSpecies] ifFalse: [RsrNegativeIntegerSpecies]].	^self speciesMapping		at: anObject class		ifAbsent: [RsrSpecies nullSpecies]! !
 
 !RsrEncoder methodsFor!
 encodeDeliverResponse: aDeliverResponse	^ByteArray		streamContents:			[:stream |			self				encodeControlWord: self deliverResponseCommand				onto: stream.			self				encodeControlWord: aDeliverResponse transaction				onto: stream.			self				encodeReferenceOf: aDeliverResponse response				onto: stream]! !
@@ -764,7 +777,7 @@ reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiver class name, '>>', 
 selector: anObject	selector := anObject! !
 
 !RsrSendMessage methodsFor!
-sendOver: aConnection	| analysis promise |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	aConnection promises		at: transaction		put: promise.	aConnection commandWriter enqueue: self.	^promise! !
+sendOver: aConnection	| analysis promise pendingMessage |	analysis := RsrRetainAnalysis		roots: self roots		connection: aConnection.	analysis perform.	retainList := analysis retainCommands.	self encodeUsing: aConnection encoder.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: analysis services		promise: promise.	aConnection pendingMessages		at: transaction		put: pendingMessage.	aConnection commandWriter enqueue: self.	^promise! !
 
 !RsrSendMessage methodsFor!
 transaction	^ transaction! !
@@ -934,6 +947,18 @@ binary	stream binary! !
 !RsrStream methodsFor!
 stream: aStream	stream := aStream! !
 
+!RsrPendingMessage methodsFor!
+services	^services! !
+
+!RsrPendingMessage methodsFor!
+services: aList	services := aList! !
+
+!RsrPendingMessage methodsFor!
+promise	^promise! !
+
+!RsrPendingMessage methodsFor!
+promise: aPromise	promise := aPromise! !
+
 !RsrLog methodsFor!
 levelError	^1! !
 
@@ -998,10 +1023,13 @@ executeCycle	[| command |	command := self nextCommand.	self report: command.
 roots: anObject	roots := anObject! !
 
 !RsrRetainAnalysis methodsFor!
-initialize	super initialize.	retainCommands := OrderedCollection new.	inFlight := IdentitySet new! !
+initialize	super initialize.	services := OrderedCollection new.	inFlight := IdentitySet new! !
 
 !RsrRetainAnalysis methodsFor!
 perform	roots do: [:each | self analyze: each]! !
+
+!RsrRetainAnalysis methodsFor!
+services	^services! !
 
 !RsrRetainAnalysis methodsFor!
 analyze: anObject	^(self speciesOf: anObject)		analyze: anObject		using: self! !
@@ -1010,7 +1038,7 @@ analyze: anObject	^(self speciesOf: anObject)		analyze: anObject		using: sel
 analyzing: anObjectduring: aBlock	(inFlight includes: anObject)		ifTrue: [^RsrCycleDetected signal: anObject].	inFlight add: anObject.	aBlock value.	inFlight remove: anObject! !
 
 !RsrRetainAnalysis methodsFor!
-retainCommands	^retainCommands! !
+retainCommands	^self services		collect:			[:service | | command |			command := RsrRetainObject object: service.			command encodeUsing: self encoder.			command]! !
 
 !RsrRetainAnalysis methodsFor!
 ensureRegistered: aService	self connection ensureRegistered: aService! !
@@ -1025,7 +1053,7 @@ encoder	^self connection encoder! !
 connection: aConnection	connection := aConnection! !
 
 !RsrRetainAnalysis methodsFor!
-speciesOf: anObject	^self encoder speciesOf: anObject! !
+speciesOf: anObject	^RsrSpecies speciesOf: anObject! !
 
 !RsrRetainAnalysis methodsFor!
 roots	^roots! !
@@ -1043,7 +1071,7 @@ analyzeCollection: aCollection	self		analyzing: aCollection		during: [	aColl
 connection	^connection! !
 
 !RsrRetainAnalysis methodsFor!
-retain: aService	| retainCommand |	retainCommand := RsrRetainObject object: aService.	retainCommand encodeUsing: self encoder.	self retainCommands add: retainCommand! !
+retain: aService	services add: aService! !
 
 !RsrCycleDetected methodsFor!
 messageText	^'Cycle detected on: ', object printString! !
@@ -1055,7 +1083,7 @@ object: anObject	object := anObject! !
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	isOpen		ifFalse: [^self].	isOpen := false.	commandReader stop.	commandWriter stop.	dispatcher stop.	self promises do: [:each | each error: RsrConnectionClosed new].	objectCache reset.	closeSemaphore signal! !
+close	isOpen		ifFalse: [^self].	isOpen := false.	commandReader stop.	commandWriter stop.	dispatcher stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	commandReader := commandWriter := dispatcher := pendingMessages := objectCache := registry := nil.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
@@ -1064,7 +1092,7 @@ log	^log! !
 decoder	^RsrDecoder registry: registry connection: self! !
 
 !RsrConnection methodsFor!
-initialize	super initialize.	isOpen := false.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	objectCache := RsrObjectCache new.	promises := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	log := RsrLog new! !
+initialize	super initialize.	isOpen := false.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	objectCache := RsrObjectCache new.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	log := RsrLog new! !
 
 !RsrConnection methodsFor!
 transactionSpigot	^transactionSpigot! !
@@ -1100,13 +1128,13 @@ commandWriter	^commandWriter! !
 _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| dispatchCommand |	isOpen		ifFalse: [self error: 'Connection is not open'].	dispatchCommand := RsrSendMessage		transaction: self newTransactionId		receiver: aService		selector: aMessage selector		arguments: aMessage arguments.	^dispatchCommand sendOver: self! !
 
 !RsrConnection methodsFor!
-promises	^promises! !
-
-!RsrConnection methodsFor!
 dispatcher	^dispatcher! !
 
 !RsrConnection methodsFor!
 registry	^registry! !
+
+!RsrConnection methodsFor!
+pendingMessages	^pendingMessages! !
 
 !RsrConnection methodsFor!
 unknownError: anException	self close! !
@@ -1181,7 +1209,7 @@ transaction	^transaction! !
 reportOn: aLog	aLog debug: 'RsrDeliverErrorResponse(', self remoteError class name, ')'! !
 
 !RsrDeliverErrorResponse methodsFor!
-executeFor: aConnection	| promise |	promise := aConnection promises		removeKey: transaction		ifAbsent: [^self error: 'Handle unknown transaction'].	promise error: self remoteError! !
+executeFor: aConnection	| pendingMessage |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent: [^self error: 'Handle unknown transaction'].	pendingMessage promise error: self remoteError! !
 
 !RsrDeliverErrorResponse methodsFor!
 sendOver: aConnection	self encodeUsing: aConnection encoder.	aConnection commandWriter enqueue: self! !

@@ -41,6 +41,7 @@ package classNames
 	add: #RsrServerTestService;
 	add: #RsrMockConnection;
 	add: #RsrServerReferenceService;
+	add: #RsrRegistryTestCase;
 	add: #RsrDifferentServerService;
 	add: #RsrLifetimeTest;
 	add: #RsrReflectedVariableTestServiceA;
@@ -253,6 +254,15 @@ RsrReflectedVariableTestServiceA
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrReflectedVariableTestServiceB categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrTestCase
+	subclass: #RsrRegistryTestCase
+	instanceVariableNames: 'registry'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrRegistryTestCase comment: 'I represent tests for the RsrRegistry.'!
+!RsrRegistryTestCase categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrRemoteAction
 	subclass: #RsrRemoteActionClient
@@ -1090,6 +1100,27 @@ forwarderClass: aClass	forwarderClass := aClass! !
 
 !RsrReflectedVariableTestClient methodsFor!
 setVarsToAndReturn: anObject	^remoteSelf setVarsToAndReturn: anObject! !
+
+!RsrRegistryTestCase methodsFor!
+testAddServer	| id object marker |	marker := Object new.	object := RsrMockServer new.	id := object _id.	registry		serviceAt: id		put: object.	object := nil.	self maximumReclamation.	object := registry serviceAt: id ifAbsent: [marker].	self		deny: object		equals: marker.	self		assert: object class		equals: RsrMockServer.	self		assert: object _id		equals: id! !
+
+!RsrRegistryTestCase methodsFor!
+testIncludesKey	| client |	client := RsrMockClient new.	self deny: (registry includesKey: client _id).	registry		serviceAt: client _id		put: client.	self assert: (registry includesKey: client _id)! !
+
+!RsrRegistryTestCase methodsFor!
+testRemoveKey	| client |	client := RsrMockClient new.	self		assert: (registry removeKey: client _id)		equals: nil.	registry		serviceAt: client _id		put: client.	self		assert: (registry removeKey: client _id) service		identicalTo: client! !
+
+!RsrRegistryTestCase methodsFor!
+tearDown	registry := nil.	super tearDown! !
+
+!RsrRegistryTestCase methodsFor!
+testAtAtIfAbsent	| server id marker |	server := RsrMockServer new.	id := server _id.	self		should: [registry serviceAt: id]		raise: Error.	marker := Object new.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: marker.	registry		serviceAt: id		put: server.	self		assert: (registry serviceAt: id)		identicalTo: server.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: server! !
+
+!RsrRegistryTestCase methodsFor!
+testAddClient	| id object entry marker |	marker := Object new.	object := RsrMockClient new.	id := object _id.	registry		serviceAt: id		put: object.	self maximumReclamation.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: object.	object := nil.	self maximumReclamation.	self		assert: (registry serviceAt: id ifAbsent: [marker])		identicalTo: marker! !
+
+!RsrRegistryTestCase methodsFor!
+setUp	super setUp.	registry := RsrRegistry new! !
 
 !RsrLifetimeTest methodsFor!
 testCloseWithDanglingObject	"It is possible that the connection could disconnect between when an object	is received and when the upcoming SendMessage or DeliverResponse message is received.	If this is the case, we could leak memory due to the caching used to ensure	the object is stored in memory long enough to process the upcoming message.	Test to ensure the object is freed on the connection close."	| service command |	self maximumReclamation.	self assert: RsrClientNoInstVars allInstances isEmpty.	service := RsrServerNoInstVars new.	service		_id: 2		connection: connectionA.	command := RsrRetainObject object: service.	command		encodeUsing: connectionA encoder;		writeUsing: connectionA commandWriter.	connectionA commandWriter flush.	(Delay forMilliseconds: 10) wait.	connectionA close.	connectionB close.	service := command := nil.	self maximumReclamation.	self assert: RsrClientNoInstVars allInstances isEmpty! !
