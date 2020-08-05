@@ -28,8 +28,11 @@ RsrAcceptConnection class >> port: aPortInteger [
 RsrAcceptConnection >> connect [
 
 	| listener socket connection |
-	listener := RsrSocket new.
-	[listener listenOn: self port.
+	listener := self socketClass new.
+	[listener
+		bindAddress: '0.0.0.0'
+		port: self port.
+	listener listen: 1.
 	socket := listener accept]
 		ensure: [listener close].
 	connection := RsrConnection

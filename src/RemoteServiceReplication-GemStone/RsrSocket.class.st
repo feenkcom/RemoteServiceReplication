@@ -27,6 +27,15 @@ RsrSocket >> accept [
 	^self class on: socket accept
 ]
 
+{ #category : 'listening' }
+RsrSocket >> bindAddress: address
+port: port [
+
+	socket
+		bindTo: port
+		toAddress: address
+]
+
 { #category : 'lifecycle' }
 RsrSocket >> close [
 
@@ -62,11 +71,18 @@ RsrSocket >> isConnected [
 ]
 
 { #category : 'listening' }
+RsrSocket >> listen: backlogLength [
+
+	socket makeListener: backlogLength
+]
+
+{ #category : 'listening' }
 RsrSocket >> listenOn: aPort [
 
-	socket
-		makeServer: 2
-		atPort: aPort
+	self
+		bindAddress: '0.0.0.0'
+		port: aPort.
+	self listen: 1
 ]
 
 { #category : 'reading' }

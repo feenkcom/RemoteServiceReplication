@@ -33,7 +33,7 @@ port: aPortInteger [
 RsrInitiateConnection >> connect [
 
 	| socket connection |
-	socket := RsrSocket new.
+	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.

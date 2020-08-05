@@ -209,7 +209,7 @@ RsrConnection >> open [
 	(isOpen := socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
 	closeSemaphore := Semaphore new.
-	stream := RsrSocketStream on: socket.
+	stream := RsrSocketStream2 on: socket.
 	dispatcher := RsrDispatchEventLoop on: self.
 	commandReader := RsrCommandSource on: self.
 	commandWriter := RsrCommandSink on: self.
