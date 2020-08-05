@@ -1,0 +1,254 @@
+Class {
+	#name : 'RsrSocket2TestCase',
+	#superclass : 'RsrTestCase',
+	#instVars : [
+		'sockets'
+	],
+	#category : 'RemoteServiceReplication-Platform-Test'
+}
+
+{ #category : 'accessing' }
+RsrSocket2TestCase >> createPair: aBlock [
+
+	| address port listener peerA peerB semaphore |
+	address := '127.0.0.1'.
+	port := 45301.
+	listener := self newSocket.
+	listener
+		bindAddress: address
+		port: port.
+	listener listen: 1.
+	peerB := self newSocket.
+	semaphore := Semaphore new.
+	self
+		fork: 
+			[[peerA := self deferClose: listener accept] ensure: [semaphore signal]];
+		fork:
+			[[peerB connectToHost: address port: port] ensure: [semaphore signal]].
+	semaphore wait; wait.
+	listener close.
+	((peerA notNil and: [peerA isConnected]) and: [peerB isConnected])
+		ifTrue: [aBlock value: peerA value: peerB]
+		ifFalse: [self error: 'Unable to create Socket Pair']
+]
+
+{ #category : 'cleanup' }
+RsrSocket2TestCase >> deferClose: aSocket [
+
+	sockets add: aSocket.
+	^aSocket
+]
+
+{ #category : 'accessing' }
+RsrSocket2TestCase >> newSocket [
+
+	^self deferClose: RsrSocket2 new
+]
+
+{ #category : 'running' }
+RsrSocket2TestCase >> setUp [
+
+	super setUp.
+	sockets := OrderedCollection new
+]
+
+{ #category : 'running' }
+RsrSocket2TestCase >> tearDown [
+
+	sockets do: [:each | each close].
+	super tearDown
+]
+
+{ #category : 'running-server' }
+RsrSocket2TestCase >> testAcceptConnects [
+
+	| listener client server semaphore |
+	listener := self newSocket.
+	listener
+		bindAddress: '127.0.0.1'
+		port: 45300.
+	listener listen: 1.
+	client := self newSocket.
+	self
+		deny: client isConnected;
+		deny: listener isConnected.
+	semaphore := Semaphore new.
+	self
+		fork:
+			[server := self deferClose: listener accept.
+			semaphore signal];
+		fork:
+			[client connectToHost: '127.0.0.1' port: 45300.
+			semaphore signal].
+	semaphore wait; wait.
+	self
+		assert: client isConnected;
+		assert: server isConnected;
+		deny: listener isConnected
+]
+
+{ #category : 'running-client' }
+RsrSocket2TestCase >> testConnectBoundSocket [
+
+	| listener |
+	listener := self newSocket.
+	listener
+		bindAddress: '127.0.0.1'
+		port: 45300.
+	self
+		should:
+			[listener
+				connectToHost: 'gemtalksystems.com'
+				port: 80]
+		raise: RsrSocketError
+]
+
+{ #category : 'running-client' }
+RsrSocket2TestCase >> testFailedConnects [
+
+	| socket |
+	socket := self newSocket.
+	self deny: socket isConnected.
+	self
+		should:
+			[socket
+				connectToHost: 'do.no.create.used.for.testing.gemtalksystems.com'
+				port: 80]
+		raise: RsrConnectFailed.
+	self
+		should:
+			[socket
+				connectToHost: 'gemtalksystems.com'
+				port: 70000]
+		raise: RsrConnectFailed.
+	self
+		should:
+			[socket
+				connectToHost: '127.0.0.1'
+				port: 79]
+		raise: RsrConnectFailed.
+	socket close
+]
+
+{ #category : 'running-read/write' }
+RsrSocket2TestCase >> testPartialRead [
+
+	| peerA peerB writeBuffer readBuffer count numRead |
+	self
+		createPair:
+			[:a :b |
+			peerA := a.
+			peerB := b].
+	count := 1024.
+	writeBuffer := ByteArray new: count.
+	1
+		to: count
+		do: [:i | writeBuffer at: i put: (i \\ 256)].
+	readBuffer := ByteArray withAll: writeBuffer.
+	peerA
+		write: count - 1
+		from: writeBuffer
+		startingAt: 1.
+	numRead := peerB
+		read: count
+		into: readBuffer
+		startingAt: 1.
+	self
+		assert: numRead
+		equals: count - 1.
+	self
+		assert: readBuffer
+		equals: writeBuffer
+]
+
+{ #category : 'running-read/write' }
+RsrSocket2TestCase >> testReadAfterPeerClose [
+
+	| peerA peerB readBuffer count numRead |
+	self
+		createPair:
+			[:a :b |
+			peerA := a.
+			peerB := b].
+	count := 1024.
+	readBuffer := ByteArray new: count.
+	peerA close.
+	self
+		should:
+			[numRead := peerB
+				read: count
+				into: readBuffer
+				startingAt: 1]
+		raise: RsrSocketClosed
+]
+
+{ #category : 'running-read/write' }
+RsrSocket2TestCase >> testReadWrite [
+
+	| peerA peerB writeBuffer readBuffer count numWritten numRead |
+	self
+		createPair:
+			[:a :b |
+			peerA := a.
+			peerB := b].
+	count := 1024.
+	writeBuffer := ByteArray new: count.
+	1
+		to: count
+		do: [:i | writeBuffer at: i put: (i \\ 256)].
+	readBuffer := ByteArray withAll: writeBuffer.
+	numWritten := peerA
+		write: count
+		from: writeBuffer
+		startingAt: 1.
+	self
+		assert: numWritten
+		equals: count.
+	numRead := peerB
+		read: count
+		into: readBuffer
+		startingAt: 1.
+	self
+		assert: numRead
+		equals: count.
+	self
+		assert: readBuffer
+		equals: writeBuffer
+]
+
+{ #category : 'running-client' }
+RsrSocket2TestCase >> testSuccessfulConnect [
+
+	| socket |
+	socket := self newSocket.
+	self deny: socket isConnected.
+	socket
+		connectToHost: 'gemtalksystems.com'
+		port: 80.
+	self assert: socket isConnected.
+	socket close.
+	self deny: socket isConnected
+]
+
+{ #category : 'running-read/write' }
+RsrSocket2TestCase >> testUnconnectedReadWrite [
+
+	| socket count bytes |
+	socket := self newSocket.
+	count := 1024.
+	bytes := ByteArray new: 1024.
+	self
+		should:
+			[socket
+				read: count
+				into: bytes
+				startingAt: 1]
+		raise: RsrSocketClosed.
+	self
+		should:
+			[socket
+				write: count
+				from: bytes
+				startingAt: 1]
+		raise: RsrSocketClosed
+]

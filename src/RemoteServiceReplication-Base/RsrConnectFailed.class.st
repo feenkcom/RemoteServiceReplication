@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrSocketClosed',
+	#name : 'RsrConnectFailed',
 	#superclass : 'RsrSocketError',
 	#category : 'RemoteServiceReplication-Base'
 }
