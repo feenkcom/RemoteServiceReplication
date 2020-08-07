@@ -53,12 +53,17 @@ RsrSocketStream2 >> next: count [
 	"Return exactly <count> number of bytes.
 	Signal RsrSocketClosed if the socket closes."
 
-	| bytes |
+	| chunkSize bytes position numRead |
+	chunkSize := 4096.
 	bytes := ByteArray new: count.
-	socket
-		read: count
-		into: bytes
-		startingAt: 1.
+	position := 1.
+	[position <= count]
+		whileTrue:
+			[numRead := socket
+				read: (chunkSize min: count - position + 1)
+				into: bytes
+				startingAt: position.
+			position := position + numRead].
 	^bytes
 ]
 
@@ -66,10 +71,17 @@ RsrSocketStream2 >> next: count [
 RsrSocketStream2 >> nextPutAll: bytes [
 	"Write <bytes> to the socket."
 
-	socket
-		write: bytes size
-		from: bytes
-		startingAt: 1
+	| chunkSize position numBytes numWritten |
+	chunkSize := 4096.
+	position := 1.
+	numBytes := bytes size.
+	[position <= numBytes]
+		whileTrue:
+			[numWritten := socket
+				write: (chunkSize min: numBytes - position + 1)
+				from: bytes
+				startingAt: position.
+			position := position + numWritten]
 ]
 
 { #category : 'accessing' }
