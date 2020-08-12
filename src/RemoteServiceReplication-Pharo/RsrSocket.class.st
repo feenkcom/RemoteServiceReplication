@@ -2,7 +2,7 @@ Class {
 	#name : 'RsrSocket',
 	#superclass : 'RsrObject',
 	#instVars : [
-		'socket'
+		'nativeSocket'
 	],
 	#category : 'RemoteServiceReplication-Pharo'
 }
@@ -21,7 +21,7 @@ RsrSocket >> _nativeSocket: aSocket [
 	"Private - Configure w/ a platform socket"
 
 	aSocket setOption: 'TCP_NODELAY' value: 1.
-	socket := aSocket
+	nativeSocket := aSocket
 ]
 
 { #category : 'listening' }
@@ -29,12 +29,12 @@ RsrSocket >> accept [
 
 	| timeoutHandler ns |
 	timeoutHandler :=
-		[socket isValid
+		[nativeSocket isValid
 			ifTrue: [nil]
 			ifFalse: [RsrSocketClosed signal: 'Socket closed during #accept']].
 	[ns isNil]
 		whileTrue:
-			[ns := socket
+			[ns := nativeSocket
 				waitForAcceptFor: 5
 				ifTimedOut: timeoutHandler].
 	^self class _nativeSocket: ns
@@ -49,7 +49,7 @@ RsrSocket >> acceptTimeout [
 { #category : 'accessing' }
 RsrSocket >> assertConnected [
 
-	socket isConnected
+	nativeSocket isConnected
 		ifFalse: [RsrSocketClosed signal]
 ]
 
@@ -61,7 +61,7 @@ port: port [
 		ifFalse: [^RsrInvalidBind signal: 'Specified port (', port printString, ') is out of range.'].
 	[| address |
 	address := NetNameResolver addressForName: addressString.
-	socket
+	nativeSocket
 		bindTo: address
 		port: port]
 			on: NameLookupFailure, PrimitiveFailed, InvalidSocketStatusException
@@ -71,7 +71,7 @@ port: port [
 { #category : 'lifecycle' }
 RsrSocket >> close [
 
-	socket closeAndDestroy
+	nativeSocket closeAndDestroy
 ]
 
 { #category : 'opening connection' }
@@ -80,7 +80,7 @@ port: aPort [
 
 	[| hostAddress |
 	hostAddress := NetNameResolver addressForName: aHostname.
-	socket
+	nativeSocket
 		connectTo: hostAddress
 		port: aPort
 		waitForConnectionFor: 5]
@@ -92,20 +92,20 @@ port: aPort [
 RsrSocket >> initialize [
 
 	super initialize.
-	socket := Socket new
+	nativeSocket := Socket new
 ]
 
 { #category : 'testing' }
 RsrSocket >> isConnected [
 
-	^socket isConnected
+	^nativeSocket isConnected
 ]
 
 { #category : 'listening' }
 RsrSocket >> listen: backlog [
 
-	socket
-		listenOn: socket port
+	nativeSocket
+		listenOn: nativeSocket port
 		backlogSize: (backlog max: 2) "Ensure a new socket is created"
 ]
 
@@ -114,7 +114,7 @@ RsrSocket >> read: aCount [
 
 	| bytes bytesRead |
 	bytes := ByteArray new: aCount.
-	bytesRead := socket receiveDataInto: bytes.
+	bytesRead := nativeSocket receiveDataInto: bytes.
 	bytesRead = aCount
 		ifFalse: [^RsrSocketClosed signal].
 	^bytes
@@ -128,7 +128,7 @@ startingAt: index [
 	| tempBuffer numRead |
 	self assertConnected.
 	tempBuffer := ByteArray new: count.
-	numRead := socket receiveDataInto: tempBuffer.
+	numRead := nativeSocket receiveDataInto: tempBuffer.
 	numRead = 0
 		ifTrue: [RsrSocketClosed signal].
 	bytes
@@ -145,7 +145,7 @@ from: bytes
 startingAt: index [
 
 	self assertConnected.
-	^socket
+	^nativeSocket
 		sendSomeData: bytes
 		startIndex: index
 		count: count
