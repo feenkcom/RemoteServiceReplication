@@ -44,9 +44,11 @@ RsrSocket >> bindAddress: address
 port: port [
 	"Bind the socket to the provided port and address. Signal RsrInvalidBind in the event the bind fails."
 
-	nativeSocket
+	[nativeSocket
 		bindTo: port
-		toAddress: address
+		toAddress: address]
+			on: SocketError, OutOfRange
+			do: [:ex | ex resignalAs: (RsrInvalidBind new messageText: ex messageText)]
 ]
 
 { #category : 'terminating connections' }

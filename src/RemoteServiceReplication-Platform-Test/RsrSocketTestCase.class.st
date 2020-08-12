@@ -159,6 +159,19 @@ RsrSocketTestCase >> testFailedConnects [
 	socket close
 ]
 
+{ #category : 'running-server' }
+RsrSocketTestCase >> testInvalidBind [
+
+	| listener |
+	listener := self newSocket.
+	self "This IP is publicly routable and owned by Cloudflare. Should be invalid on all testing hosts."
+		should: [listener bindAddress: '1.1.1.1' port: 45300]
+		raise: RsrInvalidBind.
+	self
+		should: [listener bindAddress: '127.0.0.1' port: 98765432]
+		raise: RsrInvalidBind
+]
+
 { #category : 'running-read/write' }
 RsrSocketTestCase >> testPartialRead [
 
