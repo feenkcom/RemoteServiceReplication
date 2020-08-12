@@ -1,6 +1,6 @@
-Extension { #name : #RsrProcessModel }
+Extension { #name : 'RsrProcessModel' }
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrProcessModel >> currentStackDump [
 
 	| stream context |

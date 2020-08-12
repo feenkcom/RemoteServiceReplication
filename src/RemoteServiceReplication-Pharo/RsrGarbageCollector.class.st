@@ -1,10 +1,10 @@
 Class {
-	#name : #RsrGarbageCollector,
-	#superclass : #RsrObject,
-	#category : #'RemoteServiceReplication-Pharo'
+	#name : 'RsrGarbageCollector',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : #cleaning }
+{ #category : 'cleaning' }
 RsrGarbageCollector class >> maximumReclamation [
 
 	| obj sema |

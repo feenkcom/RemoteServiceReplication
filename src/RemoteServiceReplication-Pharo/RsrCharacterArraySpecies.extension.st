@@ -1,12 +1,12 @@
-Extension { #name : #RsrCharacterArraySpecies }
+Extension { #name : 'RsrCharacterArraySpecies' }
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrCharacterArraySpecies class >> fromBytes: aByteArray [
 
 	^aByteArray utf8Decoded
 ]
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrCharacterArraySpecies class >> toBytes: aCharacterArray [
 
 	^aCharacterArray utf8Encoded

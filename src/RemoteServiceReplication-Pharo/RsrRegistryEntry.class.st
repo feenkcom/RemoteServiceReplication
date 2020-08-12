@@ -1,14 +1,14 @@
 Class {
-	#name : #RsrRegistryEntry,
-	#superclass : #RsrObject,
+	#name : 'RsrRegistryEntry',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'storage',
 		'strongReference'
 	],
-	#category : #'RemoteServiceReplication-Pharo'
+	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrRegistryEntry class >> service: aService [
 
 	^self new
@@ -16,32 +16,32 @@ RsrRegistryEntry class >> service: aService [
 		yourself
 ]
 
-{ #category : #transitions }
+{ #category : 'transitions' }
 RsrRegistryEntry >> becomeStrong [
 
 	strongReference := self service
 ]
 
-{ #category : #transitions }
+{ #category : 'transitions' }
 RsrRegistryEntry >> becomeWeak [
 
 	strongReference := nil
 ]
 
-{ #category : #initializing }
+{ #category : 'initializing' }
 RsrRegistryEntry >> initialize [
 
 	super initialize.
 	storage := WeakArray new: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistryEntry >> service [
 
 	^storage at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrRegistryEntry >> service: aService [
 
 	storage

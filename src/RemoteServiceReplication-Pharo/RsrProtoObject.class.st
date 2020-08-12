@@ -1,5 +1,5 @@
 Class {
-	#name : #RsrProtoObject,
-	#superclass : #ProtoObject,
-	#category : #'RemoteServiceReplication-Pharo'
+	#name : 'RsrProtoObject',
+	#superclass : 'ProtoObject',
+	#category : 'RemoteServiceReplication-Pharo'
 }

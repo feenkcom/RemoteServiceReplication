@@ -1,13 +1,13 @@
 Class {
-	#name : #RsrServiceReaper,
-	#superclass : #RsrObject,
+	#name : 'RsrServiceReaper',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'weakStorage'
 	],
-	#category : #'RemoteServiceReplication-Pharo'
+	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrServiceReaper class >> for: aRegistry [
 
 	^self new
@@ -15,32 +15,32 @@ RsrServiceReaper class >> for: aRegistry [
 		yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrServiceReaper >> initialize [
 
 	super initialize.
 	weakStorage := WeakArray new: 1
 ]
 
-{ #category : #reaping }
+{ #category : 'reaping' }
 RsrServiceReaper >> reapClient: aKey [
 
 	self registry ifNotNil: [:registry | registry reapClient: aKey]
 ]
 
-{ #category : #reaping }
+{ #category : 'reaping' }
 RsrServiceReaper >> reapServer: aKey [
 
 	self registry ifNotNil: [:registry | registry reapServer: aKey]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceReaper >> registry [
 
 	^weakStorage at: 1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrServiceReaper >> registry: aRegistry [
 
 	weakStorage

@@ -1,25 +1,25 @@
 Class {
-	#name : #RsrObject,
-	#superclass : #Object,
+	#name : 'RsrObject',
+	#superclass : 'Object',
 	#classInstVars : [
 		'nativeClasses'
 	],
-	#category : #'RemoteServiceReplication-Pharo'
+	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 RsrObject class >> new [
 
 	^super new
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrObject >> initialize [
 
 	^self
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 RsrObject >> instruments [
 
 	^RsrInstruments new

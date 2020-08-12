@@ -1,6 +1,6 @@
-Extension { #name : #RsrSpecies }
+Extension { #name : 'RsrSpecies' }
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrSpecies class >> initializeSpeciesMapping [
 
 	speciesMapping := Dictionary new.

@@ -1,75 +1,101 @@
 Class {
-	#name : #RsrSocket,
-	#superclass : #RsrObject,
+	#name : 'RsrSocket',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'socket'
 	],
-	#category : #'RemoteServiceReplication-Pharo'
+	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : #'instance creation' }
-RsrSocket class >> on: aSocket [
+{ #category : 'instance creation' }
+RsrSocket class >> _nativeSocket: aSocket [
+	"Private - Create a instance backed by the provided Pharo Socket"
 
-	^self new
-		socket: aSocket;
+	^self basicNew
+		_nativeSocket: aSocket;
 		yourself
 ]
 
-{ #category : #listening }
-RsrSocket >> accept [
+{ #category : 'private-accessing' }
+RsrSocket >> _nativeSocket: aSocket [
+	"Private - Configure w/ a platform socket"
 
-	^self class on: (socket waitForAcceptFor: self acceptTimeout ifTimedOut: [^nil])
+	aSocket setOption: 'TCP_NODELAY' value: 1.
+	socket := aSocket
 ]
 
-{ #category : #accessing }
+{ #category : 'listening' }
+RsrSocket >> accept [
+
+	^self class _nativeSocket: (socket waitForAcceptFor: self acceptTimeout ifTimedOut: [^nil])
+]
+
+{ #category : 'accessing' }
 RsrSocket >> acceptTimeout [
 
 	^31536000 "One year -- effectively forever"
 ]
 
-{ #category : #lifecycle }
+{ #category : 'accessing' }
+RsrSocket >> assertConnected [
+
+	socket isConnected
+		ifFalse: [RsrSocketClosed signal]
+]
+
+{ #category : 'accepting connections' }
+RsrSocket >> bindAddress: addressString
+port: port [
+
+	| address |
+	address := NetNameResolver addressForName: addressString.
+	socket
+		bindTo: address
+		port: port
+]
+
+{ #category : 'lifecycle' }
 RsrSocket >> close [
 
 	socket closeAndDestroy
 ]
 
-{ #category : #'opening connection' }
+{ #category : 'opening connection' }
 RsrSocket >> connectToHost: aHostname
 port: aPort [
 
-	| hostAddress |
+	[| hostAddress |
 	hostAddress := NetNameResolver addressForName: aHostname.
 	socket
 		connectTo: hostAddress
 		port: aPort
+		waitForConnectionFor: 5]
+			on: NameLookupFailure, ConnectionTimedOut, InvalidSocketStatusException
+			do: [:ex | ex resignalAs: (RsrConnectFailed new messageText: ex messageText)]
 ]
 
-{ #category : #testing }
-RsrSocket >> dataAvailable [
-
-	^socket dataAvailable
-]
-
-{ #category : #initialization }
+{ #category : 'initialization' }
 RsrSocket >> initialize [
 
 	super initialize.
 	socket := Socket new
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 RsrSocket >> isConnected [
 
 	^socket isConnected
 ]
 
-{ #category : #listening }
-RsrSocket >> listenOn: aPort [
+{ #category : 'listening' }
+RsrSocket >> listen: backlog [
 
-	socket listenOn: aPort backlogSize: 2
+	socket
+		listenOn: socket port
+		backlogSize: (backlog max: 2) "Ensure a new socket is created"
 ]
 
-{ #category : #reading }
+{ #category : 'reading' }
 RsrSocket >> read: aCount [
 
 	| bytes bytesRead |
@@ -80,31 +106,33 @@ RsrSocket >> read: aCount [
 	^bytes
 ]
 
-{ #category : #reading }
-RsrSocket >> readAvailable [
+{ #category : 'reading' }
+RsrSocket >> read: count
+into: bytes
+startingAt: index [ 
 
-	| bytes bytesRead |
-	bytes := ByteArray new: 4096.
-	^ByteArray
-		streamContents:
-			[:stream |
-			[self dataAvailable]
-				whileTrue:
-					[bytesRead := socket receiveAvailableDataInto: bytes.
-					bytesRead == bytes size
-						ifTrue: [stream nextPutAll: bytes]
-						ifFalse: [stream nextPutAll: (bytes copyFrom: 1 to: bytesRead)]]]
+	| tempBuffer numRead |
+	self assertConnected.
+	tempBuffer := ByteArray new: count.
+	numRead := socket receiveDataInto: tempBuffer.
+	numRead = 0
+		ifTrue: [RsrSocketClosed signal].
+	bytes
+		replaceFrom: index
+		to: (index + count - 1)
+		with: tempBuffer
+		startingAt: 1.
+	^numRead
 ]
 
-{ #category : #accessing }
-RsrSocket >> socket: aSocket [
+{ #category : 'writing' }
+RsrSocket >> write: count
+from: bytes
+startingAt: index [
 
-	aSocket setOption: 'TCP_NODELAY' value: 1.
-	socket := aSocket
-]
-
-{ #category : #writing }
-RsrSocket >> write: bytes [
-
-	socket sendData: bytes
+	self assertConnected.
+	^socket
+		sendSomeData: bytes
+		startIndex: index
+		count: count
 ]

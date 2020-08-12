@@ -1,6 +1,6 @@
-Extension { #name : #RsrDateAndTimeSpecies }
+Extension { #name : 'RsrDateAndTimeSpecies' }
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrDateAndTimeSpecies class >> fromMicroseconds: anInteger [
 
 	^DateAndTime
@@ -8,7 +8,7 @@ RsrDateAndTimeSpecies class >> fromMicroseconds: anInteger [
 		offset: 0
 ]
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrDateAndTimeSpecies class >> microsecondsSinceEpoch: aDateAndTime [
 
 	| seconds |
@@ -16,14 +16,14 @@ RsrDateAndTimeSpecies class >> microsecondsSinceEpoch: aDateAndTime [
 	^seconds * 1000000 + (aDateAndTime nanoSecond / 1000) rounded
 ]
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrDateAndTimeSpecies class >> now [
 	"Return an instance of the native DateAndTime class representing the current instant"
 
 	^DateAndTime now
 ]
 
-{ #category : #'*RemoteServiceReplication-Pharo' }
+{ #category : '*RemoteServiceReplication-Pharo' }
 RsrDateAndTimeSpecies class >> posixEpoch [
 
 	^DateAndTime unixEpoch
