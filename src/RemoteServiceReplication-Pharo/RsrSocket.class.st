@@ -27,7 +27,17 @@ RsrSocket >> _nativeSocket: aSocket [
 { #category : 'listening' }
 RsrSocket >> accept [
 
-	^self class _nativeSocket: (socket waitForAcceptFor: self acceptTimeout ifTimedOut: [^nil])
+	| timeoutHandler ns |
+	timeoutHandler :=
+		[socket isValid
+			ifTrue: [nil]
+			ifFalse: [RsrSocketClosed signal: 'Socket closed during #accept']].
+	[ns isNil]
+		whileTrue:
+			[ns := socket
+				waitForAcceptFor: 5
+				ifTimedOut: timeoutHandler].
+	^self class _nativeSocket: ns
 ]
 
 { #category : 'accessing' }
