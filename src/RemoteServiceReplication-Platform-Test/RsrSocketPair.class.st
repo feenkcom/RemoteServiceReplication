@@ -27,13 +27,18 @@ RsrSocketPair class >> listenPort [
 { #category : 'instance creation' }
 RsrSocketPair class >> new [
 
-	| listener firstSocket secondSocket |
-	listener := RsrSocket new.
-	secondSocket := RsrSocket new.
-	listener listenOn: self listenPort.
+	| localhost port listener firstSocket secondSocket |
+	localhost := '127.0.0.1'.
+	port := 8765.
+	listener := self socketClass new.
+	secondSocket := self socketClass new.
+	listener
+		bindAddress: localhost
+		port: port.
+	listener listen: 1.
 	secondSocket
-		connectToHost: '127.0.0.1'
-		port: self listenPort.
+		connectToHost: localhost
+		port: port.
 	firstSocket := listener accept.
 	listener close.
 	(firstSocket isConnected and: [secondSocket isConnected])
@@ -44,12 +49,12 @@ RsrSocketPair class >> new [
 ]
 
 { #category : 'accessing' }
-RsrSocketPair class >> timeout [
+RsrSocketPair class >> socketClass [
 
-	^2
+	^RsrSocket
 ]
 
-{ #category : 'accessing' }
+{ #category : 'closing' }
 RsrSocketPair >> close [
 
 	firstSocket close.
@@ -58,32 +63,42 @@ RsrSocketPair >> close [
 
 { #category : 'accessing' }
 RsrSocketPair >> firstSocket [
-	^ firstSocket
+
+	^firstSocket
 ]
 
 { #category : 'accessing' }
 RsrSocketPair >> firstSocket: anObject [
+
 	firstSocket := anObject
 ]
 
 { #category : 'accessing' }
 RsrSocketPair >> firstStream [
 
-	^(RsrClassResolver classNamed: #RsrSocketStream) on: firstSocket
+	^self socketStreamClass on: firstSocket
 ]
 
 { #category : 'accessing' }
 RsrSocketPair >> secondSocket [
-	^ secondSocket
+
+	^secondSocket
 ]
 
 { #category : 'accessing' }
 RsrSocketPair >> secondSocket: anObject [
+
 	secondSocket := anObject
 ]
 
 { #category : 'accessing' }
 RsrSocketPair >> secondStream [
 
-	^(RsrClassResolver classNamed: #RsrSocketStream) on: secondSocket
+	^self socketStreamClass on: secondSocket
+]
+
+{ #category : 'accessing' }
+RsrSocketPair >> socketStreamClass [
+
+	^(RsrClassResolver classNamed: #RsrSocketStream)
 ]

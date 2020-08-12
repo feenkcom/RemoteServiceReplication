@@ -19,5 +19,5 @@ RsrConnectionSpecification >> connect [
 RsrConnectionSpecification >> socketClass [
 	"Return the class that should be used for creating Socket instances."
 
-	^RsrSocket2
+	^RsrSocket
 ]

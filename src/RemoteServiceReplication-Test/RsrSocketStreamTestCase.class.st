@@ -2,59 +2,69 @@ Class {
 	#name : 'RsrSocketStreamTestCase',
 	#superclass : 'RsrTestCase',
 	#instVars : [
-		'serverStream',
-		'clientStream'
+		'aStream',
+		'bStream'
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'initialization' }
+{ #category : 'initializing' }
 RsrSocketStreamTestCase >> initializeStreams [
 
-	| listener client server |
-	listener := RsrSocket new.
-	client := RsrSocket new.
-	listener listenOn: self listenPort.
-	client
-		connectToHost: '127.0.0.1'
-		port: self listenPort.
-	server := listener accept.
-	listener close.
-	serverStream := RsrSocketStream on: server.
-	clientStream := RsrSocketStream on: client
+	| socketPair |
+	socketPair := RsrSocketPair new.
+	aStream := socketPair firstStream.
+	bStream := socketPair secondStream
 ]
 
-{ #category : 'accessing' }
-RsrSocketStreamTestCase >> listenPort [
-
-	^47856
-]
-
-{ #category : 'running' }
+{ #category : 'initializing' }
 RsrSocketStreamTestCase >> setUp [
 
 	super setUp.
 	self initializeStreams
 ]
 
-{ #category : 'running' }
+{ #category : 'initializing' }
 RsrSocketStreamTestCase >> tearDown [
 
-	serverStream close.
-	clientStream close.
+	aStream close.
+	bStream close.
 	super tearDown
 ]
 
 { #category : 'running' }
-RsrSocketStreamTestCase >> testClose [
+RsrSocketStreamTestCase >> testNextAfterClose [
 
-	serverStream close.
+	aStream close.
 	self
-		deny: serverStream isConnected;
-		assert: clientStream isConnected.
-	self
-		should: [clientStream next]
+		should: [aStream next]
 		raise: RsrSocketClosed.
 	self
-		deny: clientStream isConnected
+		should: [bStream next]
+		raise: RsrSocketClosed
+]
+
+{ #category : 'running' }
+RsrSocketStreamTestCase >> testNextPutAllAfterClose [
+
+	self deny: aStream atEnd.
+	aStream close.
+	self assert: aStream atEnd.
+	self
+		should: [aStream nextPutAll: #[1 2 3]]
+		raise: RsrSocketClosed
+]
+
+{ #category : 'running' }
+RsrSocketStreamTestCase >> testSendReceive [
+
+	| count bytes |
+	count := 1024.
+	bytes := ByteArray new: count.
+	aStream
+		nextPutAll: bytes;
+		flush.
+	self
+		assert: (bStream next: count)
+		equals: bytes
 ]
