@@ -57,11 +57,15 @@ RsrSocket >> assertConnected [
 RsrSocket >> bindAddress: addressString
 port: port [
 
-	| address |
+	(port between: 0 and: 65535)
+		ifFalse: [^RsrInvalidBind signal: 'Specified port (', port printString, ') is out of range.'].
+	[| address |
 	address := NetNameResolver addressForName: addressString.
 	socket
 		bindTo: address
-		port: port
+		port: port]
+			on: NameLookupFailure, PrimitiveFailed, InvalidSocketStatusException
+			do: [:ex | ex resignalAs: (RsrInvalidBind new messageText: ex messageText)]
 ]
 
 { #category : 'lifecycle' }
