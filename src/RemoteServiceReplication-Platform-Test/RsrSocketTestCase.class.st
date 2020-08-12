@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrSocketTestCase class >> defaultTimeLimit [
+
+	^20 seconds
+]
+
+{ #category : 'accessing' }
 RsrSocketTestCase >> createPair: aBlock [
 
 	| address port listener peerA peerB semaphore |
@@ -62,7 +68,7 @@ RsrSocketTestCase >> tearDown [
 { #category : 'running-server' }
 RsrSocketTestCase >> testAcceptConnects [
 
-	| listener client server semaphore |
+	| listener client server |
 	listener := self newSocket.
 	listener
 		bindAddress: '127.0.0.1'
@@ -72,15 +78,8 @@ RsrSocketTestCase >> testAcceptConnects [
 	self
 		deny: client isConnected;
 		deny: listener isConnected.
-	semaphore := Semaphore new.
-	self
-		fork:
-			[server := self deferClose: listener accept.
-			semaphore signal];
-		fork:
-			[client connectToHost: '127.0.0.1' port: 45300.
-			semaphore signal].
-	semaphore wait; wait.
+	client connectToHost: '127.0.0.1' port: 45300.
+	server := self deferClose: listener accept.
 	self
 		assert: client isConnected;
 		assert: server isConnected;

@@ -7,6 +7,13 @@ Class {
 	#category : 'RemoteServiceReplication-Platform-Test'
 }
 
+{ #category : 'accessing' }
+RsrTestCase class >> defaultTimeLimit [
+	"This is needed for Pharo"
+
+	^5 seconds
+]
+
 { #category : 'testing' }
 RsrTestCase class >> isAbstract [
 
@@ -24,12 +31,6 @@ identicalTo: bObject [
 RsrTestCase >> assumption: aString [
 	"This method serves as a marker for assumptions made in the tests.
 	Perhaps some of the senders can be removed in the future."
-]
-
-{ #category : 'accessing' }
-RsrTestCase >> defaultTimeLimit [
-
-	^5 seconds
 ]
 
 { #category : 'asserting' }

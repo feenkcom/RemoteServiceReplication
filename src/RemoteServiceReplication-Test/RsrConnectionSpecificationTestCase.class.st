@@ -25,12 +25,9 @@ RsrConnectionSpecificationTestCase >> testEstablishConnection [
 		host: self localhost
 		port: self port.
 	semaphore := Semaphore new.
-	self fork:
-		[connectionA := acceptor connect.
-		semaphore signal].
-	self fork:
-		[connectionB := initiator connect.
-		semaphore signal].
+	self
+		fork: [[connectionA := acceptor connect] ensure: [semaphore signal]];
+		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;

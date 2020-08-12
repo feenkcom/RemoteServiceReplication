@@ -4,6 +4,12 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'accessing' }
+RsrStressTest class >> defaultTimeLimit [
+
+	^20 seconds
+]
+
 { #category : 'running-utilities' }
 RsrStressTest >> repeatedlySend: anObject [
 
