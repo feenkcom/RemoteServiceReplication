@@ -27,9 +27,16 @@ RsrSocket >> _nativeSocket: aGsSignalingSocket [
 RsrSocket >> accept [
 	"Return an RsrSocket which is connected to a peer. In the event that the socket is closed while waiting, signal RsrSocketClosed."
 
-	| ns |
-	ns := nativeSocket accept.
-	^self class _nativeSocket: ns
+	[| ns |
+	ns := false.
+	[ns == false]
+		whileTrue:
+			[nativeSocket isActive
+				ifFalse: [^RsrSocketClosed signal: 'Socket closed during #accept'].
+			ns := nativeSocket acceptTimeoutMs: 5000 errorOnTimeout: false].
+	^self class _nativeSocket: ns]
+		on: SocketError
+		do: [:ex | ex resignalAs: (RsrSocketError new messageText: ex messageText)]
 ]
 
 { #category : 'accepting connections' }

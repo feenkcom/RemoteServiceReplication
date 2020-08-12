@@ -86,6 +86,36 @@ RsrSocketTestCase >> testAcceptConnects [
 		deny: listener isConnected
 ]
 
+{ #category : 'running-server' }
+RsrSocketTestCase >> testAcceptOnAlreadyClosedSocket [
+
+	| listener |
+	listener := self newSocket.
+	listener
+		bindAddress: '127.0.0.1'
+		port: 45300.
+	listener listen: 1.
+	listener close.
+	self
+		should: [listener accept]
+		raise: RsrSocketError
+]
+
+{ #category : 'running-server' }
+RsrSocketTestCase >> testCloseDuringAccept [
+
+	| listener |
+	listener := self newSocket.
+	listener
+		bindAddress: '127.0.0.1'
+		port: 45300.
+	listener listen: 1.
+	self fork: [(Delay forSeconds: 1) wait. listener close].
+	self
+		should: [listener accept]
+		raise: RsrSocketClosed
+]
+
 { #category : 'running-client' }
 RsrSocketTestCase >> testConnectBoundSocket [
 
