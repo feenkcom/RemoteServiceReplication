@@ -3,52 +3,52 @@ package := Package name: 'RemoteServiceReplication-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrReflectedVariableTestServer;
-	add: #RsrMockRegistry;
-	add: #RsrValueHolder;
-	add: #RsrTestService;
-	add: #RsrClientTestService;
-	add: #RsrSpeciesEquality;
-	add: #RsrRemoteActionClient;
-	add: #RsrMockEncoder;
-	add: #RsrReflectedVariableTestServiceB;
-	add: #RsrServerNoInstVars;
-	add: #RsrServiceTest;
-	add: #RsrConnectionSpecificationTestCase;
 	add: #RsrRemoteActionServer;
-	add: #RsrThreadSafeNumericSpigotTest;
-	add: #RsrStressTest;
-	add: #RsrSystemTestCase;
-	add: #RsrRemoteAction;
 	add: #RsrCodecTest;
-	add: #RsrValueHolderClient;
-	add: #RsrServiceNoInstVars;
-	add: #RsrPromiseTest;
-	add: #RsrEncoderTest;
-	add: #RsrConcurrentTestService;
-	add: #RsrValueHolderServer;
-	add: #RsrSignalErrorInAsString;
-	add: #RsrClientReferenceService;
-	add: #RsrSameTemplateAndClientService;
-	add: #RsrConnectionTestCase;
-	add: #RsrDecoderTest;
 	add: #RsrConcurrentTestServer;
-	add: #RsrRetainAnalysisTest;
-	add: #RsrForwarderTest;
-	add: #RsrConcurrentTestClient;
-	add: #RsrReflectedVariableTestClient;
-	add: #RsrServiceReferenceService;
 	add: #RsrServerTestService;
+	add: #RsrSystemTestCase;
+	add: #RsrClientNoInstVars;
+	add: #RsrForwarderTest;
+	add: #RsrReflectedVariableTestServer;
 	add: #RsrMockConnection;
+	add: #RsrServiceTest;
+	add: #RsrMockEncoder;
 	add: #RsrServerReferenceService;
 	add: #RsrRegistryTestCase;
-	add: #RsrDifferentServerService;
-	add: #RsrLifetimeTest;
+	add: #RsrSameTemplateAndClientService;
+	add: #RsrDecoderTest;
 	add: #RsrReflectedVariableTestServiceA;
-	add: #RsrClientNoInstVars;
-	add: #RsrSocketStreamTestCase;
+	add: #RsrValueHolder;
+	add: #RsrConnectionTestCase;
+	add: #RsrServerNoInstVars;
 	add: #RsrNumericSpigotTest;
+	add: #RsrRemoteAction;
+	add: #RsrMockRegistry;
+	add: #RsrSpeciesEquality;
+	add: #RsrConcurrentTestService;
+	add: #RsrTestService;
+	add: #RsrRetainAnalysisTest;
+	add: #RsrDifferentServerService;
+	add: #RsrEncoderTest;
+	add: #RsrReflectedVariableTestServiceB;
+	add: #RsrValueHolderClient;
+	add: #RsrLifetimeTest;
+	add: #RsrServiceReferenceService;
+	add: #RsrThreadSafeNumericSpigotTest;
+	add: #RsrRemoteActionClient;
+	add: #RsrSignalErrorInAsString;
+	add: #RsrStressTest;
+	add: #RsrConcurrentTestClient;
+	add: #RsrClientTestService;
+	add: #RsrSocketStreamTestCase;
+	add: #RsrServiceNoInstVars;
+	add: #RsrConnectionSpecificationTestCase;
+	add: #RsrReflectedVariableTestClient;
+	add: #RsrValueHolderServer;
 	add: #RsrMessageSendingTest;
+	add: #RsrClientReferenceService;
+	add: #RsrPromiseTest;
 	yourself.
 
 package methodNames
@@ -315,7 +315,7 @@ RsrTestService
 
 RsrTestCase
 	subclass: #RsrSocketStreamTestCase
-	instanceVariableNames: 'serverStream clientStream'
+	instanceVariableNames: 'aStream bStream'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -494,6 +494,9 @@ serverClassName	^#RsrDifferentServerService! !
 
 !RsrSystemTestCase class methodsFor!
 isAbstract	^self == RsrSystemTestCase! !
+
+!RsrStressTest class methodsFor!
+defaultTimeLimit	^20 seconds! !
 
 !RsrTestService class methodsFor!
 clientClassName	^#RsrClientTestService! !
@@ -838,19 +841,22 @@ value	^value! !
 value: anObject	value := anObject.	self synchronize! !
 
 !RsrSocketStreamTestCase methodsFor!
-tearDown	serverStream close.	clientStream close.	super tearDown! !
+testSendReceive	| count bytes |	count := 1024.	bytes := ByteArray new: count.	aStream		nextPutAll: bytes;		flush.	self		assert: (bStream next: count)		equals: bytes! !
+
+!RsrSocketStreamTestCase methodsFor!
+testNextPutAllAfterClose	self deny: aStream atEnd.	aStream close.	self assert: aStream atEnd.	self		should: [aStream nextPutAll: #[1 2 3]]		raise: RsrSocketClosed! !
+
+!RsrSocketStreamTestCase methodsFor!
+tearDown	aStream close.	bStream close.	super tearDown! !
 
 !RsrSocketStreamTestCase methodsFor!
 setUp	super setUp.	self initializeStreams! !
 
 !RsrSocketStreamTestCase methodsFor!
-initializeStreams	| listener client server |	listener := RsrSocket new.	client := RsrSocket new.	listener listenOn: self listenPort.	client		connectToHost: '127.0.0.1'		port: self listenPort.	server := listener accept.	listener close.	serverStream := RsrSocketStream on: server.	clientStream := RsrSocketStream on: client! !
+testNextAfterClose	aStream close.	self		should: [aStream next]		raise: RsrSocketClosed.	self		should: [bStream next]		raise: RsrSocketClosed! !
 
 !RsrSocketStreamTestCase methodsFor!
-testClose	serverStream close.	self		deny: serverStream isConnected;		assert: clientStream isConnected.	self		should: [clientStream next]		raise: RsrSocketClosed.	self		deny: clientStream isConnected! !
-
-!RsrSocketStreamTestCase methodsFor!
-listenPort	^47856! !
+initializeStreams	| socketPair |	socketPair := RsrSocketPair new.	aStream := socketPair firstStream.	bStream := socketPair secondStream! !
 
 !RsrRemoteActionServer methodsFor!
 action: aBlock	action := aBlock! !
@@ -883,7 +889,7 @@ sharedVariable	^sharedVariable! !
 localhost	^'127.0.0.1'! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self fork:		[connectionA := acceptor connect.		semaphore signal].	self fork:		[connectionB := initiator connect.		semaphore signal].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self		fork: [[connectionA := acceptor connect] ensure: [semaphore signal]];		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
 port	^47652! !
@@ -1087,13 +1093,13 @@ _forwarderClass	^forwarderClass ifNil: [RsrForwarder]! !
 lastMessage	^[lastMessage]		ensure: [lastMessage := nil]! !
 
 !RsrMockConnection methodsFor!
+ensureRegistered: aService	aService isMirrored		ifTrue: [^self].	aService		_id: self oidSpigot next		connection: self! !
+
+!RsrMockConnection methodsFor!
 registry	^registry ifNil: [registry := RsrRegistry new]! !
 
 !RsrMockConnection methodsFor!
 releaseOid: anInteger! !
-
-!RsrMockConnection methodsFor!
-ensureRegistered: aService	aService isMirrored		ifTrue: [^self].	aService		_id: self oidSpigot next		connection: self! !
 
 !RsrMockConnection methodsFor!
 forwarderClass: aClass	forwarderClass := aClass! !

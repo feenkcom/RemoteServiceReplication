@@ -3,18 +3,13 @@ package := Package name: 'RemoteServiceReplication-Base'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrServiceSpecies;
-	add: #RsrStringSpecies;
-	add: #RsrOrderedCollectionSpecies;
-	add: #RsrCharacterArraySpecies;
-	add: #RsrNullSpecies;
-	add: #RsrUnsupportedObject;
+	add: #RsrSocketClosed;
 	add: #RsrByteArraySpecies;
 	add: #RsrPositiveIntegerSpecies;
-	add: #RsrUnknownClass;
+	add: #RsrConnectFailed;
 	add: #RsrTrueSpecies;
 	add: #RsrNegativeIntegerSpecies;
-	add: #RsrSocketClosed;
+	add: #RsrSocketError;
 	add: #RsrFalseSpecies;
 	add: #RsrIntegerSpecies;
 	add: #RsrConnectionClosed;
@@ -27,8 +22,16 @@ package classNames
 	add: #RsrSpecies;
 	add: #RsrCharacterSpecies;
 	add: #RsrSetSpecies;
+	add: #RsrInvalidBind;
 	add: #RsrProcessModel;
 	add: #RsrSymbolSpecies;
+	add: #RsrServiceSpecies;
+	add: #RsrUnsupportedObject;
+	add: #RsrStringSpecies;
+	add: #RsrOrderedCollectionSpecies;
+	add: #RsrUnknownClass;
+	add: #RsrCharacterArraySpecies;
+	add: #RsrNullSpecies;
 	yourself.
 
 package methodNames
@@ -223,12 +226,12 @@ RsrError
 !RsrConnectionClosed categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
-	subclass: #RsrSocketClosed
+	subclass: #RsrSocketError
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrSocketClosed categoriesForClass!RemoteServiceReplication-Base! !
+!RsrSocketError categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
 	subclass: #RsrUnknownClass
@@ -245,6 +248,30 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrUnsupportedObject categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrSocketError
+	subclass: #RsrConnectFailed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrConnectFailed categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrSocketError
+	subclass: #RsrInvalidBind
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrInvalidBind categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrSocketError
+	subclass: #RsrSocketClosed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrSocketClosed categoriesForClass!RemoteServiceReplication-Base! !
 
 !RsrServiceSpecies class methodsFor!
 decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	self shouldNotImplement! !
