@@ -73,6 +73,9 @@ RsrSocketTestCase >> testAcceptConnects [
 	listener
 		bindAddress: '127.0.0.1'
 		port: 45300.
+	self
+		assert: listener port
+		equals: 45300.
 	listener listen: 1.
 	client := self newSocket.
 	self
@@ -80,6 +83,10 @@ RsrSocketTestCase >> testAcceptConnects [
 		deny: listener isConnected.
 	client connectToHost: '127.0.0.1' port: 45300.
 	server := self deferClose: listener accept.
+	self
+		assert: server port
+		equals: 45300.
+	self assert: (client port > 1023).
 	self
 		assert: client isConnected;
 		assert: server isConnected;
@@ -172,6 +179,15 @@ RsrSocketTestCase >> testInvalidBind [
 		raise: RsrInvalidBind
 ]
 
+{ #category : 'running-server' }
+RsrSocketTestCase >> testListenWithoutBind [
+
+	| listener |
+	listener := self newSocket.
+	listener listen: 1.
+	self assert: (listener port > 1023)
+]
+
 { #category : 'running-read/write' }
 RsrSocketTestCase >> testPartialRead [
 
@@ -201,6 +217,16 @@ RsrSocketTestCase >> testPartialRead [
 	self
 		assert: readBuffer
 		equals: writeBuffer
+]
+
+{ #category : 'running' }
+RsrSocketTestCase >> testPort [
+
+	| socket |
+	socket := self newSocket.
+	self
+		assert: socket port
+		equals: 0
 ]
 
 { #category : 'running-read/write' }

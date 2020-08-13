@@ -90,10 +90,16 @@ RsrSocket >> isConnected [
 { #category : 'accepting connections' }
 RsrSocket >> listen: backlogLength [
 	"Starting listening for connections. <backlogLength> specifies the number of connections to allow in a pending state.
-	The actual backlog may support fewer prending connections depending upon implementation.
-	Signal RsrInvalidListen in the event that the socket is not yet bound to an address and port."
+	The actual backlog may support fewer prending connections depending upon implementation."
 
 	nativeSocket makeListener: backlogLength
+]
+
+{ #category : 'accessing' }
+RsrSocket >> port [
+	"Return the port associated with the socket."
+
+	^nativeSocket port
 ]
 
 { #category : 'read/write' }
@@ -116,24 +122,6 @@ startingAt: index [
 		ifFalse:
 			[nativeSocket close.
 			RsrSocketClosed signal]
-]
-
-{ #category : 'read/write' }
-RsrSocket >> readAvailable [
-
-	self error
-]
-
-{ #category : 'read/write' }
-RsrSocket >> waitUntilReadable [
-
-	self error
-]
-
-{ #category : 'read/write' }
-RsrSocket >> waitUntilWritable [
-
-	self error
 ]
 
 { #category : 'read/write' }
