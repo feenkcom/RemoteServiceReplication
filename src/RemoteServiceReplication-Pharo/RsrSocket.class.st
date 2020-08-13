@@ -24,8 +24,9 @@ RsrSocket >> _nativeSocket: aSocket [
 	nativeSocket := aSocket
 ]
 
-{ #category : 'listening' }
+{ #category : 'accepting connections' }
 RsrSocket >> accept [
+	"Return an RsrSocket which is connected to a peer. In the event that the socket is closed while waiting, signal RsrSocketClosed."
 
 	| timeoutHandler ns |
 	timeoutHandler :=
@@ -40,14 +41,9 @@ RsrSocket >> accept [
 	^self class _nativeSocket: ns
 ]
 
-{ #category : 'accessing' }
-RsrSocket >> acceptTimeout [
-
-	^31536000 "One year -- effectively forever"
-]
-
-{ #category : 'accessing' }
+{ #category : 'private-asserting' }
 RsrSocket >> assertConnected [
+	"Throw an RsrSocketClosed if <nativeSocket> is not in a connected state."
 
 	nativeSocket isConnected
 		ifFalse: [RsrSocketClosed signal]
@@ -56,6 +52,7 @@ RsrSocket >> assertConnected [
 { #category : 'accepting connections' }
 RsrSocket >> bindAddress: addressString
 port: port [
+	"Bind the socket to the provided port and address. Signal RsrInvalidBind in the event the bind fails."
 
 	(port between: 0 and: 65535)
 		ifFalse: [^RsrInvalidBind signal: 'Specified port (', port printString, ') is out of range.'].
@@ -68,15 +65,21 @@ port: port [
 			do: [:ex | ex resignalAs: (RsrInvalidBind new messageText: ex messageText)]
 ]
 
-{ #category : 'lifecycle' }
+{ #category : 'terminating connections' }
 RsrSocket >> close [
+	"Ensure closure of the Socket and cleanup any associated resources."
 
 	nativeSocket closeAndDestroy
 ]
 
-{ #category : 'opening connection' }
+{ #category : 'establishing connections' }
 RsrSocket >> connectToHost: aHostname
 port: aPort [
+	"Establish a connect to the provided host and port. If the socket is unable to establish, signal RsrConnectFailed.
+	If the socket is bound to an address/port, signal RsrInvalidConnect.
+	<hostname> - The name or ip address of a machine which should accept a connection.
+	<port> - An integer representing a valid TCP port."
+
 
 	[| hostAddress |
 	hostAddress := NetNameResolver addressForName: aHostname.
@@ -97,33 +100,29 @@ RsrSocket >> initialize [
 
 { #category : 'testing' }
 RsrSocket >> isConnected [
+	"Return true if the socket is open and connected with a peer. Return false otherwise."
 
 	^nativeSocket isConnected
 ]
 
-{ #category : 'listening' }
+{ #category : 'accepting connections' }
 RsrSocket >> listen: backlog [
+	"Starting listening for connections. <backlogLength> specifies the number of connections to allow in a pending state.
+	The actual backlog may support fewer prending connections depending upon implementation.
+	Signal RsrInvalidListen in the event that the socket is not yet bound to an address and port."
 
 	nativeSocket
 		listenOn: nativeSocket port
 		backlogSize: (backlog max: 2) "Ensure a new socket is created"
 ]
 
-{ #category : 'reading' }
-RsrSocket >> read: aCount [
-
-	| bytes bytesRead |
-	bytes := ByteArray new: aCount.
-	bytesRead := nativeSocket receiveDataInto: bytes.
-	bytesRead = aCount
-		ifFalse: [^RsrSocketClosed signal].
-	^bytes
-]
-
-{ #category : 'reading' }
+{ #category : 'reading/writing' }
 RsrSocket >> read: count
 into: bytes
 startingAt: index [ 
+	"Read <count> number of bytes into <bytes> and place the first byte into slot <index>.
+	<bytes> is assumed to be at least <count + index> bytes in size.
+	Return the number of bytes successfully read. Signal RsrSocketClosed if the socket is closed before or during the call."
 
 	| tempBuffer numRead |
 	self assertConnected.
@@ -139,10 +138,13 @@ startingAt: index [
 	^numRead
 ]
 
-{ #category : 'writing' }
+{ #category : 'reading/writing' }
 RsrSocket >> write: count
 from: bytes
 startingAt: index [
+	"Write <count> number of bytes from <bytes> with <index> as the index of the first bytes.
+	If <bytes> is smaller than <index + count> the behavior is undefined.
+	If the socket is not connected, signal RsrSocketClosed."
 
 	self assertConnected.
 	^nativeSocket
