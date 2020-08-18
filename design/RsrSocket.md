@@ -10,9 +10,6 @@ This document describes the interface and associated semantics of RsrSocket.
 * #accept
 * #close
 * #isConnected
-* #waitUntilReadable
-* #waitUntilWritable
-* #readAvailable
 * #read:
 * #write:
 
@@ -47,20 +44,6 @@ Closes a socket. The resources associated with the socket are cleaned up.
 ### #isConnected
 
 Returns true is a socket is currently connected to a peer. Returns false otherwise.
-
-### #waitUntilReadable
-
-The invoking process will wait until data is available for reading. In the event that the socket is closed before the method returns, RsrSocketClosed is signaled.
-
-### #waitUntilWritable
-
-<I don't know if I can implement this.>
-
-The invoking process will wait until data can be written to the socket. In the event that the socket is closed before the method returns, RsrSocketClosed is signaled.
-
-### #readAvailable
-
-Return all available socket data. In the event that no data is available, return an empty ByteArray. In the event that the socket is not connected, signal RsrSocketClosed.
 
 ### #read:into:startingAt:
 
