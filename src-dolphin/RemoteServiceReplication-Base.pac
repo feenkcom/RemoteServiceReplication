@@ -6,10 +6,8 @@ package classNames
 	add: #RsrSocketClosed;
 	add: #RsrByteArraySpecies;
 	add: #RsrPositiveIntegerSpecies;
-	add: #RsrConnectFailed;
 	add: #RsrTrueSpecies;
 	add: #RsrNegativeIntegerSpecies;
-	add: #RsrSocketError;
 	add: #RsrFalseSpecies;
 	add: #RsrIntegerSpecies;
 	add: #RsrConnectionClosed;
@@ -22,15 +20,17 @@ package classNames
 	add: #RsrSpecies;
 	add: #RsrCharacterSpecies;
 	add: #RsrSetSpecies;
-	add: #RsrInvalidBind;
 	add: #RsrProcessModel;
+	add: #RsrInvalidBind;
 	add: #RsrSymbolSpecies;
 	add: #RsrServiceSpecies;
 	add: #RsrUnsupportedObject;
 	add: #RsrStringSpecies;
+	add: #RsrConnectFailed;
 	add: #RsrOrderedCollectionSpecies;
 	add: #RsrUnknownClass;
 	add: #RsrCharacterArraySpecies;
+	add: #RsrSocketError;
 	add: #RsrNullSpecies;
 	yourself.
 
