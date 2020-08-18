@@ -85,9 +85,9 @@ RsrObject subclass: #RsrScientist
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 RsrObject subclass: #RsrSocket
-	instanceVariableNames: 'socket'
+	instanceVariableNames: 'fd isConnected isBound'
 	classVariableNames: ''
-	poolDictionaries: ''
+	poolDictionaries: 'WinSocketConstants'
 	classInstanceVariableNames: ''!
 ProtoObject subclass: #RsrProtoObject
 	instanceVariableNames: ''
@@ -556,91 +556,209 @@ if: aCondition
 !RsrScientist categoriesFor: #profile:lable:if:!public! !
 
 RsrSocket guid: (GUID fromString: '{401a4593-5b85-47ad-9860-48941a585902}')!
-RsrSocket comment: ''!
+RsrSocket comment: 'This class implements the RsrSocket interface.
+
+The implementation of this class is based upon SocketAbstract2, ServerSocket2, and Socket2.
+
+Notes:
+- This socket has not been tested against IPv6 yet.'!
 !RsrSocket categoriesForClass!RemoteServiceReplication-Dolphin! !
 !RsrSocket methodsFor!
 
-accept
+_fd: aFileDescriptor
+	"Private - Configure a connected socket from the provided descriptor"
 
-	^self class on: socket accept!
+	fd := aFileDescriptor.
+	isConnected := true.
+	isBound := false!
+
+accept
+	"Return an RsrSocket which is connected to a peer. In the event that the socket is closed while waiting, signal RsrSocketClosed."
+
+	| address length newDescriptor |
+	address := SOCKADDR_IN new.
+	length := DWORD new
+		value: address byteSize;
+		yourself.
+	newDescriptor := WS2_32Library default 
+				accept: fd
+				addr: address
+				addrlen: length.
+	newDescriptor = INVALID_SOCKET
+		ifTrue: [self close. RsrSocketClosed signal: 'Socket closed during #accept'].
+	^self class _fd: newDescriptor!
+
+bindAddress: hostname
+port: port
+	"Bind the socket to the provided port and address. Signal RsrInvalidBind in the event the bind fails."
+
+	| address ret |
+	(port between: 0 and: 65535)
+		ifFalse: [RsrInvalidBind signal: port asString, ' is not a valid port'].
+	address := SOCKADDR_IN fromString: hostname.
+	address
+		sin_family: AF_INET;
+		port: port.
+	ret := WS2_32Library default
+		bind: fd
+		name: address
+		namelen: address byteSize.
+	ret = SOCKET_ERROR
+		ifTrue: [^RsrInvalidBind signal: 'Unable to bind to ', hostname asString, ':', port asString].
+	isBound := true!
 
 close
+	"Ensure closure of the Socket and cleanup any associated resources."
 
-	socket close!
+	isConnected := false.
+	WS2_32Library default closesocket: fd!
 
-connectToHost: aHostname
-port: aPort
+connectToHost: hostname
+port: port
+	"Establish a connect to the provided host and port. If the socket is unable to establish, signal RsrConnectFailed.
+	If the socket is bound to an address/port, signal RsrInvalidConnect.
+	<hostname> - The name or ip address of a machine which should accept a connection.
+	<port> - An integer representing a valid TCP port."
 
-	socket := Socket2
-		port: aPort
-		host: aHostname.
-	socket connect!
+	| remoteAddress socketAddress result |
+	(port between: 0 and: 65535)
+		ifFalse: [^RsrConnectFailed signal: 'Invalid port specified: ', port asString].
+	[remoteAddress := IN_ADDR address: (InternetAddress host: hostname)]
+		on: SocketError
+		do: [:ex | ex resignalAs: (RsrConnectFailed new messageText: ex messageText)].
+	socketAddress := SOCKADDR_IN new
+		sin_family: AF_INET;
+		port: port;
+		sin_addr: remoteAddress.
+	result := WS2_32Library default
+				connect: fd
+				name: socketAddress
+				namelen: socketAddress byteSize.
+	result = SOCKET_ERROR
+		ifTrue: [^RsrConnectFailed signal: 'Unable to connect to ', hostname asString, ':', port asString].
+	isConnected := true!
 
-dataAvailable
+initialize
 
-	^socket notNil and: [socket hasInput]!
+	super initialize.
+	isConnected := false.
+	isBound := false.
+	self initializeFileDescriptor!
+
+initializeFileDescriptor
+	"Private - Initialize the file descriptor used by this socket"
+
+	| fileDescriptor |
+	fileDescriptor := WS2_32Library default 
+				socket: AF_INET
+				type: SOCK_STREAM
+				protocol: 0.
+	fileDescriptor = INVALID_SOCKET
+		ifTrue: [^RsrSocketError signal: 'Unable to initialize file descriptor'].
+	fd := fileDescriptor.
+	self beFinalizable!
 
 isConnected
+	"Return true if the socket is open and connected with a peer. Return false otherwise."
 
-	^socket notNil and: [socket isOpen]!
+	^isConnected!
 
-listenOn: aPort
+listen: backlogLength
+	"Starting listening for connections. <backlogLength> specifies the number of connections to allow in a pending state.
+	The actual backlog may support fewer prending connections depending upon implementation."
 
-	socket := ServerSocket2
-		port: aPort
-		backlog: 1!
+	| ret |
+	isBound
+		ifFalse: [self bindAddress: self wildcardAddress port: 0].
+	ret := WS2_32Library default
+		listen: fd
+		backlog: backlogLength.
+	ret = SOCKET_ERROR
+		ifTrue: [^RsrSocketError signal: 'Failed to listen on port']!
 
-read: aCount
+port
+	"Return the port associated with the socket."
 
-	| bytes |
-	bytes := ByteArray new: aCount.
-	[socket receive: bytes]
-		on: SocketClosed
-		do: [:ex | socket close.  ex resignalAs: RsrSocketClosed new].
-	^bytes!
+	| name nl ret |
+	name := (SOCKADDR_IN new)
+				sin_family: AF_INET;
+				yourself.
+	nl := SDWORD new
+		value: name size;
+		yourself.
+	ret := WS2_32Library default 
+		getsockname: fd
+		name: name
+		namelen: nl.
+	^ret = SOCKET_ERROR 
+		ifTrue: [^0]
+		ifFalse: [name port]!
 
-readAvailable
+read: count
+into: bytes
+startingAt: index
+	"Read <count> number of bytes into <bytes> and place the first byte into slot <index>.
+	<bytes> is assumed to be at least <count + index> bytes in size.
+	Return the number of bytes successfully read. Signal RsrSocketClosed if the socket is closed before or during the call."
 
-	| bytes totalBytesRead bytesRead |
-	bytes := ByteArray new: 4096.
-	totalBytesRead := 0.
-	[self dataAvailable]
-		whileTrue:
-			[bytes size = totalBytesRead
-				ifTrue: [bytes := bytes, (ByteArray new: 4096)].
-			bytesRead := socket
-				receiveSome: bytes
-				count: bytes size - totalBytesRead
-				startingAt: totalBytesRead + 1.
-			totalBytesRead := totalBytesRead + bytesRead].
-	^bytes copyFrom: 1 to: totalBytesRead!
+	| bytesReceived |
+	bytesReceived := WS2_32Library default 
+				recv: fd
+				buf: bytes yourAddress + index - 1
+				len: count
+				flags: 0.
+	bytesReceived > 0
+		ifTrue: [^bytesReceived].
+	bytesReceived = 0
+		ifTrue:
+			[self close.
+			^RsrSocketClosed signal].
+	^RsrSocketClosed signal!
 
-socket: aHostSocket
+wildcardAddress
+	"Default bind address"
 
-	socket := aHostSocket!
+	^'0.0.0.0'!
 
-write: aByteArray
+write: count
+from: bytes
+startingAt: index
+	"Write <count> number of bytes from <bytes> with <index> as the index of the first bytes.
+	If <bytes> is smaller than <index + count> the behavior is undefined.
+	If the socket is not connected, signal RsrSocketClosed."
 
-	socket send: aByteArray! !
-!RsrSocket categoriesFor: #accept!public! !
-!RsrSocket categoriesFor: #close!public! !
-!RsrSocket categoriesFor: #connectToHost:port:!public! !
-!RsrSocket categoriesFor: #dataAvailable!public! !
-!RsrSocket categoriesFor: #isConnected!public! !
-!RsrSocket categoriesFor: #listenOn:!public! !
-!RsrSocket categoriesFor: #read:!public! !
-!RsrSocket categoriesFor: #readAvailable!public! !
-!RsrSocket categoriesFor: #socket:!public! !
-!RsrSocket categoriesFor: #write:!public! !
+	| result |
+	result := WS2_32Library default 
+				send: fd
+				buf: bytes yourAddress + index - 1
+				len: count
+				flags: 0.
+	result = SOCKET_ERROR
+		ifTrue: [^RsrSocketClosed signal].
+	^result! !
+!RsrSocket categoriesFor: #_fd:!private! !
+!RsrSocket categoriesFor: #accept!accepting connections!public! !
+!RsrSocket categoriesFor: #bindAddress:port:!accepting connections!public! !
+!RsrSocket categoriesFor: #close!public!terminating connections! !
+!RsrSocket categoriesFor: #connectToHost:port:!establishing connections!public! !
+!RsrSocket categoriesFor: #initialize!initialize/release!public! !
+!RsrSocket categoriesFor: #initializeFileDescriptor!initialize/release!public! !
+!RsrSocket categoriesFor: #isConnected!public!testing! !
+!RsrSocket categoriesFor: #listen:!accepting connections!public! !
+!RsrSocket categoriesFor: #port!accessing!public! !
+!RsrSocket categoriesFor: #read:into:startingAt:!public!reading/writing! !
+!RsrSocket categoriesFor: #wildcardAddress!accessing!public! !
+!RsrSocket categoriesFor: #write:from:startingAt:!public!reading/writing! !
 
 !RsrSocket class methodsFor!
 
-on: aHostSocket
+_fd: aFileDescriptor
+	"Private - Create a connected socket from the provided descriptor"
 
-	^self new
-		socket: aHostSocket;
+	^self basicNew
+		_fd: aFileDescriptor;
 		yourself! !
-!RsrSocket class categoriesFor: #on:!public! !
+!RsrSocket class categoriesFor: #_fd:!private! !
 
 RsrProtoObject guid: (GUID fromString: '{8c807a21-ab7c-4f1d-9c7a-f012b4953ad7}')!
 RsrProtoObject comment: ''!
