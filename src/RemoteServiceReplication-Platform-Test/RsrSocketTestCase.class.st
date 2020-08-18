@@ -151,12 +151,14 @@ RsrSocketTestCase >> testFailedConnects [
 				connectToHost: 'do.no.create.used.for.testing.gemtalksystems.com'
 				port: 80]
 		raise: RsrConnectFailed.
+	socket := self newSocket.
 	self
 		should:
 			[socket
 				connectToHost: 'gemtalksystems.com'
 				port: 70000]
 		raise: RsrConnectFailed.
+	socket := self newSocket.
 	self
 		should:
 			[socket
@@ -174,6 +176,7 @@ RsrSocketTestCase >> testInvalidBind [
 	self "This IP is publicly routable and owned by Cloudflare. Should be invalid on all testing hosts."
 		should: [listener bindAddress: '1.1.1.1' port: 45300]
 		raise: RsrInvalidBind.
+	listener := self newSocket.
 	self
 		should: [listener bindAddress: '127.0.0.1' port: 98765432]
 		raise: RsrInvalidBind
