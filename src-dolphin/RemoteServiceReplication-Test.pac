@@ -886,16 +886,25 @@ remoteSelf	^remoteSelf! !
 sharedVariable	^sharedVariable! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-localhost	^'127.0.0.1'! !
+testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+port	^47652! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
 testCancelWaitForConnection	| acceptor |	acceptor := RsrAcceptConnection port: self port.	self fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection].	self		should: [acceptor waitForConnection]		raise: RsrWaitForConnectionCancelled! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-port	^47652! !
+alternativeLocalhost	^'127.0.1.1'! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testFailedAcceptOnAlternativeLocalhost	| acceptor initiator semaphore |	acceptor := RsrAcceptConnection		host: self alternativeLocalhost		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]].	[semaphore wait.	self		should: [initiator connect]		raise: RsrSocketError]			ensure: [acceptor cancelWaitForConnection]! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+localhost	^'127.0.0.1'! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testAcceptOnLocalhost	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrReflectedVariableTestServiceB methodsFor!
 varB	^varB! !

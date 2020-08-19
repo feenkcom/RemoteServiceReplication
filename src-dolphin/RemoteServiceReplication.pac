@@ -91,7 +91,7 @@ RsrObject
 
 RsrObject
 	subclass: #RsrConnectionSpecification
-	instanceVariableNames: ''
+	instanceVariableNames: 'host port'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -197,7 +197,7 @@ RsrObject
 
 RsrConnectionSpecification
 	subclass: #RsrAcceptConnection
-	instanceVariableNames: 'listener port'
+	instanceVariableNames: 'listener'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -270,7 +270,7 @@ RsrCodec
 
 RsrConnectionSpecification
 	subclass: #RsrInitiateConnection
-	instanceVariableNames: 'host port'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -398,9 +398,6 @@ transaction: aTransactionIdresponse: anObjectroots: anArray	^self new		tran
 !RsrServiceFactory class methodsFor!
 templateClassName	^#RsrServiceFactory! !
 
-!RsrInitiateConnection class methodsFor!
-host: aHostnameport: aPortInteger	^self new		host: aHostname;		port: aPortInteger;		yourself! !
-
 !RsrReleaseObjects class methodsFor!
 oids: anArray	^self new		oids: anArray;		yourself! !
 
@@ -453,7 +450,10 @@ on: aSocketStream	^self new		stream: aSocketStream;		yourself! !
 action: aBlock	^self new		action: aBlock;		yourself! !
 
 !RsrAcceptConnection class methodsFor!
-port: aPortInteger	^self new		port: aPortInteger;		yourself! !
+wildcardAddress	^'0.0.0.0'! !
+
+!RsrAcceptConnection class methodsFor!
+port: aPortInteger	^self		host: self wildcardAddress		port: aPortInteger! !
 
 !RsrLogWithPrefix class methodsFor!
 prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
@@ -493,6 +493,9 @@ registry: anRsrRegistryconnection: aConnection	^self new		registry: anRsrReg
 
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
+
+!RsrConnectionSpecification class methodsFor!
+host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
 
 !RsrNumericSpigot class methodsFor!
 new	^self		start: 0		step: 1! !
@@ -630,19 +633,7 @@ isImmediate: anObject	^self speciesMapping includesKey: anObject class! !
 integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes! !
 
 !RsrInitiateConnection methodsFor!
-port: anInteger	port := anInteger! !
-
-!RsrInitiateConnection methodsFor!
 connect	| socket connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
-
-!RsrInitiateConnection methodsFor!
-port	^port! !
-
-!RsrInitiateConnection methodsFor!
-host: aHostnameString	host := aHostnameString! !
-
-!RsrInitiateConnection methodsFor!
-host	^host! !
 
 !RsrCommandSink methodsFor!
 write: aByteArray	self stream nextPutAll: aByteArray! !
@@ -891,19 +882,13 @@ action	^action! !
 write: aMessage	self action value: aMessage! !
 
 !RsrAcceptConnection methodsFor!
-port: anInteger	port := anInteger! !
-
-!RsrAcceptConnection methodsFor!
 cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
-
-!RsrAcceptConnection methodsFor!
-port	^port! !
 
 !RsrAcceptConnection methodsFor!
 isWaitingForConnection	^listener ~~ nil! !
 
 !RsrAcceptConnection methodsFor!
-waitForConnection	| socket connection |	listener := self socketClass new.	[listener		bindAddress: '0.0.0.0'		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketClosed		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+waitForConnection	| socket connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketClosed		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrTranscriptSink methodsFor!
 write: aMessageString	Transcript		show: aMessageString;		cr! !
@@ -1290,7 +1275,19 @@ decodeObjectReference: aStream	| oid |	oid := self decodeControlWord: aStream
 decodeImmediateObject: aStream	| species |	species := self decodeControlWord: aStream.	^(RsrSpecies speciesList at: species + 1)		decodeReference: aStream		using: self! !
 
 !RsrConnectionSpecification methodsFor!
+port: aPort	"The port number used for establishing a socket"	port := aPort! !
+
+!RsrConnectionSpecification methodsFor!
+port	"The port number used for establishing a socket"	^port! !
+
+!RsrConnectionSpecification methodsFor!
 socketClass	"Return the class that should be used for creating Socket instances."	^RsrSocket! !
+
+!RsrConnectionSpecification methodsFor!
+host: hostnameOrAddress	"The hostname or IP address used to establish a connection."	host := hostnameOrAddress! !
+
+!RsrConnectionSpecification methodsFor!
+host	"Return the configured hostname or IP address"	^host! !
 
 !RsrCommand methodsFor!
 reportOn: aLog	self subclassResponsibility! !
