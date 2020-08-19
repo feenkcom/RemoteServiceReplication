@@ -12,22 +12,8 @@ initiator := RsrInitiateConnection
 Class {
 	#name : 'RsrInitiateConnection',
 	#superclass : 'RsrConnectionSpecification',
-	#instVars : [
-		'host',
-		'port'
-	],
 	#category : 'RemoteServiceReplication'
 }
-
-{ #category : 'instance creation' }
-RsrInitiateConnection class >> host: aHostname
-port: aPortInteger [
-
-	^self new
-		host: aHostname;
-		port: aPortInteger;
-		yourself
-]
 
 { #category : 'connecting' }
 RsrInitiateConnection >> connect [
@@ -42,28 +28,4 @@ RsrInitiateConnection >> connect [
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	^connection open
-]
-
-{ #category : 'accessing' }
-RsrInitiateConnection >> host [
-
-	^host
-]
-
-{ #category : 'accessing' }
-RsrInitiateConnection >> host: aHostnameString [
-
-	host := aHostnameString
-]
-
-{ #category : 'accessing' }
-RsrInitiateConnection >> port [
-
-	^port
-]
-
-{ #category : 'accessing' }
-RsrInitiateConnection >> port: anInteger [
-
-	port := anInteger
 ]

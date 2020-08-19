@@ -11,8 +11,7 @@ Class {
 	#name : 'RsrAcceptConnection',
 	#superclass : 'RsrConnectionSpecification',
 	#instVars : [
-		'listener',
-		'port'
+		'listener'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -20,9 +19,15 @@ Class {
 { #category : 'instance creation' }
 RsrAcceptConnection class >> port: aPortInteger [
 
-	^self new
-		port: aPortInteger;
-		yourself
+	^self
+		host: self wildcardAddress
+		port: aPortInteger
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection class >> wildcardAddress [
+
+	^'0.0.0.0'
 ]
 
 { #category : 'cancelling' }
@@ -37,25 +42,13 @@ RsrAcceptConnection >> isWaitingForConnection [
 	^listener ~~ nil
 ]
 
-{ #category : 'accessing' }
-RsrAcceptConnection >> port [
-
-	^port
-]
-
-{ #category : 'accessing' }
-RsrAcceptConnection >> port: anInteger [
-
-	port := anInteger
-]
-
 { #category : 'connecting' }
 RsrAcceptConnection >> waitForConnection [
 
 	| socket connection |
 	listener := self socketClass new.
 	[listener
-		bindAddress: '0.0.0.0'
+		bindAddress: self host
 		port: self port.
 	listener listen: 1.
 	socket := [listener accept]
