@@ -36,7 +36,7 @@ RsrSocket >> accept [
 	[ns isNil]
 		whileTrue:
 			[ns := nativeSocket
-				waitForAcceptFor: 5
+				waitForAcceptFor: 2
 				ifTimedOut: timeoutHandler].
 	^self class _nativeSocket: ns
 ]
