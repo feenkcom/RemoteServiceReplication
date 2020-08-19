@@ -140,7 +140,10 @@ RsrConnection >> encoder [
 RsrConnection >> ensureRegistered: aService [
 
 	aService isMirrored
-		ifTrue: [^self].
+		ifTrue:
+			[^aService _connection == self
+				ifTrue: [self]
+				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].
 	aService
 		_id: oidSpigot next
 		connection: self.

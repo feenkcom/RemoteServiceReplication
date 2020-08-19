@@ -11,6 +11,24 @@ RsrServiceTest >> mirror: aService [
 ]
 
 { #category : 'running' }
+RsrServiceTest >> testAnalyzeServiceRegisteredWithDifferentConnection [
+
+	| instance analysis |
+	instance := RsrRemoteAction clientClass new.
+	analysis := RsrRetainAnalysis
+		roots: (Array with: instance)
+		connection: connectionA.
+	analysis perform.
+	self assert: instance isMirrored.
+	analysis := RsrRetainAnalysis
+		roots: (Array with: instance)
+		connection: connectionB.
+	self
+		should: [analysis perform]
+		raise: RsrAlreadyRegistered
+]
+
+{ #category : 'running' }
 RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
 
 	| client |
@@ -197,7 +215,10 @@ RsrServiceTest >> testRegisterWith [
 	instance := RsrRemoteAction clientClass new.
 	self deny: instance isMirrored.
 	instance registerWith: connectionA.
-	self assert: instance isMirrored
+	self assert: instance isMirrored.
+	self
+		should: [instance registerWith: connectionB]
+		raise: RsrAlreadyRegistered
 ]
 
 { #category : 'running' }
