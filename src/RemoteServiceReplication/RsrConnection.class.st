@@ -26,7 +26,7 @@ RsrConnection class >> acceptOn: aPortNumber [
 	| acceptor |
 	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.
 	acceptor := RsrAcceptConnection port: aPortNumber.
-	^acceptor connect
+	^acceptor waitForConnection
 ]
 
 { #category : 'instance creation' }

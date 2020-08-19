@@ -11,6 +11,7 @@ Class {
 	#name : 'RsrAcceptConnection',
 	#superclass : 'RsrConnectionSpecification',
 	#instVars : [
+		'listener',
 		'port'
 	],
 	#category : 'RemoteServiceReplication'
@@ -24,22 +25,16 @@ RsrAcceptConnection class >> port: aPortInteger [
 		yourself
 ]
 
-{ #category : 'connecting' }
-RsrAcceptConnection >> connect [
+{ #category : 'cancelling' }
+RsrAcceptConnection >> cancelWaitForConnection [
 
-	| listener socket connection |
-	listener := self socketClass new.
-	[listener
-		bindAddress: '0.0.0.0'
-		port: self port.
-	listener listen: 1.
-	socket := listener accept]
-		ensure: [listener close].
-	connection := RsrConnection
-		socket: socket
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: RsrThreadSafeNumericSpigot naturals.
-	^connection open
+	listener ifNotNil: [:socket | socket close]
+]
+
+{ #category : 'testing' }
+RsrAcceptConnection >> isWaitingForConnection [
+
+	^listener ~~ nil
 ]
 
 { #category : 'accessing' }
@@ -52,4 +47,26 @@ RsrAcceptConnection >> port [
 RsrAcceptConnection >> port: anInteger [
 
 	port := anInteger
+]
+
+{ #category : 'connecting' }
+RsrAcceptConnection >> waitForConnection [
+
+	| socket connection |
+	listener := self socketClass new.
+	[listener
+		bindAddress: '0.0.0.0'
+		port: self port.
+	listener listen: 1.
+	socket := [listener accept]
+		on: RsrSocketClosed
+		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]
+			ensure:
+				[listener close.
+				listener := nil].
+	connection := RsrConnection
+		socket: socket
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals
+		oidSpigot: RsrThreadSafeNumericSpigot naturals.
+	^connection open
 ]

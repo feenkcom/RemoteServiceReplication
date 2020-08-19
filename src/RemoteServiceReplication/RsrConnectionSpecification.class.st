@@ -9,12 +9,6 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'connecting' }
-RsrConnectionSpecification >> connect [
-
-	self subclassResponsibility
-]
-
 { #category : 'accessing' }
 RsrConnectionSpecification >> socketClass [
 	"Return the class that should be used for creating Socket instances."

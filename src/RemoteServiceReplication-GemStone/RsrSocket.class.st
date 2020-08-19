@@ -29,11 +29,12 @@ RsrSocket >> accept [
 
 	[| ns |
 	ns := false.
+	"This loop will ensure we properly detect a closed socket during an #accept"
 	[ns == false]
 		whileTrue:
 			[nativeSocket isActive
 				ifFalse: [^RsrSocketClosed signal: 'Socket closed during #accept'].
-			ns := nativeSocket acceptTimeoutMs: 5000 errorOnTimeout: false].
+			ns := nativeSocket acceptTimeoutMs: 2000 errorOnTimeout: false].
 	^self class _nativeSocket: ns]
 		on: SocketError
 		do: [:ex | ex resignalAs: (RsrSocketError new messageText: ex messageText)]
