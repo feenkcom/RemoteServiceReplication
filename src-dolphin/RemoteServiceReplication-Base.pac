@@ -21,6 +21,7 @@ package classNames
 	add: #RsrCharacterSpecies;
 	add: #RsrSetSpecies;
 	add: #RsrProcessModel;
+	add: #RsrAlreadyRegistered;
 	add: #RsrInvalidBind;
 	add: #RsrSymbolSpecies;
 	add: #RsrServiceSpecies;
@@ -216,6 +217,14 @@ RsrBooleanSpecies
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrTrueSpecies categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
+	subclass: #RsrAlreadyRegistered
+	instanceVariableNames: 'service intendedConnection'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrAlreadyRegistered categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
 	subclass: #RsrConnectionClosed
@@ -468,6 +477,9 @@ speciesIdentifier	^7! !
 !RsrPositiveIntegerSpecies class methodsFor!
 speciesIdentifier	^3! !
 
+!RsrAlreadyRegistered class methodsFor!
+signalService: aServiceintendedConnection: aConnection	^self new		service: aService;		intendedConnection: aConnection;		signal! !
+
 !RsrNegativeIntegerSpecies class methodsFor!
 decodeReference: aStreamusing: aDecoder	"Decode the provided bytes into the default native class for this species"	^(super decodeReference: aStream using: aDecoder) negated! !
 
@@ -506,6 +518,18 @@ object	^object! !
 
 !RsrUnsupportedObject methodsFor!
 object: anObject	object := anObject! !
+
+!RsrAlreadyRegistered methodsFor!
+service	^service! !
+
+!RsrAlreadyRegistered methodsFor!
+service: aService	service := aService! !
+
+!RsrAlreadyRegistered methodsFor!
+intendedConnection	^intendedConnection! !
+
+!RsrAlreadyRegistered methodsFor!
+intendedConnection: aConnection	intendedConnection := aConnection! !
 
 !RsrConnectionClosed methodsFor!
 messageText	^'The connection has closed'! !

@@ -1140,7 +1140,7 @@ registry	^registry! !
 unknownError: anException	self close! !
 
 !RsrConnection methodsFor!
-ensureRegistered: aService	aService isMirrored		ifTrue: [^self].	aService		_id: oidSpigot next		connection: self.	self registry		serviceAt: aService _id		put: aService! !
+ensureRegistered: aService	aService isMirrored		ifTrue:			[^aService _connection == self				ifTrue: [self]				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].	aService		_id: oidSpigot next		connection: self.	self registry		serviceAt: aService _id		put: aService! !
 
 !RsrConnection methodsFor!
 encoder	^RsrEncoder new! !
