@@ -19,25 +19,12 @@ RsrConnectionSpecificationTestCase >> port [
 { #category : 'running' }
 RsrConnectionSpecificationTestCase >> testCancelWaitForConnection [
 
-	| acceptor semaphore wasSignaled |
+	| acceptor |
 	acceptor := RsrAcceptConnection port: self port.
-	semaphore := Semaphore new.
-	wasSignaled := false.
+	self fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection].
 	self
-		fork:
-			[semaphore signal.
-			[acceptor waitForConnection]
-				on: RsrWaitForConnectionCancelled
-				do:
-					[:ex |
-					wasSignaled := true.
-					semaphore signal.
-					ex return]].
-	self fork: [(Delay forSeconds: 3) wait. semaphore signal "ensure we don't ever deadlock the test"].
-	semaphore wait. "Wait until forked block is running"
-	acceptor cancelWaitForConnection.
-	semaphore wait.
-	self assert: wasSignaled.
+		should: [acceptor waitForConnection]
+		raise: RsrWaitForConnectionCancelled
 ]
 
 { #category : 'running' }
