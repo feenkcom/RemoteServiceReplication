@@ -197,7 +197,7 @@ RsrObject
 
 RsrConnectionSpecification
 	subclass: #RsrAcceptConnection
-	instanceVariableNames: 'port'
+	instanceVariableNames: 'listener port'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -480,7 +480,7 @@ new	self error: 'Instance creation via #new is unsupported'! !
 socket: aSockettransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		socket: aSocket;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
 
 !RsrConnection class methodsFor!
-acceptOn: aPortNumber	| acceptor |	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.	acceptor := RsrAcceptConnection port: aPortNumber.	^acceptor connect! !
+acceptOn: aPortNumber	| acceptor |	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.	acceptor := RsrAcceptConnection port: aPortNumber.	^acceptor waitForConnection! !
 
 !RsrConnection class methodsFor!
 connectToHost: aHostnameport: aPortNumber	| initiator |	self deprecated: 'RsrConnection class>>#connectToHost:port: replaced by RsrInitiateConnection.'.	initiator := RsrInitiateConnection		host: aHostname		port: aPortNumber.	^initiator connect! !
@@ -894,10 +894,16 @@ write: aMessage	self action value: aMessage! !
 port: anInteger	port := anInteger! !
 
 !RsrAcceptConnection methodsFor!
-connect	| listener socket connection |	listener := self socketClass new.	[listener		bindAddress: '0.0.0.0'		port: self port.	listener listen: 1.	socket := listener accept]		ensure: [listener close].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
 
 !RsrAcceptConnection methodsFor!
 port	^port! !
+
+!RsrAcceptConnection methodsFor!
+isWaitingForConnection	^listener ~~ nil! !
+
+!RsrAcceptConnection methodsFor!
+waitForConnection	| socket connection |	listener := self socketClass new.	[listener		bindAddress: '0.0.0.0'		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketClosed		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrTranscriptSink methodsFor!
 write: aMessageString	Transcript		show: aMessageString;		cr! !
@@ -1282,9 +1288,6 @@ decodeObjectReference: aStream	| oid |	oid := self decodeControlWord: aStream
 
 !RsrDecoder methodsFor!
 decodeImmediateObject: aStream	| species |	species := self decodeControlWord: aStream.	^(RsrSpecies speciesList at: species + 1)		decodeReference: aStream		using: self! !
-
-!RsrConnectionSpecification methodsFor!
-connect	self subclassResponsibility! !
 
 !RsrConnectionSpecification methodsFor!
 socketClass	"Return the class that should be used for creating Socket instances."	^RsrSocket! !

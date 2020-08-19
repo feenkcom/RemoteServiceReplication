@@ -14,6 +14,7 @@ package classNames
 	add: #RsrBooleanSpecies;
 	add: #RsrDictionarySpecies;
 	add: #RsrError;
+	add: #RsrWaitForConnectionCancelled;
 	add: #RsrArraySpecies;
 	add: #RsrDateAndTimeSpecies;
 	add: #RsrUndefinedObjectSpecies;
@@ -257,6 +258,14 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrUnsupportedObject categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
+	subclass: #RsrWaitForConnectionCancelled
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrWaitForConnectionCancelled categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrSocketError
 	subclass: #RsrConnectFailed
