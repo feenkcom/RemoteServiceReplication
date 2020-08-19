@@ -8,13 +8,13 @@ package classNames
 	add: #RsrPositiveIntegerSpecies;
 	add: #RsrTrueSpecies;
 	add: #RsrNegativeIntegerSpecies;
+	add: #RsrWaitForConnectionCancelled;
 	add: #RsrFalseSpecies;
 	add: #RsrIntegerSpecies;
 	add: #RsrConnectionClosed;
 	add: #RsrBooleanSpecies;
 	add: #RsrDictionarySpecies;
 	add: #RsrError;
-	add: #RsrWaitForConnectionCancelled;
 	add: #RsrArraySpecies;
 	add: #RsrDateAndTimeSpecies;
 	add: #RsrUndefinedObjectSpecies;
