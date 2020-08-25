@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrDeliverResponse, hierarchy is:
+Object
+  RsrObject
+    RsrCommand( encoding)
+      RsrDeliverResponse( transaction response roots retainList)
+
+"
 Class {
 	#name : 'RsrDeliverResponse',
 	#superclass : 'RsrCommand',
@@ -5,6 +13,7 @@ Class {
 		'transaction',
 		'response',
 		'roots',
+		'services',
 		'retainList'
 	],
 	#category : 'RemoteServiceReplication'
@@ -49,8 +58,7 @@ RsrDeliverResponse >> executeFor: aConnection [
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	pendingMessage promise fulfill: response.
-	aConnection objectCache reset
+	pendingMessage promise fulfill: response
 ]
 
 { #category : 'reporting' }
@@ -91,9 +99,21 @@ RsrDeliverResponse >> sendOver: aConnection [
 		roots: roots
 		connection: aConnection.
 	analysis perform.
-	retainList := analysis retainCommands.
+	services := analysis services.
 	self encodeUsing: aConnection encoder.
 	aConnection commandWriter enqueue: self
+]
+
+{ #category : 'accessing' }
+RsrDeliverResponse >> services [
+
+	^services
+]
+
+{ #category : 'accessing' }
+RsrDeliverResponse >> services: aServiceList [
+
+	services := aServiceList
 ]
 
 { #category : 'accessing' }
@@ -111,6 +131,5 @@ RsrDeliverResponse >> transaction: aTransactionId [
 { #category : 'lifecycle' }
 RsrDeliverResponse >> writeUsing: aCommandWriter [
 
-	retainList do: [:each | each writeUsing: aCommandWriter].
 	aCommandWriter write: encoding
 ]

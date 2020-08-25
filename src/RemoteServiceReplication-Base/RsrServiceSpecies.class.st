@@ -22,7 +22,7 @@ using: aDecoder [
 	species := aDecoder decodeControlWord: aStream.
 	oid := aDecoder decodeControlWord: aStream.
 	instVarCount := aDecoder decodeControlWord: aStream.
-	serviceName := aDecoder decodeObjectReference: aStream.
+	serviceName := aDecoder decodeAndResolveObjectReference: aStream.
 	instance := aDecoder registry
 		serviceAt: oid
 		ifAbsent:
@@ -39,7 +39,7 @@ using: aDecoder [
 		ifFalse: [self error: 'Incorrectly encoded instance detected'].
 	self
 		reflectedVariableIndicesFor: instance
-		do: [:index | instance instVarAt: index put: (aDecoder decodeObjectReference: aStream)].
+		do: [:index | instance instVarAt: index put: (aDecoder decodeAndResolveObjectReference: aStream)].
 	^instance
 ]
 

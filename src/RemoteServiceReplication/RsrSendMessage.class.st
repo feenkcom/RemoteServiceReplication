@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrSendMessage, hierarchy is:
+Object
+  RsrObject
+    RsrCommand( encoding)
+      RsrSendMessage( transaction receiver selector arguments retainList)
+
+"
 Class {
 	#name : 'RsrSendMessage',
 	#superclass : 'RsrCommand',
@@ -6,6 +14,7 @@ Class {
 		'receiver',
 		'selector',
 		'arguments',
+		'services',
 		'retainList'
 	],
 	#category : 'RemoteServiceReplication'
@@ -48,7 +57,6 @@ RsrSendMessage >> executeFor: aConnection [
 	[result := receiver
 		perform: selector
 		withArguments: arguments.
-	aConnection objectCache reset.
 	response := RsrDeliverResponse
 		transaction: transaction
 		response: result
@@ -120,7 +128,7 @@ RsrSendMessage >> sendOver: aConnection [
 		roots: self roots
 		connection: aConnection.
 	analysis perform.
-	retainList := analysis retainCommands.
+	services := analysis services.
 	self encodeUsing: aConnection encoder.
 	promise := RsrPromise new.
 	pendingMessage := RsrPendingMessage
@@ -131,6 +139,18 @@ RsrSendMessage >> sendOver: aConnection [
 		put: pendingMessage.
 	aConnection commandWriter enqueue: self.
 	^promise
+]
+
+{ #category : 'accessing' }
+RsrSendMessage >> services [
+
+	^services
+]
+
+{ #category : 'accessing' }
+RsrSendMessage >> services: anArray [
+
+	services := anArray
 ]
 
 { #category : 'accessing' }
@@ -146,6 +166,5 @@ RsrSendMessage >> transaction: anObject [
 { #category : 'lifecycle' }
 RsrSendMessage >> writeUsing: aCommandWriter [
 
-	retainList do: [:each | each writeUsing: aCommandWriter].
 	aCommandWriter write: encoding
 ]

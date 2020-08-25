@@ -40,6 +40,15 @@ RsrDecoder >> connection: aConnection [
 	connection := aConnection
 ]
 
+{ #category : 'decoding' }
+RsrDecoder >> decodeAndResolveObjectReference: aStream [
+
+	| oid |
+	oid := self decodeControlWord: aStream.
+	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
+	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]
+]
+
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
@@ -76,10 +85,10 @@ RsrDecoder >> decodeDeliverErrorResponse: aStream [
 
 	| transaction originalClassName tag messageText stack error |
 	transaction := self decodeControlWord: aStream.
-	originalClassName := self decodeObjectReference: aStream.
-	tag := self decodeObjectReference: aStream.
-	messageText := self decodeObjectReference: aStream.
-	stack := self decodeObjectReference: aStream.
+	originalClassName := self decodeAndResolveObjectReference: aStream.
+	tag := self decodeAndResolveObjectReference: aStream.
+	messageText := self decodeAndResolveObjectReference: aStream.
+	stack := self decodeAndResolveObjectReference: aStream.
 	error := RsrRemoteError new
 		originalClassName: originalClassName;
 		tag: tag;
@@ -95,13 +104,16 @@ RsrDecoder >> decodeDeliverErrorResponse: aStream [
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
-	| transaction response |
-	transaction := self decodeControlWord: aStream.
-	response := self decodeObjectReference: aStream.
-	^RsrDeliverResponse new
-		transaction: transaction;
-		response: response;
-		yourself
+    | transaction numServices services response |
+    transaction := self decodeControlWord: aStream.
+    numServices := self decodeControlWord: aStream.
+    services := (1 to: numServices) collect: [:each | self decodeService: aStream].
+    response := self decodeAndResolveObjectReference: aStream.
+    ^RsrDeliverResponse new
+        transaction: transaction;
+        services: services;
+        response: response;
+        yourself
 ]
 
 { #category : 'decoding-services' }
@@ -119,8 +131,8 @@ RsrDecoder >> decodeObjectReference: aStream [
 
 	| oid |
 	oid := self decodeControlWord: aStream.
-	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
-	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]
+	oid = self immediateOID ifTrue: [^RsrValueReference value: (self decodeImmediateObject: aStream)].
+	^RsrServiceReference sid: oid
 ]
 
 { #category : 'decoding-commands' }
@@ -139,26 +151,24 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 ]
 
 { #category : 'decoding-commands' }
-RsrDecoder >> decodeRetainObject: aStream [
-
-	^RsrRetainObject object: (self decodeService: aStream)
-]
-
-{ #category : 'decoding-commands' }
 RsrDecoder >> decodeSendMessage: aStream [
 
-	| transaction argCount receiverOID receiver selector arguments |
+	| transaction argCount receiverReference receiver selector numServices services arguments instance |
 	transaction := self decodeControlWord: aStream.
+	numServices := self decodeControlWord: aStream.
+	services := (1 to: numServices) collect: [:each | self decodeService: aStream].
+	receiverReference := self decodeObjectReference: aStream.
+	receiver := receiverReference resolve: self registry.
+	selector := self decodeAndResolveObjectReference: aStream.
 	argCount := self decodeControlWord: aStream.
-	receiverOID := self decodeControlWord: aStream.
-	receiver := registry serviceAt: receiverOID ifAbsent: [^self signalUnknownOID].
-	selector := self decodeObjectReference: aStream.
-	arguments := (1 to: argCount) collect: [:each | self decodeObjectReference: aStream].
-	^RsrSendMessage
+	arguments := (1 to: argCount) collect: [:each | self decodeAndResolveObjectReference: aStream].
+	instance := RsrSendMessage
 		transaction: transaction
 		receiver: receiver
 		selector: selector
-		arguments: arguments
+		arguments: arguments.
+	instance services: services.
+	^instance
 ]
 
 { #category : 'decoding-services' }
@@ -174,7 +184,6 @@ RsrDecoder >> initializeDecodeCommandMap [
 
 	decodeCommandMap := Dictionary new.
 	decodeCommandMap
-		at: self retainObjectCommand put: #decodeRetainObject:;
 		at: self sendMessageCommand put: #decodeSendMessage:;
 		at: self deliverResponseCommand put: #decodeDeliverResponse:;
 		at: self releaseObjectsCommand put: #decodeReleaseObjects:;

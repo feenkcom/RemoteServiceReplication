@@ -61,6 +61,10 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 				encodeControlWord: aDeliverResponse transaction
 				onto: stream.
 			self
+				encodeControlWord: aDeliverResponse services size
+				onto: stream.
+			aDeliverResponse services do: [:each | self encodeObject: each onto: stream].
+			self
 				encodeReferenceOf: aDeliverResponse response
 				onto: stream]
 ]
@@ -119,20 +123,6 @@ RsrEncoder >> encodeReleaseObjects: aReleaseObject [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeRetainObject: aRetainObject [
-
-	^ByteArray
-		streamContents:
-			[:stream |
-			self
-				encodeControlWord: self retainObjectIdentifier
-				onto: stream.
-			self
-				encodeObject: aRetainObject object
-				onto: stream]
-]
-
-{ #category : 'private-encoding' }
 RsrEncoder >> encodeSendMessage: aSendMessage [
 
 	^ByteArray
@@ -145,13 +135,22 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 				encodeControlWord: aSendMessage transaction
 				onto: stream.
 			self
-				encodeControlWord: aSendMessage arguments size
+				encodeControlWord: aSendMessage services size
 				onto: stream.
+			aSendMessage services
+				do:
+					[:each |
+					self
+						encodeObject: each
+						onto: stream].
 			self
 				encodeReferenceOf: aSendMessage receiver
 				onto: stream.
 			self
 				encodeReferenceOf: aSendMessage selector
+				onto: stream.
+			self
+				encodeControlWord: aSendMessage arguments size
 				onto: stream.
 			aSendMessage arguments
 				do:
@@ -185,12 +184,6 @@ ofSize: aNumberOfBytes [
 RsrEncoder >> isImmediate: anObject [
 
 	^self speciesMapping includesKey: anObject class
-]
-
-{ #category : 'private-accessing' }
-RsrEncoder >> retainObjectIdentifier [
-
-	^0
 ]
 
 { #category : 'private-accessing' }

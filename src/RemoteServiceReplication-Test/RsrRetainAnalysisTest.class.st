@@ -61,10 +61,9 @@ RsrRetainAnalysisTest >> testNewServiceInArray [
 	| service analysis expected |
 	service := RsrServerNoInstVars new.
 	analysis := self analyze: (Array with: service).
-	expected := OrderedCollection
-		with: (RsrRetainObject object: service encoding: ByteArray new).
+	expected := OrderedCollection with: service.
 	self
-		assert: analysis retainCommands
+		assert: analysis services
 		equals: expected.
 	self assert: service isMirrored
 ]
@@ -81,10 +80,10 @@ RsrRetainAnalysisTest >> testNewServicesInDictionary [
 		yourself.
 	analysis := self analyze: dictionary.
 	expected := OrderedCollection
-		with: (RsrRetainObject object: key encoding: ByteArray new)
-		with: (RsrRetainObject object: value encoding: ByteArray new).
+		with: key
+		with: value.
 	self
-		assert: analysis retainCommands
+		assert: analysis services
 		equals: expected.
 	self
 		assert: key isMirrored;
@@ -111,10 +110,9 @@ RsrRetainAnalysisTest >> testServiceAllDataObjects [
 	client := RsrRemoteAction clientClass new.
 	registry := RsrMockRegistry new.
 	analysis := self analyze: client.
-	expected := OrderedCollection
-		with: (RsrRetainObject object: client encoding: ByteArray new).
+	expected := OrderedCollection with: client.
 	self
-		assert: analysis retainCommands
+		assert: analysis services
 		equals: expected.
 	self assert: client isMirrored
 ]
@@ -125,10 +123,9 @@ RsrRetainAnalysisTest >> testServiceNoInstVars [
 	| client analysis expected |
 	client := RsrClientNoInstVars new.
 	analysis := self analyze: client.
-	expected := OrderedCollection
-		with: (RsrRetainObject object: client encoding: ByteArray new).
+	expected := OrderedCollection with: client.
 	self
-		assert: analysis retainCommands
+		assert: analysis services
 		equals: expected.
 	self assert: client isMirrored
 ]
@@ -143,10 +140,10 @@ RsrRetainAnalysisTest >> testServiceReferencingAnotherService [
 	client := RsrRemoteAction clientClass sharedVariable: referencedService.
 	analysis := self analyze: client.
 	expected := OrderedCollection
-		with: (RsrRetainObject object: referencedService encoding: ByteArray new)
-		with: (RsrRetainObject object: client encoding: ByteArray new).
+		with: referencedService
+		with: client.
 	self
-		assert: analysis retainCommands
+		assert: analysis services
 		equals: expected.
 	self
 		assert: client isMirrored;

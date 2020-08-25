@@ -215,7 +215,7 @@ RsrCodecTest >> testDictionary [
 		at: false put: true;
 		yourself.
 	encoding := self encodeReferenceOf: dictionary.
-	result := self decoder decodeObjectReference: encoding readStream.
+	result := self decoder decodeAndResolveObjectReference: encoding readStream.
 	self
 		assert: result
 		equals: dictionary.
@@ -289,7 +289,7 @@ RsrCodecTest >> testSet [
 		with: true
 		with: nil.
 	encoding := self encodeReferenceOf: set.
-	result := self decoder decodeObjectReference: encoding readStream.
+	result := self decoder decodeAndResolveObjectReference: encoding readStream.
 	self
 		assert: result
 		equals: set.

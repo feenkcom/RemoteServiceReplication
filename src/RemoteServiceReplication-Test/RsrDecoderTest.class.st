@@ -9,7 +9,7 @@ RsrDecoderTest >> assertReference: bytes
 decodesTo: expected [
 
 	| actual |
-	actual := self decoder decodeObjectReference: bytes readStream.
+	actual := self decoder decodeAndResolveObjectReference: bytes readStream.
 	self
 		assert: actual
 		equals: expected
@@ -72,11 +72,20 @@ RsrDecoderTest >> testDeliverErrorResponse [
 { #category : 'running' }
 RsrDecoderTest >> testDeliverResponse [
 
-	| response encoding command |
+	| service response encoding command |
+	service := RsrServerNoInstVars
+		_id: 1
+		connection: RsrMockConnection new.
+	self decoder.
+	registry
+		serviceAt: 1
+		put: service.
 	response := #responseSymbol.
 	encoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"
 		#[0 0 0 0 0 0 0 1], "Transaction Id"
+		#[0 0 0 0 0 0 0 1], "Number of services"
+		self serviceNoInstVarsEncoding,
 		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"
@@ -88,6 +97,9 @@ RsrDecoderTest >> testDeliverResponse [
 	self
 		assert: command transaction
 		equals: 1.
+	self
+		assert: command services
+		equals: (Array with: service).
 	self
 		assert: command response
 		equals: response
@@ -112,29 +124,6 @@ RsrDecoderTest >> testReleaseObjects [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testRetainObject [
-
-	| encoding command |
-	encoding :=
-		#[0 0 0 0 0 0 0 0], "RetainObject Command"
-		#[0 0 0 0 0 0 0 0], "ServiceType Object"
-		#[0 0 0 0 0 0 0 1], "Service OID"
-		#[0 0 0 0 0 0 0 0], "Inst Var Count"
-		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"
-		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
-		#[0 0 0 0 0 0 0 19], "Length of UTF-8 bytes"
-		#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"
-	command := self decoder decodeCommand: encoding readStream.
-	self
-		assert: command object class
-		equals: RsrServerNoInstVars.
-	self
-		assert: command object _id
-		equals: 1.
-	self assert: (registry includesKey: command object _id)
-]
-
-{ #category : 'running' }
 RsrDecoderTest >> testSendMessage [
 
 	| service encoding command |
@@ -148,12 +137,14 @@ RsrDecoderTest >> testSendMessage [
 	encoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"
 		#[0 0 0 0 0 0 0 1], "Transaction ID"
-		#[0 0 0 0 0 0 0 0], "Argument Count"
+		#[0 0 0 0 0 0 0 1], "One service is part of this message"
+		self serviceNoInstVarsEncoding,
 		#[0 0 0 0 0 0 0 1], "Receiver OID"
 		#[0 0 0 0 0 0 0 0], "Selector Reference"
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"
-		#[114 101 116 117 114 110 52 50]. "#return42"
+		#[114 101 116 117 114 110 52 50], "#return42"
+		#[0 0 0 0 0 0 0 0]. "Argument Count"
 	command := self decoder decodeCommand: encoding readStream.
 	self
 		assert: command class
@@ -169,7 +160,10 @@ RsrDecoderTest >> testSendMessage [
 		identicalTo: #return42.
 	self
 		assert: command arguments
-		equals: #()
+		equals: #().
+	self
+		assert: command services
+		equals: (Array with: service)
 ]
 
 { #category : 'running' }
@@ -234,7 +228,7 @@ RsrDecoderTest >> verifyImmediate: expected
 encoding: encoding [
 
 	| actual |
-	actual := self decoder decodeObjectReference: encoding readStream.
+	actual := self decoder decodeAndResolveObjectReference: encoding readStream.
 	self
 		assert: actual
 		equals: expected

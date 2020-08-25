@@ -21,7 +21,7 @@ using: aDecoder [
 	| size set |
 	size := aDecoder decodeControlWord: aStream.
 	set := Set new: size.
-	size timesRepeat: [set add: (aDecoder decodeObjectReference: aStream)].
+	size timesRepeat: [set add: (aDecoder decodeAndResolveObjectReference: aStream)].
 	^set
 ]
 

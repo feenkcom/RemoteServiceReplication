@@ -128,17 +128,6 @@ RsrRetainAnalysis >> retain: aService [
 ]
 
 { #category : 'accessing' }
-RsrRetainAnalysis >> retainCommands [
-
-	^self services
-		collect:
-			[:service | | command |
-			command := RsrRetainObject object: service.
-			command encodeUsing: self encoder.
-			command]
-]
-
-{ #category : 'accessing' }
 RsrRetainAnalysis >> roots [
 
 	^roots

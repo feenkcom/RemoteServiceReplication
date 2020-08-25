@@ -1,3 +1,10 @@
+"
+No class-specific documentation for RsrConnection, hierarchy is:
+Object
+  RsrObject
+    RsrConnection( isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore)
+
+"
 Class {
 	#name : 'RsrConnection',
 	#superclass : 'RsrObject',
@@ -7,7 +14,6 @@ Class {
 		'commandWriter',
 		'commandReader',
 		'registry',
-		'objectCache',
 		'socket',
 		'stream',
 		'pendingMessages',
@@ -85,7 +91,7 @@ to: aService [
 	^dispatchCommand sendOver: self
 ]
 
-{ #category : 'public-lifecycle' }
+{ #category : 'other' }
 RsrConnection >> close [
 
 	isOpen
@@ -95,7 +101,7 @@ RsrConnection >> close [
 	commandWriter stop.
 	dispatcher stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
-	commandReader := commandWriter := dispatcher := pendingMessages := objectCache := registry := nil.
+	commandReader := commandWriter := dispatcher := pendingMessages  := registry := nil.
 	closeSemaphore signal
 ]
 
@@ -152,13 +158,12 @@ RsrConnection >> ensureRegistered: aService [
 		put: aService
 ]
 
-{ #category : 'private-initialization' }
+{ #category : 'other' }
 RsrConnection >> initialize [
 
 	super initialize.
 	isOpen := false.
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
-	objectCache := RsrObjectCache new.
 	pendingMessages := Dictionary new.
 	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
 	log := RsrLog new
@@ -186,12 +191,6 @@ RsrConnection >> log [
 RsrConnection >> newTransactionId [
 
 	^transactionSpigot next
-]
-
-{ #category : 'private-accessing' }
-RsrConnection >> objectCache [
-
-	^objectCache
 ]
 
 { #category : 'private-accessing' }

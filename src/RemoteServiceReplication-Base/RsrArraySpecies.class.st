@@ -21,7 +21,7 @@ using: aDecoder [
 	| size array |
 	size := aDecoder decodeControlWord: aStream.
 	array := Array new: size.
-	1 to: size do: [:i | array at: i put: (aDecoder decodeObjectReference: aStream)].
+	1 to: size do: [:i | array at: i put: (aDecoder decodeAndResolveObjectReference: aStream)].
 	^array
 ]
 

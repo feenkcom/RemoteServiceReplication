@@ -21,7 +21,7 @@ using: aDecoder [
 	| size oc |
 	size := aDecoder decodeControlWord: aStream.
 	oc := OrderedCollection new: size.
-	size timesRepeat: [oc add: (aDecoder decodeObjectReference: aStream)].
+	size timesRepeat: [oc add: (aDecoder decodeAndResolveObjectReference: aStream)].
 	^oc
 ]
 

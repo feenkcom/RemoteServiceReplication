@@ -26,8 +26,8 @@ using: aDecoder [
 		do:
 			[:i |
 			dictionary
-				at: (aDecoder decodeObjectReference: aStream)
-				put: (aDecoder decodeObjectReference: aStream)].
+				at: (aDecoder decodeAndResolveObjectReference: aStream)
+				put: (aDecoder decodeAndResolveObjectReference: aStream)].
 	^dictionary
 ]
 

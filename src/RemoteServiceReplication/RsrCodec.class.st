@@ -41,12 +41,6 @@ RsrCodec >> releaseObjectsCommand [
 ]
 
 { #category : 'private-accessing-commands' }
-RsrCodec >> retainObjectCommand [
-
-	^0
-]
-
-{ #category : 'private-accessing-commands' }
 RsrCodec >> sendMessageCommand [
 
 	^1

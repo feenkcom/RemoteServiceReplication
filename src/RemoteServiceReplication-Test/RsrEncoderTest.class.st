@@ -74,16 +74,22 @@ RsrEncoderTest >> testDeliverErrorResponse [
 { #category : 'running-immediates' }
 RsrEncoderTest >> testDeliverResponse [
 
-	| response command expectedEncoding |
+	| service response command expectedEncoding |
+	service := RsrClientNoInstVars new.
+	self register: service.
 	response := #responseSymbol.
 	command := RsrDeliverResponse
 		transaction: 1
 		response: response
-		roots: (Array with: response).
-	command encodeUsing: RsrEncoder new.
+		roots: (Array with: service with: response).
+	command
+		services: (Array with: service);
+		encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"
 		#[0 0 0 0 0 0 0 1], "Transaction Id"
+		#[0 0 0 0 0 0 0 1], "One service is part of this response"
+		self serviceNoInstVarsEncoding,
 		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"
@@ -113,28 +119,6 @@ RsrEncoderTest >> testReleaseObjects [
 ]
 
 { #category : 'running-immediates' }
-RsrEncoderTest >> testRetainObject [
-
-	| service command expectedEncoding |
-	service := RsrClientNoInstVars new.
-	self register: service.
-	command := RsrRetainObject object: service.
-	command encodeUsing: RsrEncoder new.
-	expectedEncoding :=
-		#[0 0 0 0 0 0 0 0], "RetainObject Command"
-		#[0 0 0 0 0 0 0 0], "ServiceType Object"
-		#[0 0 0 0 0 0 0 1], "Service OID"
-		#[0 0 0 0 0 0 0 0], "Inst Var Count"
-		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"
-		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
-		#[0 0 0 0 0 0 0 19], "Length of UTF-8 bytes"
-		#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"
-	self
-		assert: command encoding
-		equals: expectedEncoding
-]
-
-{ #category : 'running-immediates' }
 RsrEncoderTest >> testSendMessage [
 
 	| service command expectedEncoding |
@@ -145,16 +129,19 @@ RsrEncoderTest >> testSendMessage [
 		receiver: service
 		selector: #return42
 		arguments: #().
+	command services: (Array with: service).
 	command encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"
 		#[0 0 0 0 0 0 0 1], "Transaction ID"
-		#[0 0 0 0 0 0 0 0], "Argument Count"
+		#[0 0 0 0 0 0 0 1], "One service is part of this message"
+		self serviceNoInstVarsEncoding,
 		#[0 0 0 0 0 0 0 1], "Receiver OID"
 		#[0 0 0 0 0 0 0 0], "Selector Reference"
 		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
 		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"
-		#[114 101 116 117 114 110 52 50]. "#return42"
+		#[114 101 116 117 114 110 52 50], "#return42"
+		#[0 0 0 0 0 0 0 0]. "Argument Count"
 	self
 		assert: command encoding
 		equals: expectedEncoding
