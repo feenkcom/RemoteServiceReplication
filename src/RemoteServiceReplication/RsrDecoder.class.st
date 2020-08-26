@@ -193,9 +193,18 @@ RsrDecoder >> decodeSendMessage: aStream [
 { #category : 'decoding-services' }
 RsrDecoder >> decodeService: aStream [
 
-	^RsrServiceSpecies
+	^(self decodeServiceSnapshot: aStream) reifyIn: self connection
+]
+
+{ #category : 'decoding-services' }
+RsrDecoder >> decodeServiceSnapshot: aStream [
+
+	| snapshot |
+	snapshot := RsrServiceSnapshot new.
+	snapshot
 		decode: aStream
-		using: self
+		using: self.
+	^snapshot
 ]
 
 { #category : 'private-initialization' }

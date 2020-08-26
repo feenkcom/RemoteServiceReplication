@@ -77,7 +77,7 @@ RsrDecoderTest >> testDeliverResponse [
 		_id: 1
 		connection: RsrMockConnection new.
 	self decoder.
-	registry
+	self registry
 		serviceAt: 1
 		put: service.
 	response := #responseSymbol.
@@ -129,9 +129,9 @@ RsrDecoderTest >> testSendMessage [
 	| service encoding command |
 	service := RsrServerNoInstVars
 		_id: 1
-		connection: RsrMockConnection new.
+		connection: self connection.
 	self decoder.
-	registry
+	self registry
 		serviceAt: 1
 		put: service.
 	encoding :=

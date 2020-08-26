@@ -15,9 +15,21 @@ RsrCodecTest class >> isAbstract [
 ]
 
 { #category : 'accessing' }
+RsrCodecTest >> connection [
+
+	^self decoder connection
+]
+
+{ #category : 'accessing' }
 RsrCodecTest >> decoder [
 
-	^decoder ifNil: [decoder := RsrDecoder registry: (registry := RsrRegistry new) connection: RsrMockConnection new]
+	| connection |
+	decoder == nil
+		ifFalse: [^decoder].
+	connection := RsrMockConnection new.
+	^decoder := RsrDecoder
+		registry: connection registry
+		connection: connection
 ]
 
 { #category : 'accessing' }
@@ -57,6 +69,12 @@ RsrCodecTest >> referencedServiceEncoding [
 	#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"
 	#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"
 	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"
+]
+
+{ #category : 'accessing' }
+RsrCodecTest >> registry [
+
+	^self decoder registry
 ]
 
 { #category : 'accessing-objects' }
