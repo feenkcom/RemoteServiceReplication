@@ -45,7 +45,7 @@ RsrDecoder >> decodeAndResolveObjectReference: aStream [
 
 	| oid |
 	oid := self decodeControlWord: aStream.
-	oid = self immediateOID ifTrue: [^self decodeImmediateObject: aStream].
+	oid = self immediateOID ifTrue: [^(self decodeImmediateReference: aStream) resolve: self registry].
 	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]
 ]
 
@@ -126,12 +126,31 @@ RsrDecoder >> decodeImmediateObject: aStream [
 		using: self
 ]
 
+{ #category : 'decoding-services' }
+RsrDecoder >> decodeImmediateReference: aStream [
+
+	| referenceType |
+	referenceType := self decodeControlWord: aStream.
+	^(self instanceOfImmediate: referenceType)
+		decode: aStream
+		using: self
+]
+
 { #category : 'decoding' }
 RsrDecoder >> decodeObjectReference: aStream [
 
 	| oid |
 	oid := self decodeControlWord: aStream.
-	oid = self immediateOID ifTrue: [^RsrValueReference value: (self decodeImmediateObject: aStream)].
+	oid = self immediateOID ifTrue: [^(self decodeImmediateReference: aStream) resolve: self registry].
+	^RsrServiceReference sid: oid
+]
+
+{ #category : 'decoding' }
+RsrDecoder >> decodeReference: aStream [
+
+	| oid |
+	oid := self decodeControlWord: aStream.
+	oid = self immediateOID ifTrue: [^self decodeImmediateReference: aStream].
 	^RsrServiceReference sid: oid
 ]
 
@@ -189,6 +208,40 @@ RsrDecoder >> initializeDecodeCommandMap [
 		at: self releaseObjectsCommand put: #decodeReleaseObjects:;
 		at: self deliverErrorResponseCommand put: #decodeDeliverErrorResponse:.
 	^decodeCommandMap
+]
+
+{ #category : 'decoding-services' }
+RsrDecoder >> instanceOfImmediate: aReferenceType [
+
+	aReferenceType = 1
+		ifTrue: [^RsrSymbolReference new].
+	aReferenceType = 2
+		ifTrue: [^RsrStringReference new].
+	aReferenceType = 3
+		ifTrue: [^RsrPositiveIntegerReference new].
+	aReferenceType = 4
+		ifTrue: [^RsrNegativeIntegerReference new].
+	aReferenceType = 5
+		ifTrue: [^RsrCharacterReference new].
+	aReferenceType = 6
+		ifTrue: [^RsrNilReference new].
+	aReferenceType = 7
+		ifTrue: [^RsrTrueReference new].
+	aReferenceType = 8
+		ifTrue: [^RsrFalseReference new].
+	aReferenceType = 9
+		ifTrue: [^RsrArrayReference new].
+	aReferenceType = 10
+		ifTrue: [^RsrByteArrayReference new].
+	aReferenceType = 11
+		ifTrue: [^RsrSetReference new].
+	aReferenceType = 12
+		ifTrue: [^RsrOrderedCollectionReference new].
+	aReferenceType = 13
+		ifTrue: [^RsrDictionaryReference new].
+	aReferenceType = 14
+		ifTrue: [^RsrDateAndTimeReference new].
+	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.
 ]
 
 { #category : 'utility' }
