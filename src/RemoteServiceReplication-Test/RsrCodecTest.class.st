@@ -117,6 +117,24 @@ RsrCodecTest >> testArray [
 ]
 
 { #category : 'running-immediates' }
+RsrCodecTest >> testBoolean [
+
+	| encoding |
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 7].
+	self
+		verifyImmediate: true
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 8].
+	self
+		verifyImmediate: false
+		encoding: encoding.
+]
+
+{ #category : 'running-immediates' }
 RsrCodecTest >> testByteArray [
 
 	| bytes encoding |
@@ -138,6 +156,47 @@ RsrCodecTest >> testByteArray [
 	self
 		verifyImmediate: bytes
 		encoding: encoding
+]
+
+{ #category : 'running-immediates' }
+RsrCodecTest >> testCharacter [
+
+	| encoding |
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 5],
+		#[0 0 0 0 0 0 0 0].
+	self
+		verifyImmediate: (Character codePoint: 0)
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 5],
+		#[0 0 0 0 0 0 0 65].
+	self
+		verifyImmediate: (Character codePoint: 65)
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 5],
+		#[0 0 0 0 0 0 0 65].
+	self
+		verifyImmediate: $A
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 5],
+		#[0 0 0 0 0 0 1 212].
+	self
+		verifyImmediate: (Character codePoint: 16r01D4)
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 5],
+		#[0 0 0 0 0 0 131 52].
+	self
+		verifyImmediate: (Character codePoint: 16r8334)
+		encoding: encoding.
 ]
 
 { #category : 'running-control words' }
@@ -239,6 +298,72 @@ RsrCodecTest >> testDictionary [
 	self
 		verifyImmediate: dictionary
 		encoding: encoding"
+]
+
+{ #category : 'running-immediates' }
+RsrCodecTest >> testInteger [
+
+	| encoding |
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 3],
+		#[0 0 0 0 0 0 0 1],
+		#[0].
+	self
+		verifyImmediate: 0
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 3],
+		#[0 0 0 0 0 0 0 1],
+		#[4].
+	self
+		verifyImmediate: 4
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 3],
+		#[0 0 0 0 0 0 0 5],
+		#[1 15 248 235 121].
+	self
+		verifyImmediate: 4562938745
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 4],
+		#[0 0 0 0 0 0 0 5],
+		#[1 15 248 235 121].
+	self
+		verifyImmediate: -4562938745
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 3],
+		#[0 0 0 0 0 0 0 13],
+		#[10 101 181 177 179 46 128 92 96 64 190 76 107].
+	self
+		verifyImmediate: 823759265872134912569713249387
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 4],
+		#[0 0 0 0 0 0 0 13],
+		#[10 101 181 177 179 46 128 92 96 64 190 76 107].
+	self
+		verifyImmediate: -823759265872134912569713249387
+		encoding: encoding.
+]
+
+{ #category : 'running-immediates' }
+RsrCodecTest >> testNil [
+
+	| encoding |
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 6].
+	self
+		verifyImmediate: nil
+		encoding: encoding
 ]
 
 { #category : 'running-immediates' }
