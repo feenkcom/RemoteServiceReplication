@@ -35,16 +35,16 @@ RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse [
 				encodeControlWord: aDeliverErrorResponse transaction
 				onto: stream.
 			self
-				encodeReferenceOf: error originalClassName
+				encodeReference: (RsrReference from: error originalClassName)
 				onto: stream.
 			self
-				encodeReferenceOf: error tag
+				encodeReference: (RsrReference from: error tag)
 				onto: stream.
 			self
-				encodeReferenceOf: error messageText
+				encodeReference: (RsrReference from: error messageText)
 				onto: stream.
 			self
-				encodeReferenceOf: error stack
+				encodeReference: (RsrReference from: error stack)
 				onto: stream]
 ]
 
@@ -63,22 +63,19 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 			self
 				encodeControlWord: aDeliverResponse services size
 				onto: stream.
-			aDeliverResponse services do: [:each | self encodeService: each onto: stream].
+			aDeliverResponse services do: [:each | self encodeServiceSnapshot: (RsrServiceSnapshot from: each) onto: stream].
 			self
-				encodeReferenceOf: aDeliverResponse response
+				encodeReference: (RsrReference from: aDeliverResponse response)
 				onto: stream]
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeReferenceOf: anObject
+RsrEncoder >> encodeReference: aReference
 onto: aStream [
 
-	| species |
-	species := self speciesOf: anObject.
-	species
-		encodeReference: anObject
+	aReference
+		encode: aStream
 		using: self
-		onto: aStream
 ]
 
 { #category : 'private-encoding' }
@@ -123,10 +120,10 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 						encodeServiceSnapshot: (RsrServiceSnapshot from: each)
 						onto: stream].
 			self
-				encodeReferenceOf: aSendMessage receiver
+				encodeReference: (RsrReference from: aSendMessage receiver)
 				onto: stream.
 			self
-				encodeReferenceOf: aSendMessage selector
+				encodeReference: (RsrReference from: aSendMessage selector)
 				onto: stream.
 			self
 				encodeControlWord: aSendMessage arguments size
@@ -135,30 +132,19 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 				do:
 					[:each |
 					self
-						encodeReferenceOf: each
+						encodeReference: (RsrReference from: each)
 						onto: stream]]
 ]
 
 { #category : 'encoding' }
-RsrEncoder >> encodeService: anObject [
+RsrEncoder >> encodeServiceSnapshot: aServiceSnapshot [
 
 	^ByteArray
 		streamContents:
 			[:stream |
 			self
-				encodeService: anObject
+				encodeServiceSnapshot: aServiceSnapshot
 				onto: stream]
-]
-
-{ #category : 'private-encoding' }
-RsrEncoder >> encodeService: aService
-onto: aStream [
-
-	(aService isKindOf: RsrService)
-		ifFalse: [^RsrUnsupportedObject signal: aService].
-	self
-		encodeServiceSnapshot: (RsrServiceSnapshot from: aService)
-		onto: aStream
 ]
 
 { #category : 'private-encoding' }
@@ -190,28 +176,8 @@ ofSize: aNumberOfBytes [
 	^bytes
 ]
 
-{ #category : 'private-testing' }
-RsrEncoder >> isImmediate: anObject [
-
-	^self speciesMapping includesKey: anObject class
-]
-
 { #category : 'private-accessing' }
 RsrEncoder >> sendMessageIdentifier [
 
 	^1
-]
-
-{ #category : 'private-accessing' }
-RsrEncoder >> speciesMapping [
-	"Return a mapping between the native class and their associated RsrSpecies"
-
-	^RsrSpecies speciesMapping
-]
-
-{ #category : 'accessing' }
-RsrEncoder >> speciesOf: anObject [
-
-	
-	^RsrSpecies speciesOf: anObject
 ]

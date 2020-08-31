@@ -40,15 +40,6 @@ RsrDecoder >> connection: aConnection [
 	connection := aConnection
 ]
 
-{ #category : 'decoding' }
-RsrDecoder >> decodeAndResolveObjectReference: aStream [
-
-	| oid |
-	oid := self decodeControlWord: aStream.
-	oid = self immediateOID ifTrue: [^(self decodeImmediateReference: aStream) resolve: self registry].
-	^registry serviceAt: oid ifAbsent: [self signalUnknownOID]
-]
-
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
@@ -85,10 +76,10 @@ RsrDecoder >> decodeDeliverErrorResponse: aStream [
 
 	| transaction originalClassName tag messageText stack error |
 	transaction := self decodeControlWord: aStream.
-	originalClassName := self decodeAndResolveObjectReference: aStream.
-	tag := self decodeAndResolveObjectReference: aStream.
-	messageText := self decodeAndResolveObjectReference: aStream.
-	stack := self decodeAndResolveObjectReference: aStream.
+	originalClassName := (self decodeReference: aStream) resolve: self registry.
+	tag := (self decodeReference: aStream) resolve: self registry.
+	messageText := (self decodeReference: aStream) resolve: self registry.
+	stack := (self decodeReference: aStream) resolve: self registry.
 	error := RsrRemoteError new
 		originalClassName: originalClassName;
 		tag: tag;
@@ -107,23 +98,13 @@ RsrDecoder >> decodeDeliverResponse: aStream [
     | transaction numServices services response |
     transaction := self decodeControlWord: aStream.
     numServices := self decodeControlWord: aStream.
-    services := (1 to: numServices) collect: [:each | self decodeService: aStream].
-    response := self decodeAndResolveObjectReference: aStream.
+    services := (1 to: numServices) collect: [:each | (self decodeServiceSnapshot: aStream) reifyIn: self connection].
+    response := (self decodeReference: aStream) resolve: self registry.
     ^RsrDeliverResponse new
         transaction: transaction;
         services: services;
         response: response;
         yourself
-]
-
-{ #category : 'decoding-services' }
-RsrDecoder >> decodeImmediateObject: aStream [
-
-	| species |
-	species := self decodeControlWord: aStream.
-	^(RsrSpecies speciesList at: species + 1)
-		decodeReference: aStream
-		using: self
 ]
 
 { #category : 'decoding-services' }
@@ -134,15 +115,6 @@ RsrDecoder >> decodeImmediateReference: aStream [
 	^(self instanceOfImmediate: referenceType)
 		decode: aStream
 		using: self
-]
-
-{ #category : 'decoding' }
-RsrDecoder >> decodeObjectReference: aStream [
-
-	| oid |
-	oid := self decodeControlWord: aStream.
-	oid = self immediateOID ifTrue: [^(self decodeImmediateReference: aStream) resolve: self registry].
-	^RsrServiceReference sid: oid
 ]
 
 { #category : 'decoding' }
@@ -175,12 +147,12 @@ RsrDecoder >> decodeSendMessage: aStream [
 	| transaction argCount receiverReference receiver selector numServices services arguments instance |
 	transaction := self decodeControlWord: aStream.
 	numServices := self decodeControlWord: aStream.
-	services := (1 to: numServices) collect: [:each | self decodeService: aStream].
-	receiverReference := self decodeObjectReference: aStream.
+	services := (1 to: numServices) collect: [:each | (self decodeServiceSnapshot: aStream) reifyIn: self connection].
+	receiverReference := self decodeReference: aStream.
 	receiver := receiverReference resolve: self registry.
-	selector := self decodeAndResolveObjectReference: aStream.
+	selector := (self decodeReference: aStream) resolve: self registry.
 	argCount := self decodeControlWord: aStream.
-	arguments := (1 to: argCount) collect: [:each | self decodeAndResolveObjectReference: aStream].
+	arguments := (1 to: argCount) collect: [:each | (self decodeReference: aStream) resolve: self registry].
 	instance := RsrSendMessage
 		transaction: transaction
 		receiver: receiver
@@ -188,12 +160,6 @@ RsrDecoder >> decodeSendMessage: aStream [
 		arguments: arguments.
 	instance services: services.
 	^instance
-]
-
-{ #category : 'decoding-services' }
-RsrDecoder >> decodeService: aStream [
-
-	^(self decodeServiceSnapshot: aStream) reifyIn: self connection
 ]
 
 { #category : 'decoding-services' }
@@ -269,10 +235,4 @@ RsrDecoder >> registry [
 RsrDecoder >> registry: anRsrRegistry [
 
 	registry := anRsrRegistry
-]
-
-{ #category : 'error handling' }
-RsrDecoder >> signalUnknownOID [
-
-	RsrUnknownOID signal
 ]

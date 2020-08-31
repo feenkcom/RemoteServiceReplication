@@ -9,7 +9,7 @@ RsrDecoderTest >> assertReference: bytes
 decodesTo: expected [
 
 	| actual |
-	actual := self decoder decodeAndResolveObjectReference: bytes readStream.
+	actual := (self decoder decodeReference: bytes readStream) resolve: self decoder registry.
 	self
 		assert: actual
 		equals: expected
@@ -18,7 +18,7 @@ decodesTo: expected [
 { #category : 'decoding' }
 RsrDecoderTest >> decodeService: anObjectBytes [
 
-	^self decoder decodeService: anObjectBytes readStream
+	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self decoder connection
 ]
 
 { #category : 'running' }
@@ -228,7 +228,7 @@ RsrDecoderTest >> verifyImmediate: expected
 encoding: encoding [
 
 	| actual |
-	actual := self decoder decodeAndResolveObjectReference: encoding readStream.
+	actual := (self decoder decodeReference: encoding readStream) resolve: self decoder registry.
 	self
 		assert: actual
 		equals: expected

@@ -41,7 +41,9 @@ RsrCodecTest >> encoder [
 { #category : 'encode/decode' }
 RsrCodecTest >> encodeReferenceOf: anObject [
 
-	^ByteArray streamContents: [:stream | self encoder encodeReferenceOf: anObject onto: stream]
+	| reference |
+	reference := RsrReference from: anObject.
+	^ByteArray streamContents: [:stream | self encoder encodeReference: reference onto: stream]
 ]
 
 { #category : 'running-symbol' }
@@ -292,7 +294,7 @@ RsrCodecTest >> testDictionary [
 		at: false put: true;
 		yourself.
 	encoding := self encodeReferenceOf: dictionary.
-	result := self decoder decodeAndResolveObjectReference: encoding readStream.
+	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.
 	self
 		assert: result
 		equals: dictionary.
@@ -432,7 +434,7 @@ RsrCodecTest >> testSet [
 		with: true
 		with: nil.
 	encoding := self encodeReferenceOf: set.
-	result := self decoder decodeAndResolveObjectReference: encoding readStream.
+	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.
 	self
 		assert: result
 		equals: set.

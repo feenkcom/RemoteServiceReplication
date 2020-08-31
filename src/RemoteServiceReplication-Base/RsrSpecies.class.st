@@ -55,26 +55,6 @@ RsrSpecies class >> speciesIdentifier [
 ]
 
 { #category : 'accessing' }
-RsrSpecies class >> speciesList [
-
-	^{RsrServiceSpecies.
-	RsrSymbolSpecies.
-	RsrStringSpecies.
-	RsrPositiveIntegerSpecies.
-	RsrNegativeIntegerSpecies.
-	RsrCharacterSpecies.
-	RsrUndefinedObjectSpecies.
-	RsrTrueSpecies.
-	RsrFalseSpecies.
-	RsrArraySpecies.
-	RsrByteArraySpecies.
-	RsrSetSpecies.
-	RsrOrderedCollectionSpecies.
-	RsrDictionarySpecies.
-	RsrDateAndTimeSpecies.}
-]
-
-{ #category : 'accessing' }
 RsrSpecies class >> speciesMapping [
 	"Return a mapping between the native class and their associated RsrSpecies"
 
