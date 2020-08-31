@@ -127,9 +127,3 @@ RsrDeliverResponse >> transaction: aTransactionId [
 
 	transaction := aTransactionId
 ]
-
-{ #category : 'lifecycle' }
-RsrDeliverResponse >> writeUsing: aCommandWriter [
-
-	aCommandWriter write: encoding
-]

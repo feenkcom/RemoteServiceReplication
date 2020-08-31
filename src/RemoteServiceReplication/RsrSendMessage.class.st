@@ -162,9 +162,3 @@ RsrSendMessage >> transaction [
 RsrSendMessage >> transaction: anObject [
 	transaction := anObject
 ]
-
-{ #category : 'lifecycle' }
-RsrSendMessage >> writeUsing: aCommandWriter [
-
-	aCommandWriter write: encoding
-]

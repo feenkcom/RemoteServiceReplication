@@ -66,5 +66,5 @@ RsrCommandSink >> write: aByteArray [
 RsrCommandSink >> writeCommand: aCommand [
 
 	self report: aCommand.
-	aCommand writeUsing: self
+	self write: aCommand encoding
 ]

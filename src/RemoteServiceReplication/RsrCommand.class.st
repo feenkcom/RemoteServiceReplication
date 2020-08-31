@@ -39,9 +39,3 @@ RsrCommand >> reportOn: aLog [
 RsrCommand >> sendOver: aConnection [
 	"Do nothing unless a subclass offers a specialization"
 ]
-
-{ #category : 'lifecycle' }
-RsrCommand >> writeUsing: aCommandWriter [
-
-	aCommandWriter write: encoding
-]
