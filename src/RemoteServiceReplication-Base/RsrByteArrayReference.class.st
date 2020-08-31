@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrByteArrayReference',
 	#superclass : 'RsrValueReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'encoding/decoding' }

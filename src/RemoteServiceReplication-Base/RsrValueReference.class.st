@@ -13,7 +13,7 @@ Class {
 	#instVars : [
 		'value'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }

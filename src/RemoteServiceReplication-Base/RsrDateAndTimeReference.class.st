@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrDateAndTimeReference',
 	#superclass : 'RsrValueReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'accessing' }

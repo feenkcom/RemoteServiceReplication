@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrReference',
 	#superclass : 'RsrObject',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }

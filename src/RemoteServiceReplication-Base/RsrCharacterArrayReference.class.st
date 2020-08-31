@@ -10,7 +10,7 @@ Object
 Class {
 	#name : 'RsrCharacterArrayReference',
 	#superclass : 'RsrValueReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'converting' }

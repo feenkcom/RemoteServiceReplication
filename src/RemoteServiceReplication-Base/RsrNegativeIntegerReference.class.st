@@ -11,7 +11,7 @@ Object
 Class {
 	#name : 'RsrNegativeIntegerReference',
 	#superclass : 'RsrIntegerReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'converting' }

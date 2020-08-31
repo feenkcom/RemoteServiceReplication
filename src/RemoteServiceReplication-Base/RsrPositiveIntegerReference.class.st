@@ -11,7 +11,7 @@ Object
 Class {
 	#name : 'RsrPositiveIntegerReference',
 	#superclass : 'RsrIntegerReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'accessing' }

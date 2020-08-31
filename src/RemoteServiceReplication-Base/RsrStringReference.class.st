@@ -11,7 +11,7 @@ Object
 Class {
 	#name : 'RsrStringReference',
 	#superclass : 'RsrCharacterArrayReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'accessing' }

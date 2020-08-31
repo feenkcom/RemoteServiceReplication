@@ -11,7 +11,7 @@ Object
 Class {
 	#name : 'RsrSymbolReference',
 	#superclass : 'RsrCharacterArrayReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }

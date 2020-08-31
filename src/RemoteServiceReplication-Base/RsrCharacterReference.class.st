@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrCharacterReference',
 	#superclass : 'RsrValueReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'encoding/decoding' }

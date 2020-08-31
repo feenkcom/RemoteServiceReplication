@@ -9,7 +9,7 @@ Object
 Class {
 	#name : 'RsrImmediateReference',
 	#superclass : 'RsrReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }

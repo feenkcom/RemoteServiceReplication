@@ -11,7 +11,7 @@ Object
 Class {
 	#name : 'RsrArrayReference',
 	#superclass : 'RsrCollectionReference',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'accessing' }

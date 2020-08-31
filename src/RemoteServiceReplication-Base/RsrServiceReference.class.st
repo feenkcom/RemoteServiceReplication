@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'sid'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }
