@@ -19,3 +19,9 @@ RsrNegativeIntegerReference >> convertBytes: aByteArray [
 
 	^(super convertBytes: aByteArray) negated
 ]
+
+{ #category : 'accessing' }
+RsrNegativeIntegerReference >> typeIdentifier [
+
+	^4
+]

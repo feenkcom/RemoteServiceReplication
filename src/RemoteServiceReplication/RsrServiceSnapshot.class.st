@@ -17,6 +17,14 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'instance creation' }
+RsrServiceSnapshot class >> from: aService [
+
+	^self new
+		snapshot: aService;
+		yourself
+]
+
 { #category : 'accessing' }
 RsrServiceSnapshot >> createBasicInstance [
 
@@ -33,7 +41,7 @@ using: aDecoder [
 	species := aDecoder decodeControlWord: aStream.
 	sid := aDecoder decodeControlWord: aStream.
 	instVarCount := aDecoder decodeControlWord: aStream.
-	serviceName := aDecoder decodeAndResolveObjectReference: aStream.
+	serviceName := (aDecoder decodeReference: aStream) resolve: aDecoder registry.
 	templateClass := (RsrClassResolver classNamed: serviceName) templateClass.
 	template := templateClass templateClassName.
 	targetServiceType := templateClass clientClassName = serviceName
@@ -41,6 +49,25 @@ using: aDecoder [
 		ifFalse: [#server].
 	slots := OrderedCollection new: instVarCount.
 	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]
+]
+
+{ #category : 'encoding/decoding' }
+RsrServiceSnapshot >> encode: aStream
+using: anEncoder [
+
+	anEncoder
+		encodeControlWord: self snapshotIdentifier
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self sid
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self slots size
+		onto: aStream.
+	self targetClassNameReference
+		encode: aStream
+		using: anEncoder.
+	self slots do: [:each | each encode: aStream using: anEncoder]
 ]
 
 { #category : 'accessing' }
@@ -102,6 +129,36 @@ RsrServiceSnapshot >> slots [
 RsrServiceSnapshot >> slots: anArrayOfReferences [
 
 	slots := anArrayOfReferences
+]
+
+{ #category : 'snapshotting' }
+RsrServiceSnapshot >> snapshot: aService [
+
+	sid := aService _id.
+	template := aService class templateClassName.
+	targetServiceType := aService isClient
+		ifTrue: [#server]
+		ifFalse: [#client].
+	slots := OrderedCollection new.
+	RsrServiceSpecies
+		reflectedVariablesFor: aService
+		do: [:each | slots add: (RsrReference from: each)]
+]
+
+{ #category : 'accessing' }
+RsrServiceSnapshot >> snapshotIdentifier [
+
+	^0
+]
+
+{ #category : 'accessing' }
+RsrServiceSnapshot >> targetClassNameReference [
+
+	| targetClassName |
+	targetClassName := self shouldCreateClient
+		ifTrue: [self templateClass clientClassName]
+		ifFalse: [self templateClass serverClassName].
+	^RsrSymbolReference symbol: targetClassName
 ]
 
 { #category : 'accessing' }

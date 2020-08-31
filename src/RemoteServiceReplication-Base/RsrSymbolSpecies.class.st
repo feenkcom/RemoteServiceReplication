@@ -12,6 +12,15 @@ RsrSymbolSpecies class >> decodeReference: aStream using: aDecoder [
 ]
 
 { #category : 'accessing' }
+RsrSymbolSpecies class >> from: x [
+
+	Transcript
+		show: RsrProcessModel currentStackDump;
+		cr.
+	^super from: x
+]
+
+{ #category : 'accessing' }
 RsrSymbolSpecies class >> speciesIdentifier [
 
 	^1

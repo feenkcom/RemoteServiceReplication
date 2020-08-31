@@ -1,24 +1,26 @@
 Class {
-	#name : 'RsrNilReference',
+	#name : 'RsrBooleanReference',
 	#superclass : 'RsrImmediateReference',
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'instance creation' }
-RsrNilReference class >> from: aNil [
+RsrBooleanReference class >> from: aBoolean [
 
-	^self new
+	^aBoolean
+		ifTrue: [RsrTrueReference new]
+		ifFalse: [RsrFalseReference new]
 ]
 
 { #category : 'encoding/decoding' }
-RsrNilReference >> decode: aStream
+RsrBooleanReference >> decode: aStream
 using: aDecoder [
 
-	"Nil has no additional value"
+	"Boolean has no additional value"
 ]
 
 { #category : 'encoding/decoding' }
-RsrNilReference >> encode: aStream
+RsrBooleanReference >> encode: aStream
 using: anEncoder [
 
 	anEncoder
@@ -27,16 +29,4 @@ using: anEncoder [
 	anEncoder
 		encodeControlWord: self typeIdentifier
 		onto: aStream
-]
-
-{ #category : 'resolving' }
-RsrNilReference >> resolve: aRegistry [
-
-	^nil
-]
-
-{ #category : 'accessing' }
-RsrNilReference >> typeIdentifier [
-
-	^6
 ]

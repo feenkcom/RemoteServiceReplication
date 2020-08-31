@@ -1,17 +1,23 @@
+"
+No class-specific documentation for RsrArrayReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrValueReference( value)
+          RsrArrayReference
+
+"
 Class {
 	#name : 'RsrArrayReference',
-	#superclass : 'RsrValueReference',
+	#superclass : 'RsrCollectionReference',
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'decoding' }
-RsrArrayReference >> decode: aStream
-using: aDecoder [
+{ #category : 'accessing' }
+RsrArrayReference class >> typeIdentifier [
 
-	| size |
-	size := aDecoder decodeControlWord: aStream.
-	value := Array new: size.
-	1 to: size do: [:i | value at: i put: (aDecoder decodeReference: aStream)]
+	^9
 ]
 
 { #category : 'resolving' }

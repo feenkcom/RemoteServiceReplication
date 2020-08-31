@@ -1,14 +1,22 @@
+"
+No class-specific documentation for RsrFalseReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrFalseReference
+
+"
 Class {
 	#name : 'RsrFalseReference',
-	#superclass : 'RsrImmediateReference',
+	#superclass : 'RsrBooleanReference',
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'decoding' }
-RsrFalseReference >> decode: aStream
-using: aDecoder [
+{ #category : 'accessing' }
+RsrFalseReference class >> typeIdentifier [
 
-	"False has no additional value"
+	^8
 ]
 
 { #category : 'resolving' }

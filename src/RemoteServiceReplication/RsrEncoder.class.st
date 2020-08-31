@@ -63,31 +63,10 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 			self
 				encodeControlWord: aDeliverResponse services size
 				onto: stream.
-			aDeliverResponse services do: [:each | self encodeObject: each onto: stream].
+			aDeliverResponse services do: [:each | self encodeService: each onto: stream].
 			self
 				encodeReferenceOf: aDeliverResponse response
 				onto: stream]
-]
-
-{ #category : 'encoding' }
-RsrEncoder >> encodeObject: anObject [
-
-	^ByteArray
-		streamContents:
-			[:stream |
-			self
-				encodeObject: anObject
-				onto: stream]
-]
-
-{ #category : 'private-encoding' }
-RsrEncoder >> encodeObject: anObject
-onto: aStream [
-
-	(self speciesOf: anObject)
-		encode: anObject
-		using: self
-		on: aStream
 ]
 
 { #category : 'private-encoding' }
@@ -141,7 +120,7 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 				do:
 					[:each |
 					self
-						encodeObject: each
+						encodeServiceSnapshot: (RsrServiceSnapshot from: each)
 						onto: stream].
 			self
 				encodeReferenceOf: aSendMessage receiver
@@ -158,6 +137,37 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 					self
 						encodeReferenceOf: each
 						onto: stream]]
+]
+
+{ #category : 'encoding' }
+RsrEncoder >> encodeService: anObject [
+
+	^ByteArray
+		streamContents:
+			[:stream |
+			self
+				encodeService: anObject
+				onto: stream]
+]
+
+{ #category : 'private-encoding' }
+RsrEncoder >> encodeService: aService
+onto: aStream [
+
+	(aService isKindOf: RsrService)
+		ifFalse: [^RsrUnsupportedObject signal: aService].
+	self
+		encodeServiceSnapshot: (RsrServiceSnapshot from: aService)
+		onto: aStream
+]
+
+{ #category : 'private-encoding' }
+RsrEncoder >> encodeServiceSnapshot: aServiceSnapshot
+onto: aStream [
+
+	aServiceSnapshot
+		encode: aStream
+		using: self
 ]
 
 { #category : 'converting' }

@@ -14,6 +14,20 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'instance creation' }
+RsrSymbolReference class >> symbol: aSymbol [
+
+	^self new
+		value: aSymbol;
+		yourself
+]
+
+{ #category : 'accessing' }
+RsrSymbolReference class >> typeIdentifier [
+
+	^1
+]
+
 { #category : 'converting' }
 RsrSymbolReference >> convertBytes: aByteArray [
 

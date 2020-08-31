@@ -13,3 +13,9 @@ Class {
 	#superclass : 'RsrIntegerReference',
 	#category : 'RemoteServiceReplication'
 }
+
+{ #category : 'accessing' }
+RsrPositiveIntegerReference >> typeIdentifier [
+
+	^3
+]

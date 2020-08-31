@@ -13,3 +13,9 @@ Class {
 	#superclass : 'RsrCharacterArrayReference',
 	#category : 'RemoteServiceReplication'
 }
+
+{ #category : 'accessing' }
+RsrStringReference class >> typeIdentifier [
+
+	^2
+]

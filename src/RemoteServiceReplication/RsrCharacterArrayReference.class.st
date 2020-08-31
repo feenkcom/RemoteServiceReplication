@@ -19,7 +19,13 @@ RsrCharacterArrayReference >> convertBytes: aByteArray [
 	^aByteArray decodeFromUTF8ToString
 ]
 
-{ #category : 'decoding' }
+{ #category : 'converting' }
+RsrCharacterArrayReference >> convertToBytes: aCharacterArray [
+
+	^aCharacterArray encodeAsUTF8
+]
+
+{ #category : 'encoding/decoding' }
 RsrCharacterArrayReference >> decode: aStream
 using: aDecoder [
 
@@ -27,4 +33,22 @@ using: aDecoder [
 	length := aDecoder decodeControlWord: aStream.
 	bytes := aStream next: length.
 	value := self convertBytes: bytes
+]
+
+{ #category : 'encoding/decoding' }
+RsrCharacterArrayReference >> encode: aStream
+using: anEncoder [
+
+	| bytes |
+	anEncoder
+		encodeControlWord: anEncoder immediateOID
+		onto: aStream.
+	anEncoder
+		encodeControlWord: self typeIdentifier
+		onto: aStream.
+	bytes := self convertToBytes: value.
+	anEncoder
+		encodeControlWord: bytes size
+		onto: aStream.
+	aStream nextPutAll: bytes
 ]

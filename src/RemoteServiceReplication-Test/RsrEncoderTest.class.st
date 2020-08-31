@@ -153,7 +153,7 @@ RsrEncoderTest >> testServiceNoInstVars [
 	| rootService encodedBytes expectedEncoding |
 	rootService := RsrClientNoInstVars new.
 	self register: rootService.
-	encodedBytes := self encoder encodeObject: rootService.
+	encodedBytes := self encoder encodeService: rootService.
 	expectedEncoding := self serviceNoInstVarsEncoding.
 	self
 		assert: encodedBytes
@@ -169,7 +169,7 @@ RsrEncoderTest >> testServiceReferenceService [
 	self
 		register: rootService;
 		register: referencedService.
-	encodedObject := self encoder encodeObject: rootService.
+	encodedObject := self encoder encodeService: rootService.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 0], "type"
 		#[0 0 0 0 0 0 0 1], "rootService's OID = 1"
@@ -182,7 +182,7 @@ RsrEncoderTest >> testServiceReferenceService [
 	self
 		assert: encodedObject
 		equals: expectedEncoding.
-	encodedObject := self encoder encodeObject: referencedService.
+	encodedObject := self encoder encodeService: referencedService.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 0], "type"
 		#[0 0 0 0 0 0 0 2], "referencedService's OID = 2"
@@ -200,7 +200,7 @@ RsrEncoderTest >> testServiceReferenceService [
 RsrEncoderTest >> testUnsupportedObject [
 
 	self
-		should: [self encoder encodeObject: Object new]
+		should: [self encoder encodeService: Object new]
 		raise: RsrUnsupportedObject.
 	self
 		should: [self encoder encodeReferenceOf: Object new onto: (WriteStream on: ByteArray new)]

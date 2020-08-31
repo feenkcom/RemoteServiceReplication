@@ -9,15 +9,14 @@ Object
 "
 Class {
 	#name : 'RsrTrueReference',
-	#superclass : 'RsrImmediateReference',
+	#superclass : 'RsrBooleanReference',
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'decoding' }
-RsrTrueReference >> decode: aStream
-using: aDecoder [
+{ #category : 'accessing' }
+RsrTrueReference class >> typeIdentifier [
 
-	"True has no additional value"
+	^7
 ]
 
 { #category : 'resolving' }

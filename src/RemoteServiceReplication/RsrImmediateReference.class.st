@@ -13,11 +13,15 @@ Class {
 }
 
 { #category : 'instance creation' }
-RsrImmediateReference class >> value: anObject [
+RsrImmediateReference class >> from: anObject [
 
-	^self new
-		value: anObject;
-		yourself
+	^self subclassResponsiblity
+]
+
+{ #category : 'accessing' }
+RsrImmediateReference >> immediateOID [
+
+	^0
 ]
 
 { #category : 'resolving' }

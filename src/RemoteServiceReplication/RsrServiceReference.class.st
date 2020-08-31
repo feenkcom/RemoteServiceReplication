@@ -8,11 +8,26 @@ Class {
 }
 
 { #category : 'instance creation' }
+RsrServiceReference class >> from: aService [
+
+	^self sid: aService _id
+]
+
+{ #category : 'instance creation' }
 RsrServiceReference class >> sid: aServiceID [
 
 	^self new
 		sid: aServiceID;
 		yourself
+]
+
+{ #category : 'encoding/decoding' }
+RsrServiceReference >> encode: aStream
+using: anEncoder [
+
+	anEncoder
+		encodeControlWord: self sid
+		onto: aStream
 ]
 
 { #category : 'resolving' }

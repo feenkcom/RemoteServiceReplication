@@ -1,21 +1,30 @@
+"
+No class-specific documentation for RsrOrderedCollectionReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrValueReference( value)
+          RsrOrderedCollectionReference
+
+"
 Class {
 	#name : 'RsrOrderedCollectionReference',
-	#superclass : 'RsrValueReference',
+	#superclass : 'RsrCollectionReference',
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'decoding' }
-RsrOrderedCollectionReference >> decode: aStream
-using: aDecoder [
+{ #category : 'accessing' }
+RsrOrderedCollectionReference class >> typeIdentifier [
 
-	| size |
-	size := aDecoder decodeControlWord: aStream.
-	value := OrderedCollection new: size.
-	size timesRepeat: [value add: (aDecoder decodeReference: aStream)]
+	^12
 ]
 
 { #category : 'resolving' }
 RsrOrderedCollectionReference >> resolve: aRegistry [
 
-	^value collect: [:each | each resolve: aRegistry]
+	| oc |
+	oc := OrderedCollection new: value size.
+	value do: [:each | oc add: (each resolve: aRegistry)].
+	^oc
 ]
