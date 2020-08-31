@@ -25,6 +25,41 @@ RsrServiceSnapshot class >> from: aService [
 		yourself
 ]
 
+{ #category : 'variable utilites' }
+RsrServiceSnapshot class >> reflectedVariableIndicesFor: aService
+do: aBlock [
+
+	| allVariables |
+	allVariables := aService class allInstVarNames.
+	(self reflectedVariablesFor: aService)
+		do:
+			[:varName | | index |
+			index := allVariables indexOf: varName.
+			aBlock value: index]
+]
+
+{ #category : 'variable utilites' }
+RsrServiceSnapshot class >> reflectedVariablesFor: aService [
+
+	| currentClass variables |
+	variables := OrderedCollection new.
+	currentClass := aService class templateClass.
+	[currentClass == RsrService]
+		whileFalse:
+			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
+			currentClass := currentClass superclass].
+	^variables
+]
+
+{ #category : 'variable utilites' }
+RsrServiceSnapshot class >> reflectedVariablesFor: aService
+do: aBlock [
+
+	self
+		reflectedVariableIndicesFor: aService
+		do: [:index | aBlock value: (aService instVarAt: index)]
+]
+
 { #category : 'accessing' }
 RsrServiceSnapshot >> createBasicInstance [
 
@@ -92,10 +127,10 @@ RsrServiceSnapshot >> reifyIn: aConnection [
 
 	| instance referenceStream |
 	instance := self instanceIn: aConnection.
-	(RsrServiceSpecies reflectedVariablesFor: instance) size = slots size
+	(self class reflectedVariablesFor: instance) size = slots size
 		ifFalse: [self error: 'Incorrected encoded instance detected'].
 	referenceStream := ReadStream on: slots.
-	RsrServiceSpecies
+	self class
 		reflectedVariableIndicesFor: instance
 		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection registry)].
 	^instance
@@ -140,7 +175,7 @@ RsrServiceSnapshot >> snapshot: aService [
 		ifTrue: [#server]
 		ifFalse: [#client].
 	slots := OrderedCollection new.
-	RsrServiceSpecies
+	RsrServiceSnapshot
 		reflectedVariablesFor: aService
 		do: [:each | slots add: (RsrReference from: each)]
 ]

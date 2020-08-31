@@ -130,7 +130,7 @@ RsrService >> isServer [
 { #category : 'public-accessing' }
 RsrService >> reflectedVariableNames [
 
-	^RsrServiceSpecies reflectedVariablesFor: self
+	^RsrServiceSnapshot reflectedVariablesFor: self
 ]
 
 { #category : 'public-registration' }

@@ -5,6 +5,7 @@ RsrServiceSpecies class >> reflectedVariableIndicesFor: aService
 do: aBlock [
 
 	| allVariables |
+	Error signal.
 	allVariables := aService class allInstVarNames.
 	(self reflectedVariablesFor: aService)
 		do:
@@ -17,6 +18,7 @@ do: aBlock [
 RsrServiceSpecies class >> reflectedVariablesFor: aService [
 
 	| currentClass variables |
+	Error signal.
 	variables := OrderedCollection new.
 	currentClass := aService class templateClass.
 	[currentClass == RsrService]
@@ -30,6 +32,7 @@ RsrServiceSpecies class >> reflectedVariablesFor: aService [
 RsrServiceSpecies class >> reflectedVariablesFor: aService
 do: aBlock [
 
+	Error signal.
 	self
 		reflectedVariableIndicesFor: aService
 		do: [:index | aBlock value: (aService instVarAt: index)]

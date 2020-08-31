@@ -66,7 +66,7 @@ RsrRetainAnalysis >> analyzeService: aService [
 	self
 		analyzing: aService
 		during:
-			[RsrServiceSpecies
+			[RsrServiceSnapshot
 				reflectedVariablesFor: aService
 				do: [:each | self analyze: each]].
 	self retain: aService
