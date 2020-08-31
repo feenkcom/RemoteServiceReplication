@@ -59,18 +59,6 @@ using: anEncoder [
 	value do: [:each | each encode: aStream using: anEncoder]
 ]
 
-{ #category : 'encoding/decoding' }
-RsrDictionaryReference >> encodeControlWord: x
-onto: y [
-
-	Transcript
-		show: RsrProcessModel currentStackDump;
-		cr.
-	^super
-		encodeControlWord: x
-		onto: y
-]
-
 { #category : 'resolving' }
 RsrDictionaryReference >> resolve: aRegistry [
 

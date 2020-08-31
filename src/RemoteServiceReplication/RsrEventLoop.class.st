@@ -83,9 +83,6 @@ RsrEventLoop >> report: aCommand [
 { #category : 'running' }
 RsrEventLoop >> reportException: anException [
 
-	Transcript
-		show: RsrProcessModel currentStackDump;
-		cr.
 	self log: '', self class name, '/', anException description
 ]
 

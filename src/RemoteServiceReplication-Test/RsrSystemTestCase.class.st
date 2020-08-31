@@ -39,9 +39,7 @@ RsrSystemTestCase >> setUp [
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;
-		assert: connectionB isOpen.
-	connectionA log addSink: RsrTranscriptSink new.
-	connectionB log addSink: RsrTranscriptSink new.
+		assert: connectionB isOpen
 ]
 
 { #category : 'initialization' }

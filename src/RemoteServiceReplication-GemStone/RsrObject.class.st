@@ -21,12 +21,3 @@ RsrObject >> initialize [
 
 	^self
 ]
-
-{ #category : 'errors' }
-RsrObject >> subclassResponsibility [
-
-	Transcript
-		show: RsrProcessModel currentStackDump;
-		cr.
-	^super subclassResponsibility
-]
