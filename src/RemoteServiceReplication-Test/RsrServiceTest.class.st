@@ -15,12 +15,12 @@ RsrServiceTest >> testAnalyzeServiceRegisteredWithDifferentConnection [
 
 	| instance analysis |
 	instance := RsrRemoteAction clientClass new.
-	analysis := RsrRetainAnalysis
+	analysis := RsrSnapshotAnalysis
 		roots: (Array with: instance)
 		connection: connectionA.
 	analysis perform.
 	self assert: instance isMirrored.
-	analysis := RsrRetainAnalysis
+	analysis := RsrSnapshotAnalysis
 		roots: (Array with: instance)
 		connection: connectionB.
 	self

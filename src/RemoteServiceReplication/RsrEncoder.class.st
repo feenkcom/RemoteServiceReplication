@@ -63,9 +63,9 @@ RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 			self
 				encodeControlWord: aDeliverResponse services size
 				onto: stream.
-			aDeliverResponse services do: [:each | self encodeServiceSnapshot: (RsrServiceSnapshot from: each) onto: stream].
+			aDeliverResponse services do: [:each | self encodeServiceSnapshot: each onto: stream].
 			self
-				encodeReference: (RsrReference from: aDeliverResponse response)
+				encodeReference: aDeliverResponse response
 				onto: stream]
 ]
 

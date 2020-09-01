@@ -14,6 +14,13 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'analyzing' }
+RsrDictionaryReference class >> analyze: aDictionary
+using: anAnalyzer [
+
+	^anAnalyzer analyzeDictionary: aDictionary
+]
+
 { #category : 'instance creation' }
 RsrDictionaryReference class >> from: aDictionary [
 

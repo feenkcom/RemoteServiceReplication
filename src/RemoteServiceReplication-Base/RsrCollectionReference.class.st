@@ -4,6 +4,13 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'analyzing' }
+RsrCollectionReference class >> analyze: aCollection
+using: anAnalyzer [
+
+	^anAnalyzer analyzeCollection: aCollection
+]
+
 { #category : 'instance creation' }
 RsrCollectionReference class >> from: aSequencedCollection [
 

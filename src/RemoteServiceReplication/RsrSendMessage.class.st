@@ -53,14 +53,19 @@ RsrSendMessage >> encodeUsing: anEncoder [
 { #category : 'lifecycle' }
 RsrSendMessage >> executeFor: aConnection [
 
-	| result response |
+	| result analysis resultReference response |
 	[result := receiver
 		perform: selector
 		withArguments: arguments.
+	analysis := RsrSnapshotAnalysis
+		roots: (Array with: receiver with: result)
+		connection: aConnection.
+	analysis perform.
+	resultReference := RsrReference from: result.
 	response := RsrDeliverResponse
 		transaction: transaction
-		response: result
-		roots: (Array with: receiver with: result).
+		response: resultReference
+		snapshots: analysis snapshots.
 	response sendOver: aConnection]
 		on: Error
 		do:

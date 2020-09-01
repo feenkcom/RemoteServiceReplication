@@ -44,6 +44,18 @@ roots: anArray [
 		yourself
 ]
 
+{ #category : 'instance creation' }
+RsrDeliverResponse class >> transaction: aTransactionId
+response: anObject
+snapshots: anArray [
+
+	^self new
+		transaction: aTransactionId;
+		response: anObject;
+		services: anArray;
+		yourself
+]
+
 { #category : 'lifecycle' }
 RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 
@@ -53,12 +65,14 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 { #category : 'lifecycle' }
 RsrDeliverResponse >> executeFor: aConnection [
 
-	| pendingMessage |
+	| pendingMessage result |
+	services do: [:each | each reifyIn: aConnection].
+	result := response resolve: aConnection registry.
 	pendingMessage := aConnection pendingMessages
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	pendingMessage promise fulfill: response
+	pendingMessage promise fulfill: result
 ]
 
 { #category : 'reporting' }
@@ -94,12 +108,6 @@ RsrDeliverResponse >> roots: anArray [
 { #category : 'lifecycle' }
 RsrDeliverResponse >> sendOver: aConnection [
 
-	| analysis |
-	analysis := RsrRetainAnalysis
-		roots: roots
-		connection: aConnection.
-	analysis perform.
-	services := analysis services.
 	self encodeUsing: aConnection encoder.
 	aConnection commandWriter enqueue: self
 ]

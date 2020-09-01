@@ -98,8 +98,8 @@ RsrDecoder >> decodeDeliverResponse: aStream [
     | transaction numServices services response |
     transaction := self decodeControlWord: aStream.
     numServices := self decodeControlWord: aStream.
-    services := (1 to: numServices) collect: [:each | (self decodeServiceSnapshot: aStream) reifyIn: self connection].
-    response := (self decodeReference: aStream) resolve: self registry.
+    services := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].
+    response := self decodeReference: aStream.
     ^RsrDeliverResponse new
         transaction: transaction;
         services: services;

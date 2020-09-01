@@ -12,6 +12,13 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'analyzing' }
+RsrImmediateReference class >> analyze: anObject
+using: anAnalyzer [
+
+	^anAnalyzer analyzeImmediate: anObject
+]
+
 { #category : 'instance creation' }
 RsrImmediateReference class >> from: anObject [
 

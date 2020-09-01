@@ -80,10 +80,9 @@ RsrEncoderTest >> testDeliverResponse [
 	response := #responseSymbol.
 	command := RsrDeliverResponse
 		transaction: 1
-		response: response
-		roots: (Array with: service with: response).
+		response: (RsrReference from: response)
+		snapshots: (Array with: (RsrServiceSnapshot from: service)).
 	command
-		services: (Array with: service);
 		encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"

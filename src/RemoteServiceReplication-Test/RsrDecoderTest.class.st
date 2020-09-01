@@ -72,7 +72,7 @@ RsrDecoderTest >> testDeliverErrorResponse [
 { #category : 'running' }
 RsrDecoderTest >> testDeliverResponse [
 
-	| service response encoding command |
+	| service response encoding command decodedService |
 	service := RsrServerNoInstVars
 		_id: 1
 		connection: RsrMockConnection new.
@@ -98,10 +98,14 @@ RsrDecoderTest >> testDeliverResponse [
 		assert: command transaction
 		equals: 1.
 	self
-		assert: command services
-		equals: (Array with: service).
+		assert: command services size
+		equals: 1.
+	decodedService := command services first reifyIn: self connection.
 	self
-		assert: command response
+		assert: decodedService
+		equals: service.
+	self
+		assert: (command response resolve: self registry)
 		equals: response
 ]
 

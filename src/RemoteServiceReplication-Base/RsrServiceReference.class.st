@@ -7,6 +7,13 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'analyzing' }
+RsrServiceReference class >> analyze: aService
+using: anAnalyzer [
+
+	^anAnalyzer analyzeService: aService
+]
+
 { #category : 'instance creation' }
 RsrServiceReference class >> from: aService [
 

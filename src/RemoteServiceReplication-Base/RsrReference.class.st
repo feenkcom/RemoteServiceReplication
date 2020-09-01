@@ -4,6 +4,13 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'analyzing' }
+RsrReference class >> analyze: anObject
+using: anAnalyzer [
+
+	^self subclassResponsibility
+]
+
 { #category : 'instance creation' }
 RsrReference class >> from: anObject [
 
