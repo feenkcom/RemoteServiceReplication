@@ -80,14 +80,22 @@ to: aService [
 	"Send DispatchMessage command"
 "Coorination window closed"
 	"Return Promise"
-	| dispatchCommand |
+	| analysis receiverReference selectorReference argumentReferences dispatchCommand |
 	isOpen
 		ifFalse: [self error: 'Connection is not open'].
+	analysis := RsrSnapshotAnalysis
+		roots: (Array with: aService), aMessage arguments
+		connection: self.
+	analysis perform.
+	receiverReference := RsrReference from: aService.
+	selectorReference := RsrReference from: aMessage selector.
+	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].
 	dispatchCommand := RsrSendMessage
 		transaction: self newTransactionId
-		receiver: aService
-		selector: aMessage selector
-		arguments: aMessage arguments.
+		receiver: receiverReference
+		selector: selectorReference
+		arguments: argumentReferences.
+	dispatchCommand services: analysis snapshots.
 	^dispatchCommand sendOver: self
 ]
 

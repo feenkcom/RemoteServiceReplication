@@ -117,13 +117,13 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 				do:
 					[:each |
 					self
-						encodeServiceSnapshot: (RsrServiceSnapshot from: each)
+						encodeServiceSnapshot: each
 						onto: stream].
 			self
-				encodeReference: (RsrReference from: aSendMessage receiver)
+				encodeReference:  aSendMessage receiver
 				onto: stream.
 			self
-				encodeReference: (RsrReference from: aSendMessage selector)
+				encodeReference: aSendMessage selector
 				onto: stream.
 			self
 				encodeControlWord: aSendMessage arguments size
@@ -132,7 +132,7 @@ RsrEncoder >> encodeSendMessage: aSendMessage [
 				do:
 					[:each |
 					self
-						encodeReference: (RsrReference from: each)
+						encodeReference: each
 						onto: stream]]
 ]
 

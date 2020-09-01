@@ -120,15 +120,19 @@ RsrEncoderTest >> testReleaseObjects [
 { #category : 'running-immediates' }
 RsrEncoderTest >> testSendMessage [
 
-	| service command expectedEncoding |
+	| service analysis command expectedEncoding |
 	service := RsrClientNoInstVars new.
 	self register: service.
+	analysis := RsrSnapshotAnalysis
+		roots: (Array with: service)
+		connection: self connection.
+	analysis perform.
 	command := RsrSendMessage
 		transaction: 1
-		receiver: service
-		selector: #return42
+		receiver: (RsrReference from: service)
+		selector: (RsrSymbolReference from: #return42)
 		arguments: #().
-	command services: (Array with: service).
+	command services: analysis snapshots.
 	command encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"

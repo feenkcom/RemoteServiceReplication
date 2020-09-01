@@ -144,18 +144,17 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeSendMessage: aStream [
 
-	| transaction argCount receiverReference receiver selector numServices services arguments instance |
+	| transaction argCount receiverReference selector numServices services arguments instance |
 	transaction := self decodeControlWord: aStream.
 	numServices := self decodeControlWord: aStream.
-	services := (1 to: numServices) collect: [:each | (self decodeServiceSnapshot: aStream) reifyIn: self connection].
+	services := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].
 	receiverReference := self decodeReference: aStream.
-	receiver := receiverReference resolve: self registry.
-	selector := (self decodeReference: aStream) resolve: self registry.
+	selector := self decodeReference: aStream.
 	argCount := self decodeControlWord: aStream.
-	arguments := (1 to: argCount) collect: [:each | (self decodeReference: aStream) resolve: self registry].
+	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].
 	instance := RsrSendMessage
 		transaction: transaction
-		receiver: receiver
+		receiver: receiverReference
 		selector: selector
 		arguments: arguments.
 	instance services: services.

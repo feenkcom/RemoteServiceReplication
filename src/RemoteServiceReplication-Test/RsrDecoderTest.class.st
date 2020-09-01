@@ -157,17 +157,17 @@ RsrDecoderTest >> testSendMessage [
 		assert: command transaction
 		equals: 1.
 	self
-		assert: command receiver
+		assert: (command receiver resolve: self registry)
 		identicalTo: service.
 	self
-		assert: command selector
+		assert: (command selector resolve: self registry)
 		identicalTo: #return42.
 	self
 		assert: command arguments
 		equals: #().
 	self
-		assert: command services
-		equals: (Array with: service)
+		assert: command services size
+		equals: 1
 ]
 
 { #category : 'running' }

@@ -54,11 +54,16 @@ RsrSendMessage >> encodeUsing: anEncoder [
 RsrSendMessage >> executeFor: aConnection [
 
 	| result analysis resultReference response |
-	[result := receiver
-		perform: selector
-		withArguments: arguments.
+	[| servs rec sel args |
+	servs := services collect: [:each | each reifyIn: aConnection].
+	rec := receiver resolve: aConnection registry.
+	sel := selector resolve: aConnection registry.
+	args := arguments collect: [:each | each resolve: aConnection registry].
+	result := rec
+		perform: sel
+		withArguments: args.
 	analysis := RsrSnapshotAnalysis
-		roots: (Array with: receiver with: result)
+		roots: (Array with: rec with: result)
 		connection: aConnection.
 	analysis perform.
 	resultReference := RsrReference from: result.
@@ -85,9 +90,9 @@ to: aLog [
 		streamContents:
 			[:stream |
 			stream
-				nextPutAll: receiver class name;
+				print: receiver;
 				nextPutAll: '>>';
-				nextPutAll: selector;
+				print: selector;
 				nextPutAll: ' due to: ';
 				nextPutAll: anException description].
 	aLog error: message
@@ -106,7 +111,7 @@ RsrSendMessage >> receiver: anObject [
 { #category : 'reporting' }
 RsrSendMessage >> reportOn: aLog [
 
-	aLog debug: 'RsrSendMessage(', self receiver class name, '>>', self selector, ')'
+	aLog debug: 'RsrSendMessage(', self receiver value asString, '>>', self selector value asString, ')'
 ]
 
 { #category : 'accessing' }
@@ -128,16 +133,11 @@ RsrSendMessage >> selector: anObject [
 { #category : 'lifecycle' }
 RsrSendMessage >> sendOver: aConnection [
 
-	| analysis promise pendingMessage |
-	analysis := RsrRetainAnalysis
-		roots: self roots
-		connection: aConnection.
-	analysis perform.
-	services := analysis services.
+	| promise pendingMessage |
 	self encodeUsing: aConnection encoder.
 	promise := RsrPromise new.
 	pendingMessage := RsrPendingMessage
-		services: analysis services
+		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"
 		promise: promise.
 	aConnection pendingMessages
 		at: transaction
