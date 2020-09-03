@@ -14,8 +14,7 @@ Class {
 		'receiver',
 		'selector',
 		'arguments',
-		'snapshots',
-		'retainList'
+		'snapshots'
 	],
 	#category : 'RemoteServiceReplication'
 }

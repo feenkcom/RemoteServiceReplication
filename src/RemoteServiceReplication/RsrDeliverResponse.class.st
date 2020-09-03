@@ -12,9 +12,7 @@ Class {
 	#instVars : [
 		'transaction',
 		'response',
-		'roots',
-		'snapshots',
-		'retainList'
+		'snapshots'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -91,18 +89,6 @@ RsrDeliverResponse >> response [
 RsrDeliverResponse >> response: anObject [
 
 	response := anObject
-]
-
-{ #category : 'accessing' }
-RsrDeliverResponse >> roots [
-
-	^roots
-]
-
-{ #category : 'accessing' }
-RsrDeliverResponse >> roots: anArray [
-
-	roots := anArray
 ]
 
 { #category : 'lifecycle' }
