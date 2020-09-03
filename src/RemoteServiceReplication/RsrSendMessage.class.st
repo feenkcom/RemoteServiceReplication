@@ -108,12 +108,6 @@ RsrSendMessage >> reportOn: aLog [
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> roots [
-
-	^(Array with: receiver with: selector) ,  arguments
-]
-
-{ #category : 'accessing' }
 RsrSendMessage >> selector [
 	^ selector
 ]
