@@ -44,12 +44,6 @@ RsrSendMessage >> arguments: anObject [
 ]
 
 { #category : 'lifecycle' }
-RsrSendMessage >> encodeUsing: anEncoder [
-
-	encoding := anEncoder encodeSendMessage: self
-]
-
-{ #category : 'lifecycle' }
 RsrSendMessage >> executeFor: aConnection [
 
 	| result analysis resultReference response |
@@ -133,7 +127,7 @@ RsrSendMessage >> selector: anObject [
 RsrSendMessage >> sendOver: aConnection [
 
 	| promise pendingMessage |
-	self encodeUsing: aConnection encoder.
+	encoding := aConnection encoder encodeSendMessage: self.
 	promise := RsrPromise new.
 	pendingMessage := RsrPendingMessage
 		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"

@@ -1,24 +1,26 @@
+"
+No class-specific documentation for RsrReleaseServices, hierarchy is:
+Object
+  RsrObject
+    RsrCommand( encoding)
+      RsrReleaseServices( oids)
+
+"
 Class {
 	#name : 'RsrReleaseServices',
 	#superclass : 'RsrCommand',
 	#instVars : [
-		'oids'
+		'sids'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'instance creation' }
-RsrReleaseServices class >> oids: anArray [
+RsrReleaseServices class >> sids: anArrayOfServiceIDs [
 
 	^self new
-		oids: anArray;
+		sids: anArrayOfServiceIDs;
 		yourself
-]
-
-{ #category : 'lifecycle' }
-RsrReleaseServices >> encodeUsing: anRsrEncoder [
-
-	encoding := anRsrEncoder encodeReleaseObjects: self
 ]
 
 { #category : 'lifecycle' }
@@ -26,23 +28,30 @@ RsrReleaseServices >> executeFor: aConnection [
 
 	| registry |
 	registry := aConnection registry.
-	oids do: [:oid | registry cleanupEntryFor: oid]
-]
-
-{ #category : 'accessing' }
-RsrReleaseServices >> oids [
-
-	^oids
-]
-
-{ #category : 'accessing' }
-RsrReleaseServices >> oids: anArray [
-
-	oids := anArray
+	sids do: [:sid | registry cleanupEntryFor: sid]
 ]
 
 { #category : 'reporting' }
 RsrReleaseServices >> reportOn: aLog [
 
-	aLog debug: 'RsrReleaseObjects(', self oids printString, ')'
+	aLog debug: 'RsrReleaseObjects(', self sids printString, ')'
+]
+
+{ #category : 'lifecycle' }
+RsrReleaseServices >> sendOver: aConnection [
+
+	encoding := aConnection encoder encodeReleaseServices: self.
+	aConnection commandWriter enqueue: self
+]
+
+{ #category : 'accessing' }
+RsrReleaseServices >> sids [
+
+	^sids
+]
+
+{ #category : 'accessing' }
+RsrReleaseServices >> sids: anArrayOfServiceIDs [
+
+	sids := anArrayOfServiceIDs
 ]

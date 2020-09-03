@@ -36,7 +36,7 @@ RsrEncoderTest >> tearDown [
 { #category : 'running-immediates' }
 RsrEncoderTest >> testDeliverErrorResponse [
 
-	| error remoteError command expectedEncoding |
+	| error remoteError command result expectedEncoding |
 	error := Error new
 		tag: 'tag';
 		messageText: 'message text';
@@ -46,7 +46,7 @@ RsrEncoderTest >> testDeliverErrorResponse [
 	command := RsrDeliverErrorResponse
 		transaction: 1
 		remoteError: remoteError.
-	command encodeUsing: RsrEncoder new.
+	result := self encoder encodeDeliverErrorResponse: command.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"
 		#[0 0 0 0 0 0 0 1], "Transaction Id"
@@ -67,14 +67,14 @@ RsrEncoderTest >> testDeliverErrorResponse [
 		#[0 0 0 0 0 0 0 10], "length"
 		#[115 116 97 99 107 32 100 117 109 112].	 "stack dump"
 	self
-		assert: command encoding
+		assert: result
 		equals: expectedEncoding
 ]
 
 { #category : 'running-immediates' }
 RsrEncoderTest >> testDeliverResponse [
 
-	| service response command expectedEncoding |
+	| service response command result expectedEncoding |
 	service := RsrClientNoInstVars new.
 	self register: service.
 	response := #responseSymbol.
@@ -82,8 +82,7 @@ RsrEncoderTest >> testDeliverResponse [
 		transaction: 1
 		response: (RsrReference from: response)
 		snapshots: (Array with: (RsrServiceSnapshot from: service)).
-	command
-		encodeUsing: RsrEncoder new.
+	result := self encoder encodeDeliverResponse: command.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"
 		#[0 0 0 0 0 0 0 1], "Transaction Id"
@@ -94,16 +93,16 @@ RsrEncoderTest >> testDeliverResponse [
 		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"
 		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"
 	self
-		assert: command encoding
+		assert: result
 		equals: expectedEncoding
 ]
 
 { #category : 'running-immediates' }
 RsrEncoderTest >> testReleaseServices [
 
-	| command expectedEncoding |
-	command := RsrReleaseServices oids: #(1 2 3 4 5).
-	command encodeUsing: RsrEncoder new.
+	| command result expectedEncoding |
+	command := RsrReleaseServices sids: #(1 2 3 4 5).
+	result := self encoder encodeReleaseServices: command.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"
 		#[0 0 0 0 0 0 0 5], "Num OIDS"
@@ -113,14 +112,14 @@ RsrEncoderTest >> testReleaseServices [
 		#[0 0 0 0 0 0 0 4],
 		#[0 0 0 0 0 0 0 5]. "Last OID"
 	self
-		assert: command encoding
+		assert: result
 		equals: expectedEncoding
 ]
 
 { #category : 'running-immediates' }
 RsrEncoderTest >> testSendMessage [
 
-	| service analysis command expectedEncoding |
+	| service analysis command result expectedEncoding |
 	service := RsrClientNoInstVars new.
 	self register: service.
 	analysis := RsrSnapshotAnalysis
@@ -133,7 +132,7 @@ RsrEncoderTest >> testSendMessage [
 		selector: (RsrSymbolReference from: #return42)
 		arguments: #().
 	command snapshots: analysis snapshots.
-	command encodeUsing: RsrEncoder new.
+	result := self encoder encodeSendMessage: command.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"
 		#[0 0 0 0 0 0 0 1], "Transaction ID"
@@ -146,7 +145,7 @@ RsrEncoderTest >> testSendMessage [
 		#[114 101 116 117 114 110 52 50], "#return42"
 		#[0 0 0 0 0 0 0 0]. "Argument Count"
 	self
-		assert: command encoding
+		assert: result
 		equals: expectedEncoding
 ]
 

@@ -138,7 +138,7 @@ RsrDecoder >> decodeReleaseServices: aStream [
 			[:i | | oid |
 			oid := self decodeControlWord: aStream.
 			oids at: i put: oid].
-	^RsrReleaseServices oids: oids
+	^RsrReleaseServices sids: oids
 ]
 
 { #category : 'decoding-commands' }

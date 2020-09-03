@@ -123,7 +123,7 @@ RsrDecoderTest >> testReleaseServices [
 		#[0 0 0 0 0 0 0 5]. "Last OID"
 	command := self decoder decodeCommand: encoding readStream.
 	self
-		assert: command oids
+		assert: command sids
 		equals: #(1 2 3 4 5)
 ]
 

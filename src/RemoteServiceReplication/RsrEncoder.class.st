@@ -79,7 +79,7 @@ onto: aStream [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeReleaseObjects: aReleaseObject [
+RsrEncoder >> encodeReleaseServices: aReleaseServices [
 
 	^ByteArray
 		streamContents:
@@ -88,13 +88,13 @@ RsrEncoder >> encodeReleaseObjects: aReleaseObject [
 				encodeControlWord: self releaseObjectsCommand
 				onto: stream.
 			self
-				encodeControlWord: aReleaseObject oids size
+				encodeControlWord: aReleaseServices sids size
 				onto: stream.
-			aReleaseObject oids
+			aReleaseServices sids
 				do:
-					[:oid |
+					[:sid |
 					self
-						encodeControlWord: oid
+						encodeControlWord: sid
 						onto: stream]]
 ]
 

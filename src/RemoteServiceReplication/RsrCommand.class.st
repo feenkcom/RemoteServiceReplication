@@ -7,12 +7,6 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'lifecycle' }
-RsrCommand >> encodeUsing: anRsrEncoder [
-
-	self subclassResponsibility
-]
-
 { #category : 'accessing' }
 RsrCommand >> encoding [
 	^ encoding
