@@ -127,7 +127,7 @@ RsrDecoder >> decodeReference: aStream [
 ]
 
 { #category : 'decoding-commands' }
-RsrDecoder >> decodeReleaseObjects: aStream [
+RsrDecoder >> decodeReleaseServices: aStream [
 
 	| count oids |
 	count := self decodeControlWord: aStream.
@@ -138,7 +138,7 @@ RsrDecoder >> decodeReleaseObjects: aStream [
 			[:i | | oid |
 			oid := self decodeControlWord: aStream.
 			oids at: i put: oid].
-	^RsrReleaseObjects oids: oids
+	^RsrReleaseServices oids: oids
 ]
 
 { #category : 'decoding-commands' }
@@ -179,7 +179,7 @@ RsrDecoder >> initializeDecodeCommandMap [
 	decodeCommandMap
 		at: self sendMessageCommand put: #decodeSendMessage:;
 		at: self deliverResponseCommand put: #decodeDeliverResponse:;
-		at: self releaseObjectsCommand put: #decodeReleaseObjects:;
+		at: self releaseObjectsCommand put: #decodeReleaseServices:;
 		at: self deliverErrorResponseCommand put: #decodeDeliverErrorResponse:.
 	^decodeCommandMap
 ]

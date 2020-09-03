@@ -110,7 +110,7 @@ RsrDecoderTest >> testDeliverResponse [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testReleaseObjects [
+RsrDecoderTest >> testReleaseServices [
 
 	| command encoding |
 	encoding :=

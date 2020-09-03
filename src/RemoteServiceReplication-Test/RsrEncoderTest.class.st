@@ -99,10 +99,10 @@ RsrEncoderTest >> testDeliverResponse [
 ]
 
 { #category : 'running-immediates' }
-RsrEncoderTest >> testReleaseObjects [
+RsrEncoderTest >> testReleaseServices [
 
 	| command expectedEncoding |
-	command := RsrReleaseObjects oids: #(1 2 3 4 5).
+	command := RsrReleaseServices oids: #(1 2 3 4 5).
 	command encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"

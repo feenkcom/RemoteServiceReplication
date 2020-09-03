@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrReleaseObjects',
+	#name : 'RsrReleaseServices',
 	#superclass : 'RsrCommand',
 	#instVars : [
 		'oids'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-RsrReleaseObjects class >> oids: anArray [
+RsrReleaseServices class >> oids: anArray [
 
 	^self new
 		oids: anArray;
@@ -16,13 +16,13 @@ RsrReleaseObjects class >> oids: anArray [
 ]
 
 { #category : 'lifecycle' }
-RsrReleaseObjects >> encodeUsing: anRsrEncoder [
+RsrReleaseServices >> encodeUsing: anRsrEncoder [
 
 	encoding := anRsrEncoder encodeReleaseObjects: self
 ]
 
 { #category : 'lifecycle' }
-RsrReleaseObjects >> executeFor: aConnection [
+RsrReleaseServices >> executeFor: aConnection [
 
 	| registry |
 	registry := aConnection registry.
@@ -30,19 +30,19 @@ RsrReleaseObjects >> executeFor: aConnection [
 ]
 
 { #category : 'accessing' }
-RsrReleaseObjects >> oids [
+RsrReleaseServices >> oids [
 
 	^oids
 ]
 
 { #category : 'accessing' }
-RsrReleaseObjects >> oids: anArray [
+RsrReleaseServices >> oids: anArray [
 
 	oids := anArray
 ]
 
 { #category : 'reporting' }
-RsrReleaseObjects >> reportOn: aLog [
+RsrReleaseServices >> reportOn: aLog [
 
 	aLog debug: 'RsrReleaseObjects(', self oids printString, ')'
 ]
