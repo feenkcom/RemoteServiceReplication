@@ -98,9 +98,9 @@ RsrDecoderTest >> testDeliverResponse [
 		assert: command transaction
 		equals: 1.
 	self
-		assert: command services size
+		assert: command snapshots size
 		equals: 1.
-	decodedService := command services first reifyIn: self connection.
+	decodedService := command snapshots first reifyIn: self connection.
 	self
 		assert: decodedService
 		equals: service.
@@ -166,7 +166,7 @@ RsrDecoderTest >> testSendMessage [
 		assert: command arguments
 		equals: #().
 	self
-		assert: command services size
+		assert: command snapshots size
 		equals: 1
 ]
 

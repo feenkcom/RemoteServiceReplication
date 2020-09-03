@@ -132,7 +132,7 @@ RsrEncoderTest >> testSendMessage [
 		receiver: (RsrReference from: service)
 		selector: (RsrSymbolReference from: #return42)
 		arguments: #().
-	command services: analysis snapshots.
+	command snapshots: analysis snapshots.
 	command encodeUsing: RsrEncoder new.
 	expectedEncoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"

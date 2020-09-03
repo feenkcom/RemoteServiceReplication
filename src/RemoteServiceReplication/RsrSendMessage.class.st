@@ -14,7 +14,7 @@ Class {
 		'receiver',
 		'selector',
 		'arguments',
-		'services',
+		'snapshots',
 		'retainList'
 	],
 	#category : 'RemoteServiceReplication'
@@ -55,7 +55,7 @@ RsrSendMessage >> executeFor: aConnection [
 
 	| result analysis resultReference response |
 	[| servs rec sel args |
-	servs := services collect: [:each | each reifyIn: aConnection].
+	servs := snapshots collect: [:each | each reifyIn: aConnection].
 	rec := receiver resolve: aConnection registry.
 	sel := selector resolve: aConnection registry.
 	args := arguments collect: [:each | each resolve: aConnection registry].
@@ -147,15 +147,15 @@ RsrSendMessage >> sendOver: aConnection [
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> services [
+RsrSendMessage >> snapshots [
 
-	^services
+	^snapshots
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> services: anArray [
+RsrSendMessage >> snapshots: anArrayOfSnapshots [
 
-	services := anArray
+	snapshots := anArrayOfSnapshots
 ]
 
 { #category : 'accessing' }

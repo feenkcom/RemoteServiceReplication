@@ -13,7 +13,7 @@ Class {
 		'transaction',
 		'response',
 		'roots',
-		'services',
+		'snapshots',
 		'retainList'
 	],
 	#category : 'RemoteServiceReplication'
@@ -52,7 +52,7 @@ snapshots: anArray [
 	^self new
 		transaction: aTransactionId;
 		response: anObject;
-		services: anArray;
+		snapshots: anArray;
 		yourself
 ]
 
@@ -66,7 +66,7 @@ RsrDeliverResponse >> encodeUsing: anRsrEncoder [
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| pendingMessage result |
-	services do: [:each | each reifyIn: aConnection].
+	snapshots do: [:each | each reifyIn: aConnection].
 	result := response resolve: aConnection registry.
 	pendingMessage := aConnection pendingMessages
 		removeKey: transaction
@@ -113,15 +113,15 @@ RsrDeliverResponse >> sendOver: aConnection [
 ]
 
 { #category : 'accessing' }
-RsrDeliverResponse >> services [
+RsrDeliverResponse >> snapshots [
 
-	^services
+	^snapshots
 ]
 
 { #category : 'accessing' }
-RsrDeliverResponse >> services: aServiceList [
+RsrDeliverResponse >> snapshots: anArrayOfSnapshots [
 
-	services := aServiceList
+	snapshots := anArrayOfSnapshots
 ]
 
 { #category : 'accessing' }

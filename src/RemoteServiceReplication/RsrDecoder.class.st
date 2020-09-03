@@ -95,14 +95,14 @@ RsrDecoder >> decodeDeliverErrorResponse: aStream [
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeDeliverResponse: aStream [
 
-    | transaction numServices services response |
+    | transaction numServices serviceSnapshots response |
     transaction := self decodeControlWord: aStream.
     numServices := self decodeControlWord: aStream.
-    services := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].
+    serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].
     response := self decodeReference: aStream.
     ^RsrDeliverResponse new
         transaction: transaction;
-        services: services;
+        snapshots: serviceSnapshots;
         response: response;
         yourself
 ]
@@ -144,10 +144,10 @@ RsrDecoder >> decodeReleaseServices: aStream [
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeSendMessage: aStream [
 
-	| transaction argCount receiverReference selector numServices services arguments instance |
+	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |
 	transaction := self decodeControlWord: aStream.
 	numServices := self decodeControlWord: aStream.
-	services := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].
+	serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].
 	receiverReference := self decodeReference: aStream.
 	selector := self decodeReference: aStream.
 	argCount := self decodeControlWord: aStream.
@@ -157,7 +157,7 @@ RsrDecoder >> decodeSendMessage: aStream [
 		receiver: receiverReference
 		selector: selector
 		arguments: arguments.
-	instance services: services.
+	instance snapshots: serviceSnapshots.
 	^instance
 ]
 

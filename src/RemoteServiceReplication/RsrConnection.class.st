@@ -95,7 +95,7 @@ to: aService [
 		receiver: receiverReference
 		selector: selectorReference
 		arguments: argumentReferences.
-	dispatchCommand services: analysis snapshots.
+	dispatchCommand snapshots: analysis snapshots.
 	^dispatchCommand sendOver: self
 ]
 
