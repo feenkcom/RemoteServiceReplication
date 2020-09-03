@@ -43,7 +43,16 @@ RsrSendMessage >> arguments: anObject [
 	arguments := anObject
 ]
 
-{ #category : 'lifecycle' }
+{ #category : 'encoding' }
+RsrSendMessage >> encode: aStream
+using: anEncoder [
+
+	anEncoder
+		encodeSendMessage: self
+		onto: aStream
+]
+
+{ #category : 'executing' }
 RsrSendMessage >> executeFor: aConnection [
 
 	| result analysis resultReference response |
@@ -64,14 +73,14 @@ RsrSendMessage >> executeFor: aConnection [
 		transaction: transaction
 		response: resultReference
 		snapshots: analysis snapshots.
-	response sendOver: aConnection]
+	aConnection _sendCommand: response]
 		on: Error
 		do:
 			[:ex |
 			self
 				logException: ex
 				to: aConnection log.
-			(RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex)) sendOver: aConnection]
+			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex))]
 ]
 
 { #category : 'reporting' }
@@ -115,22 +124,6 @@ RsrSendMessage >> selector [
 { #category : 'accessing' }
 RsrSendMessage >> selector: anObject [
 	selector := anObject
-]
-
-{ #category : 'lifecycle' }
-RsrSendMessage >> sendOver: aConnection [
-
-	| promise pendingMessage |
-	encoding := aConnection encoder encodeSendMessage: self.
-	promise := RsrPromise new.
-	pendingMessage := RsrPendingMessage
-		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"
-		promise: promise.
-	aConnection pendingMessages
-		at: transaction
-		put: pendingMessage.
-	aConnection commandWriter enqueue: self.
-	^promise
 ]
 
 { #category : 'accessing' }

@@ -54,7 +54,16 @@ snapshots: anArray [
 		yourself
 ]
 
-{ #category : 'lifecycle' }
+{ #category : 'encoding' }
+RsrDeliverResponse >> encode: aStream
+using: anEncoder [
+
+	anEncoder
+		encodeDeliverResponse: self
+		onto: aStream
+]
+
+{ #category : 'executing' }
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| pendingMessage result |
@@ -83,13 +92,6 @@ RsrDeliverResponse >> response [
 RsrDeliverResponse >> response: anObject [
 
 	response := anObject
-]
-
-{ #category : 'lifecycle' }
-RsrDeliverResponse >> sendOver: aConnection [
-
-	encoding := aConnection encoder encodeDeliverResponse: self.
-	aConnection commandWriter enqueue: self
 ]
 
 { #category : 'accessing' }

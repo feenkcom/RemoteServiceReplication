@@ -7,6 +7,13 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'encoding' }
+RsrCommand >> encode: aStream
+using: anEncoder [
+
+	self subclassResponsibility
+]
+
 { #category : 'accessing' }
 RsrCommand >> encoding [
 	^ encoding
@@ -17,7 +24,7 @@ RsrCommand >> encoding: anObject [
 	encoding := anObject
 ]
 
-{ #category : 'lifecycle' }
+{ #category : 'executing' }
 RsrCommand >> executeFor: aConnection [
 
 	self subclassResponsibility
@@ -27,9 +34,4 @@ RsrCommand >> executeFor: aConnection [
 RsrCommand >> reportOn: aLog [
 
 	self subclassResponsibility
-]
-
-{ #category : 'lifecycle' }
-RsrCommand >> sendOver: aConnection [
-	"Do nothing unless a subclass offers a specialization"
 ]

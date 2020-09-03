@@ -19,7 +19,16 @@ remoteError: anException [
 		yourself
 ]
 
-{ #category : 'lifecycle' }
+{ #category : 'encoding' }
+RsrDeliverErrorResponse >> encode: aStream
+using: anEncoder [
+
+	anEncoder
+		encodeDeliverErrorResponse: self
+		onto: aStream
+]
+
+{ #category : 'executing' }
 RsrDeliverErrorResponse >> executeFor: aConnection [
 
 	| pendingMessage |
@@ -45,13 +54,6 @@ RsrDeliverErrorResponse >> remoteError: aRemoteError [
 RsrDeliverErrorResponse >> reportOn: aLog [
 
 	aLog debug: 'RsrDeliverErrorResponse(', self remoteError class name, ')'
-]
-
-{ #category : 'lifecycle' }
-RsrDeliverErrorResponse >> sendOver: aConnection [
-
-	encoding := aConnection encoder encodeDeliverErrorResponse: self.
-	aConnection commandWriter enqueue: self
 ]
 
 { #category : 'accessing' }

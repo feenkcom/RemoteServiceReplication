@@ -23,7 +23,16 @@ RsrReleaseServices class >> sids: anArrayOfServiceIDs [
 		yourself
 ]
 
-{ #category : 'lifecycle' }
+{ #category : 'encoding' }
+RsrReleaseServices >> encode: aStream
+using: anEncoder [
+
+	anEncoder
+		encodeReleaseServices: self
+		onto: aStream
+]
+
+{ #category : 'executing' }
 RsrReleaseServices >> executeFor: aConnection [
 
 	| registry |
@@ -35,13 +44,6 @@ RsrReleaseServices >> executeFor: aConnection [
 RsrReleaseServices >> reportOn: aLog [
 
 	aLog debug: 'RsrReleaseObjects(', self sids printString, ')'
-]
-
-{ #category : 'lifecycle' }
-RsrReleaseServices >> sendOver: aConnection [
-
-	encoding := aConnection encoder encodeReleaseServices: self.
-	aConnection commandWriter enqueue: self
 ]
 
 { #category : 'accessing' }

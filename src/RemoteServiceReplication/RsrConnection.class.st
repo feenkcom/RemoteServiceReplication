@@ -72,6 +72,15 @@ RsrConnection >> _forwarderClass [
 ]
 
 { #category : 'private-sending' }
+RsrConnection >> _sendCommand: aCommand [
+
+	| encoding |
+	encoding := ByteArray streamContents: [:byteStream | aCommand encode: byteStream using: self encoder].
+	aCommand encoding: encoding.
+	self commandWriter enqueue: aCommand
+]
+
+{ #category : 'private-sending' }
 RsrConnection >> _sendMessage: aMessage
 to: aService [
 
@@ -80,7 +89,7 @@ to: aService [
 	"Send DispatchMessage command"
 "Coorination window closed"
 	"Return Promise"
-	| analysis receiverReference selectorReference argumentReferences dispatchCommand |
+	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |
 	isOpen
 		ifFalse: [self error: 'Connection is not open'].
 	analysis := RsrSnapshotAnalysis
@@ -96,7 +105,15 @@ to: aService [
 		selector: selectorReference
 		arguments: argumentReferences.
 	dispatchCommand snapshots: analysis snapshots.
-	^dispatchCommand sendOver: self
+	promise := RsrPromise new.
+	pendingMessage := RsrPendingMessage
+		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"
+		promise: promise.
+	self pendingMessages
+		at: dispatchCommand transaction
+		put: pendingMessage.
+	self _sendCommand: dispatchCommand.
+	^promise
 ]
 
 { #category : 'other' }
@@ -254,7 +271,7 @@ RsrConnection >> releaseOid: anOid [
 		ifFalse: [^self].
 	self log trace: 'Cleaning up OID:', anOid printString.
 	command := RsrReleaseServices sids: (Array with: anOid).
-	command sendOver: self
+	self _sendCommand: command
 ]
 
 { #category : 'public-service factory' }

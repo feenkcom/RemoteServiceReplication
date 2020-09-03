@@ -23,50 +23,58 @@ onto: aStream [
 { #category : 'private-encoding' }
 RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse [
 
+	^ByteArray streamContents: [:stream | self encodeDeliverErrorResponse: aDeliverErrorResponse onto: stream]
+]
+
+{ #category : 'private-encoding' }
+RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse
+onto: aStream [
+
 	| error |
 	error := aDeliverErrorResponse remoteError.
-	^ByteArray
-		streamContents:
-			[:stream |
-			self
-				encodeControlWord: self deliverErrorResponseCommand
-				onto: stream.
-			self
-				encodeControlWord: aDeliverErrorResponse transaction
-				onto: stream.
-			self
-				encodeReference: (RsrReference from: error originalClassName)
-				onto: stream.
-			self
-				encodeReference: (RsrReference from: error tag)
-				onto: stream.
-			self
-				encodeReference: (RsrReference from: error messageText)
-				onto: stream.
-			self
-				encodeReference: (RsrReference from: error stack)
-				onto: stream]
+	self
+		encodeControlWord: self deliverErrorResponseCommand
+		onto: aStream.
+	self
+		encodeControlWord: aDeliverErrorResponse transaction
+		onto: aStream.
+	self
+		encodeReference: (RsrReference from: error originalClassName)
+		onto: aStream.
+	self
+		encodeReference: (RsrReference from: error tag)
+		onto: aStream.
+	self
+		encodeReference: (RsrReference from: error messageText)
+		onto: aStream.
+	self
+		encodeReference: (RsrReference from: error stack)
+		onto: aStream
 ]
 
 { #category : 'private-encoding' }
 RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 
-	^ByteArray
-		streamContents:
-			[:stream |
-			self
-				encodeControlWord: self deliverResponseCommand
-				onto: stream.
-			self
-				encodeControlWord: aDeliverResponse transaction
-				onto: stream.
-			self
-				encodeControlWord: aDeliverResponse snapshots size
-				onto: stream.
-			aDeliverResponse snapshots do: [:each | self encodeServiceSnapshot: each onto: stream].
-			self
-				encodeReference: aDeliverResponse response
-				onto: stream]
+	^ByteArray streamContents: [:stream | self encodeDeliverResponse: aDeliverResponse onto: stream]
+]
+
+{ #category : 'private-encoding' }
+RsrEncoder >> encodeDeliverResponse: aDeliverResponse
+onto: aStream [
+
+	self
+		encodeControlWord: self deliverResponseCommand
+		onto: aStream.
+	self
+		encodeControlWord: aDeliverResponse transaction
+		onto: aStream.
+	self
+		encodeControlWord: aDeliverResponse snapshots size
+		onto: aStream.
+	aDeliverResponse snapshots do: [:each | self encodeServiceSnapshot: each onto: aStream].
+	self
+		encodeReference: aDeliverResponse response
+		onto: aStream
 ]
 
 { #category : 'private-encoding' }
@@ -81,59 +89,67 @@ onto: aStream [
 { #category : 'private-encoding' }
 RsrEncoder >> encodeReleaseServices: aReleaseServices [
 
-	^ByteArray
-		streamContents:
-			[:stream |
+	^ByteArray streamContents: [:stream | self encodeReleaseServices: aReleaseServices onto: stream]
+]
+
+{ #category : 'private-encoding' }
+RsrEncoder >> encodeReleaseServices: aReleaseServices
+onto: aStream [
+
+	self
+		encodeControlWord: self releaseObjectsCommand
+		onto: aStream.
+	self
+		encodeControlWord: aReleaseServices sids size
+		onto: aStream.
+	aReleaseServices sids
+		do:
+			[:sid |
 			self
-				encodeControlWord: self releaseObjectsCommand
-				onto: stream.
-			self
-				encodeControlWord: aReleaseServices sids size
-				onto: stream.
-			aReleaseServices sids
-				do:
-					[:sid |
-					self
-						encodeControlWord: sid
-						onto: stream]]
+				encodeControlWord: sid
+				onto: aStream]
 ]
 
 { #category : 'private-encoding' }
 RsrEncoder >> encodeSendMessage: aSendMessage [
 
-	^ByteArray
-		streamContents:
-			[:stream |
+	^ByteArray streamContents: [:stream | self encodeSendMessage: aSendMessage onto: stream]
+]
+
+{ #category : 'private-encoding' }
+RsrEncoder >> encodeSendMessage: aSendMessage
+onto: aStream [
+
+	self
+		encodeControlWord: self sendMessageIdentifier
+		onto: aStream.
+	self
+		encodeControlWord: aSendMessage transaction
+		onto: aStream.
+	self
+		encodeControlWord: aSendMessage snapshots size
+		onto: aStream.
+	aSendMessage snapshots
+		do:
+			[:each |
 			self
-				encodeControlWord: self sendMessageIdentifier
-				onto: stream.
+				encodeServiceSnapshot: each
+				onto: aStream].
+	self
+		encodeReference:  aSendMessage receiver
+		onto: aStream.
+	self
+		encodeReference: aSendMessage selector
+		onto: aStream.
+	self
+		encodeControlWord: aSendMessage arguments size
+		onto: aStream.
+	aSendMessage arguments
+		do:
+			[:each |
 			self
-				encodeControlWord: aSendMessage transaction
-				onto: stream.
-			self
-				encodeControlWord: aSendMessage snapshots size
-				onto: stream.
-			aSendMessage snapshots
-				do:
-					[:each |
-					self
-						encodeServiceSnapshot: each
-						onto: stream].
-			self
-				encodeReference:  aSendMessage receiver
-				onto: stream.
-			self
-				encodeReference: aSendMessage selector
-				onto: stream.
-			self
-				encodeControlWord: aSendMessage arguments size
-				onto: stream.
-			aSendMessage arguments
-				do:
-					[:each |
-					self
-						encodeReference: each
-						onto: stream]]
+				encodeReference: each
+				onto: aStream]
 ]
 
 { #category : 'encoding' }
