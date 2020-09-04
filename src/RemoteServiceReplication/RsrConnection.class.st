@@ -74,9 +74,6 @@ RsrConnection >> _forwarderClass [
 { #category : 'private-sending' }
 RsrConnection >> _sendCommand: aCommand [
 
-	| encoding |
-	encoding := ByteArray streamContents: [:byteStream | aCommand encode: byteStream using: self encoder].
-	aCommand encoding: encoding.
 	self commandWriter enqueue: aCommand
 ]
 

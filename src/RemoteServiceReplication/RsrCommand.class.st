@@ -1,9 +1,13 @@
+"
+No class-specific documentation for RsrCommand, hierarchy is:
+Object
+  RsrObject
+    RsrCommand( encoding)
+
+"
 Class {
 	#name : 'RsrCommand',
 	#superclass : 'RsrObject',
-	#instVars : [
-		'encoding'
-	],
 	#category : 'RemoteServiceReplication'
 }
 
@@ -12,16 +16,6 @@ RsrCommand >> encode: aStream
 using: anEncoder [
 
 	self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-RsrCommand >> encoding [
-	^ encoding
-]
-
-{ #category : 'accessing' }
-RsrCommand >> encoding: anObject [
-	encoding := anObject
 ]
 
 { #category : 'executing' }

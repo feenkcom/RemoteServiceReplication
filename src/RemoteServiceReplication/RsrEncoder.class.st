@@ -121,7 +121,7 @@ RsrEncoder >> encodeSendMessage: aSendMessage
 onto: aStream [
 
 	self
-		encodeControlWord: self sendMessageIdentifier
+		encodeControlWord: self sendMessageCommand
 		onto: aStream.
 	self
 		encodeControlWord: aSendMessage transaction
@@ -190,10 +190,4 @@ ofSize: aNumberOfBytes [
 	int ~= 0
 		ifTrue: [self error: 'Loss of precision detected'].
 	^bytes
-]
-
-{ #category : 'private-accessing' }
-RsrEncoder >> sendMessageIdentifier [
-
-	^1
 ]

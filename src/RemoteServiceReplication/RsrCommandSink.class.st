@@ -7,6 +7,12 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'accessing' }
+RsrCommandSink >> encoder [
+
+	^self connection encoder
+]
+
 { #category : 'commands' }
 RsrCommandSink >> enqueue: aCommand [
 
@@ -66,5 +72,7 @@ RsrCommandSink >> write: aByteArray [
 RsrCommandSink >> writeCommand: aCommand [
 
 	self report: aCommand.
-	self write: aCommand encoding
+	aCommand
+		encode: self stream
+		using: self encoder
 ]

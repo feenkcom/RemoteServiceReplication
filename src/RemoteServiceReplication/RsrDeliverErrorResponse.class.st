@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrDeliverErrorResponse, hierarchy is:
+Object
+  RsrObject
+    RsrCommand( encoding)
+      RsrDeliverErrorResponse( transaction originalClass remoteError)
+
+"
 Class {
 	#name : 'RsrDeliverErrorResponse',
 	#superclass : 'RsrCommand',
