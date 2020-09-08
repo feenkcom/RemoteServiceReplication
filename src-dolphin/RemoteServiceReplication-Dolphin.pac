@@ -10,7 +10,6 @@ package classNames
 	add: #RsrEnvironment;
 	add: #RsrForwarder;
 	add: #RsrGarbageCollector;
-	add: #RsrObject;
 	add: #RsrProtoObject;
 	add: #RsrRegistry;
 	add: #RsrRegistryEntry;
