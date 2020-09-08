@@ -23,13 +23,6 @@ package methodNames
 	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
 	add: #Set -> #hash;
-	add: 'RsrCharacterArraySpecies class' -> #fromBytes:;
-	add: 'RsrCharacterArraySpecies class' -> #toBytes:;
-	add: 'RsrDateAndTimeSpecies class' -> #fromMicroseconds:;
-	add: 'RsrDateAndTimeSpecies class' -> #microsecondsSinceEpoch:;
-	add: 'RsrDateAndTimeSpecies class' -> #now;
-	add: 'RsrDateAndTimeSpecies class' -> #posixEpoch;
-	add: 'RsrSpecies class' -> #initializeSpeciesMapping;
 	yourself.
 
 package binaryGlobalNames: (Set new
@@ -112,104 +105,12 @@ asString
 	^self printString! !
 !Object categoriesFor: #asString!converting!public! !
 
-!RsrCharacterArraySpecies class methodsFor!
-
-fromBytes: aByteArray
-
-	^Utf8String fromByteArray: aByteArray!
-
-toBytes: aCharacterArray
-
-	^aCharacterArray asUtf8String asByteArray! !
-!RsrCharacterArraySpecies class categoriesFor: #fromBytes:!public! !
-!RsrCharacterArraySpecies class categoriesFor: #toBytes:!public! !
-
-!RsrDateAndTimeSpecies class methodsFor!
-
-fromMicroseconds: anInteger
-
-	^TimeStamp fromMilliseconds: self posixEpoch asMilliseconds + (anInteger // 1000)!
-
-microsecondsSinceEpoch: aTimeStamp
-
-	| millisDiff |
-	millisDiff := aTimeStamp asMilliseconds - self posixEpoch asMilliseconds.
-	^millisDiff * 1000!
-
-now
-
-	^TimeStamp current!
-
-posixEpoch
-
-	^TimeStamp fromSeconds: 2177452800! !
-!RsrDateAndTimeSpecies class categoriesFor: #fromMicroseconds:!public! !
-!RsrDateAndTimeSpecies class categoriesFor: #microsecondsSinceEpoch:!public! !
-!RsrDateAndTimeSpecies class categoriesFor: #now!public! !
-!RsrDateAndTimeSpecies class categoriesFor: #posixEpoch!public! !
-
 !RsrProcessModel methodsFor!
 
 currentStackDump
 
 	^Processor activeProcess stackTrace: 1000! !
 !RsrProcessModel categoriesFor: #currentStackDump!public! !
-
-!RsrSpecies class methodsFor!
-
-initializeSpeciesMapping
-
-	speciesMapping := Dictionary new.
-	speciesMapping
-		at: Symbol
-		put: RsrSymbolSpecies.
-	speciesMapping
-		at: String
-		put: RsrStringSpecies.
-	speciesMapping
-		at: Utf8String
-		put: RsrStringSpecies.
-	speciesMapping
-		at: AnsiString
-		put: RsrStringSpecies.
-	speciesMapping
-		at: LargeInteger
-		put: RsrIntegerSpecies.
-	speciesMapping
-		at: SmallInteger
-		put: RsrIntegerSpecies.
-	speciesMapping
-		at: Character
-		put: RsrCharacterSpecies.
-	speciesMapping
-		at: UndefinedObject
-		put: RsrUndefinedObjectSpecies.
-	speciesMapping
-		at: True
-		put: RsrBooleanSpecies.
-	speciesMapping
-		at: False
-		put: RsrBooleanSpecies.
-	speciesMapping
-		at: Array
-		put: RsrArraySpecies.
-	speciesMapping
-		at: ByteArray
-		put: RsrByteArraySpecies.
-	speciesMapping
-		at: Set
-		put: RsrSetSpecies.
-	speciesMapping
-		at: OrderedCollection
-		put: RsrOrderedCollectionSpecies.
-	speciesMapping
-		at: Dictionary
-		put: RsrDictionarySpecies.
-	speciesMapping
-		at: TimeStamp
-		put: RsrDateAndTimeSpecies.
-	^speciesMapping! !
-!RsrSpecies class categoriesFor: #initializeSpeciesMapping!public! !
 
 !SequenceableCollection methodsFor!
 
