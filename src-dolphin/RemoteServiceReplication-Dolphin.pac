@@ -19,11 +19,18 @@ package classNames
 
 package methodNames
 	add: #Object -> #asString;
+	add: #RsrCharacterArrayReference -> #convertBytes:;
+	add: #RsrCharacterArrayReference -> #convertToBytes:;
+	add: #RsrObject -> #initialize;
 	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
 	add: #Set -> #hash;
-	add: #RsrObject -> #initialize;
-	add: #'RsrObject class' -> #new;
+	add: 'RsrDateAndTime class' -> #fromMicroseconds:;
+	add: 'RsrDateAndTime class' -> #microsecondsSinceEpoch:;
+	add: 'RsrDateAndTime class' -> #now;
+	add: 'RsrDateAndTime class' -> #posixEpoch;
+	add: 'RsrObject class' -> #new;
+	add: 'RsrReference class' -> #initializeReferenceMapping;
 	yourself.
 
 package binaryGlobalNames: (Set new
@@ -32,7 +39,11 @@ package binaryGlobalNames: (Set new
 package globalAliases: (Set new
 	yourself).
 
-package setPrerequisites: #('RemoteServiceReplication-Base').
+package setPrerequisites: #(
+	'..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin'
+	'..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Legacy Date & Time'
+	'..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Sockets\Dolphin Sockets'
+	'RemoteServiceReplication-Base').
 
 package!
 
@@ -101,12 +112,118 @@ asString
 	^self printString! !
 !Object categoriesFor: #asString!converting!public! !
 
+!RsrCharacterArrayReference methodsFor!
+
+convertBytes: aByteArray
+
+	^Utf8String fromByteArray: aByteArray!
+
+convertToBytes: aCharacterArray
+
+	^aCharacterArray asUtf8String asByteArray! !
+!RsrCharacterArrayReference categoriesFor: #convertBytes:!public! !
+!RsrCharacterArrayReference categoriesFor: #convertToBytes:!public! !
+
+!RsrDateAndTime class methodsFor!
+
+fromMicroseconds: anInteger
+
+	^TimeStamp fromMilliseconds: self posixEpoch asMilliseconds + (anInteger // 1000)!
+
+microsecondsSinceEpoch: aTimeStamp
+
+	| millisDiff |
+	millisDiff := aTimeStamp asMilliseconds - self posixEpoch asMilliseconds.
+	^millisDiff * 1000!
+
+now
+
+	^TimeStamp current!
+
+posixEpoch
+
+	^TimeStamp fromSeconds: 2177452800! !
+!RsrDateAndTime class categoriesFor: #fromMicroseconds:!public! !
+!RsrDateAndTime class categoriesFor: #microsecondsSinceEpoch:!public! !
+!RsrDateAndTime class categoriesFor: #now!public! !
+!RsrDateAndTime class categoriesFor: #posixEpoch!public! !
+
+!RsrObject methodsFor!
+
+initialize
+
+	^self! !
+!RsrObject categoriesFor: #initialize!public! !
+
+!RsrObject class methodsFor!
+
+new
+
+	^super new initialize! !
+!RsrObject class categoriesFor: #new!public! !
+
 !RsrProcessModel methodsFor!
 
 currentStackDump
 
 	^Processor activeProcess stackTrace: 1000! !
 !RsrProcessModel categoriesFor: #currentStackDump!public! !
+
+!RsrReference class methodsFor!
+
+initializeReferenceMapping
+
+	referenceMapping := Dictionary new.
+	referenceMapping
+		at: Symbol
+		put: RsrSymbolReference.
+	referenceMapping
+		at: String
+		put: RsrStringReference.
+	referenceMapping
+		at: Utf8String
+		put: RsrStringReference.
+	referenceMapping
+		at: AnsiString
+		put: RsrStringReference.
+	referenceMapping
+		at: LargeInteger
+		put: RsrIntegerReference.
+	referenceMapping
+		at: SmallInteger
+		put: RsrIntegerReference.
+	referenceMapping
+		at: Character
+		put: RsrCharacterReference.
+	referenceMapping
+		at: UndefinedObject
+		put: RsrNilReference.
+	referenceMapping
+		at: True
+		put: RsrBooleanReference.
+	referenceMapping
+		at: False
+		put: RsrBooleanReference.
+	referenceMapping
+		at: Array
+		put: RsrArrayReference.
+	referenceMapping
+		at: ByteArray
+		put: RsrByteArrayReference.
+	referenceMapping
+		at: Set
+		put: RsrSetReference.
+	referenceMapping
+		at: OrderedCollection
+		put: RsrOrderedCollectionReference.
+	referenceMapping
+		at: Dictionary
+		put: RsrDictionaryReference.
+	referenceMapping
+		at: TimeStamp
+		put: RsrDateAndTimeReference.
+	^referenceMapping! !
+!RsrReference class categoriesFor: #initializeReferenceMapping!public! !
 
 !SequenceableCollection methodsFor!
 
@@ -137,23 +254,6 @@ hash
 "Source Globals"!
 
 "Classes"!
-
-RsrObject guid: (GUID fromString: '{8faf60e5-9213-4b3a-b8ca-d6e46209c662}')!
-RsrObject comment: ''!
-!RsrObject categoriesForClass!RemoteServiceReplication-Dolphin! !
-!RsrObject methodsFor!
-
-initialize
-
-	^self! !
-!RsrObject categoriesFor: #initialize!public! !
-
-!RsrObject class methodsFor!
-
-new
-
-	^super new initialize! !
-!RsrObject class categoriesFor: #new!public! !
 
 RsrAbstractService guid: (GUID fromString: '{7fe58ad6-2d95-4e01-9243-9cb9d5506477}')!
 RsrAbstractService comment: ''!
