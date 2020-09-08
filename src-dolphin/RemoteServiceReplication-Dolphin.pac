@@ -23,6 +23,8 @@ package methodNames
 	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
 	add: #Set -> #hash;
+	add: #RsrObject -> #initialize;
+	add: #'RsrObject class' -> #new;
 	yourself.
 
 package binaryGlobalNames: (Set new
@@ -37,11 +39,6 @@ package!
 
 "Class Definitions"!
 
-Object subclass: #RsrObject
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
 RsrObject subclass: #RsrAbstractService
 	instanceVariableNames: 'finalizationSend'
 	classVariableNames: ''
