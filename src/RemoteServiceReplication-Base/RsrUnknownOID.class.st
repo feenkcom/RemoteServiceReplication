@@ -1,5 +1,5 @@
 Class {
 	#name : 'RsrUnknownOID',
 	#superclass : 'RsrError',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }

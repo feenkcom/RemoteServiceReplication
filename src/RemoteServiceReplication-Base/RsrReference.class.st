@@ -30,16 +30,6 @@ RsrReference class >> from: anObject [
 ]
 
 { #category : 'accessing' }
-RsrReference class >> referenceClassFor: anObject [
-
-	(anObject isKindOf: RsrService)
-		ifTrue: [^RsrServiceReference].
-	^self referenceMapping
-		at: anObject class
-		ifAbsent: [RsrUnsupportedObject signal: anObject]
-]
-
-{ #category : 'accessing' }
 RsrReference class >> referenceMapping [
 
 	^referenceMapping ifNil: [self initializeReferenceMapping]
