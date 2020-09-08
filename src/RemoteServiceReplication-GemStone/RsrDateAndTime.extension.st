@@ -1,7 +1,7 @@
-Extension { #name : 'RsrDateAndTimeReference' }
+Extension { #name : 'RsrDateAndTime' }
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrDateAndTimeReference >> calculateFromMicroSeconds: anInteger [
+RsrDateAndTime class >> fromMicroseconds: anInteger [
 
     ^DateAndTime
         posixSeconds: (anInteger / 1000000)
@@ -9,13 +9,19 @@ RsrDateAndTimeReference >> calculateFromMicroSeconds: anInteger [
 ]
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrDateAndTimeReference >> microsecondsSinceEpoch: aDateAndTime [
+RsrDateAndTime class >> microsecondsSinceEpoch: aDateAndTime [
 
 	^((aDateAndTime asSeconds - self posixEpoch asSeconds) * 1000000) rounded
 ]
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrDateAndTimeReference >> posixEpoch [
+RsrDateAndTime class >> now [
+
+	^DateAndTime now
+]
+
+{ #category : '*remoteservicereplication-gemstone' }
+RsrDateAndTime class >> posixEpoch [
 
 	^DateAndTime
         posixSeconds: 0

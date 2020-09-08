@@ -135,7 +135,7 @@ RsrMessageSendingTest >> testReturnArgument [
 		add: (OrderedCollection with: 42 with: 43);
 		add: #(1 2 #(nil));
 		yourself.
-	dt := RsrDateAndTimeSpecies now.
+	dt := RsrDateAndTime now.
 	response := client value: dt.
 	self
 		assert: (dt asSeconds * 1000000) rounded

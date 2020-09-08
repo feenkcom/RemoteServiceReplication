@@ -26,7 +26,7 @@ using: aDecoder [
 
 	| microseconds |
 	microseconds := aDecoder decodeControlWord: aStream.
-	value := self calculateFromMicroSeconds: microseconds
+	value := RsrDateAndTime fromMicroseconds: microseconds
 ]
 
 { #category : 'encoding/decoding' }
@@ -40,7 +40,7 @@ using: anEncoder [
 	anEncoder
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
-	microseconds := self microsecondsSinceEpoch: value.
+	microseconds := RsrDateAndTime microsecondsSinceEpoch: value.
 	anEncoder
 		encodeControlWord: microseconds
 		onto: aStream

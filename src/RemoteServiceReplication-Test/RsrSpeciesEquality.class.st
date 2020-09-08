@@ -30,8 +30,8 @@ RsrSpeciesEquality >> basicExamples [
 	OrderedCollection with: #x.
 	Dictionary new.
 	Dictionary new at: #key put: #value; yourself.
-	RsrDateAndTimeSpecies posixEpoch.
-	RsrDateAndTimeSpecies fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}
+	RsrDateAndTime posixEpoch.
+	RsrDateAndTime fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}
 ]
 
 { #category : 'running' }
@@ -74,8 +74,8 @@ RsrSpeciesEquality >> testCharacter [
 RsrSpeciesEquality >> testDateAndTime [
 
 	self
-		verify: (RsrDateAndTimeSpecies fromMicroseconds: -491277642567488); "1954-06-07T14:59:17.432512-07:00"
-		verify: (RsrDateAndTimeSpecies fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"
+		verify: (RsrDateAndTime fromMicroseconds: -491277642567488); "1954-06-07T14:59:17.432512-07:00"
+		verify: (RsrDateAndTime fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"
 ]
 
 { #category : 'running' }

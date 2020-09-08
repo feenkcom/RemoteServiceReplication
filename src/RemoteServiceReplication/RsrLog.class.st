@@ -78,7 +78,7 @@ RsrLog >> log: aMessage
 level: aLevelString [
 
 	| message |
-	message := RsrDateAndTimeSpecies now printString, '-', aLevelString, '-', aMessage.
+	message := RsrDateAndTime now printString, '-', aLevelString, '-', aMessage.
 	sinks do: [:each | each write: message]
 ]
 
