@@ -1,3 +1,13 @@
+"
+No class-specific documentation for RsrCollectionReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrValueReference( value)
+          RsrCollectionReference
+
+"
 Class {
 	#name : 'RsrCollectionReference',
 	#superclass : 'RsrValueReference',

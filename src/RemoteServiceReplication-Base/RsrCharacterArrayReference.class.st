@@ -13,18 +13,6 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : 'converting' }
-RsrCharacterArrayReference >> convertBytes: aByteArray [
-
-	^aByteArray decodeFromUTF8ToString
-]
-
-{ #category : 'converting' }
-RsrCharacterArrayReference >> convertToBytes: aCharacterArray [
-
-	^aCharacterArray encodeAsUTF8
-]
-
 { #category : 'encoding/decoding' }
 RsrCharacterArrayReference >> decode: aStream
 using: aDecoder [

@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrServiceReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrServiceReference( sid)
+
+"
 Class {
 	#name : 'RsrServiceReference',
 	#superclass : 'RsrReference',

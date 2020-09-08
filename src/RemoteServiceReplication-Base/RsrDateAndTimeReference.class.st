@@ -1,3 +1,13 @@
+"
+No class-specific documentation for RsrDateAndTimeReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrValueReference( value)
+          RsrDateAndTimeReference
+
+"
 Class {
 	#name : 'RsrDateAndTimeReference',
 	#superclass : 'RsrValueReference',
@@ -8,14 +18,6 @@ Class {
 RsrDateAndTimeReference class >> typeIdentifier [
 
 	^14
-]
-
-{ #category : 'calculating' }
-RsrDateAndTimeReference >> calculateFromMicroSeconds: anInteger [
-
-    ^DateAndTime
-        posixSeconds: (anInteger / 1000000)
-        offset: Duration zero
 ]
 
 { #category : 'encoding/decoding' }
@@ -42,18 +44,4 @@ using: anEncoder [
 	anEncoder
 		encodeControlWord: microseconds
 		onto: aStream
-]
-
-{ #category : 'calculating' }
-RsrDateAndTimeReference >> microsecondsSinceEpoch: aDateAndTime [
-
-	^((aDateAndTime asSeconds - self posixEpoch asSeconds) * 1000000) rounded
-]
-
-{ #category : 'calculating' }
-RsrDateAndTimeReference >> posixEpoch [
-
-	^DateAndTime
-        posixSeconds: 0
-        offset: Duration zero
 ]

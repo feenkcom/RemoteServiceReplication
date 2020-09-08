@@ -1,3 +1,13 @@
+"
+No class-specific documentation for RsrByteArrayReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrValueReference( value)
+          RsrByteArrayReference
+
+"
 Class {
 	#name : 'RsrByteArrayReference',
 	#superclass : 'RsrValueReference',

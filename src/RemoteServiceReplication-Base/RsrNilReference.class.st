@@ -1,3 +1,12 @@
+"
+No class-specific documentation for RsrNilReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrNilReference
+
+"
 Class {
 	#name : 'RsrNilReference',
 	#superclass : 'RsrImmediateReference',

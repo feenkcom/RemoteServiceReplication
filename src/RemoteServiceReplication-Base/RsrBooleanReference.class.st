@@ -1,3 +1,12 @@
+"
+No class-specific documentation for RsrBooleanReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrBooleanReference
+
+"
 Class {
 	#name : 'RsrBooleanReference',
 	#superclass : 'RsrImmediateReference',

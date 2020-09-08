@@ -1,3 +1,13 @@
+"
+No class-specific documentation for RsrCharacterReference, hierarchy is:
+Object
+  RsrObject
+    RsrReference
+      RsrImmediateReference
+        RsrValueReference( value)
+          RsrCharacterReference
+
+"
 Class {
 	#name : 'RsrCharacterReference',
 	#superclass : 'RsrValueReference',
