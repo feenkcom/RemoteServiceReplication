@@ -113,7 +113,7 @@ RsrSendMessage >> receiver: anObject [
 { #category : 'reporting' }
 RsrSendMessage >> reportOn: aLog [
 
-	aLog debug: 'RsrSendMessage(', self receiver value asString, '>>', self selector value asString, ')'
+	aLog debug: 'RsrSendMessage(', self receiver asString, '>>', self selector asString, ')'
 ]
 
 { #category : 'accessing' }
