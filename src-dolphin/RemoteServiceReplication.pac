@@ -758,7 +758,7 @@ selector: anObject	selector := anObject! !
 receiver: anObject	receiver := anObject! !
 
 !RsrSendMessage methodsFor!
-reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiver value asString, '>>', self selector value asString, ')'! !
+reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiver asString, '>>', self selector asString, ')'! !
 
 !RsrSendMessage methodsFor!
 transaction	^ transaction! !
