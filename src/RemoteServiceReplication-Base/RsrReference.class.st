@@ -1,9 +1,18 @@
 "
-No class-specific documentation for RsrReference, hierarchy is:
-Object
-  RsrObject
-    RsrReference
+RsrReference
 
+Reference instances are created as a by-product of freezing the state of a Service. This typically happens when the framework creates a SendMessage or DeliverResponse command.
+
+The Reference represents and is able to resolve the object is it represents. In some cases, the value is immediate. In the case of ServiceReference, the stored Service Identifier is resolved in the context of a connection.
+
+Resolving must occur in the context of a Connection. Though this is true, the minimal information necessary for a Reference to resolve is the Registry.
+
+SendMessage and DeliverResponse store fields like receiver or result as references. They are resolved when the Command is set to execute.
+
+Collaborators:
+- ServiceSnapshot
+- Encoder
+- Decoder
 "
 Class {
 	#name : 'RsrReference',

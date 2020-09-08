@@ -1,9 +1,16 @@
 "
-No class-specific documentation for RsrServiceSnapshot, hierarchy is:
-Object
-  RsrObject
-    RsrServiceSnapshot( sid template type slots)
+RsrServiceSnapshot
 
+When a SendMessage or DeliverResponse command is processed, the entire transition closure of the MessageSend/Response is analyzed.
+
+A Snapshot of each Service found during this process is taken. The slots of the Service that need to be replicated are stored in the ServiceSnapshot as references.
+
+In addition, information about the template and service is stored. This allows the peer to reify the correct type of Service. For instance, a local Client will be a Server remotely. A local Server will become a remote Client.
+
+Collaborators:
+- Encoder
+- Decoder
+- Reference
 "
 Class {
 	#name : 'RsrServiceSnapshot',
