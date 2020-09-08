@@ -1,7 +1,7 @@
-Extension { #name : 'RsrDateAndTimeReference' }
+Extension { #name : 'RsrDateAndTime' }
 
 { #category : '*RemoteServiceReplication-Pharo' }
-RsrDateAndTimeReference >> calculateFromMicroSeconds: anInteger [
+RsrDateAndTime class >> fromMicroseconds: anInteger [
 
 	^DateAndTime
 		fromSeconds: (anInteger / 1000000) + self posixEpoch asSeconds
@@ -9,7 +9,7 @@ RsrDateAndTimeReference >> calculateFromMicroSeconds: anInteger [
 ]
 
 { #category : '*RemoteServiceReplication-Pharo' }
-RsrDateAndTimeReference >> microsecondsSinceEpoch: aDateAndTime [
+RsrDateAndTime class >> microsecondsSinceEpoch: aDateAndTime [
 
 	| seconds |
 	seconds := aDateAndTime asSeconds - self posixEpoch asSeconds.
@@ -17,7 +17,13 @@ RsrDateAndTimeReference >> microsecondsSinceEpoch: aDateAndTime [
 ]
 
 { #category : '*RemoteServiceReplication-Pharo' }
-RsrDateAndTimeReference >> posixEpoch [
+RsrDateAndTime class >> now [
+
+	^DateAndTime now
+]
+
+{ #category : '*RemoteServiceReplication-Pharo' }
+RsrDateAndTime class >> posixEpoch [
 
 	^DateAndTime unixEpoch
 ]
