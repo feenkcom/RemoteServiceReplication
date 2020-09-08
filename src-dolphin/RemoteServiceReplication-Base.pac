@@ -13,6 +13,7 @@ package classNames
 	add: #RsrSetReference;
 	add: #RsrValueReference;
 	add: #RsrConnectionClosed;
+	add: #RsrObject;
 	add: #RsrOrderedCollectionReference;
 	add: #RsrNilReference;
 	add: #RsrError;
@@ -45,6 +46,14 @@ package methodNames
 package setPrerequisites: #().
 
 package!
+
+Object
+	subclass: #RsrObject
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrObject categoriesForClass!RemoteServiceReplication-Base! !
 
 Object
 	subclass: #RsrProcessModel

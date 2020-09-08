@@ -58,7 +58,7 @@ package setPrerequisites: #('RemoteServiceReplication-Platform-Test').
 
 package!
 
-RsrObject
+AnObsoleteRsrObject
 	subclass: #RsrMockConnection
 	instanceVariableNames: 'forwarderClass lastMessage registry idSpigot'
 	classVariableNames: ''
@@ -66,7 +66,7 @@ RsrObject
 	classInstanceVariableNames: ''!
 !RsrMockConnection categoriesForClass!RemoteServiceReplication-Test! !
 
-RsrObject
+AnObsoleteRsrObject
 	subclass: #RsrMockRegistry
 	instanceVariableNames: 'objects idSpigot'
 	classVariableNames: ''
@@ -74,7 +74,7 @@ RsrObject
 	classInstanceVariableNames: ''!
 !RsrMockRegistry categoriesForClass!RemoteServiceReplication-Test! !
 
-RsrObject
+AnObsoleteRsrObject
 	subclass: #RsrSignalErrorInAsString
 	instanceVariableNames: ''
 	classVariableNames: ''

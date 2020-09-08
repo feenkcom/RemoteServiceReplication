@@ -22,7 +22,7 @@ package setPrerequisites: #('RemoteServiceReplication').
 
 package!
 
-RsrObject
+AnObsoleteRsrObject
 	subclass: #RsrSocketPair
 	instanceVariableNames: 'firstSocket secondSocket'
 	classVariableNames: ''
