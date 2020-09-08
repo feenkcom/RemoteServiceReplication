@@ -3,16 +3,16 @@ package := Package name: 'RemoteServiceReplication-Platform-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrClassResolverTestCase;
-	add: #RsrSocketPair;
 	add: #RsrMockServer;
 	add: #RsrGarbageCollectorTestCase;
+	add: #RsrMockService;
 	add: #RsrTestingProcessModel;
 	add: #RsrSocketTestCase;
-	add: #RsrMockService;
+	add: #RsrMockClient;
 	add: #RsrTestCase;
 	add: #RsrTestingProcessModelTestCase;
-	add: #RsrMockClient;
+	add: #RsrClassResolverTestCase;
+	add: #RsrSocketPair;
 	yourself.
 
 package methodNames
@@ -22,7 +22,7 @@ package setPrerequisites: #('RemoteServiceReplication').
 
 package!
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrSocketPair
 	instanceVariableNames: 'firstSocket secondSocket'
 	classVariableNames: ''
@@ -113,6 +113,9 @@ clientClassName	^#RsrMockClient! !
 !RsrMockService class methodsFor!
 serverClassName	^#RsrMockServer! !
 
+!RsrSocketTestCase class methodsFor!
+defaultTimeLimit	^20 seconds! !
+
 !RsrSocketPair class methodsFor!
 firstSocket: firstSocketsecondSocket: secondSocket	^super new		firstSocket: firstSocket;		secondSocket: secondSocket;		yourself! !
 
@@ -125,65 +128,11 @@ socketClass	^RsrSocket! !
 !RsrSocketPair class methodsFor!
 listenPort	^64455! !
 
-!RsrSocketTestCase class methodsFor!
-defaultTimeLimit	^20 seconds! !
-
 !RsrTestCase class methodsFor!
 isAbstract	^self == RsrTestCase! !
 
 !RsrTestCase class methodsFor!
 defaultTimeLimit	"This is needed for Pharo"	^5 seconds! !
-
-!RsrTestingProcessModel methodsFor!
-forkedException	^forkedException! !
-
-!RsrTestingProcessModel methodsFor!
-protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
-
-!RsrTestingProcessModel methodsFor!
-fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
-
-!RsrTestingProcessModel methodsFor!
-fork: aBlock	^super fork: (self protect: aBlock)! !
-
-!RsrTestingProcessModelTestCase methodsFor!
-testCurrentStackDump	| stack |	stack := RsrProcessModel currentStackDump.	self		assert: stack isString;		assert: stack size > 0! !
-
-!RsrTestingProcessModelTestCase methodsFor!
-exceptionCase	| sema |	sema := Semaphore new.	RsrProcessModel fork: [[Error signal] ensure: [sema signal]].	sema wait! !
-
-!RsrTestingProcessModelTestCase methodsFor!
-testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
-
-!RsrTestingProcessModelTestCase methodsFor!
-noExceptionCase	| sema |	sema := Semaphore new.	RsrProcessModel fork: [sema signal].	sema wait! !
-
-!RsrTestingProcessModelTestCase methodsFor!
-testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
-
-!RsrSocketPair methodsFor!
-secondSocket: anObject	secondSocket := anObject! !
-
-!RsrSocketPair methodsFor!
-firstStream	^self socketStreamClass on: firstSocket! !
-
-!RsrSocketPair methodsFor!
-close	firstSocket close.	secondSocket close! !
-
-!RsrSocketPair methodsFor!
-firstSocket	^firstSocket! !
-
-!RsrSocketPair methodsFor!
-firstSocket: anObject	firstSocket := anObject! !
-
-!RsrSocketPair methodsFor!
-secondStream	^self socketStreamClass on: secondSocket! !
-
-!RsrSocketPair methodsFor!
-socketStreamClass	^(RsrClassResolver classNamed: #RsrSocketStream)! !
-
-!RsrSocketPair methodsFor!
-secondSocket	^secondSocket! !
 
 !RsrSocketTestCase methodsFor!
 deferClose: aSocket	sockets add: aSocket.	^aSocket! !
@@ -239,6 +188,57 @@ testSuccessfulConnect	| socket |	socket := self newSocket.	self deny: socket
 !RsrSocketTestCase methodsFor!
 setUp	super setUp.	sockets := OrderedCollection new! !
 
+!RsrTestingProcessModel methodsFor!
+forkedException	^forkedException! !
+
+!RsrTestingProcessModel methodsFor!
+protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
+
+!RsrTestingProcessModel methodsFor!
+fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
+
+!RsrTestingProcessModel methodsFor!
+fork: aBlock	^super fork: (self protect: aBlock)! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+testCurrentStackDump	| stack |	stack := RsrProcessModel currentStackDump.	self		assert: stack isString;		assert: stack size > 0! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+exceptionCase	| sema |	sema := Semaphore new.	RsrProcessModel fork: [[Error signal] ensure: [sema signal]].	sema wait! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+testNoException	| testCase |	testCase := self class selector: #noExceptionCase.	self		shouldnt: [testCase runCase]		raise: Exception! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+noExceptionCase	| sema |	sema := Semaphore new.	RsrProcessModel fork: [sema signal].	sema wait! !
+
+!RsrTestingProcessModelTestCase methodsFor!
+testException	| testCase |	testCase := self class selector: #exceptionCase.	self		should: [testCase runCase]		raise: Exception! !
+
+!RsrSocketPair methodsFor!
+secondSocket: anObject	secondSocket := anObject! !
+
+!RsrSocketPair methodsFor!
+firstStream	^self socketStreamClass on: firstSocket! !
+
+!RsrSocketPair methodsFor!
+close	firstSocket close.	secondSocket close! !
+
+!RsrSocketPair methodsFor!
+firstSocket	^firstSocket! !
+
+!RsrSocketPair methodsFor!
+firstSocket: anObject	firstSocket := anObject! !
+
+!RsrSocketPair methodsFor!
+secondStream	^self socketStreamClass on: secondSocket! !
+
+!RsrSocketPair methodsFor!
+socketStreamClass	^(RsrClassResolver classNamed: #RsrSocketStream)! !
+
+!RsrSocketPair methodsFor!
+secondSocket	^secondSocket! !
+
 !RsrClassResolverTestCase methodsFor!
 testSuccessfulResolution	| actual |	actual := RsrClassResolver classNamed: #Object.	self		assert: actual		identicalTo: Object.	actual := RsrClassResolver		classNamed: #Object		ifAbsent: [self assert: false].	self		assert: actual		identicalTo: Object! !
 
@@ -270,13 +270,13 @@ hack: aString	"Placeholder for things that need to be fixed"! !
 assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
 
 !RsrTestCase methodsFor!
-deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
-
-!RsrTestCase methodsFor!
 fork: aBlock	^RsrProcessModel fork: aBlock! !
 
 !RsrTestCase methodsFor!
 assumption: aString	"This method serves as a marker for assumptions made in the tests.	Perhaps some of the senders can be removed in the future."! !
+
+!RsrTestCase methodsFor!
+deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
 
 !RsrTestCase methodsFor!
 maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !

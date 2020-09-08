@@ -3,41 +3,41 @@ package := Package name: 'RemoteServiceReplication-Base'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrCollectionReference;
-	add: #RsrIntegerReference;
-	add: #RsrSocketClosed;
-	add: #RsrCharacterArrayReference;
-	add: #RsrDateAndTimeReference;
-	add: #RsrByteArrayReference;
-	add: #RsrWaitForConnectionCancelled;
-	add: #RsrSetReference;
-	add: #RsrValueReference;
-	add: #RsrConnectionClosed;
-	add: #RsrObject;
-	add: #RsrOrderedCollectionReference;
-	add: #RsrNilReference;
-	add: #RsrError;
-	add: #RsrDictionaryReference;
-	add: #RsrDateAndTime;
-	add: #RsrTrueReference;
 	add: #RsrArrayReference;
-	add: #RsrFalseReference;
+	add: #RsrObject;
 	add: #RsrProcessModel;
-	add: #RsrAlreadyRegistered;
-	add: #RsrInvalidBind;
+	add: #RsrFalseReference;
+	add: #RsrUnsupportedObject;
+	add: #RsrCollectionReference;
 	add: #RsrServiceReference;
 	add: #RsrBooleanReference;
-	add: #RsrCharacterReference;
-	add: #RsrUnsupportedObject;
-	add: #RsrConnectFailed;
-	add: #RsrImmediateReference;
-	add: #RsrPositiveIntegerReference;
-	add: #RsrSymbolReference;
 	add: #RsrUnknownClass;
+	add: #RsrCharacterReference;
+	add: #RsrPositiveIntegerReference;
+	add: #RsrImmediateReference;
+	add: #RsrSocketClosed;
+	add: #RsrSymbolReference;
 	add: #RsrNegativeIntegerReference;
-	add: #RsrSocketError;
 	add: #RsrReference;
+	add: #RsrInvalidBind;
 	add: #RsrStringReference;
+	add: #RsrIntegerReference;
+	add: #RsrDateAndTime;
+	add: #RsrConnectFailed;
+	add: #RsrCharacterArrayReference;
+	add: #RsrDateAndTimeReference;
+	add: #RsrSocketError;
+	add: #RsrByteArrayReference;
+	add: #RsrSetReference;
+	add: #RsrConnectionClosed;
+	add: #RsrValueReference;
+	add: #RsrOrderedCollectionReference;
+	add: #RsrAlreadyRegistered;
+	add: #RsrNilReference;
+	add: #RsrDictionaryReference;
+	add: #RsrError;
+	add: #RsrTrueReference;
+	add: #RsrWaitForConnectionCancelled;
 	yourself.
 
 package methodNames
@@ -349,20 +349,8 @@ RsrCharacterArrayReference
 RsrSymbolReference comment: 'No class-specific documentation for RsrSymbolReference, hierarchy is:Object  RsrObject    RsrReference      RsrImmediateReference        RsrCharacterArrayReference( value)          RsrSymbolReference'!
 !RsrSymbolReference categoriesForClass!RemoteServiceReplication-Base! !
 
-!RsrValueReference class methodsFor!
-value: anObject	^self new		value: anObject;		yourself! !
-
-!RsrValueReference class methodsFor!
-from: anObject	^self value: anObject! !
-
 !RsrUnsupportedObject class methodsFor!
 signal: anObject	^self new		object: anObject;		signal! !
-
-!RsrStringReference class methodsFor!
-typeIdentifier	^2! !
-
-!RsrDateAndTimeReference class methodsFor!
-typeIdentifier	^14! !
 
 !RsrOrderedCollectionReference class methodsFor!
 typeIdentifier	^12! !
@@ -370,11 +358,68 @@ typeIdentifier	^12! !
 !RsrFalseReference class methodsFor!
 typeIdentifier	^8! !
 
-!RsrImmediateReference class methodsFor!
-analyze: anObjectusing: anAnalyzer	^anAnalyzer analyzeImmediate: anObject! !
+!RsrStringReference class methodsFor!
+typeIdentifier	^2! !
 
-!RsrImmediateReference class methodsFor!
-from: anObject	^self subclassResponsiblity! !
+!RsrBooleanReference class methodsFor!
+from: aBoolean	^aBoolean		ifTrue: [RsrTrueReference new]		ifFalse: [RsrFalseReference new]! !
+
+!RsrSymbolReference class methodsFor!
+typeIdentifier	^1! !
+
+!RsrSymbolReference class methodsFor!
+symbol: aSymbol	^self new		value: aSymbol;		yourself! !
+
+!RsrIntegerReference class methodsFor!
+from: anInteger	^anInteger positive		ifTrue: [RsrPositiveIntegerReference value: anInteger]		ifFalse: [RsrNegativeIntegerReference value: anInteger]! !
+
+!RsrCollectionReference class methodsFor!
+analyze: aCollectionusing: anAnalyzer	^anAnalyzer analyzeCollection: aCollection! !
+
+!RsrCollectionReference class methodsFor!
+from: aSequencedCollection	| references |	references := (1 to: aSequencedCollection size) collect: [:i | RsrReference from: (aSequencedCollection at: i)].	^self value: references! !
+
+!RsrServiceReference class methodsFor!
+sid: aServiceID	^self new		sid: aServiceID;		yourself! !
+
+!RsrServiceReference class methodsFor!
+analyze: aServiceusing: anAnalyzer	^anAnalyzer analyzeService: aService! !
+
+!RsrServiceReference class methodsFor!
+from: aService	^self sid: aService _id! !
+
+!RsrReference class methodsFor!
+referenceMapping	^referenceMapping ifNil: [self initializeReferenceMapping]! !
+
+!RsrReference class methodsFor!
+referenceClassFor: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceReference].	^self referenceMapping		at: anObject class		ifAbsent: [RsrUnsupportedObject signal: anObject]! !
+
+!RsrReference class methodsFor!
+analyze: anObjectusing: anAnalyzer	^self subclassResponsibility! !
+
+!RsrReference class methodsFor!
+typeIdentifier	^self subclassResponsibility! !
+
+!RsrReference class methodsFor!
+from: anObject	| referenceClass |	referenceClass := self referenceClassFor: anObject.	^referenceClass from: anObject! !
+
+!RsrNilReference class methodsFor!
+from: aNil	^self new! !
+
+!RsrDictionaryReference class methodsFor!
+typeIdentifier	^13! !
+
+!RsrDictionaryReference class methodsFor!
+analyze: aDictionaryusing: anAnalyzer	^anAnalyzer analyzeDictionary: aDictionary! !
+
+!RsrDictionaryReference class methodsFor!
+from: aDictionary	| referenceStream |	referenceStream := WriteStream on: (Array new: aDictionary size * 2).	aDictionary		keysAndValuesDo:			[:key :value |			referenceStream				nextPut: (RsrReference from: key);				nextPut: (RsrReference from: value)].	^self value: referenceStream contents! !
+
+!RsrDateAndTimeReference class methodsFor!
+typeIdentifier	^14! !
+
+!RsrArrayReference class methodsFor!
+typeIdentifier	^9! !
 
 !RsrProcessModel class methodsFor!
 currentStackDump	^self current currentStackDump! !
@@ -394,74 +439,29 @@ current: concurrency	current := concurrency! !
 !RsrProcessModel class methodsFor!
 fork: aBlockat: aPriority	^self current		fork: aBlock		at: aPriority! !
 
-!RsrServiceReference class methodsFor!
-sid: aServiceID	^self new		sid: aServiceID;		yourself! !
+!RsrImmediateReference class methodsFor!
+analyze: anObjectusing: anAnalyzer	^anAnalyzer analyzeImmediate: anObject! !
 
-!RsrServiceReference class methodsFor!
-analyze: aServiceusing: anAnalyzer	^anAnalyzer analyzeService: aService! !
+!RsrImmediateReference class methodsFor!
+from: anObject	^self subclassResponsiblity! !
 
-!RsrServiceReference class methodsFor!
-from: aService	^self sid: aService _id! !
+!RsrAlreadyRegistered class methodsFor!
+signalService: aServiceintendedConnection: aConnection	^self new		service: aService;		intendedConnection: aConnection;		signal! !
 
-!RsrIntegerReference class methodsFor!
-from: anInteger	^anInteger positive		ifTrue: [RsrPositiveIntegerReference value: anInteger]		ifFalse: [RsrNegativeIntegerReference value: anInteger]! !
+!RsrValueReference class methodsFor!
+value: anObject	^self new		value: anObject;		yourself! !
 
-!RsrBooleanReference class methodsFor!
-from: aBoolean	^aBoolean		ifTrue: [RsrTrueReference new]		ifFalse: [RsrFalseReference new]! !
+!RsrValueReference class methodsFor!
+from: anObject	^self value: anObject! !
 
-!RsrNilReference class methodsFor!
-from: aNil	^self new! !
-
-!RsrReference class methodsFor!
-referenceMapping	^referenceMapping ifNil: [self initializeReferenceMapping]! !
-
-!RsrReference class methodsFor!
-referenceClassFor: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceReference].	^self referenceMapping		at: anObject class		ifAbsent: [RsrUnsupportedObject signal: anObject]! !
-
-!RsrReference class methodsFor!
-analyze: anObjectusing: anAnalyzer	^self subclassResponsibility! !
-
-!RsrReference class methodsFor!
-typeIdentifier	^self subclassResponsibility! !
-
-!RsrReference class methodsFor!
-from: anObject	| referenceClass |	referenceClass := self referenceClassFor: anObject.	^referenceClass from: anObject! !
-
-!RsrArrayReference class methodsFor!
-typeIdentifier	^9! !
-
-!RsrSymbolReference class methodsFor!
-typeIdentifier	^1! !
-
-!RsrSymbolReference class methodsFor!
-symbol: aSymbol	^self new		value: aSymbol;		yourself! !
+!RsrTrueReference class methodsFor!
+typeIdentifier	^7! !
 
 !RsrSetReference class methodsFor!
 typeIdentifier	^11! !
 
 !RsrSetReference class methodsFor!
 from: aSet	| referenceStream |	referenceStream := WriteStream on: (Array new: aSet size).	aSet do:  [:each | referenceStream nextPut: (RsrReference from: each)].	^self value: referenceStream contents! !
-
-!RsrTrueReference class methodsFor!
-typeIdentifier	^7! !
-
-!RsrAlreadyRegistered class methodsFor!
-signalService: aServiceintendedConnection: aConnection	^self new		service: aService;		intendedConnection: aConnection;		signal! !
-
-!RsrCollectionReference class methodsFor!
-analyze: aCollectionusing: anAnalyzer	^anAnalyzer analyzeCollection: aCollection! !
-
-!RsrCollectionReference class methodsFor!
-from: aSequencedCollection	| references |	references := (1 to: aSequencedCollection size) collect: [:i | RsrReference from: (aSequencedCollection at: i)].	^self value: references! !
-
-!RsrDictionaryReference class methodsFor!
-typeIdentifier	^13! !
-
-!RsrDictionaryReference class methodsFor!
-analyze: aDictionaryusing: anAnalyzer	^anAnalyzer analyzeDictionary: aDictionary! !
-
-!RsrDictionaryReference class methodsFor!
-from: aDictionary	| referenceStream |	referenceStream := WriteStream on: (Array new: aDictionary size * 2).	aDictionary		keysAndValuesDo:			[:key :value |			referenceStream				nextPut: (RsrReference from: key);				nextPut: (RsrReference from: value)].	^self value: referenceStream contents! !
 
 !RsrUnsupportedObject methodsFor!
 messageText	^'Instances of ', object class name, ' cannot be serialized'! !
@@ -493,12 +493,6 @@ encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder imme
 !RsrSymbolReference methodsFor!
 convertBytes: aByteArray	^(super convertBytes: aByteArray) asSymbol! !
 
-!RsrCollectionReference methodsFor!
-decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value := (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
-
-!RsrCollectionReference methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
-
 !RsrIntegerReference methodsFor!
 convertBytes: aByteArray	^aByteArray		inject: 0		into: [:integer :byte | (integer bitShift: 8) bitOr: byte]! !
 
@@ -510,6 +504,12 @@ convertToBytes: anInteger	| stream int |	anInteger <= 0		ifTrue: [^#[0]].	s
 
 !RsrIntegerReference methodsFor!
 encode: aStreamusing: anEncoder	| bytes |	bytes := self convertToBytes: value abs.	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+
+!RsrCollectionReference methodsFor!
+decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value := (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
+
+!RsrCollectionReference methodsFor!
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
 
 !RsrByteArrayReference methodsFor!
 typeIdentifier	^10! !
@@ -547,6 +547,12 @@ resolve: aRegistry	^nil! !
 !RsrNilReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream! !
 
+!RsrNegativeIntegerReference methodsFor!
+convertBytes: aByteArray	^(super convertBytes: aByteArray) negated! !
+
+!RsrNegativeIntegerReference methodsFor!
+typeIdentifier	^4! !
+
 !RsrCharacterArrayReference methodsFor!
 decode: aStreamusing: aDecoder	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	value := self convertBytes: bytes! !
 
@@ -562,12 +568,6 @@ resolve: aRegistry	| stream numEntries dictionary |	stream := ReadStream on: 
 !RsrDictionaryReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size / 2		onto: aStream.	value do: [:each | each encode: aStream using: anEncoder]! !
 
-!RsrNegativeIntegerReference methodsFor!
-convertBytes: aByteArray	^(super convertBytes: aByteArray) negated! !
-
-!RsrNegativeIntegerReference methodsFor!
-typeIdentifier	^4! !
-
 !RsrDateAndTimeReference methodsFor!
 decode: aStreamusing: aDecoder	| microseconds |	microseconds := aDecoder decodeControlWord: aStream.	value := RsrDateAndTime fromMicroseconds: microseconds! !
 
@@ -576,12 +576,6 @@ encode: aStreamusing: anEncoder	| microseconds |	anEncoder		encodeControlWo
 
 !RsrArrayReference methodsFor!
 resolve: aRegistry	^value collect: [:each | each resolve: aRegistry]! !
-
-!RsrProcessModel methodsFor!
-fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
-
-!RsrProcessModel methodsFor!
-fork: aBlock	^aBlock fork! !
 
 !RsrImmediateReference methodsFor!
 immediateOID	^0! !
@@ -597,6 +591,12 @@ decode: aStreamusing: aDecoder	| codePoint |	codePoint := aDecoder decodeCon
 
 !RsrCharacterReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value codePoint		onto: aStream! !
+
+!RsrProcessModel methodsFor!
+fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
+
+!RsrProcessModel methodsFor!
+fork: aBlock	^aBlock fork! !
 
 !RsrAlreadyRegistered methodsFor!
 service	^service! !

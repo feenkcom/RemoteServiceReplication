@@ -3,43 +3,43 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrCommandSink;
+	add: #RsrInitiateConnection;
+	add: #RsrSnapshotAnalysis;
 	add: #RsrUnknownOID;
-	add: #RsrPendingMessage;
 	add: #RsrReleaseServices;
-	add: #RsrCodec;
-	add: #RsrLogSink;
-	add: #RsrServiceFactoryServer;
+	add: #RsrDispatchEventLoop;
 	add: #RsrAcceptConnection;
-	add: #RsrStream;
+	add: #RsrRemoteError;
+	add: #RsrPendingMessage;
+	add: #RsrCommand;
+	add: #RsrEventLoop;
+	add: #RsrSocketStream;
+	add: #RsrSendMessage;
+	add: #RsrLogWithPrefix;
+	add: #RsrCodec;
+	add: #RsrLog;
+	add: #RsrServiceFactory;
+	add: #RsrCycleDetected;
+	add: #RsrPromise;
 	add: #RsrDeliverErrorResponse;
+	add: #RsrCommandSink;
+	add: #RsrStream;
+	add: #RsrConnection;
 	add: #RsrNumericSpigot;
+	add: #RsrDecoder;
+	add: #RsrLogSink;
+	add: #RsrServiceFactoryClient;
+	add: #RsrServiceSnapshot;
+	add: #RsrDeliverResponse;
+	add: #RsrTranscriptSink;
 	add: #RsrCommandSource;
 	add: #RsrService;
-	add: #RsrSendMessage;
-	add: #RsrPromise;
-	add: #RsrDecoder;
-	add: #RsrCustomSink;
-	add: #RsrInitiateConnection;
-	add: #RsrCycleDetected;
-	add: #RsrDeliverResponse;
-	add: #RsrThreadSafeNumericSpigot;
-	add: #RsrServiceSnapshot;
-	add: #RsrDispatchEventLoop;
-	add: #RsrServiceFactory;
-	add: #RsrConnection;
-	add: #RsrEncoder;
-	add: #RsrTranscriptSink;
-	add: #RsrEventLoop;
-	add: #RsrRemoteError;
-	add: #RsrSnapshotAnalysis;
 	add: #RsrBufferedSocketStream;
-	add: #RsrLog;
-	add: #RsrServiceFactoryClient;
 	add: #RsrConnectionSpecification;
-	add: #RsrSocketStream;
-	add: #RsrCommand;
-	add: #RsrLogWithPrefix;
+	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrEncoder;
+	add: #RsrCustomSink;
+	add: #RsrServiceFactoryServer;
 	yourself.
 
 package methodNames
@@ -52,7 +52,7 @@ package setPrerequisites: #('RemoteServiceReplication-Dolphin').
 
 package!
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrBufferedSocketStream
 	instanceVariableNames: 'stream outBuffer writePosition nextToWrite'
 	classVariableNames: ''
@@ -60,7 +60,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrBufferedSocketStream categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrCodec
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -68,7 +68,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrCodec categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrCommand
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -77,7 +77,7 @@ AnObsoleteRsrObject
 RsrCommand comment: 'No class-specific documentation for RsrCommand, hierarchy is:Object  RsrObject    RsrCommand( encoding)'!
 !RsrCommand categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrConnection
 	instanceVariableNames: 'isOpen transactionSpigot commandWriter commandReader registry socket stream pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore'
 	classVariableNames: ''
@@ -86,7 +86,7 @@ AnObsoleteRsrObject
 RsrConnection comment: 'No class-specific documentation for RsrConnection, hierarchy is:Object  RsrObject    RsrConnection( isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore)'!
 !RsrConnection categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrConnectionSpecification
 	instanceVariableNames: 'host port'
 	classVariableNames: ''
@@ -95,7 +95,7 @@ AnObsoleteRsrObject
 RsrConnectionSpecification comment: 'This class is abstract and defines the interface for manufacturing RsrConnection instances which are connected to a peer.Specialized subclasses are reponsible for either listening for or initiating connections with a peer.'!
 !RsrConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrEventLoop
 	instanceVariableNames: 'process connection state'
 	classVariableNames: ''
@@ -103,7 +103,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrEventLoop categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrLog
 	instanceVariableNames: 'verbosity sinks'
 	classVariableNames: ''
@@ -111,7 +111,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrLog categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrLogSink
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -119,7 +119,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrLogSink categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrLogWithPrefix
 	instanceVariableNames: 'prefix log'
 	classVariableNames: ''
@@ -127,7 +127,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrLogWithPrefix categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrNumericSpigot
 	instanceVariableNames: 'current step'
 	classVariableNames: ''
@@ -135,7 +135,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrNumericSpigot categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrPendingMessage
 	instanceVariableNames: 'services promise'
 	classVariableNames: ''
@@ -143,7 +143,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrPendingMessage categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrPromise
 	instanceVariableNames: 'mutex value error markerValue'
 	classVariableNames: ''
@@ -160,7 +160,7 @@ RsrAbstractService
 RsrService comment: 'I represent a class of Objects that know offer Rsr Services.'!
 !RsrService categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrServiceSnapshot
 	instanceVariableNames: 'sid template targetServiceType slots'
 	classVariableNames: ''
@@ -169,7 +169,7 @@ AnObsoleteRsrObject
 RsrServiceSnapshot comment: 'No class-specific documentation for RsrServiceSnapshot, hierarchy is:Object  RsrObject    RsrServiceSnapshot( sid template type slots)'!
 !RsrServiceSnapshot categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrSnapshotAnalysis
 	instanceVariableNames: 'roots snapshots inFlight connection'
 	classVariableNames: ''
@@ -178,7 +178,7 @@ AnObsoleteRsrObject
 RsrSnapshotAnalysis comment: 'No class-specific documentation for RsrSnapshotAnalysis, hierarchy is:Object  RsrObject    RsrSnapshotAnalysis( roots snapshots inFlight connection)'!
 !RsrSnapshotAnalysis categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrSocketStream
 	instanceVariableNames: 'socket'
 	classVariableNames: ''
@@ -186,7 +186,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrSocketStream categoriesForClass!RemoteServiceReplication! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrStream
 	instanceVariableNames: 'stream'
 	classVariableNames: ''
@@ -462,6 +462,9 @@ on: aStream	^self new		stream: aStream;		yourself! !
 !RsrCycleDetected class methodsFor!
 signal: anObject	^self new		object: anObject;		signal! !
 
+!RsrSnapshotAnalysis class methodsFor!
+roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
+
 !RsrConnection class methodsFor!
 new	self error: 'Instance creation via #new is unsupported'! !
 
@@ -474,20 +477,17 @@ acceptOn: aPortNumber	| acceptor |	self deprecated: 'RsrConnection class>>#ac
 !RsrConnection class methodsFor!
 connectToHost: aHostnameport: aPortNumber	| initiator |	self deprecated: 'RsrConnection class>>#connectToHost:port: replaced by RsrInitiateConnection.'.	initiator := RsrInitiateConnection		host: aHostname		port: aPortNumber.	^initiator connect! !
 
-!RsrSnapshotAnalysis class methodsFor!
-roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
-
 !RsrDeliverErrorResponse class methodsFor!
 transaction: aTransactionIdremoteError: anException	^self new		transaction: aTransactionId;		remoteError: anException;		yourself! !
 
 !RsrDecoder class methodsFor!
 registry: anRsrRegistryconnection: aConnection	^self new		registry: anRsrRegistry;		connection: aConnection;		yourself! !
 
-!RsrSocketStream class methodsFor!
-on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
-
 !RsrConnectionSpecification class methodsFor!
 host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
+
+!RsrSocketStream class methodsFor!
+on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
 
 !RsrNumericSpigot class methodsFor!
 new	^self		start: 0		step: 1! !
@@ -547,31 +547,31 @@ originalClassName: aSymbol	originalClassName := aSymbol! !
 stack	^stack! !
 
 !RsrDeliverResponse methodsFor!
+transaction: aTransactionId	transaction := aTransactionId! !
+
+!RsrDeliverResponse methodsFor!
 snapshots	^snapshots! !
-
-!RsrDeliverResponse methodsFor!
-snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
-
-!RsrDeliverResponse methodsFor!
-response	^response! !
-
-!RsrDeliverResponse methodsFor!
-executeFor: aConnection	| pendingMessage result |	snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection registry.	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	pendingMessage promise fulfill: result! !
-
-!RsrDeliverResponse methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		onto: aStream! !
 
 !RsrDeliverResponse methodsFor!
 response: anObject	response := anObject! !
 
 !RsrDeliverResponse methodsFor!
-transaction	^transaction! !
+executeFor: aConnection	| pendingMessage result |	snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection registry.	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	pendingMessage promise fulfill: result! !
 
 !RsrDeliverResponse methodsFor!
 reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')'! !
 
 !RsrDeliverResponse methodsFor!
-transaction: aTransactionId	transaction := aTransactionId! !
+transaction	^transaction! !
+
+!RsrDeliverResponse methodsFor!
+response	^response! !
+
+!RsrDeliverResponse methodsFor!
+encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		onto: aStream! !
+
+!RsrDeliverResponse methodsFor!
+snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
 
 !RsrEncoder methodsFor!
 encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedInteger := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]).	encodedBytes := self		integerAsByteArray: encodedInteger		ofSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes! !
@@ -751,22 +751,22 @@ arguments: anObject	arguments := anObject! !
 executeFor: aConnection	| result analysis resultReference response |	[| servs rec sel args |	servs := snapshots collect: [:each | each reifyIn: aConnection].	rec := receiver resolve: aConnection registry.	sel := selector resolve: aConnection registry.	args := arguments collect: [:each | each resolve: aConnection registry].	result := rec		perform: sel		withArguments: args.	analysis := RsrSnapshotAnalysis		roots: (Array with: rec with: result)		connection: aConnection.	analysis perform.	resultReference := RsrReference from: result.	response := RsrDeliverResponse		transaction: transaction		response: resultReference		snapshots: analysis snapshots.	aConnection _sendCommand: response]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex))]! !
 
 !RsrSendMessage methodsFor!
+encode: aStreamusing: anEncoder	anEncoder		encodeSendMessage: self		onto: aStream! !
+
+!RsrSendMessage methodsFor!
 selector	^ selector! !
-
-!RsrSendMessage methodsFor!
-transaction	^ transaction! !
-
-!RsrSendMessage methodsFor!
-receiver: anObject	receiver := anObject! !
 
 !RsrSendMessage methodsFor!
 selector: anObject	selector := anObject! !
 
 !RsrSendMessage methodsFor!
+receiver: anObject	receiver := anObject! !
+
+!RsrSendMessage methodsFor!
 reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiver value asString, '>>', self selector value asString, ')'! !
 
 !RsrSendMessage methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeSendMessage: self		onto: aStream! !
+transaction	^ transaction! !
 
 !RsrSendMessage methodsFor!
 transaction: anObject	transaction := anObject! !
@@ -892,13 +892,13 @@ action	^action! !
 write: aMessage	self action value: aMessage! !
 
 !RsrAcceptConnection methodsFor!
+waitForConnection	| socket connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketClosed		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+
+!RsrAcceptConnection methodsFor!
 cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
 
 !RsrAcceptConnection methodsFor!
 isWaitingForConnection	^listener ~~ nil! !
-
-!RsrAcceptConnection methodsFor!
-waitForConnection	| socket connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketClosed		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	connection := RsrConnection		socket: socket		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrTranscriptSink methodsFor!
 write: aMessageString	Transcript		show: aMessageString;		cr! !
@@ -951,6 +951,12 @@ binary	stream binary! !
 !RsrStream methodsFor!
 stream: aStream	stream := aStream! !
 
+!RsrCycleDetected methodsFor!
+messageText	^'Cycle detected on: ', object printString! !
+
+!RsrCycleDetected methodsFor!
+object: anObject	object := anObject! !
+
 !RsrLog methodsFor!
 levelError	^1! !
 
@@ -996,9 +1002,6 @@ trace: aString	self verbosity >= self levelTrace		ifTrue: [self log: aString 
 !RsrLog methodsFor!
 error: aString	self verbosity >= self levelError		ifTrue: [self log: aString level: #error]! !
 
-!RsrLogSink methodsFor!
-write: aMessage	self subclassResponsibility! !
-
 !RsrCommandSource methodsFor!
 decoder	^self connection decoder! !
 
@@ -1011,11 +1014,8 @@ dispatcher	^self connection dispatcher! !
 !RsrCommandSource methodsFor!
 executeCycle	[| command |	command := self nextCommand.	self report: command.	self dispatcher dispatch: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
 
-!RsrCycleDetected methodsFor!
-messageText	^'Cycle detected on: ', object printString! !
-
-!RsrCycleDetected methodsFor!
-object: anObject	object := anObject! !
+!RsrLogSink methodsFor!
+write: aMessage	self subclassResponsibility! !
 
 !RsrConnection methodsFor!
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
@@ -1204,64 +1204,64 @@ remoteError	^remoteError! !
 remoteError: aRemoteError	remoteError := aRemoteError! !
 
 !RsrDeliverErrorResponse methodsFor!
-transaction: anInteger	transaction := anInteger! !
-
-!RsrDeliverErrorResponse methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeDeliverErrorResponse: self		onto: aStream! !
 
-!RsrDecoder methodsFor!
-decodeDeliverResponse: aStream    | transaction numServices serviceSnapshots response |    transaction := self decodeControlWord: aStream.    numServices := self decodeControlWord: aStream.    serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].    response := self decodeReference: aStream.    ^RsrDeliverResponse new        transaction: transaction;        snapshots: serviceSnapshots;        response: response;        yourself! !
-
-!RsrDecoder methodsFor!
-lookupClass: aClassName	^RsrClassResolver classNamed: aClassName! !
-
-!RsrDecoder methodsFor!
-decodeCommandMap	^decodeCommandMap ifNil: [self initializeDecodeCommandMap]! !
-
-!RsrDecoder methodsFor!
-decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := self bytesAsInteger: bytes.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]! !
-
-!RsrDecoder methodsFor!
-decodeDeliverErrorResponse: aStream	| transaction originalClassName tag messageText stack error |	transaction := self decodeControlWord: aStream.	originalClassName := (self decodeReference: aStream) resolve: self registry.	tag := (self decodeReference: aStream) resolve: self registry.	messageText := (self decodeReference: aStream) resolve: self registry.	stack := (self decodeReference: aStream) resolve: self registry.	error := RsrRemoteError new		originalClassName: originalClassName;		tag: tag;		messageText: messageText;		stack: stack;		yourself.	^RsrDeliverErrorResponse new		transaction: transaction;		remoteError: error;		yourself! !
-
-!RsrDecoder methodsFor!
-initializeDecodeCommandMap	decodeCommandMap := Dictionary new.	decodeCommandMap		at: self sendMessageCommand put: #decodeSendMessage:;		at: self deliverResponseCommand put: #decodeDeliverResponse:;		at: self releaseObjectsCommand put: #decodeReleaseServices:;		at: self deliverErrorResponseCommand put: #decodeDeliverErrorResponse:.	^decodeCommandMap! !
-
-!RsrDecoder methodsFor!
-decodeImmediateReference: aStream	| referenceType |	referenceType := self decodeControlWord: aStream.	^(self instanceOfImmediate: referenceType)		decode: aStream		using: self! !
-
-!RsrDecoder methodsFor!
-registry	^registry! !
-
-!RsrDecoder methodsFor!
-bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
-
-!RsrDecoder methodsFor!
-decodeReference: aStream	| oid |	oid := self decodeControlWord: aStream.	oid = self immediateOID ifTrue: [^self decodeImmediateReference: aStream].	^RsrServiceReference sid: oid! !
-
-!RsrDecoder methodsFor!
-decodeServiceSnapshot: aStream	| snapshot |	snapshot := RsrServiceSnapshot new.	snapshot		decode: aStream		using: self.	^snapshot! !
+!RsrDeliverErrorResponse methodsFor!
+transaction: anInteger	transaction := anInteger! !
 
 !RsrDecoder methodsFor!
 decodeSendMessage: aStream	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |	transaction := self decodeControlWord: aStream.	numServices := self decodeControlWord: aStream.	serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].	receiverReference := self decodeReference: aStream.	selector := self decodeReference: aStream.	argCount := self decodeControlWord: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].	instance := RsrSendMessage		transaction: transaction		receiver: receiverReference		selector: selector		arguments: arguments.	instance snapshots: serviceSnapshots.	^instance! !
 
 !RsrDecoder methodsFor!
+decodeReleaseServices: aStream	| count oids |	count := self decodeControlWord: aStream.	oids := Array new: count.	1		to: count		do:			[:i | | oid |			oid := self decodeControlWord: aStream.			oids at: i put: oid].	^RsrReleaseServices sids: oids! !
+
+!RsrDecoder methodsFor!
+initializeDecodeCommandMap	decodeCommandMap := Dictionary new.	decodeCommandMap		at: self sendMessageCommand put: #decodeSendMessage:;		at: self deliverResponseCommand put: #decodeDeliverResponse:;		at: self releaseObjectsCommand put: #decodeReleaseServices:;		at: self deliverErrorResponseCommand put: #decodeDeliverErrorResponse:.	^decodeCommandMap! !
+
+!RsrDecoder methodsFor!
+decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := self bytesAsInteger: bytes.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]! !
+
+!RsrDecoder methodsFor!
+lookupClass: aClassName	^RsrClassResolver classNamed: aClassName! !
+
+!RsrDecoder methodsFor!
+registry	^registry! !
+
+!RsrDecoder methodsFor!
 registry: anRsrRegistry	registry := anRsrRegistry! !
-
-!RsrDecoder methodsFor!
-decodeCommand: aStream	"Decode an object from the stream"	| command decodeSelector |	command := self decodeControlWord: aStream.	decodeSelector := self decodeCommandMap		at: command		ifAbsent: [self error: 'Invalid command received'].	^self		perform: decodeSelector		with: aStream! !
-
-!RsrDecoder methodsFor!
-connection: aConnection	connection := aConnection! !
 
 !RsrDecoder methodsFor!
 instanceOfImmediate: aReferenceType	aReferenceType = 1		ifTrue: [^RsrSymbolReference new].	aReferenceType = 2		ifTrue: [^RsrStringReference new].	aReferenceType = 3		ifTrue: [^RsrPositiveIntegerReference new].	aReferenceType = 4		ifTrue: [^RsrNegativeIntegerReference new].	aReferenceType = 5		ifTrue: [^RsrCharacterReference new].	aReferenceType = 6		ifTrue: [^RsrNilReference new].	aReferenceType = 7		ifTrue: [^RsrTrueReference new].	aReferenceType = 8		ifTrue: [^RsrFalseReference new].	aReferenceType = 9		ifTrue: [^RsrArrayReference new].	aReferenceType = 10		ifTrue: [^RsrByteArrayReference new].	aReferenceType = 11		ifTrue: [^RsrSetReference new].	aReferenceType = 12		ifTrue: [^RsrOrderedCollectionReference new].	aReferenceType = 13		ifTrue: [^RsrDictionaryReference new].	aReferenceType = 14		ifTrue: [^RsrDateAndTimeReference new].	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.! !
 
 !RsrDecoder methodsFor!
+decodeReference: aStream	| oid |	oid := self decodeControlWord: aStream.	oid = self immediateOID ifTrue: [^self decodeImmediateReference: aStream].	^RsrServiceReference sid: oid! !
+
+!RsrDecoder methodsFor!
+decodeDeliverResponse: aStream    | transaction numServices serviceSnapshots response |    transaction := self decodeControlWord: aStream.    numServices := self decodeControlWord: aStream.    serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].    response := self decodeReference: aStream.    ^RsrDeliverResponse new        transaction: transaction;        snapshots: serviceSnapshots;        response: response;        yourself! !
+
+!RsrDecoder methodsFor!
+connection: aConnection	connection := aConnection! !
+
+!RsrDecoder methodsFor!
+decodeServiceSnapshot: aStream	| snapshot |	snapshot := RsrServiceSnapshot new.	snapshot		decode: aStream		using: self.	^snapshot! !
+
+!RsrDecoder methodsFor!
+decodeImmediateReference: aStream	| referenceType |	referenceType := self decodeControlWord: aStream.	^(self instanceOfImmediate: referenceType)		decode: aStream		using: self! !
+
+!RsrDecoder methodsFor!
+decodeCommandMap	^decodeCommandMap ifNil: [self initializeDecodeCommandMap]! !
+
+!RsrDecoder methodsFor!
+decodeCommand: aStream	"Decode an object from the stream"	| command decodeSelector |	command := self decodeControlWord: aStream.	decodeSelector := self decodeCommandMap		at: command		ifAbsent: [self error: 'Invalid command received'].	^self		perform: decodeSelector		with: aStream! !
+
+!RsrDecoder methodsFor!
+bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
+
+!RsrDecoder methodsFor!
 connection	^connection! !
 
 !RsrDecoder methodsFor!
-decodeReleaseServices: aStream	| count oids |	count := self decodeControlWord: aStream.	oids := Array new: count.	1		to: count		do:			[:i | | oid |			oid := self decodeControlWord: aStream.			oids at: i put: oid].	^RsrReleaseServices sids: oids! !
+decodeDeliverErrorResponse: aStream	| transaction originalClassName tag messageText stack error |	transaction := self decodeControlWord: aStream.	originalClassName := (self decodeReference: aStream) resolve: self registry.	tag := (self decodeReference: aStream) resolve: self registry.	messageText := (self decodeReference: aStream) resolve: self registry.	stack := (self decodeReference: aStream) resolve: self registry.	error := RsrRemoteError new		originalClassName: originalClassName;		tag: tag;		messageText: messageText;		stack: stack;		yourself.	^RsrDeliverErrorResponse new		transaction: transaction;		remoteError: error;		yourself! !
 
 !RsrConnectionSpecification methodsFor!
 port: aPort	"The port number used for establishing a socket"	port := aPort! !
@@ -1273,16 +1273,16 @@ port	"The port number used for establishing a socket"	^port! !
 socketClass	"Return the class that should be used for creating Socket instances."	^RsrSocket! !
 
 !RsrConnectionSpecification methodsFor!
-host	"Return the configured hostname or IP address"	^host! !
-
-!RsrConnectionSpecification methodsFor!
 host: hostnameOrAddress	"The hostname or IP address used to establish a connection."	host := hostnameOrAddress! !
 
-!RsrCommand methodsFor!
-reportOn: aLog	self subclassResponsibility! !
+!RsrConnectionSpecification methodsFor!
+host	"Return the configured hostname or IP address"	^host! !
 
 !RsrCommand methodsFor!
 executeFor: aConnection	self subclassResponsibility! !
+
+!RsrCommand methodsFor!
+reportOn: aLog	self subclassResponsibility! !
 
 !RsrCommand methodsFor!
 encode: aStreamusing: anEncoder	self subclassResponsibility! !

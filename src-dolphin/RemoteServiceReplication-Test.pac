@@ -3,6 +3,28 @@ package := Package name: 'RemoteServiceReplication-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
+	add: #RsrTestService;
+	add: #RsrSnapshotAnalysisTest;
+	add: #RsrDifferentServerService;
+	add: #RsrEncoderTest;
+	add: #RsrReflectedVariableTestServiceB;
+	add: #RsrValueHolderClient;
+	add: #RsrLifetimeTest;
+	add: #RsrServiceReferenceService;
+	add: #RsrThreadSafeNumericSpigotTest;
+	add: #RsrRemoteActionClient;
+	add: #RsrSignalErrorInAsString;
+	add: #RsrStressTest;
+	add: #RsrConcurrentTestClient;
+	add: #RsrClientTestService;
+	add: #RsrSocketStreamTestCase;
+	add: #RsrServiceNoInstVars;
+	add: #RsrConnectionSpecificationTestCase;
+	add: #RsrReflectedVariableTestClient;
+	add: #RsrValueHolderServer;
+	add: #RsrMessageSendingTest;
+	add: #RsrClientReferenceService;
+	add: #RsrPromiseTest;
 	add: #RsrRemoteActionServer;
 	add: #RsrCodecTest;
 	add: #RsrConcurrentTestServer;
@@ -27,28 +49,6 @@ package classNames
 	add: #RsrMockRegistry;
 	add: #RsrSpeciesEquality;
 	add: #RsrConcurrentTestService;
-	add: #RsrTestService;
-	add: #RsrDifferentServerService;
-	add: #RsrEncoderTest;
-	add: #RsrReflectedVariableTestServiceB;
-	add: #RsrValueHolderClient;
-	add: #RsrLifetimeTest;
-	add: #RsrServiceReferenceService;
-	add: #RsrThreadSafeNumericSpigotTest;
-	add: #RsrSnapshotAnalysisTest;
-	add: #RsrRemoteActionClient;
-	add: #RsrSignalErrorInAsString;
-	add: #RsrStressTest;
-	add: #RsrConcurrentTestClient;
-	add: #RsrClientTestService;
-	add: #RsrSocketStreamTestCase;
-	add: #RsrServiceNoInstVars;
-	add: #RsrConnectionSpecificationTestCase;
-	add: #RsrReflectedVariableTestClient;
-	add: #RsrValueHolderServer;
-	add: #RsrMessageSendingTest;
-	add: #RsrClientReferenceService;
-	add: #RsrPromiseTest;
 	yourself.
 
 package methodNames
@@ -58,7 +58,7 @@ package setPrerequisites: #('RemoteServiceReplication-Platform-Test').
 
 package!
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrMockConnection
 	instanceVariableNames: 'forwarderClass lastMessage registry idSpigot'
 	classVariableNames: ''
@@ -66,7 +66,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrMockConnection categoriesForClass!RemoteServiceReplication-Test! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrMockRegistry
 	instanceVariableNames: 'objects idSpigot'
 	classVariableNames: ''
@@ -74,7 +74,7 @@ AnObsoleteRsrObject
 	classInstanceVariableNames: ''!
 !RsrMockRegistry categoriesForClass!RemoteServiceReplication-Test! !
 
-AnObsoleteRsrObject
+RsrObject
 	subclass: #RsrSignalErrorInAsString
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -883,10 +883,10 @@ remoteSelf	^remoteSelf! !
 sharedVariable	^sharedVariable! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+port	^47652! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-port	^47652! !
+testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	self		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
 testCancelWaitForConnection	| acceptor |	acceptor := RsrAcceptConnection port: self port.	self fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection].	self		should: [acceptor waitForConnection]		raise: RsrWaitForConnectionCancelled! !
@@ -943,10 +943,10 @@ decodeService: anObjectBytes	^(self decoder decodeServiceSnapshot: anObjectByt
 setVarsToAndReturn: anObject	^varA := varB := anObject! !
 
 !RsrServiceTest methodsFor!
-testCreateServiceWithDistinctClientAbstractService	| client |	client := self serviceFactoryA serviceFor: #RsrRemoteAction.	self		assert: client class		equals: RsrRemoteAction clientClass! !
+mirror: aService	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService! !
 
 !RsrServiceTest methodsFor!
-mirror: aService	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService! !
+testCreateServiceWithDistinctClientAbstractService	| client |	client := self serviceFactoryA serviceFor: #RsrRemoteAction.	self		assert: client class		equals: RsrRemoteAction clientClass! !
 
 !RsrServiceTest methodsFor!
 testVariableReflection	| localService remoteService |	localService := RsrTestService clientClass new		sharedVariable: #shared;		privateVariable: #private;		yourself.	self mirror: localService.	remoteService := connectionB registry serviceAt: localService _id.	self		assert: localService sharedVariable		identicalTo: remoteService sharedVariable.	self		assert: localService privateVariable		identicalTo: #private.	self		assert: remoteService privateVariable		identicalTo: nil! !
@@ -964,10 +964,10 @@ testMessagesDispatchedSeriallyForMultipleServices	"Ensure a long-running proces
 testRegisterWith	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	instance registerWith: connectionA.	self assert: instance isMirrored.	self		should: [instance registerWith: connectionB]		raise: RsrAlreadyRegistered! !
 
 !RsrServiceTest methodsFor!
-testReflectedVariableNames	| client server clientNames serverNames |	client := connectionA serviceFor: #RsrTestService.	server := connectionB registry serviceAt: client _id.	clientNames := client reflectedVariableNames.	serverNames := server reflectedVariableNames.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 1.	self		assert: (clientNames at: 1) asSymbol		equals: #sharedVariable.	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.	server := connectionB registry serviceAt: client _id.	clientNames := client reflectedVariableNames.	serverNames := server reflectedVariableNames.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 2.	self		assert: (clientNames at: 1) asSymbol		equals: #varA.	self		assert: (clientNames at: 2) asSymbol		equals: #varB! !
+testIsMirrored	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	self mirror: instance.	self assert: instance isMirrored! !
 
 !RsrServiceTest methodsFor!
-testIsMirrored	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	self mirror: instance.	self assert: instance isMirrored! !
+testReflectedVariableNames	| client server clientNames serverNames |	client := connectionA serviceFor: #RsrTestService.	server := connectionB registry serviceAt: client _id.	clientNames := client reflectedVariableNames.	serverNames := server reflectedVariableNames.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 1.	self		assert: (clientNames at: 1) asSymbol		equals: #sharedVariable.	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.	server := connectionB registry serviceAt: client _id.	clientNames := client reflectedVariableNames.	serverNames := server reflectedVariableNames.	self		assert: clientNames		equals: serverNames.	self		assert: clientNames size		equals: 2.	self		assert: (clientNames at: 1) asSymbol		equals: #varA.	self		assert: (clientNames at: 2) asSymbol		equals: #varB! !
 
 !RsrServiceTest methodsFor!
 testHasRemoteSelf	| service |	service := RsrTestService clientClass new.	self mirror: service.	self deny: nil == service remoteSelf! !
@@ -1066,13 +1066,13 @@ testBoolean	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 
 encoder	^RsrEncoder new! !
 
 !RsrCodecTest methodsFor!
-testSet	| set encoding result |	set := Set new.	encoding :=		#[0 0 0 0 0 0 0 0], "OID"		#[0 0 0 0 0 0 0 11], "Set"		#[0 0 0 0 0 0 0 0]. "0 elements"	self		verifyImmediate: set		encoding: encoding.	set := Set		with: true		with: nil.	encoding := self encodeReferenceOf: set.	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.	self		assert: result		equals: set.	self		deny: result		identicalTo: set.	"self hack: 'Hashed collections do not have an ordering'.	encoding :=		#[0 0 0 0 0 0 0 0], ""OID""		#[0 0 0 0 0 0 0 11], ""Set""		#[0 0 0 0 0 0 0 2], ""2 elements""		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: set		encoding: encoding"! !
-
-!RsrCodecTest methodsFor!
 encodeReferenceOf: anObject	| reference |	reference := RsrReference from: anObject.	^ByteArray streamContents: [:stream | self encoder encodeReference: reference onto: stream]! !
 
 !RsrCodecTest methodsFor!
 testDictionary	| dictionary encoding result |	dictionary := Dictionary new.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate Object OID"		#[0 0 0 0 0 0 0 13], "Dictionary type"		#[0 0 0 0 0 0 0 0]. "0 associations"	self		verifyImmediate: dictionary		encoding: encoding.	dictionary := Dictionary new		at: 1 put: self genericSymbol;		at: false put: true;		yourself.	encoding := self encodeReferenceOf: dictionary.	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.	self		assert: result		equals: dictionary.	self		deny: result		identicalTo: dictionary.	"self hack: 'Order is not guaranteed in a dictionary'.	encoding :=		#[0 0 0 0 0 0 0 0], ""Immediate OID""		#[0 0 0 0 0 0 0 13], ""Dictionary Type""		#[0 0 0 0 0 0 0 2], ""Two assocs""		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6],		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""Integer 1""		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[1],		self genericSymbolEncoding.	self		verifyImmediate: dictionary		encoding: encoding"! !
+
+!RsrCodecTest methodsFor!
+testSet	| set encoding result |	set := Set new.	encoding :=		#[0 0 0 0 0 0 0 0], "OID"		#[0 0 0 0 0 0 0 11], "Set"		#[0 0 0 0 0 0 0 0]. "0 elements"	self		verifyImmediate: set		encoding: encoding.	set := Set		with: true		with: nil.	encoding := self encodeReferenceOf: set.	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.	self		assert: result		equals: set.	self		deny: result		identicalTo: set.	"self hack: 'Hashed collections do not have an ordering'.	encoding :=		#[0 0 0 0 0 0 0 0], ""OID""		#[0 0 0 0 0 0 0 11], ""Set""		#[0 0 0 0 0 0 0 2], ""2 elements""		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: set		encoding: encoding"! !
 
 !RsrCodecTest methodsFor!
 genericSymbolEncoding	^#[0 0 0 0 0 0 0 0], "OID = 0"	#[0 0 0 0 0 0 0 1], "Immediate Type = 1"	#[0 0 0 0 0 0 0 13], "Length of UTF-8 data"	#[103 101 110 101 114 105 99 83 121 109 98 111 108]	"#genericSymbol"! !
@@ -1081,13 +1081,13 @@ genericSymbolEncoding	^#[0 0 0 0 0 0 0 0], "OID = 0"	#[0 0 0 0 0 0 0 1], "Imm
 testOrderedCollection	| oc encoding |	oc := OrderedCollection new.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate OID"		#[0 0 0 0 0 0 0 12], "OrderedCollection type"		#[0 0 0 0 0 0 0 0].	self		verifyImmediate: oc		encoding: encoding.	oc := OrderedCollection		with: self genericSymbol		with: 5		with: nil.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate Object OID"		#[0 0 0 0 0 0 0 12], "OrderedCollection type"		#[0 0 0 0 0 0 0 3], "3 elements"		self genericSymbolEncoding, "Generic Symbol"		#[0 0 0 0 0 0 0 0], "Immediate OID"		#[0 0 0 0 0 0 0 3], "Positive Integer"		#[0 0 0 0 0 0 0 1], "num bytes"		#[5], "5"		#[0 0 0 0 0 0 0 0], "Immediate OID"		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: oc		encoding: encoding! !
 
 !RsrCodecTest methodsFor!
+testInteger	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[0].	self		verifyImmediate: 0		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[4].	self		verifyImmediate: 4		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: 4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: -4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: 823759265872134912569713249387		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: -823759265872134912569713249387		encoding: encoding.! !
+
+!RsrCodecTest methodsFor!
 connection	^self decoder connection! !
 
 !RsrCodecTest methodsFor!
 testSymbol	self		verifyImmediate: self genericSymbol		encoding: self genericSymbolEncoding! !
-
-!RsrCodecTest methodsFor!
-testInteger	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[0].	self		verifyImmediate: 0		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[4].	self		verifyImmediate: 4		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: 4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: -4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: 823759265872134912569713249387		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: -823759265872134912569713249387		encoding: encoding.! !
 
 !RsrCodecTest methodsFor!
 testNil	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: nil		encoding: encoding! !
