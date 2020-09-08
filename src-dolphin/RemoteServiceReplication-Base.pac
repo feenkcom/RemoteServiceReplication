@@ -31,6 +31,7 @@ package classNames
 	add: #RsrSetReference;
 	add: #RsrConnectionClosed;
 	add: #RsrValueReference;
+	add: #RsrUnknownOID;
 	add: #RsrOrderedCollectionReference;
 	add: #RsrAlreadyRegistered;
 	add: #RsrNilReference;
@@ -155,6 +156,14 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrUnknownClass categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
+	subclass: #RsrUnknownOID
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrUnknownOID categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
 	subclass: #RsrUnsupportedObject
@@ -390,9 +399,6 @@ from: aService	^self sid: aService _id! !
 
 !RsrReference class methodsFor!
 referenceMapping	^referenceMapping ifNil: [self initializeReferenceMapping]! !
-
-!RsrReference class methodsFor!
-referenceClassFor: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceReference].	^self referenceMapping		at: anObject class		ifAbsent: [RsrUnsupportedObject signal: anObject]! !
 
 !RsrReference class methodsFor!
 analyze: anObjectusing: anAnalyzer	^self subclassResponsibility! !

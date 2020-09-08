@@ -3,48 +3,48 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrInitiateConnection;
-	add: #RsrSnapshotAnalysis;
-	add: #RsrUnknownOID;
-	add: #RsrReleaseServices;
-	add: #RsrDispatchEventLoop;
-	add: #RsrAcceptConnection;
-	add: #RsrRemoteError;
-	add: #RsrPendingMessage;
-	add: #RsrCommand;
-	add: #RsrEventLoop;
-	add: #RsrSocketStream;
-	add: #RsrSendMessage;
-	add: #RsrLogWithPrefix;
-	add: #RsrCodec;
-	add: #RsrLog;
+	add: #RsrConnection;
 	add: #RsrServiceFactory;
 	add: #RsrCycleDetected;
-	add: #RsrPromise;
-	add: #RsrDeliverErrorResponse;
-	add: #RsrCommandSink;
-	add: #RsrStream;
-	add: #RsrConnection;
+	add: #RsrDispatchEventLoop;
 	add: #RsrNumericSpigot;
-	add: #RsrDecoder;
-	add: #RsrLogSink;
-	add: #RsrServiceFactoryClient;
-	add: #RsrServiceSnapshot;
-	add: #RsrDeliverResponse;
-	add: #RsrTranscriptSink;
+	add: #RsrSendMessage;
 	add: #RsrCommandSource;
+	add: #RsrLogWithPrefix;
+	add: #RsrReleaseServices;
+	add: #RsrRemoteError;
+	add: #RsrCommandSink;
 	add: #RsrService;
-	add: #RsrBufferedSocketStream;
-	add: #RsrConnectionSpecification;
-	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrDeliverResponse;
+	add: #RsrStream;
+	add: #RsrEventLoop;
+	add: #RsrTranscriptSink;
+	add: #RsrDeliverErrorResponse;
+	add: #RsrSocketStream;
+	add: #RsrInitiateConnection;
+	add: #RsrCommand;
+	add: #RsrSnapshotAnalysis;
 	add: #RsrEncoder;
+	add: #RsrServiceSnapshot;
 	add: #RsrCustomSink;
+	add: #RsrDecoder;
+	add: #RsrPromise;
+	add: #RsrAcceptConnection;
 	add: #RsrServiceFactoryServer;
+	add: #RsrLogSink;
+	add: #RsrCodec;
+	add: #RsrPendingMessage;
+	add: #RsrConnectionSpecification;
+	add: #RsrServiceFactoryClient;
+	add: #RsrLog;
+	add: #RsrBufferedSocketStream;
+	add: #RsrThreadSafeNumericSpigot;
 	yourself.
 
 package methodNames
 	add: #RsrForwarder -> #doesNotUnderstand:;
 	add: #RsrForwarder -> #_service:;
+	add: 'RsrReference class' -> #referenceClassFor:;
 	add: 'RsrForwarder class' -> #on:;
 	yourself.
 
@@ -352,13 +352,8 @@ RsrServiceFactory
 	classInstanceVariableNames: ''!
 !RsrServiceFactoryServer categoriesForClass!RemoteServiceReplication! !
 
-RsrError
-	subclass: #RsrUnknownOID
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrUnknownOID categoriesForClass!RemoteServiceReplication! !
+!RsrReference class methodsFor!
+referenceClassFor: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceReference].	^self referenceMapping		at: anObject class		ifAbsent: [RsrUnsupportedObject signal: anObject]! !
 
 !RsrForwarder class methodsFor!
 on: anRsrObject	| instance |	instance := self new.	instance _service: anRsrObject.	^instance! !
