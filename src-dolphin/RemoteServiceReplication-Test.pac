@@ -28,7 +28,6 @@ package classNames
 	add: #RsrSpeciesEquality;
 	add: #RsrConcurrentTestService;
 	add: #RsrTestService;
-	add: #RsrRetainAnalysisTest;
 	add: #RsrDifferentServerService;
 	add: #RsrEncoderTest;
 	add: #RsrReflectedVariableTestServiceB;
@@ -36,6 +35,7 @@ package classNames
 	add: #RsrLifetimeTest;
 	add: #RsrServiceReferenceService;
 	add: #RsrThreadSafeNumericSpigotTest;
+	add: #RsrSnapshotAnalysisTest;
 	add: #RsrRemoteActionClient;
 	add: #RsrSignalErrorInAsString;
 	add: #RsrStressTest;
@@ -280,15 +280,6 @@ RsrRemoteAction
 	classInstanceVariableNames: ''!
 !RsrRemoteActionServer categoriesForClass!RemoteServiceReplication-Test! !
 
-RsrTestCase
-	subclass: #RsrRetainAnalysisTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrRetainAnalysisTest comment: 'This class contains tests'!
-!RsrRetainAnalysisTest categoriesForClass!RemoteServiceReplication-Test! !
-
 RsrServiceNoInstVars
 	subclass: #RsrServerNoInstVars
 	instanceVariableNames: 'marker'
@@ -312,6 +303,15 @@ RsrTestService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrServerTestService categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrTestCase
+	subclass: #RsrSnapshotAnalysisTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSnapshotAnalysisTest comment: 'This class contains tests'!
+!RsrSnapshotAnalysisTest categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrTestCase
 	subclass: #RsrSocketStreamTestCase
@@ -555,42 +555,6 @@ repetitions	^1000! !
 !RsrStressTest methodsFor!
 testRepeatedSendReceive1MBytes	self repeatedlySend: (ByteArray new: 1024 squared)! !
 
-!RsrRetainAnalysisTest methodsFor!
-testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client registry analysis expected |	client := RsrRemoteAction clientClass new.	registry := RsrMockRegistry new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self		assert: analysis services		equals: expected.	self assert: client isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-assertCycle: anObject	self		should: [self analyze: anObject]		raise: RsrCycleDetected! !
-
-!RsrRetainAnalysisTest methodsFor!
-testSetCycle	| set |	set := Set new.	set add: set.	self assertCycle: set.	set := Set new.	set add: (Array with: set).	self assertCycle: set! !
-
-!RsrRetainAnalysisTest methodsFor!
-analyze: anObject	| analysis |	analysis := RsrRetainAnalysis		roots: (Array with: anObject)		connection: RsrMockConnection new.	analysis perform.	^analysis! !
-
-!RsrRetainAnalysisTest methodsFor!
-testArrayCycle	| array |	array := Array new: 1.	array		at: 1		put: array.	self assertCycle: array.	array		at: 1		put: { array }.	self assertCycle: array! !
-
-!RsrRetainAnalysisTest methodsFor!
-testNewServiceInArray	"Ensure a new service in a collection is properly tagged"	| service analysis expected |	service := RsrServerNoInstVars new.	analysis := self analyze: (Array with: service).	expected := OrderedCollection with: service.	self		assert: analysis services		equals: expected.	self assert: service isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceNoInstVars	| client analysis expected |	client := RsrClientNoInstVars new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self		assert: analysis services		equals: expected.	self assert: client isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testOrderedCollectionCycle	| oc |	oc := OrderedCollection new.	oc add: oc.	self assertCycle: oc.	oc := OrderedCollection with: (Array with: oc).	self assertCycle: oc.! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceWithCycle	"Cycles are disallowed for our POC. Perhaps they will get added later?"	| rootClient referencedClient |	rootClient := RsrRemoteAction new.	referencedClient := RsrRemoteAction sharedVariable: rootClient.	rootClient sharedVariable: referencedClient.	self assertCycle: rootClient! !
-
-!RsrRetainAnalysisTest methodsFor!
-testDictionaryCycle	| dictionary |	dictionary := Dictionary new.	dictionary		at: 1		put: dictionary.	self assertCycle: dictionary.	dictionary removeKey: 1.	dictionary		at: dictionary		put: 1.	self assertCycle: dictionary! !
-
-!RsrRetainAnalysisTest methodsFor!
-testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis expected |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	expected := OrderedCollection		with: key		with: value.	self		assert: analysis services		equals: expected.	self		assert: key isMirrored;		assert: value isMirrored! !
-
-!RsrRetainAnalysisTest methodsFor!
-testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis expected |	referencedService := RsrRemoteAction clientClass new.	client := RsrRemoteAction clientClass sharedVariable: referencedService.	analysis := self analyze: client.	expected := OrderedCollection		with: referencedService		with: client.	self		assert: analysis services		equals: expected.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
-
 !RsrConcurrentTestServer methodsFor!
 counter: anArray	counter := anArray! !
 
@@ -616,37 +580,37 @@ testFulfillment	| promise expected semaphore |	promise := RsrPromise new.	ex
 testError	| promise semaphore |	promise := RsrPromise new.	self fork:		[(Delay forSeconds: 1) wait.		promise error: Error new].	self		should: [promise value]		raise: Error.	promise := RsrPromise new.	semaphore := Semaphore new.	self fork:		[promise error: Error new.		semaphore signal].	self		should: [promise value]		raise: Error! !
 
 !RsrEncoderTest methodsFor!
-testReleaseObjects	| command expectedEncoding |	command := RsrReleaseObjects oids: #(1 2 3 4 5).	command encodeUsing: RsrEncoder new.	expectedEncoding :=		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"		#[0 0 0 0 0 0 0 5], "Num OIDS"		#[0 0 0 0 0 0 0 1], "First OID"		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5]. "Last OID"	self		assert: command encoding		equals: expectedEncoding! !
-
-!RsrEncoderTest methodsFor!
-testDeliverErrorResponse	| error remoteError command expectedEncoding |	error := Error new		tag: 'tag';		messageText: 'message text';		yourself.	remoteError := RsrRemoteError from: error.	remoteError stack: 'stack dump'.	command := RsrDeliverErrorResponse		transaction: 1		remoteError: remoteError.	command encodeUsing: RsrEncoder new.	expectedEncoding :=		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"		#[69 114 114 111 114], "#Error"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 3], "length"		#[116 97 103],	 "tag"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 12], "length"		#[109 101 115 115 97 103 101 32 116 101 120 116],	 "message text"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 10], "length"		#[115 116 97 99 107 32 100 117 109 112].	 "stack dump"	self		assert: command encoding		equals: expectedEncoding! !
+testDeliverErrorResponse	| error remoteError command result expectedEncoding |	error := Error new		tag: 'tag';		messageText: 'message text';		yourself.	remoteError := RsrRemoteError from: error.	remoteError stack: 'stack dump'.	command := RsrDeliverErrorResponse		transaction: 1		remoteError: remoteError.	result := self encoder encodeDeliverErrorResponse: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"		#[69 114 114 111 114], "#Error"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 3], "length"		#[116 97 103],	 "tag"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 12], "length"		#[109 101 115 115 97 103 101 32 116 101 120 116],	 "message text"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 10], "length"		#[115 116 97 99 107 32 100 117 109 112].	 "stack dump"	self		assert: result		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
 tearDown	registry := connection := nil.	super setUp! !
 
 !RsrEncoderTest methodsFor!
-testUnsupportedObject	self		should: [self encoder encodeObject: Object new]		raise: RsrUnsupportedObject.	self		should: [self encoder encodeReferenceOf: Object new onto: (WriteStream on: ByteArray new)]		raise: RsrUnsupportedObject! !
+testUnsupportedObject	self		should: [self encoder encodeReference: (RsrReference from: Object new) onto: (WriteStream on: ByteArray new)]		raise: RsrUnsupportedObject! !
 
 !RsrEncoderTest methodsFor!
-testServiceReferenceService	| rootService referencedService encodedObject expectedEncoding |	referencedService := RsrClientNoInstVars new.	rootService := RsrClientReferenceService service: referencedService.	self		register: rootService;		register: referencedService.	encodedObject := self encoder encodeObject: rootService.	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 1], "rootService's OID = 1"		#[0 0 0 0 0 0 0 1], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 25], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 82 101 102 101 114 101 110 99 101 83 101 114 118 105 99 101],		#[0 0 0 0 0 0 0 2]. "#RsrServerReferenceService"	self		assert: encodedObject		equals: expectedEncoding.	encodedObject := self encoder encodeObject: referencedService.	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 2], "referencedService's OID = 2"		#[0 0 0 0 0 0 0 0], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"	self		assert: encodedObject		equals: expectedEncoding! !
+testServiceReferenceService	| rootService referencedService encodedObject expectedEncoding |	referencedService := RsrClientNoInstVars new.	rootService := RsrClientReferenceService service: referencedService.	self		register: rootService;		register: referencedService.	encodedObject := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: rootService).	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 1], "rootService's OID = 1"		#[0 0 0 0 0 0 0 1], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 25], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 82 101 102 101 114 101 110 99 101 83 101 114 118 105 99 101],		#[0 0 0 0 0 0 0 2]. "#RsrServerReferenceService"	self		assert: encodedObject		equals: expectedEncoding.	encodedObject := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: referencedService).	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 2], "referencedService's OID = 2"		#[0 0 0 0 0 0 0 0], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"	self		assert: encodedObject		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
-testDeliverResponse	| service response command expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	response := #responseSymbol.	command := RsrDeliverResponse		transaction: 1		response: response		roots: (Array with: service with: response).	command		services: (Array with: service);		encodeUsing: RsrEncoder new.	expectedEncoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "One service is part of this response"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	self		assert: command encoding		equals: expectedEncoding! !
+testDeliverResponse	| service response command result expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	response := #responseSymbol.	command := RsrDeliverResponse		transaction: 1		response: (RsrReference from: response)		snapshots: (Array with: (RsrServiceSnapshot from: service)).	result := self encoder encodeDeliverResponse: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "One service is part of this response"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	self		assert: result		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
-verifyImmediate: anObjectencoding: expected	| actual |	actual := ByteArray streamContents: [:stream | self encoder encodeReferenceOf: anObject onto: stream].	self		assert: actual		equals: expected! !
+verifyImmediate: anObjectencoding: expected	| actual |	actual := ByteArray streamContents: [:stream | self encoder encodeReference: (RsrReference from: anObject) onto: stream].	self		assert: actual		equals: expected! !
 
 !RsrEncoderTest methodsFor!
-testServiceNoInstVars	| rootService encodedBytes expectedEncoding |	rootService := RsrClientNoInstVars new.	self register: rootService.	encodedBytes := self encoder encodeObject: rootService.	expectedEncoding := self serviceNoInstVarsEncoding.	self		assert: encodedBytes		equals: expectedEncoding! !
+testServiceNoInstVars	| rootService encodedBytes expectedEncoding |	rootService := RsrClientNoInstVars new.	self register: rootService.	encodedBytes := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: rootService).	expectedEncoding := self serviceNoInstVarsEncoding.	self		assert: encodedBytes		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
 verifyControlWord: anIntegerencoding: expected	| actual |	actual := ByteArray streamContents: [:stream | self encoder encodeControlWord: anInteger onto: stream].	self		assert: actual		equals: expected! !
 
 !RsrEncoderTest methodsFor!
+testReleaseServices	| command result expectedEncoding |	command := RsrReleaseServices sids: #(1 2 3 4 5).	result := self encoder encodeReleaseServices: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"		#[0 0 0 0 0 0 0 5], "Num OIDS"		#[0 0 0 0 0 0 0 1], "First OID"		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5]. "Last OID"	self		assert: result		equals: expectedEncoding! !
+
+!RsrEncoderTest methodsFor!
 register: aService	aService		_id: connection oidSpigot next		connection: connection.	registry		at: aService _id		put: aService! !
 
 !RsrEncoderTest methodsFor!
-testSendMessage	| service command expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	command := RsrSendMessage		transaction: 1		receiver: service		selector: #return42		arguments: #().	command services: (Array with: service).	command encodeUsing: RsrEncoder new.	expectedEncoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	self		assert: command encoding		equals: expectedEncoding! !
+testSendMessage	| service analysis command result expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	analysis := RsrSnapshotAnalysis		roots: (Array with: service)		connection: self connection.	analysis perform.	command := RsrSendMessage		transaction: 1		receiver: (RsrReference from: service)		selector: (RsrSymbolReference from: #return42)		arguments: #().	command snapshots: analysis snapshots.	result := self encoder encodeSendMessage: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	self		assert: result		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
 setUp	super setUp.	registry := RsrMockRegistry new.	connection := RsrMockConnection new! !
@@ -664,7 +628,7 @@ serviceFactoryB	^connectionB serviceFactory! !
 tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
 
 !RsrSystemTestCase methodsFor!
-setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := (RsrAcceptConnection port: port) waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := (RsrInitiateConnection host: '127.0.0.1' port: port) connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA log addSink: RsrTranscriptSink new.	connectionB log addSink: RsrTranscriptSink new.! !
+setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := (RsrAcceptConnection port: port) waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := (RsrInitiateConnection host: '127.0.0.1' port: port) connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
 
 !RsrSystemTestCase methodsFor!
 serviceFactoryA	^connectionA serviceFactory! !
@@ -742,7 +706,7 @@ testCharacter	self		verify: (Character codePoint: 0);		verify: (Character co
 testArray	self		verify: #();		verify: (Array withAll: self basicExamples)! !
 
 !RsrSpeciesEquality methodsFor!
-basicExamples	"Give a samples of each species to ensure Collection classes are able to encode each type successfully."	^{RsrClientNoInstVars new.	#h.	#''.	'h'.	''.	0.	234.	-97.	$s.	nil.	true.	false.	{}.	{RsrClientNoInstVars new. {}.}.	#[].	#[123].	Set new.	Set with: 42.	OrderedCollection new.	OrderedCollection with: #x.	Dictionary new.	Dictionary new at: #key put: #value; yourself.	RsrDateAndTimeSpecies posixEpoch.	RsrDateAndTimeSpecies fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}! !
+basicExamples	"Give a samples of each species to ensure Collection classes are able to encode each type successfully."	^{RsrClientNoInstVars new.	#h.	#''.	'h'.	''.	0.	234.	-97.	$s.	nil.	true.	false.	{}.	{RsrClientNoInstVars new. {}.}.	#[].	#[123].	Set new.	Set with: 42.	OrderedCollection new.	OrderedCollection with: #x.	Dictionary new.	Dictionary new at: #key put: #value; yourself.	RsrDateAndTime posixEpoch.	RsrDateAndTime fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"}! !
 
 !RsrSpeciesEquality methodsFor!
 verify: anObject	"Send <anObject> through RSR and have it returned. Assert it is equivalent."	| client server |	client := connectionA serviceFor: #RsrRemoteAction.	server := connectionB registry serviceAt: client _id.	server action: [:object | server sharedVariable: object. object].	self		assert: (client value: anObject)		equals: anObject.	self		assert: client sharedVariable		equals: anObject! !
@@ -772,7 +736,7 @@ testSet	self		verify: Set new;		verify: (Set withAll: self basicExamples)! !
 testDictionary	| example |	example := Dictionary new.	self verify: example.	self basicExamples do: [:each | each ifNotNil: [example at: each put: each]].	example at: #testDictionaryPrivateKey put: nil.	self verify: example! !
 
 !RsrSpeciesEquality methodsFor!
-testDateAndTime	self		verify: (RsrDateAndTimeSpecies fromMicroseconds: -491277642567488); "1954-06-07T14:59:17.432512-07:00"		verify: (RsrDateAndTimeSpecies fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"! !
+testDateAndTime	self		verify: (RsrDateAndTime fromMicroseconds: -491277642567488); "1954-06-07T14:59:17.432512-07:00"		verify: (RsrDateAndTime fromMicroseconds: 1562692562657612). "2019-07-09T10:16:02.657612-07:00"! !
 
 !RsrSpeciesEquality methodsFor!
 testService	| clientClass serverClass |	clientClass := RsrRemoteAction clientClass.	serverClass := RsrRemoteAction serverClass.	self		verify: clientClass new;		verify: (clientClass sharedVariable: clientClass new);		verify: (serverClass sharedVariable: clientClass new)! !
@@ -788,6 +752,42 @@ testSymbol	self		verify: #'';		verify: #symbol! !
 
 !RsrConnectionTestCase methodsFor!
 testWaitUntilClose	| semaphore marker |	semaphore := Semaphore new.	marker := false.	self		fork:			[semaphore signal.			[connectionB waitUntilClose.			marker := true]				ensure: [semaphore signal]].	semaphore wait.	self deny: marker.	connectionA close.	semaphore wait.	self assert: marker! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client analysis expected |	client := RsrRemoteAction clientClass new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self		assert: analysis snapshots size		equals: 1.	self assert: client isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+assertCycle: anObject	self		should: [self analyze: anObject]		raise: RsrCycleDetected! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testSetCycle	| set |	set := Set new.	set add: set.	self assertCycle: set.	set := Set new.	set add: (Array with: set).	self assertCycle: set! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+analyze: anObject	| analysis |	analysis := RsrSnapshotAnalysis		roots: (Array with: anObject)		connection: RsrMockConnection new.	analysis perform.	^analysis! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testArrayCycle	| array |	array := Array new: 1.	array		at: 1		put: array.	self assertCycle: array.	array		at: 1		put: { array }.	self assertCycle: array! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testNewServiceInArray	"Ensure a new service in a collection is properly tagged"	| service analysis expected |	service := RsrServerNoInstVars new.	analysis := self analyze: (Array with: service).	expected := OrderedCollection with: service.	self		assert: analysis snapshots size		equals: 1.	self assert: service isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceNoInstVars	| client analysis expected snapshot |	client := RsrClientNoInstVars new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self assert: client isMirrored.	self		assert: analysis snapshots size		equals: 1.	snapshot := analysis snapshots first.	self		assert: snapshot slots size		equals: 0.	self deny: snapshot shouldCreateClient.	self		assert: snapshot templateClass		equals: client class templateClass! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testOrderedCollectionCycle	| oc |	oc := OrderedCollection new.	oc add: oc.	self assertCycle: oc.	oc := OrderedCollection with: (Array with: oc).	self assertCycle: oc.! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceWithCycle	"Cycles are disallowed for our POC. Perhaps they will get added later?"	| rootClient referencedClient |	rootClient := RsrRemoteAction new.	referencedClient := RsrRemoteAction sharedVariable: rootClient.	rootClient sharedVariable: referencedClient.	self assertCycle: rootClient! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testDictionaryCycle	| dictionary |	dictionary := Dictionary new.	dictionary		at: 1		put: dictionary.	self assertCycle: dictionary.	dictionary removeKey: 1.	dictionary		at: dictionary		put: 1.	self assertCycle: dictionary! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis expected |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size		equals: 2.	self		assert: key isMirrored;		assert: value isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis expected |	referencedService := RsrRemoteAction clientClass new.	client := RsrRemoteAction clientClass sharedVariable: referencedService.	analysis := self analyze: client.	self		assert: analysis snapshots size		equals: 2.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
 
 !RsrSameTemplateAndClientService methodsFor!
 replicated2: anObject	replicated2 := anObject! !
@@ -814,7 +814,7 @@ testReturnInvalidObject	| client server exception |				client := connectionA 
 testReturnSymbol	| client server symbol result |	client := connectionA serviceFor: #RsrRemoteAction.	server := connectionB registry serviceAt: client _id.	symbol := #testSymbol.	server action: [symbol].	result := client value.	self		assert: result		equals: symbol! !
 
 !RsrMessageSendingTest methodsFor!
-testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrRemoteAction.	server := connectionB registry serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTimeSpecies now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server value: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server value: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
+testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrRemoteAction.	server := connectionB registry serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTime now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server value: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server value: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
 
 !RsrMessageSendingTest methodsFor!
 testReturnNewService	| client server returnedService |	client := connectionA serviceFor: #RsrRemoteAction.	server := connectionB registry serviceAt: client _id.	server action: [RsrValueHolderServer new].	returnedService := client value.	self		assert: returnedService class		equals: RsrValueHolderClient! !
@@ -907,9 +907,6 @@ testAcceptOnLocalhost	| acceptor initiator semaphore connectionA connectionB |
 varB	^varB! !
 
 !RsrDecoderTest methodsFor!
-decodeService: anObjectBytes	^self decoder decodeService: anObjectBytes readStream! !
-
-!RsrDecoderTest methodsFor!
 testDeliverErrorResponse	| encoding command error |	encoding :=		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"		#[69 114 114 111 114], "#Error"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 3], "length"		#[116 97 103],	 "tag"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 12], "length"		#[109 101 115 115 97 103 101 32 116 101 120 116],	 "message text"		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 10], "length"		#[115 116 97 99 107 32 100 117 109 112].	 "stack dump"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrDeliverErrorResponse.	self		assert: command transaction		equals: 1.	error := command remoteError.	self		assert: error class		equals: RsrRemoteError.	self		assert: error originalClassName		equals: #Error.	self		assert: error tag		equals: 'tag'.	self		assert: error messageText		equals: 'message text'.	self		assert: error stack		equals: 'stack dump'! !
 
 !RsrDecoderTest methodsFor!
@@ -919,25 +916,28 @@ testServiceDecodeIdentity	"Ensure that decoding an object multiple times result
 testServiceReferenceService	| rootService referencedService |	referencedService := self decodeService: self referencedServiceEncoding.	self		assert: referencedService class		equals: RsrServerNoInstVars.	self		assert: referencedService _id		equals: 2.	rootService := self decodeService: self rootServiceEncoding.	self		assert: rootService class		equals: RsrServerReferenceService.	self		assert: rootService service		equals: referencedService! !
 
 !RsrDecoderTest methodsFor!
-testDeliverResponse	| service response encoding command |	service := RsrServerNoInstVars		_id: 1		connection: RsrMockConnection new.	self decoder.	registry		serviceAt: 1		put: service.	response := #responseSymbol.	encoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "Number of services"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrDeliverResponse.	self		assert: command transaction		equals: 1.	self		assert: command services		equals: (Array with: service).	self		assert: command response		equals: response! !
+testDeliverResponse	| service response encoding command decodedService |	service := RsrServerNoInstVars		_id: 1		connection: RsrMockConnection new.	self decoder.	self registry		serviceAt: 1		put: service.	response := #responseSymbol.	encoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "Number of services"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrDeliverResponse.	self		assert: command transaction		equals: 1.	self		assert: command snapshots size		equals: 1.	decodedService := command snapshots first reifyIn: self connection.	self		assert: decodedService		equals: service.	self		assert: (command response resolve: self registry)		equals: response! !
 
 !RsrDecoderTest methodsFor!
-verifyImmediate: expectedencoding: encoding	| actual |	actual := self decoder decodeAndResolveObjectReference: encoding readStream.	self		assert: actual		equals: expected! !
+verifyImmediate: expectedencoding: encoding	| actual |	actual := (self decoder decodeReference: encoding readStream) resolve: self decoder registry.	self		assert: actual		equals: expected! !
 
 !RsrDecoderTest methodsFor!
 testServiceNoInstVars	| decodedService |	decodedService := self decodeService: self serviceNoInstVarsEncoding.	self		assert: decodedService class		equals: RsrServerNoInstVars.	self		assert: decodedService _id		equals: 1! !
 
 !RsrDecoderTest methodsFor!
-assertReference: bytesdecodesTo: expected	| actual |	actual := self decoder decodeAndResolveObjectReference: bytes readStream.	self		assert: actual		equals: expected! !
+assertReference: bytesdecodesTo: expected	| actual |	actual := (self decoder decodeReference: bytes readStream) resolve: self decoder registry.	self		assert: actual		equals: expected! !
 
 !RsrDecoderTest methodsFor!
 verifyControlWord: expectedencoding: bytes	| actual |	actual := self decoder decodeControlWord: bytes readStream.	self		assert: actual		equals: expected! !
 
 !RsrDecoderTest methodsFor!
-testSendMessage	| service encoding command |	service := RsrServerNoInstVars		_id: 1		connection: RsrMockConnection new.	self decoder.	registry		serviceAt: 1		put: service.	encoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrSendMessage.	self		assert: command transaction		equals: 1.	self		assert: command receiver		identicalTo: service.	self		assert: command selector		identicalTo: #return42.	self		assert: command arguments		equals: #().	self		assert: command services		equals: (Array with: service)! !
+testReleaseServices	| command encoding |	encoding :=		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"		#[0 0 0 0 0 0 0 5], "Num OIDS"		#[0 0 0 0 0 0 0 1], "First OID"		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5]. "Last OID"	command := self decoder decodeCommand: encoding readStream.	self		assert: command sids		equals: #(1 2 3 4 5)! !
 
 !RsrDecoderTest methodsFor!
-testReleaseObjects	| command encoding |	encoding :=		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"		#[0 0 0 0 0 0 0 5], "Num OIDS"		#[0 0 0 0 0 0 0 1], "First OID"		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5]. "Last OID"	command := self decoder decodeCommand: encoding readStream.	self		assert: command oids		equals: #(1 2 3 4 5)! !
+testSendMessage	| service encoding command |	service := RsrServerNoInstVars		_id: 1		connection: self connection.	self decoder.	self registry		serviceAt: 1		put: service.	encoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrSendMessage.	self		assert: command transaction		equals: 1.	self		assert: (command receiver resolve: self registry)		identicalTo: service.	self		assert: (command selector resolve: self registry)		identicalTo: #return42.	self		assert: command arguments		equals: #().	self		assert: command snapshots size		equals: 1! !
+
+!RsrDecoderTest methodsFor!
+decodeService: anObjectBytes	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self decoder connection! !
 
 !RsrReflectedVariableTestServer methodsFor!
 setVarsToAndReturn: anObject	^varA := varB := anObject! !
@@ -955,7 +955,7 @@ testVariableReflection	| localService remoteService |	localService := RsrTest
 testEnsureServersAreCachedAndReused	| client service1 service2 |	client := connectionA serviceFor: #RsrRemoteAction.	service1 := connectionB registry serviceAt: client _id.	self mirror: client.	service2 := connectionB registry serviceAt: client _id.	self		assert: service1		identicalTo: service2! !
 
 !RsrServiceTest methodsFor!
-testAnalyzeServiceRegisteredWithDifferentConnection	| instance analysis |	instance := RsrRemoteAction clientClass new.	analysis := RsrRetainAnalysis		roots: (Array with: instance)		connection: connectionA.	analysis perform.	self assert: instance isMirrored.	analysis := RsrRetainAnalysis		roots: (Array with: instance)		connection: connectionB.	self		should: [analysis perform]		raise: RsrAlreadyRegistered! !
+testAnalyzeServiceRegisteredWithDifferentConnection	| instance analysis |	instance := RsrRemoteAction clientClass new.	analysis := RsrSnapshotAnalysis		roots: (Array with: instance)		connection: connectionA.	analysis perform.	self assert: instance isMirrored.	analysis := RsrSnapshotAnalysis		roots: (Array with: instance)		connection: connectionB.	self		should: [analysis perform]		raise: RsrAlreadyRegistered! !
 
 !RsrServiceTest methodsFor!
 testMessagesDispatchedSeriallyForMultipleServices	"Ensure a long-running process in one Service will not cause startvation of other Services"	| delayClient delayServer client server initialCounter counter delayedResult delaySem immediateResult |	delayClient := RsrConcurrentTestClient new.	client := RsrConcurrentTestClient new.	self mirror: delayClient.	self mirror: client.	initialCounter := 0.	counter := Array with: initialCounter.	delayServer := connectionB registry serviceAt: delayClient _id.	server := connectionB registry serviceAt: client _id.	delaySem := Semaphore new.	delayServer		counter: counter;		semaphore: delaySem.	server counter: counter.	self		assumption: 'The call to #delayedCounter needs to run before the methods continues.';		assumption: 'The delay period in #delayedCounter will be enough to ensure #counterWithIncrement processes'.	RsrProcessModel fork: [delayedResult := delayClient delayedCounter. delaySem signal].	delaySem wait.	immediateResult := client counterWithIncrement.	self		assert: immediateResult		equals: initialCounter.	delaySem wait.	self		assert: delayedResult		equals: initialCounter! !
@@ -1024,10 +1024,10 @@ testFloat	| spigot |	spigot := self spigotClass		start: 0		step: 0.5.	self
 serviceNoInstVarsEncoding	^#[0 0 0 0 0 0 0 0], "type"	#[0 0 0 0 0 0 0 1], "rootService's OID = 1"	#[0 0 0 0 0 0 0 0], "Inst Var Count"	#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"	#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"	#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115] "#RsrServerNoInstVars"! !
 
 !RsrCodecTest methodsFor!
-testDateTime	| dt encoding |	dt := RsrDateAndTimeSpecies posixEpoch.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[0 0 0 0 0 0 0 0].	self		verifyImmediate: dt		encoding: encoding.	dt := RsrDateAndTimeSpecies fromMicroseconds: 1562692562657612. "2019-07-09T10:16:02.657612-07:00"	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[0 5 141 66 183 23 33 76].	self		verifyImmediate: dt		encoding: encoding.	dt := RsrDateAndTimeSpecies fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[255 255 255 255 255 240 189 192].	self		verifyImmediate: dt		encoding: encoding.	dt := RsrDateAndTimeSpecies fromMicroseconds: -491277642567488. "1954-06-07T14:59:17.432512-07:00"	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[255 254 65 47 130 160 240 192].	self		verifyImmediate: dt		encoding: encoding! !
+testDateTime	| dt encoding |	dt := RsrDateAndTime posixEpoch.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[0 0 0 0 0 0 0 0].	self		verifyImmediate: dt		encoding: encoding.	dt := RsrDateAndTime fromMicroseconds: 1562692562657612. "2019-07-09T10:16:02.657612-07:00"	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[0 5 141 66 183 23 33 76].	self		verifyImmediate: dt		encoding: encoding.	dt := RsrDateAndTime fromMicroseconds: -1000000. "1969-12-31T23:59:59-00:00"	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[255 255 255 255 255 240 189 192].	self		verifyImmediate: dt		encoding: encoding.	dt := RsrDateAndTime fromMicroseconds: -491277642567488. "1954-06-07T14:59:17.432512-07:00"	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 14],		#[255 254 65 47 130 160 240 192].	self		verifyImmediate: dt		encoding: encoding! !
 
 !RsrCodecTest methodsFor!
-decoder	^decoder ifNil: [decoder := RsrDecoder registry: (registry := RsrRegistry new) connection: RsrMockConnection new]! !
+decoder	| connection |	decoder == nil		ifFalse: [^decoder].	connection := RsrMockConnection new.	^decoder := RsrDecoder		registry: connection registry		connection: connection! !
 
 !RsrCodecTest methodsFor!
 verifyControlWord: anIntegerencoding: bytes	self subclassResponsibility! !
@@ -1043,6 +1043,9 @@ testArray	| array encoding |	array := Array		with: self genericSymbol		with
 
 !RsrCodecTest methodsFor!
 verifyImmediate: anImmediateObjectencoding: encoding	self subclassResponsibility! !
+
+!RsrCodecTest methodsFor!
+registry	^self decoder registry! !
 
 !RsrCodecTest methodsFor!
 testString	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 0], "length"		#[].	 "empty string"	self		verifyImmediate: ''		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0], "OID = 0"		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"		#[0 0 0 0 0 0 0 13], "length"		#[103 101 110 101 114 105 99 83 116 114 105 110 103].	 "genericString"	self		verifyImmediate: 'genericString'		encoding: encoding! !
@@ -1063,13 +1066,13 @@ testBoolean	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 
 encoder	^RsrEncoder new! !
 
 !RsrCodecTest methodsFor!
-testSet	| set encoding result |	set := Set new.	encoding :=		#[0 0 0 0 0 0 0 0], "OID"		#[0 0 0 0 0 0 0 11], "Set"		#[0 0 0 0 0 0 0 0]. "0 elements"	self		verifyImmediate: set		encoding: encoding.	set := Set		with: true		with: nil.	encoding := self encodeReferenceOf: set.	result := self decoder decodeAndResolveObjectReference: encoding readStream.	self		assert: result		equals: set.	self		deny: result		identicalTo: set.	"self hack: 'Hashed collections do not have an ordering'.	encoding :=		#[0 0 0 0 0 0 0 0], ""OID""		#[0 0 0 0 0 0 0 11], ""Set""		#[0 0 0 0 0 0 0 2], ""2 elements""		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: set		encoding: encoding"! !
+testSet	| set encoding result |	set := Set new.	encoding :=		#[0 0 0 0 0 0 0 0], "OID"		#[0 0 0 0 0 0 0 11], "Set"		#[0 0 0 0 0 0 0 0]. "0 elements"	self		verifyImmediate: set		encoding: encoding.	set := Set		with: true		with: nil.	encoding := self encodeReferenceOf: set.	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.	self		assert: result		equals: set.	self		deny: result		identicalTo: set.	"self hack: 'Hashed collections do not have an ordering'.	encoding :=		#[0 0 0 0 0 0 0 0], ""OID""		#[0 0 0 0 0 0 0 11], ""Set""		#[0 0 0 0 0 0 0 2], ""2 elements""		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: set		encoding: encoding"! !
 
 !RsrCodecTest methodsFor!
-encodeReferenceOf: anObject	^ByteArray streamContents: [:stream | self encoder encodeReferenceOf: anObject onto: stream]! !
+encodeReferenceOf: anObject	| reference |	reference := RsrReference from: anObject.	^ByteArray streamContents: [:stream | self encoder encodeReference: reference onto: stream]! !
 
 !RsrCodecTest methodsFor!
-testDictionary	| dictionary encoding result |	dictionary := Dictionary new.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate Object OID"		#[0 0 0 0 0 0 0 13], "Dictionary type"		#[0 0 0 0 0 0 0 0]. "0 associations"	self		verifyImmediate: dictionary		encoding: encoding.	dictionary := Dictionary new		at: 1 put: self genericSymbol;		at: false put: true;		yourself.	encoding := self encodeReferenceOf: dictionary.	result := self decoder decodeAndResolveObjectReference: encoding readStream.	self		assert: result		equals: dictionary.	self		deny: result		identicalTo: dictionary.	"self hack: 'Order is not guaranteed in a dictionary'.	encoding :=		#[0 0 0 0 0 0 0 0], ""Immediate OID""		#[0 0 0 0 0 0 0 13], ""Dictionary Type""		#[0 0 0 0 0 0 0 2], ""Two assocs""		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6],		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""Integer 1""		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[1],		self genericSymbolEncoding.	self		verifyImmediate: dictionary		encoding: encoding"! !
+testDictionary	| dictionary encoding result |	dictionary := Dictionary new.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate Object OID"		#[0 0 0 0 0 0 0 13], "Dictionary type"		#[0 0 0 0 0 0 0 0]. "0 associations"	self		verifyImmediate: dictionary		encoding: encoding.	dictionary := Dictionary new		at: 1 put: self genericSymbol;		at: false put: true;		yourself.	encoding := self encodeReferenceOf: dictionary.	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.	self		assert: result		equals: dictionary.	self		deny: result		identicalTo: dictionary.	"self hack: 'Order is not guaranteed in a dictionary'.	encoding :=		#[0 0 0 0 0 0 0 0], ""Immediate OID""		#[0 0 0 0 0 0 0 13], ""Dictionary Type""		#[0 0 0 0 0 0 0 2], ""Two assocs""		#[0 0 0 0 0 0 0 0], ""nil""		#[0 0 0 0 0 0 0 6],		#[0 0 0 0 0 0 0 0], ""true""		#[0 0 0 0 0 0 0 7],		#[0 0 0 0 0 0 0 0], ""Integer 1""		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[1],		self genericSymbolEncoding.	self		verifyImmediate: dictionary		encoding: encoding"! !
 
 !RsrCodecTest methodsFor!
 genericSymbolEncoding	^#[0 0 0 0 0 0 0 0], "OID = 0"	#[0 0 0 0 0 0 0 1], "Immediate Type = 1"	#[0 0 0 0 0 0 0 13], "Length of UTF-8 data"	#[103 101 110 101 114 105 99 83 121 109 98 111 108]	"#genericSymbol"! !
@@ -1078,10 +1081,13 @@ genericSymbolEncoding	^#[0 0 0 0 0 0 0 0], "OID = 0"	#[0 0 0 0 0 0 0 1], "Imm
 testOrderedCollection	| oc encoding |	oc := OrderedCollection new.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate OID"		#[0 0 0 0 0 0 0 12], "OrderedCollection type"		#[0 0 0 0 0 0 0 0].	self		verifyImmediate: oc		encoding: encoding.	oc := OrderedCollection		with: self genericSymbol		with: 5		with: nil.	encoding :=		#[0 0 0 0 0 0 0 0], "Immediate Object OID"		#[0 0 0 0 0 0 0 12], "OrderedCollection type"		#[0 0 0 0 0 0 0 3], "3 elements"		self genericSymbolEncoding, "Generic Symbol"		#[0 0 0 0 0 0 0 0], "Immediate OID"		#[0 0 0 0 0 0 0 3], "Positive Integer"		#[0 0 0 0 0 0 0 1], "num bytes"		#[5], "5"		#[0 0 0 0 0 0 0 0], "Immediate OID"		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: oc		encoding: encoding! !
 
 !RsrCodecTest methodsFor!
-testInteger	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[0].	self		verifyImmediate: 0		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[4].	self		verifyImmediate: 4		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: 4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: -4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: 823759265872134912569713249387		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: -823759265872134912569713249387		encoding: encoding.! !
+connection	^self decoder connection! !
 
 !RsrCodecTest methodsFor!
 testSymbol	self		verifyImmediate: self genericSymbol		encoding: self genericSymbolEncoding! !
+
+!RsrCodecTest methodsFor!
+testInteger	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[0].	self		verifyImmediate: 0		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 1],		#[4].	self		verifyImmediate: 4		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: 4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5],		#[1 15 248 235 121].	self		verifyImmediate: -4562938745		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: 823759265872134912569713249387		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 13],		#[10 101 181 177 179 46 128 92 96 64 190 76 107].	self		verifyImmediate: -823759265872134912569713249387		encoding: encoding.! !
 
 !RsrCodecTest methodsFor!
 testNil	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 6].	self		verifyImmediate: nil		encoding: encoding! !
