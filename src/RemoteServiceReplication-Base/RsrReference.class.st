@@ -40,6 +40,12 @@ RsrReference class >> referenceClassFor: anObject [
 ]
 
 { #category : 'accessing' }
+RsrReference class >> referenceMapping [
+
+	^referenceMapping ifNil: [self initializeReferenceMapping]
+]
+
+{ #category : 'accessing' }
 RsrReference class >> typeIdentifier [
 
 	^self subclassResponsibility

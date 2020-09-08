@@ -1,7 +1,7 @@
 Extension { #name : 'RsrReference' }
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrReference class >> referenceMapping [
+RsrReference class >> initializeReferenceMapping [
 
 	referenceMapping := Dictionary new.
 	referenceMapping
