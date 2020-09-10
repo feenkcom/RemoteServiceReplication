@@ -1,3 +1,13 @@
+"
+No class-specific documentation for RsrDecoderTest, hierarchy is:
+Object
+  TestAsserter
+    TestCase( testSelector)
+      RsrTestCase
+        RsrCodecTest( registry decoder)
+          RsrDecoderTest
+
+"
 Class {
 	#name : 'RsrDecoderTest',
 	#superclass : 'RsrCodecTest',
@@ -18,7 +28,7 @@ decodesTo: expected [
 { #category : 'decoding' }
 RsrDecoderTest >> decodeService: anObjectBytes [
 
-	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self decoder connection
+	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self connection
 ]
 
 { #category : 'running' }
@@ -75,7 +85,7 @@ RsrDecoderTest >> testDeliverResponse [
 	| service response encoding command decodedService |
 	service := RsrServerNoInstVars
 		_id: 1
-		connection: RsrMockConnection new.
+		connection: self connection.
 	self decoder.
 	self registry
 		serviceAt: 1

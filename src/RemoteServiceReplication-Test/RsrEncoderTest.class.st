@@ -1,36 +1,28 @@
+"
+No class-specific documentation for RsrEncoderTest, hierarchy is:
+Object
+  TestAsserter
+    TestCase( testSelector)
+      RsrTestCase
+        RsrCodecTest( registry decoder)
+          RsrEncoderTest( connection)
+
+"
 Class {
 	#name : 'RsrEncoderTest',
 	#superclass : 'RsrCodecTest',
-	#instVars : [
-		'connection'
-	],
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'registration' }
+{ #category : 'other' }
 RsrEncoderTest >> register: aService [
 
 	aService
-		_id: connection oidSpigot next
-		connection: connection.
-	registry
-		at: aService _id
+		_id: self connection oidSpigot next
+		connection: self connection.
+	self registry
+		serviceAt: aService _id
 		put: aService
-]
-
-{ #category : 'running' }
-RsrEncoderTest >> setUp [
-
-	super setUp.
-	registry := RsrMockRegistry new.
-	connection := RsrMockConnection new
-]
-
-{ #category : 'running' }
-RsrEncoderTest >> tearDown [
-
-	registry := connection := nil.
-	super setUp
 ]
 
 { #category : 'running-immediates' }

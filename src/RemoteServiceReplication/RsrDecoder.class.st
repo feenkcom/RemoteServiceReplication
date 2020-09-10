@@ -1,21 +1,25 @@
+"
+No class-specific documentation for RsrDecoder, hierarchy is:
+Object
+  RsrObject
+    RsrCodec
+      RsrDecoder( registry connection decodeCommandMap)
+
+"
 Class {
 	#name : 'RsrDecoder',
 	#superclass : 'RsrCodec',
 	#instVars : [
-		'registry',
-		'connection',
-		'decodeCommandMap'
+		'registry'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'instance creation' }
-RsrDecoder class >> registry: anRsrRegistry
-connection: aConnection [
+RsrDecoder class >> registry: aRegistry [
 
 	^self new
-		registry: anRsrRegistry;
-		connection: aConnection;
+		registry: aRegistry;
 		yourself
 ]
 
@@ -28,36 +32,17 @@ RsrDecoder >> bytesAsInteger: bytes [
 	^res
 ]
 
-{ #category : 'accessing' }
-RsrDecoder >> connection [
-
-	^connection
-]
-
-{ #category : 'accessing' }
-RsrDecoder >> connection: aConnection [
-
-	connection := aConnection
-]
-
 { #category : 'decoding-commands' }
 RsrDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
 
-	| command decodeSelector |
+	| command |
 	command := self decodeControlWord: aStream.
-	decodeSelector := self decodeCommandMap
-		at: command
-		ifAbsent: [self error: 'Invalid command received'].
-	^self
-		perform: decodeSelector
-		with: aStream
-]
-
-{ #category : 'accessing' }
-RsrDecoder >> decodeCommandMap [
-
-	^decodeCommandMap ifNil: [self initializeDecodeCommandMap]
+	command == self sendMessageCommand ifTrue: [^self decodeSendMessage: aStream].
+	command == self deliverResponseCommand ifTrue: [^self decodeDeliverResponse: aStream].
+	command == self releaseObjectsCommand ifTrue: [^self decodeReleaseServices: aStream].
+	command == self deliverErrorResponseCommand ifTrue: [^self decodeDeliverErrorResponse: aStream].
+	^RsrError signal: 'Unknown command identifier: ', command printString
 ]
 
 { #category : 'decoding' }
@@ -170,18 +155,6 @@ RsrDecoder >> decodeServiceSnapshot: aStream [
 		decode: aStream
 		using: self.
 	^snapshot
-]
-
-{ #category : 'private-initialization' }
-RsrDecoder >> initializeDecodeCommandMap [
-
-	decodeCommandMap := Dictionary new.
-	decodeCommandMap
-		at: self sendMessageCommand put: #decodeSendMessage:;
-		at: self deliverResponseCommand put: #decodeDeliverResponse:;
-		at: self releaseObjectsCommand put: #decodeReleaseServices:;
-		at: self deliverErrorResponseCommand put: #decodeDeliverErrorResponse:.
-	^decodeCommandMap
 ]
 
 { #category : 'decoding-services' }

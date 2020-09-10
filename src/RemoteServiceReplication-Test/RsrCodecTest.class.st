@@ -2,6 +2,7 @@ Class {
 	#name : 'RsrCodecTest',
 	#superclass : 'RsrTestCase',
 	#instVars : [
+		'connection',
 		'registry',
 		'decoder'
 	],
@@ -17,19 +18,13 @@ RsrCodecTest class >> isAbstract [
 { #category : 'accessing' }
 RsrCodecTest >> connection [
 
-	^self decoder connection
+	^connection
 ]
 
 { #category : 'accessing' }
 RsrCodecTest >> decoder [
 
-	| connection |
-	decoder == nil
-		ifFalse: [^decoder].
-	connection := RsrMockConnection new.
-	^decoder := RsrDecoder
-		registry: connection registry
-		connection: connection
+	^decoder
 ]
 
 { #category : 'accessing' }
@@ -76,7 +71,7 @@ RsrCodecTest >> referencedServiceEncoding [
 { #category : 'accessing' }
 RsrCodecTest >> registry [
 
-	^self decoder registry
+	^registry
 ]
 
 { #category : 'accessing-objects' }
@@ -102,6 +97,22 @@ RsrCodecTest >> serviceNoInstVarsEncoding [
 	#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"
 	#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"
 	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115] "#RsrServerNoInstVars"
+]
+
+{ #category : 'running' }
+RsrCodecTest >> setUp [
+
+	super setUp.
+	connection := RsrMockConnection new.
+	registry := connection registry.
+	decoder := RsrDecoder registry: registry
+]
+
+{ #category : 'running' }
+RsrCodecTest >> tearDown [
+
+	connection := registry := decoder := nil.
+	super tearDown
 ]
 
 { #category : 'running-immediates' }
@@ -294,7 +305,7 @@ RsrCodecTest >> testDictionary [
 		at: false put: true;
 		yourself.
 	encoding := self encodeReferenceOf: dictionary.
-	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.
+	result := (self decoder decodeReference: encoding readStream) resolve: self registry.
 	self
 		assert: result
 		equals: dictionary.
@@ -434,7 +445,7 @@ RsrCodecTest >> testSet [
 		with: true
 		with: nil.
 	encoding := self encodeReferenceOf: set.
-	result := (self decoder decodeReference: encoding readStream) resolve: self decoder connection registry.
+	result := (self decoder decodeReference: encoding readStream) resolve: self registry.
 	self
 		assert: result
 		equals: set.

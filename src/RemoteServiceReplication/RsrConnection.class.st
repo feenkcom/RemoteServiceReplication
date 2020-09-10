@@ -21,7 +21,8 @@ Class {
 		'oidSpigot',
 		'serviceFactory',
 		'log',
-		'closeSemaphore'
+		'closeSemaphore',
+		'channel'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -142,7 +143,7 @@ RsrConnection >> commandWriter [
 { #category : 'private-accessing' }
 RsrConnection >> decoder [
 
-	^RsrDecoder registry: registry connection: self
+	^RsrDecoder registry: registry
 ]
 
 { #category : 'private-events' }
