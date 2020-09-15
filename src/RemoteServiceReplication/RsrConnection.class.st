@@ -11,11 +11,7 @@ Class {
 	#instVars : [
 		'isOpen',
 		'transactionSpigot',
-		'commandWriter',
-		'commandReader',
 		'registry',
-		'socket',
-		'stream',
 		'pendingMessages',
 		'dispatcher',
 		'oidSpigot',
@@ -34,6 +30,18 @@ RsrConnection class >> acceptOn: aPortNumber [
 	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.
 	acceptor := RsrAcceptConnection port: aPortNumber.
 	^acceptor waitForConnection
+]
+
+{ #category : 'instance creation' }
+RsrConnection class >> channel: aChannel
+transactionSpigot: aNumericSpigot
+oidSpigot: anOidSpigot [
+
+	^super new
+		channel: aChannel;
+		transactionSpigot: aNumericSpigot;
+		oidSpigot: anOidSpigot;
+		yourself
 ]
 
 { #category : 'instance creation' }
@@ -59,11 +67,13 @@ RsrConnection class >> socket: aSocket
 transactionSpigot: aNumericSpigot
 oidSpigot: anOidSpigot [
 
-	^super new
-		socket: aSocket;
-		transactionSpigot: aNumericSpigot;
-		oidSpigot: anOidSpigot;
-		yourself
+	| channel |
+	channel := RsrSocketChannel new.
+	channel socket: aSocket.
+	^self
+		channel: channel
+		transactionSpigot: aNumericSpigot
+		oidSpigot: anOidSpigot
 ]
 
 { #category : 'private-accessing' }
@@ -75,7 +85,7 @@ RsrConnection >> _forwarderClass [
 { #category : 'private-sending' }
 RsrConnection >> _sendCommand: aCommand [
 
-	self commandWriter enqueue: aCommand
+	channel send: aCommand
 ]
 
 { #category : 'private-sending' }
@@ -114,30 +124,29 @@ to: aService [
 	^promise
 ]
 
+{ #category : 'private-accessing' }
+RsrConnection >> channel [
+
+	^channel
+]
+
+{ #category : 'private-accessing' }
+RsrConnection >> channel: aChannel [
+
+	channel := aChannel
+]
+
 { #category : 'other' }
 RsrConnection >> close [
 
 	isOpen
 		ifFalse: [^self].
 	isOpen := false.
-	commandReader stop.
-	commandWriter stop.
-	dispatcher stop.
+	channel close.
+	self dispatcher stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
-	commandReader := commandWriter := dispatcher := pendingMessages  := registry := nil.
+	channel := dispatcher := pendingMessages  := registry := nil.
 	closeSemaphore signal
-]
-
-{ #category : 'private-accessing' }
-RsrConnection >> commandReader [
-
-	^commandReader
-]
-
-{ #category : 'private-accessing' }
-RsrConnection >> commandWriter [
-
-	^commandWriter
 ]
 
 { #category : 'private-accessing' }
@@ -228,19 +237,18 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 	oidSpigot := anIntegerSpigot
 ]
 
-{ #category : 'public-lifecycle' }
+{ #category : 'other' }
 RsrConnection >> open [
 
-	(isOpen := socket isConnected)
+	(isOpen := channel socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
 	closeSemaphore := Semaphore new.
-	stream := RsrSocketStream on: socket.
 	dispatcher := RsrDispatchEventLoop on: self.
-	commandReader := RsrCommandSource on: self.
-	commandWriter := RsrCommandSink on: self.
-	dispatcher start.
-	commandReader start.
-	commandWriter start.
+	channel stream: (RsrSocketStream on: channel socket).
+	channel source: (RsrCommandSource on: self).
+	channel sink: (RsrCommandSink on: self).
+	self dispatcher start.
+	channel open.
 	serviceFactory := RsrServiceFactory clientClass
 		_id: self oidSpigot next
 		connection: self.
@@ -285,15 +293,9 @@ RsrConnection >> serviceFor: aResponsibility [
 ]
 
 { #category : 'private-accessing' }
-RsrConnection >> socket: aSocket [
-
-	socket := aSocket
-]
-
-{ #category : 'private-accessing' }
 RsrConnection >> stream [
 
-	^stream
+	^channel stream
 ]
 
 { #category : 'private-accessing' }

@@ -18,16 +18,33 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'lifecycle' }
+RsrSocketChannel >> close [
+	"Shutdown the Command sink and source."
+
+	source stop.
+	sink stop
+]
+
 { #category : 'testing' }
 RsrSocketChannel >> isOpen [
 
 	^self socket isConnected
 ]
 
-{ #category : 'sending' }
-RsrSocketChannel >> send: aCommand [
+{ #category : 'lifecycle' }
+RsrSocketChannel >> open [
+	"Ensure the Command sink and source are running"
 
-	self sink enqueue: aCommand
+	source start.
+	sink start
+]
+
+{ #category : 'command processing' }
+RsrSocketChannel >> send: aCommand [
+	"Send the provided command over the channel"
+
+	sink enqueue: aCommand
 ]
 
 { #category : 'accessing' }
