@@ -45,7 +45,7 @@ RsrAcceptConnection >> isWaitingForConnection [
 { #category : 'connecting' }
 RsrAcceptConnection >> waitForConnection [
 
-	| socket connection |
+	| socket channel connection |
 	listener := self socketClass new.
 	[listener
 		bindAddress: self host
@@ -57,8 +57,9 @@ RsrAcceptConnection >> waitForConnection [
 			ensure:
 				[listener close.
 				listener := nil].
+	channel := RsrSocketChannel socket: socket.
 	connection := RsrConnection
-		socket: socket
+		channel: channel
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
 		oidSpigot: RsrThreadSafeNumericSpigot naturals.
 	^connection open

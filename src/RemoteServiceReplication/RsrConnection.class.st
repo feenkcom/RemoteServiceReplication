@@ -62,20 +62,6 @@ RsrConnection class >> new [
 	self error: 'Instance creation via #new is unsupported'
 ]
 
-{ #category : 'instance creation' }
-RsrConnection class >> socket: aSocket
-transactionSpigot: aNumericSpigot
-oidSpigot: anOidSpigot [
-
-	| channel |
-	channel := RsrSocketChannel new.
-	channel socket: aSocket.
-	^self
-		channel: channel
-		transactionSpigot: aNumericSpigot
-		oidSpigot: anOidSpigot
-]
-
 { #category : 'private-accessing' }
 RsrConnection >> _forwarderClass [
 
@@ -108,7 +94,7 @@ to: aService [
 	selectorReference := RsrReference from: aMessage selector.
 	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].
 	dispatchCommand := RsrSendMessage
-		transaction: self newTransactionId
+		transaction: self transactionSpigot next
 		receiver: receiverReference
 		selector: selectorReference
 		arguments: argumentReferences.
@@ -133,7 +119,8 @@ RsrConnection >> channel [
 { #category : 'private-accessing' }
 RsrConnection >> channel: aChannel [
 
-	channel := aChannel
+	channel := aChannel.
+	channel connection: self
 ]
 
 { #category : 'other' }
@@ -149,12 +136,6 @@ RsrConnection >> close [
 	closeSemaphore signal
 ]
 
-{ #category : 'private-accessing' }
-RsrConnection >> decoder [
-
-	^RsrDecoder registry: registry
-]
-
 { #category : 'private-events' }
 RsrConnection >> disconnected [
 
@@ -166,12 +147,6 @@ RsrConnection >> disconnected [
 RsrConnection >> dispatcher [
 
 	^dispatcher
-]
-
-{ #category : 'private-accessing' }
-RsrConnection >> encoder [
-
-	^RsrEncoder new
 ]
 
 { #category : 'private-registration' }
@@ -220,12 +195,6 @@ RsrConnection >> log [
 ]
 
 { #category : 'private-accessing' }
-RsrConnection >> newTransactionId [
-
-	^transactionSpigot next
-]
-
-{ #category : 'private-accessing' }
 RsrConnection >> oidSpigot [
 
 	^oidSpigot
@@ -243,10 +212,7 @@ RsrConnection >> open [
 	(isOpen := channel socket isConnected)
 		ifFalse: [^RsrConnectionClosed signal].
 	closeSemaphore := Semaphore new.
-	dispatcher := RsrDispatchEventLoop on: self.
-	channel stream: (RsrSocketStream on: channel socket).
-	channel source: (RsrCommandSource on: self).
-	channel sink: (RsrCommandSink on: self).
+	dispatcher := RsrDispatchEventLoop on: channel.
 	self dispatcher start.
 	channel open.
 	serviceFactory := RsrServiceFactory clientClass
@@ -293,12 +259,6 @@ RsrConnection >> serviceFor: aResponsibility [
 ]
 
 { #category : 'private-accessing' }
-RsrConnection >> stream [
-
-	^channel stream
-]
-
-{ #category : 'private-accessing' }
 RsrConnection >> transactionSpigot [
 
 	^transactionSpigot
@@ -319,6 +279,7 @@ RsrConnection >> unknownError: anException [
 { #category : 'public-waiting' }
 RsrConnection >> waitUntilClose [
 
-	closeSemaphore wait.
-	closeSemaphore signal
+	closeSemaphore
+		wait;
+		signal
 ]

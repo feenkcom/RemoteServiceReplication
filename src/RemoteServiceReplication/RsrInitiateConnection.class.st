@@ -18,13 +18,14 @@ Class {
 { #category : 'connecting' }
 RsrInitiateConnection >> connect [
 
-	| socket connection |
+	| socket channel connection |
 	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.
+	channel := RsrSocketChannel socket: socket.
 	connection := RsrConnection
-		socket: socket
+		channel: channel
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	^connection open

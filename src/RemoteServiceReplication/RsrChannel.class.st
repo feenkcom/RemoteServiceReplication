@@ -1,6 +1,16 @@
+"
+No class-specific documentation for RsrChannel, hierarchy is:
+Object
+  RsrObject
+    RsrChannel
+
+"
 Class {
 	#name : 'RsrChannel',
 	#superclass : 'RsrObject',
+	#instVars : [
+		'connection'
+	],
 	#category : 'RemoteServiceReplication'
 }
 
@@ -9,6 +19,18 @@ RsrChannel >> close [
 	"Ensure the channel is closed to further communication."
 
 	^self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RsrChannel >> connection [
+
+	^connection
+]
+
+{ #category : 'accessing' }
+RsrChannel >> connection: aConnection [
+
+	connection := aConnection
 ]
 
 { #category : 'testing' }

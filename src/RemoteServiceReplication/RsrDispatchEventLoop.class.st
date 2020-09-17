@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrDispatchEventLoop, hierarchy is:
+Object
+  RsrObject
+    RsrEventLoop( process connection state)
+      RsrDispatchEventLoop( queue)
+
+"
 Class {
 	#name : 'RsrDispatchEventLoop',
 	#superclass : 'RsrEventLoop',
@@ -21,7 +29,7 @@ RsrDispatchEventLoop >> executeCycle [
 	item == self stopToken
 		ifTrue: [^self].
 	self report: item.
-	item executeFor: connection
+	item executeFor: self connection
 ]
 
 { #category : 'initialize' }

@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrCommandSink, hierarchy is:
+Object
+  RsrObject
+    RsrEventLoop( process connection state)
+      RsrCommandSink( queue)
+
+"
 Class {
 	#name : 'RsrCommandSink',
 	#superclass : 'RsrEventLoop',
@@ -10,7 +18,7 @@ Class {
 { #category : 'accessing' }
 RsrCommandSink >> encoder [
 
-	^self connection encoder
+	^RsrEncoder new
 ]
 
 { #category : 'commands' }

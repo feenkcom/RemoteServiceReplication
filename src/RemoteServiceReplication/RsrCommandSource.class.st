@@ -1,3 +1,11 @@
+"
+No class-specific documentation for RsrCommandSource, hierarchy is:
+Object
+  RsrObject
+    RsrEventLoop( process connection state)
+      RsrCommandSource( decoder)
+
+"
 Class {
 	#name : 'RsrCommandSource',
 	#superclass : 'RsrEventLoop',
@@ -10,7 +18,7 @@ Class {
 { #category : 'accessing' }
 RsrCommandSource >> decoder [
 
-	^self connection decoder
+	^RsrDecoder registry: self registry
 ]
 
 { #category : 'accessing' }
@@ -37,4 +45,10 @@ RsrCommandSource >> executeCycle [
 RsrCommandSource >> nextCommand [
 
 	^self decoder decodeCommand: self stream
+]
+
+{ #category : 'accessing' }
+RsrCommandSource >> registry [
+
+	^self connection registry
 ]

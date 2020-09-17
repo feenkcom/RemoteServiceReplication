@@ -1,32 +1,45 @@
+"
+No class-specific documentation for RsrEventLoop, hierarchy is:
+Object
+  RsrObject
+    RsrEventLoop( process connection state)
+
+"
 Class {
 	#name : 'RsrEventLoop',
 	#superclass : 'RsrObject',
 	#instVars : [
 		'process',
-		'connection',
+		'channel',
 		'state'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'instance creation' }
-RsrEventLoop class >> on: aConnection [
+RsrEventLoop class >> on: aChannel [
 
 	^self new
-		connection: aConnection;
+		channel: aChannel;
 		yourself
+]
+
+{ #category : 'accessing' }
+RsrEventLoop >> channel [
+
+	^channel
+]
+
+{ #category : 'accessing' }
+RsrEventLoop >> channel: aChannel [
+
+	channel := aChannel
 ]
 
 { #category : 'accessing' }
 RsrEventLoop >> connection [
 
-	^connection
-]
-
-{ #category : 'accessing' }
-RsrEventLoop >> connection: anObject [
-
-	connection := anObject
+	^self channel connection
 ]
 
 { #category : 'running' }
@@ -133,5 +146,5 @@ RsrEventLoop >> stoppedState [
 { #category : 'accessing' }
 RsrEventLoop >> stream [
 
-	^self connection stream
+	^self channel stream
 ]

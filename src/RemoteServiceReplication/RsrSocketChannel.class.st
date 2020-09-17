@@ -18,12 +18,28 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'instance creation' }
+RsrSocketChannel class >> socket: aSocket [
+
+	^self new
+		socket: aSocket;
+		yourself
+]
+
 { #category : 'lifecycle' }
 RsrSocketChannel >> close [
 	"Shutdown the Command sink and source."
 
 	source stop.
 	sink stop
+]
+
+{ #category : 'initializing' }
+RsrSocketChannel >> initialize [
+
+	super initialize.
+	source := RsrCommandSource on: self.
+	sink := RsrCommandSink on: self
 ]
 
 { #category : 'testing' }
@@ -54,12 +70,6 @@ RsrSocketChannel >> sink [
 ]
 
 { #category : 'accessing' }
-RsrSocketChannel >> sink: aCommandSink [
-
-	sink := aCommandSink
-]
-
-{ #category : 'accessing' }
 RsrSocketChannel >> socket [
 
 	^socket
@@ -78,19 +88,7 @@ RsrSocketChannel >> source [
 ]
 
 { #category : 'accessing' }
-RsrSocketChannel >> source: aCommandSource [
-
-	source := aCommandSource
-]
-
-{ #category : 'accessing' }
 RsrSocketChannel >> stream [
 
-	^stream
-]
-
-{ #category : 'accessing' }
-RsrSocketChannel >> stream: aStream [
-
-	stream := aStream
+	^stream ifNil: [stream := RsrSocketStream on: socket]
 ]
