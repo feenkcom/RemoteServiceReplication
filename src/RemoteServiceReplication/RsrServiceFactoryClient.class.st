@@ -13,5 +13,9 @@ RsrServiceFactoryClient >> mirror: aService [
 { #category : 'manufactoring' }
 RsrServiceFactoryClient >> serviceFor: aResponsibility [
 
-	^remoteSelf create: aResponsibility
+	| abstractClass instance |
+	abstractClass := RsrClassResolver classNamed: aResponsibility.
+	instance := abstractClass clientClass new.
+	instance registerWith: _connection.
+	^instance
 ]
