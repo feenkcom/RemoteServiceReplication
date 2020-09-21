@@ -84,7 +84,7 @@ to: aService [
 "Coorination window closed"
 	"Return Promise"
 	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |
-	isOpen
+	self isOpen
 		ifFalse: [self error: 'Connection is not open'].
 	analysis := RsrSnapshotAnalysis
 		roots: (Array with: aService), aMessage arguments
@@ -126,9 +126,8 @@ RsrConnection >> channel: aChannel [
 { #category : 'other' }
 RsrConnection >> close [
 
-	isOpen
-		ifFalse: [^self].
-	isOpen := false.
+	channel == nil
+		ifTrue: [^self].
 	channel close.
 	self dispatcher stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
@@ -169,7 +168,6 @@ RsrConnection >> ensureRegistered: aService [
 RsrConnection >> initialize [
 
 	super initialize.
-	isOpen := false.
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	pendingMessages := Dictionary new.
 	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
@@ -177,15 +175,9 @@ RsrConnection >> initialize [
 ]
 
 { #category : 'public-testing' }
-RsrConnection >> isClosed [
-
-	^self isOpen not
-]
-
-{ #category : 'public-testing' }
 RsrConnection >> isOpen [
 
-	^isOpen
+	^channel isOpen
 ]
 
 { #category : 'private-accessing' }
@@ -209,8 +201,6 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 { #category : 'other' }
 RsrConnection >> open [
 
-	(isOpen := channel socket isConnected)
-		ifFalse: [^RsrConnectionClosed signal].
 	closeSemaphore := Semaphore new.
 	dispatcher := RsrDispatchEventLoop on: channel.
 	self dispatcher start.

@@ -132,9 +132,7 @@ RsrEventLoop >> start [
 RsrEventLoop >> stop [
 
 	self isActive ifFalse: [^self].
-	state := self stoppedState.
-	self connection close.
-	self stream close
+	state := self stoppedState
 ]
 
 { #category : 'accessing' }

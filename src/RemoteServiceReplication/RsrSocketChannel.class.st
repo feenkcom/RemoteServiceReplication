@@ -30,6 +30,7 @@ RsrSocketChannel class >> socket: aSocket [
 RsrSocketChannel >> close [
 	"Shutdown the Command sink and source."
 
+	stream close.
 	source stop.
 	sink stop
 ]
