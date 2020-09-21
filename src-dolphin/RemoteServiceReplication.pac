@@ -90,7 +90,7 @@ RsrCommand comment: 'No class-specific documentation for RsrCommand, hierarchy i
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'isOpen transactionSpigot registry pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore channel'
+	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatcher log registry pendingMessages serviceFactory closeSemaphore'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -591,7 +591,7 @@ mirror: aService	^aService! !
 channel	^channel! !
 
 !RsrEventLoop methodsFor!
-stop	self isActive ifFalse: [^self].	state := self stoppedState.	self connection close.	self stream close! !
+stop	self isActive ifFalse: [^self].	state := self stoppedState! !
 
 !RsrEventLoop methodsFor!
 log: aString	self log debug: aString! !
@@ -705,7 +705,7 @@ stream: aStream	stream := aStream! !
 mirror: aService	^remoteSelf mirror: aService! !
 
 !RsrServiceFactoryClient methodsFor!
-serviceFor: aResponsibility	^remoteSelf create: aResponsibility! !
+serviceFor: aResponsibility	| abstractClass instance |	abstractClass := RsrClassResolver classNamed: aResponsibility.	instance := abstractClass clientClass new.	instance registerWith: _connection.	^instance! !
 
 !RsrLogWithPrefix methodsFor!
 prefix	^prefix! !
@@ -837,7 +837,7 @@ executeCycle	[| command |	command := queue next.	command == self stopToken	
 socket: aSocket	socket := aSocket! !
 
 !RsrSocketChannel methodsFor!
-close	"Shutdown the Command sink and source."	source stop.	sink stop! !
+close	"Shutdown the Command sink and source."	stream close.	source stop.	sink stop! !
 
 !RsrSocketChannel methodsFor!
 isOpen	^self socket isConnected! !
@@ -1008,13 +1008,13 @@ stack	^stack! !
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	isOpen		ifFalse: [^self].	isOpen := false.	channel close.	self dispatcher stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	channel := dispatcher := pendingMessages  := registry := nil.	closeSemaphore signal! !
+close	channel == nil		ifTrue: [^self].	channel close.	self dispatcher stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	channel := dispatcher := pendingMessages  := registry := nil.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
 
 !RsrConnection methodsFor!
-initialize	super initialize.	isOpen := false.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	log := RsrLog new! !
+initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	log := RsrLog new! !
 
 !RsrConnection methodsFor!
 transactionSpigot	^transactionSpigot! !
@@ -1026,9 +1026,6 @@ channel: aChannel	channel := aChannel.	channel connection: self! !
 oidSpigot	^oidSpigot! !
 
 !RsrConnection methodsFor!
-isClosed	^self isOpen not! !
-
-!RsrConnection methodsFor!
 disconnected	self log info: 'Disconnected'.	self close! !
 
 !RsrConnection methodsFor!
@@ -1038,7 +1035,7 @@ oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
 dispatcher	^dispatcher! !
 
 !RsrConnection methodsFor!
-_sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiver: receiverReference		selector: selectorReference		arguments: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
+_sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	self isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiver: receiverReference		selector: selectorReference		arguments: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
 
 !RsrConnection methodsFor!
 pendingMessages	^pendingMessages! !
@@ -1056,6 +1053,9 @@ ensureRegistered: aService	aService isMirrored		ifTrue:			[^aService _connec
 _sendCommand: aCommand	channel send: aCommand! !
 
 !RsrConnection methodsFor!
+initializeServiceFactory	| instance |	instance := RsrServiceFactory clientClass new.	self ensureRegistered: instance.	serviceFactory := instance.	^serviceFactory! !
+
+!RsrConnection methodsFor!
 waitUntilClose	closeSemaphore		wait;		signal! !
 
 !RsrConnection methodsFor!
@@ -1065,16 +1065,16 @@ releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace
 _forwarderClass	^RsrForwarder! !
 
 !RsrConnection methodsFor!
-serviceFactory	^serviceFactory! !
+serviceFactory	^serviceFactory ifNil: [self initializeServiceFactory]! !
 
 !RsrConnection methodsFor!
-open	(isOpen := channel socket isConnected)		ifFalse: [^RsrConnectionClosed signal].	closeSemaphore := Semaphore new.	dispatcher := RsrDispatchEventLoop on: channel.	self dispatcher start.	channel open.	serviceFactory := RsrServiceFactory clientClass		_id: self oidSpigot next		connection: self.	registry		serviceAt: serviceFactory _id		put: serviceFactory! !
+open	closeSemaphore := Semaphore new.	dispatcher := RsrDispatchEventLoop on: channel.	self dispatcher start.	channel open! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !
 
 !RsrConnection methodsFor!
-isOpen	^isOpen! !
+isOpen	^channel isOpen! !
 
 !RsrConnection methodsFor!
 channel	^channel! !
