@@ -35,6 +35,13 @@ RsrSocketChannel >> close [
 	sink stop
 ]
 
+{ #category : 'lifecycle' }
+RsrSocketChannel >> disconnected [
+	"The socket has disconnected so the channel is no longer open."
+
+	self connection disconnected
+]
+
 { #category : 'initializing' }
 RsrSocketChannel >> initialize [
 

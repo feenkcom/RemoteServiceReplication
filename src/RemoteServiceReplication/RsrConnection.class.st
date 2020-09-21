@@ -125,12 +125,11 @@ RsrConnection >> channel: aChannel [
 { #category : 'other' }
 RsrConnection >> close [
 
-	channel == nil
-		ifTrue: [^self].
 	channel close.
 	self dispatcher stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
-	channel := dispatcher := pendingMessages  := registry := nil.
+	pendingMessages := Dictionary new.
+	registry := nil.
 	closeSemaphore signal
 ]
 
