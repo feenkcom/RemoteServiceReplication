@@ -9,7 +9,6 @@ Class {
 	#name : 'RsrConnection',
 	#superclass : 'RsrObject',
 	#instVars : [
-		'isOpen',
 		'transactionSpigot',
 		'registry',
 		'pendingMessages',
