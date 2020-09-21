@@ -9,15 +9,15 @@ Class {
 	#name : 'RsrConnection',
 	#superclass : 'RsrObject',
 	#instVars : [
+		'channel',
 		'transactionSpigot',
+		'oidSpigot',
+		'dispatcher',
+		'log',
 		'registry',
 		'pendingMessages',
-		'dispatcher',
-		'oidSpigot',
 		'serviceFactory',
-		'log',
-		'closeSemaphore',
-		'channel'
+		'closeSemaphore'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -173,6 +173,16 @@ RsrConnection >> initialize [
 	log := RsrLog new
 ]
 
+{ #category : 'private-initialization' }
+RsrConnection >> initializeServiceFactory [
+
+	| instance |
+	instance := RsrServiceFactory clientClass new.
+	self ensureRegistered: instance.
+	serviceFactory := instance.
+	^serviceFactory
+]
+
 { #category : 'public-testing' }
 RsrConnection >> isOpen [
 
@@ -203,13 +213,7 @@ RsrConnection >> open [
 	closeSemaphore := Semaphore new.
 	dispatcher := RsrDispatchEventLoop on: channel.
 	self dispatcher start.
-	channel open.
-	serviceFactory := RsrServiceFactory clientClass
-		_id: self oidSpigot next
-		connection: self.
-	registry
-		serviceAt: serviceFactory _id
-		put: serviceFactory
+	channel open
 ]
 
 { #category : 'private-accessing' }
@@ -238,7 +242,7 @@ RsrConnection >> releaseOid: anOid [
 { #category : 'public-service factory' }
 RsrConnection >> serviceFactory [
 
-	^serviceFactory
+	^serviceFactory ifNil: [self initializeServiceFactory]
 ]
 
 { #category : 'public-service factory' }
