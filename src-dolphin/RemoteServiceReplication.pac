@@ -753,7 +753,7 @@ dispatcher	^self connection dispatcher! !
 nextCommand	^self decoder decodeCommand: self stream! !
 
 !RsrCommandSource methodsFor!
-executeCycle	[| command |	command := self nextCommand.	self report: command.	self dispatcher dispatch: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
+executeCycle	[| command |	command := self nextCommand.	self report: command.	self dispatcher dispatch: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
 
 !RsrCommandSource methodsFor!
 decoder	^RsrDecoder registry: self registry! !
@@ -831,7 +831,7 @@ stop	super stop.	queue nextPut: self stopToken! !
 stopToken	^self stoppedState! !
 
 !RsrCommandSink methodsFor!
-executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self connection disconnected]! !
+executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
 
 !RsrSocketChannel methodsFor!
 socket: aSocket	socket := aSocket! !
@@ -853,6 +853,9 @@ sink	^sink! !
 
 !RsrSocketChannel methodsFor!
 initialize	super initialize.	source := RsrCommandSource on: self.	sink := RsrCommandSink on: self! !
+
+!RsrSocketChannel methodsFor!
+disconnected	"The socket has disconnected so the channel is no longer open."	self connection disconnected! !
 
 !RsrSocketChannel methodsFor!
 open	"Ensure the Command sink and source are running"	source start.	sink start! !
@@ -1008,7 +1011,7 @@ stack	^stack! !
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	channel == nil		ifTrue: [^self].	channel close.	self dispatcher stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	channel := dispatcher := pendingMessages  := registry := nil.	closeSemaphore signal! !
+close	channel close.	self dispatcher stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	pendingMessages := Dictionary new.	registry := nil.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
