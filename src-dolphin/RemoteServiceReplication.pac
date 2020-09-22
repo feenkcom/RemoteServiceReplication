@@ -1308,7 +1308,7 @@ isClient	^self class isClientClass! !
 reflectedVariableNames	^RsrServiceSnapshot reflectedVariablesFor: self! !
 
 !RsrService methodsFor!
-registerWith: aConnection	aConnection serviceFactory mirror: self! !
+registerWith: aConnection	aConnection ensureRegistered: self! !
 
 !RsrService methodsFor!
 _id	^_id! !
