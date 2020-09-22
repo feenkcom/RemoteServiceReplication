@@ -15,6 +15,7 @@ RsrStressTest >> repeatedlySend: anObject [
 
 	| client server |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [:object | object].
 	self repetitions timesRepeat: [client value: anObject].
@@ -50,6 +51,7 @@ RsrStressTest >> testRepeatedUnarySends [
 
 	| client server |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [server].
 	self repetitions timesRepeat: [client value].

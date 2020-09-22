@@ -10,6 +10,7 @@ RsrMessageSendingTest >> testChangeRemoteState [
 	| marker client server |
 	marker := false.
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [marker := true].
 	client value.
@@ -21,6 +22,7 @@ RsrMessageSendingTest >> testRemoteError [
 
 	| client server exception |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
 	[client value]
@@ -48,6 +50,7 @@ RsrMessageSendingTest >> testRemoteErrorWithTag [
 
 	| client server tag messageText exception |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	tag := nil.
 	messageText := 'messageText'.
@@ -93,6 +96,7 @@ RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
 
 	| client server value response |
 	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	value := 42.
 	self
@@ -124,6 +128,7 @@ RsrMessageSendingTest >> testReturnArgument [
 
 	| client server arguments dt response |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [:object | object].
 	arguments := OrderedCollection new
@@ -170,6 +175,7 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 
 	| client server exception |			
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [Object new].
 	self
@@ -200,6 +206,7 @@ RsrMessageSendingTest >> testReturnNewService [
 
 	| client server returnedService |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [RsrValueHolderServer new].
 	returnedService := client value.
@@ -213,6 +220,7 @@ RsrMessageSendingTest >> testReturnNewServiceInArray [
 
 	| client server array returnedService |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [Array with: RsrValueHolderServer new].
 	array := client value.
@@ -227,6 +235,7 @@ RsrMessageSendingTest >> testReturnSymbol [
 
 	| client server symbol result |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	symbol := #testSymbol.
 	server action: [symbol].
@@ -241,6 +250,7 @@ RsrMessageSendingTest >> testSendInvalidObject [
 
 	| client server |			
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [:arg | arg].
 	self

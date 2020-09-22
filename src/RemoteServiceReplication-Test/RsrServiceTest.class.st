@@ -46,6 +46,7 @@ RsrServiceTest >> testCreateServiceWithSameClientAbstractService [
 	self
 		assert: client class
 		equals: RsrSameTemplateAndClientService.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	self
 		assert: server replicated1
@@ -81,6 +82,7 @@ RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	service1 := connectionB registry serviceAt: client _id.
 	self mirror: client.
 	service2 := connectionB registry serviceAt: client _id.
@@ -178,6 +180,7 @@ RsrServiceTest >> testReflectedVariableNames [
 
 	| client server clientNames serverNames |
 	client := connectionA serviceFor: #RsrTestService.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	clientNames := client reflectedVariableNames.
 	serverNames := server reflectedVariableNames.
@@ -191,6 +194,7 @@ RsrServiceTest >> testReflectedVariableNames [
 		assert: (clientNames at: 1) asSymbol
 		equals: #sharedVariable.
 	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	clientNames := client reflectedVariableNames.
 	serverNames := server reflectedVariableNames.

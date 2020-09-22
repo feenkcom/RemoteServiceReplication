@@ -136,7 +136,7 @@ RsrService >> reflectedVariableNames [
 { #category : 'public-registration' }
 RsrService >> registerWith: aConnection [
 
-	aConnection serviceFactory mirror: self
+	aConnection ensureRegistered: self
 ]
 
 { #category : 'public-synchronization' }

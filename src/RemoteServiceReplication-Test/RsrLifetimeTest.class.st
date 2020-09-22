@@ -11,6 +11,7 @@ RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 
 	| client server remoteService |
 	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB registry serviceAt: client _id.
 	server action: [:object | object].
 	self
