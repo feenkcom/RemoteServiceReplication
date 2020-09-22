@@ -105,7 +105,7 @@ RsrCodecTest >> setUp [
 	super setUp.
 	connection := RsrMockConnection new.
 	registry := connection registry.
-	decoder := RsrDecoder registry: registry
+	decoder := RsrDecoder new
 ]
 
 { #category : 'running' }

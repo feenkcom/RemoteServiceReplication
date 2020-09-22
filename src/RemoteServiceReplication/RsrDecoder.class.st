@@ -9,9 +9,6 @@ Object
 Class {
 	#name : 'RsrDecoder',
 	#superclass : 'RsrCodec',
-	#instVars : [
-		'registry'
-	],
 	#category : 'RemoteServiceReplication'
 }
 
@@ -61,10 +58,10 @@ RsrDecoder >> decodeDeliverErrorResponse: aStream [
 
 	| transaction originalClassName tag messageText stack error |
 	transaction := self decodeControlWord: aStream.
-	originalClassName := (self decodeReference: aStream) resolve: self registry.
-	tag := (self decodeReference: aStream) resolve: self registry.
-	messageText := (self decodeReference: aStream) resolve: self registry.
-	stack := (self decodeReference: aStream) resolve: self registry.
+	originalClassName := (self decodeReference: aStream) resolve: nil.
+	tag := (self decodeReference: aStream) resolve: nil.
+	messageText := (self decodeReference: aStream) resolve: nil.
+	stack := (self decodeReference: aStream) resolve: nil.
 	error := RsrRemoteError new
 		originalClassName: originalClassName;
 		tag: tag;
@@ -195,16 +192,4 @@ RsrDecoder >> instanceOfImmediate: aReferenceType [
 RsrDecoder >> lookupClass: aClassName [
 
 	^RsrClassResolver classNamed: aClassName
-]
-
-{ #category : 'accessing' }
-RsrDecoder >> registry [
-
-	^registry
-]
-
-{ #category : 'accessing' }
-RsrDecoder >> registry: anRsrRegistry [
-
-	registry := anRsrRegistry
 ]

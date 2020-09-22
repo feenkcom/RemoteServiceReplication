@@ -242,7 +242,7 @@ RsrDecoderTest >> verifyImmediate: expected
 encoding: encoding [
 
 	| actual |
-	actual := (self decoder decodeReference: encoding readStream) resolve: self decoder registry.
+	actual := (self decoder decodeReference: encoding readStream) resolve: self connection registry.
 	self
 		assert: actual
 		equals: expected

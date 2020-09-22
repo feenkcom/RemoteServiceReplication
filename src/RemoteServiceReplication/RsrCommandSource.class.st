@@ -10,7 +10,7 @@ Class {
 { #category : 'accessing' }
 RsrCommandSource >> decoder [
 
-	^RsrDecoder registry: self registry
+	^RsrDecoder new
 ]
 
 { #category : 'commands' }
@@ -31,10 +31,4 @@ RsrCommandSource >> executeCycle [
 RsrCommandSource >> nextCommand [
 
 	^self decoder decodeCommand: self stream
-]
-
-{ #category : 'accessing' }
-RsrCommandSource >> registry [
-
-	^self connection registry
 ]

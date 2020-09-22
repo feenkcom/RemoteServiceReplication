@@ -83,7 +83,7 @@ using: aDecoder [
 	species := aDecoder decodeControlWord: aStream.
 	sid := aDecoder decodeControlWord: aStream.
 	instVarCount := aDecoder decodeControlWord: aStream.
-	serviceName := (aDecoder decodeReference: aStream) resolve: aDecoder registry.
+	serviceName := (aDecoder decodeReference: aStream) resolve: nil.
 	templateClass := (RsrClassResolver classNamed: serviceName) templateClass.
 	template := templateClass templateClassName.
 	targetServiceType := templateClass clientClassName = serviceName
