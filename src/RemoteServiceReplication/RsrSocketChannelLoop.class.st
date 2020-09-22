@@ -36,12 +36,6 @@ RsrSocketChannelLoop >> channel: aChannel [
 	channel := aChannel
 ]
 
-{ #category : 'accessing' }
-RsrSocketChannelLoop >> connection [
-
-	^self channel connection
-]
-
 { #category : 'running' }
 RsrSocketChannelLoop >> executeCycle [
 
@@ -96,7 +90,7 @@ RsrSocketChannelLoop >> report: aCommand [
 { #category : 'running' }
 RsrSocketChannelLoop >> reportException: anException [
 
-	self log: '', self class name, '/', anException description
+	self log: anException description
 ]
 
 { #category : 'running' }
