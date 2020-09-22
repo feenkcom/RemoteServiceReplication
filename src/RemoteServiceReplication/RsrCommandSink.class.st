@@ -8,7 +8,7 @@ Object
 "
 Class {
 	#name : 'RsrCommandSink',
-	#superclass : 'RsrEventLoop',
+	#superclass : 'RsrSocketChannelLoop',
 	#instVars : [
 		'queue'
 	],

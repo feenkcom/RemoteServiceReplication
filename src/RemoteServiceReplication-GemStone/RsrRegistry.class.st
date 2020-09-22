@@ -42,25 +42,6 @@ RsrRegistry >> cleanupEntryFor: aKey [
 	self removeKey: aKey
 ]
 
-{ #category : 'accessing' }
-RsrRegistry >> dispatcherAt: aKey [
-
-	^self
-		dispatcherAt: aKey
-		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
-]
-
-{ #category : 'accessing' }
-RsrRegistry >> dispatcherAt: aKey
-ifAbsent: aBlock [
-
-	| element |
-	element := mutex critical: [map at: aKey ifAbsent: []].
-	^element
-		ifNil: aBlock
-		ifNotNil: [element dispatcher]
-]
-
 { #category : 'initialization' }
 RsrRegistry >> includesKey: aKey [
 

@@ -1,14 +1,6 @@
-"
-No class-specific documentation for RsrCommandSource, hierarchy is:
-Object
-  RsrObject
-    RsrEventLoop( process connection state)
-      RsrCommandSource( decoder)
-
-"
 Class {
 	#name : 'RsrCommandSource',
-	#superclass : 'RsrEventLoop',
+	#superclass : 'RsrSocketChannelLoop',
 	#instVars : [
 		'decoder'
 	],
@@ -21,19 +13,13 @@ RsrCommandSource >> decoder [
 	^RsrDecoder registry: self registry
 ]
 
-{ #category : 'accessing' }
-RsrCommandSource >> dispatcher [
-
-	^self connection dispatcher
-]
-
 { #category : 'commands' }
 RsrCommandSource >> executeCycle [
 
 	[| command |
 	command := self nextCommand.
 	self report: command.
-	self dispatcher dispatch: command]
+	self channel received: command]
 		on: RsrSocketClosed
 		do:
 			[:ex |

@@ -6,7 +6,7 @@ Object
 
 "
 Class {
-	#name : 'RsrEventLoop',
+	#name : 'RsrSocketChannelLoop',
 	#superclass : 'RsrObject',
 	#instVars : [
 		'process',
@@ -17,7 +17,7 @@ Class {
 }
 
 { #category : 'instance creation' }
-RsrEventLoop class >> on: aChannel [
+RsrSocketChannelLoop class >> on: aChannel [
 
 	^self new
 		channel: aChannel;
@@ -25,82 +25,82 @@ RsrEventLoop class >> on: aChannel [
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> channel [
+RsrSocketChannelLoop >> channel [
 
 	^channel
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> channel: aChannel [
+RsrSocketChannelLoop >> channel: aChannel [
 
 	channel := aChannel
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> connection [
+RsrSocketChannelLoop >> connection [
 
 	^self channel connection
 ]
 
 { #category : 'running' }
-RsrEventLoop >> executeCycle [
+RsrSocketChannelLoop >> executeCycle [
 
 	self subclassResponsibility
 ]
 
 { #category : 'initialization' }
-RsrEventLoop >> initialize [
+RsrSocketChannelLoop >> initialize [
 
 	super initialize.
 	state := self stoppedState
 ]
 
 { #category : 'testing' }
-RsrEventLoop >> isActive [
+RsrSocketChannelLoop >> isActive [
 
 	^state == self runningState
 ]
 
 { #category : 'testing' }
-RsrEventLoop >> isProcessActive [
+RsrSocketChannelLoop >> isProcessActive [
 
 	^process ~~ nil
 ]
 
 { #category : 'running' }
-RsrEventLoop >> log [
+RsrSocketChannelLoop >> log [
 
 	^RsrLogWithPrefix
 		prefix: self class name asString
-		log: self connection log
+		log: self channel log
 ]
 
 { #category : 'running' }
-RsrEventLoop >> log: aString [
+RsrSocketChannelLoop >> log: aString [
 
 	self log debug: aString
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> priority [
+RsrSocketChannelLoop >> priority [
 
 	^Processor lowIOPriority
 ]
 
 { #category : 'running' }
-RsrEventLoop >> report: aCommand [
+RsrSocketChannelLoop >> report: aCommand [
 
 	aCommand reportOn: self log
 ]
 
 { #category : 'running' }
-RsrEventLoop >> reportException: anException [
+RsrSocketChannelLoop >> reportException: anException [
 
 	self log: '', self class name, '/', anException description
 ]
 
 { #category : 'running' }
-RsrEventLoop >> runLoop [
+RsrSocketChannelLoop >> runLoop [
 
 	[self isActive]
 		whileTrue:
@@ -109,17 +109,17 @@ RsrEventLoop >> runLoop [
 				do:
 					[:ex |
 					self reportException: ex.
-					self connection unknownError: ex]]
+					self channel genericError: ex]]
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> runningState [
+RsrSocketChannelLoop >> runningState [
 
 	^#Running
 ]
 
 { #category : 'commands' }
-RsrEventLoop >> start [
+RsrSocketChannelLoop >> start [
 
 	state := self runningState.
 	process := RsrProcessModel
@@ -129,20 +129,20 @@ RsrEventLoop >> start [
 ]
 
 { #category : 'commands' }
-RsrEventLoop >> stop [
+RsrSocketChannelLoop >> stop [
 
 	self isActive ifFalse: [^self].
 	state := self stoppedState
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> stoppedState [
+RsrSocketChannelLoop >> stoppedState [
 
 	^#Stop
 ]
 
 { #category : 'accessing' }
-RsrEventLoop >> stream [
+RsrSocketChannelLoop >> stream [
 
 	^self channel stream
 ]

@@ -33,11 +33,23 @@ RsrChannel >> connection: aConnection [
 	connection := aConnection
 ]
 
+{ #category : 'events' }
+RsrChannel >> genericError: anError [
+
+	^self connection unknownError: anError
+]
+
 { #category : 'testing' }
 RsrChannel >> isOpen [
 	"Report whether the Channel is open between Connections."
 
 	^self subclassResponsibility
+]
+
+{ #category : 'accessing' }
+RsrChannel >> log [
+
+	^self connection log
 ]
 
 { #category : 'lifecycle' }
@@ -47,7 +59,14 @@ RsrChannel >> open [
 	^self subclassResponsibility
 ]
 
-{ #category : 'command processing' }
+{ #category : 'events' }
+RsrChannel >> received: aCommand [
+	"A command has come in over the channel. Evaluate it."
+
+	self connection dispatchQueue dispatch: [aCommand executeFor: self connection]
+]
+
+{ #category : 'events' }
 RsrChannel >> send: aCommand [
 	"Send the provided command over the channel."
 

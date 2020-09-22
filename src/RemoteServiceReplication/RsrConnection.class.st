@@ -12,7 +12,7 @@ Class {
 		'channel',
 		'transactionSpigot',
 		'oidSpigot',
-		'dispatcher',
+		'dispatchQueue',
 		'log',
 		'registry',
 		'pendingMessages',
@@ -126,7 +126,7 @@ RsrConnection >> channel: aChannel [
 RsrConnection >> close [
 
 	channel close.
-	self dispatcher stop.
+	self dispatchQueue stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
 	pendingMessages := Dictionary new.
 	registry := nil.
@@ -141,9 +141,9 @@ RsrConnection >> disconnected [
 ]
 
 { #category : 'private-accessing' }
-RsrConnection >> dispatcher [
+RsrConnection >> dispatchQueue [
 
-	^dispatcher
+	^dispatchQueue
 ]
 
 { #category : 'private-registration' }
@@ -169,7 +169,9 @@ RsrConnection >> initialize [
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	pendingMessages := Dictionary new.
 	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
-	log := RsrLog new
+	dispatchQueue := RsrDispatchQueue new.
+	log := RsrLog new.
+	closeSemaphore := Semaphore new.
 ]
 
 { #category : 'private-initialization' }
@@ -209,9 +211,7 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 { #category : 'other' }
 RsrConnection >> open [
 
-	closeSemaphore := Semaphore new.
-	dispatcher := RsrDispatchEventLoop on: channel.
-	self dispatcher start.
+	self dispatchQueue start.
 	channel open
 ]
 
