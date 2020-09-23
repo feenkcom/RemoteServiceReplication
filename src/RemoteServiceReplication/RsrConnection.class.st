@@ -23,15 +23,6 @@ Class {
 }
 
 { #category : 'instance creation' }
-RsrConnection class >> acceptOn: aPortNumber [
-
-	| acceptor |
-	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.
-	acceptor := RsrAcceptConnection port: aPortNumber.
-	^acceptor waitForConnection
-]
-
-{ #category : 'instance creation' }
 RsrConnection class >> channel: aChannel
 transactionSpigot: aNumericSpigot
 oidSpigot: anOidSpigot [
@@ -44,21 +35,12 @@ oidSpigot: anOidSpigot [
 ]
 
 { #category : 'instance creation' }
-RsrConnection class >> connectToHost: aHostname
-port: aPortNumber [
-
-	| initiator |
-	self deprecated: 'RsrConnection class>>#connectToHost:port: replaced by RsrInitiateConnection.'.
-	initiator := RsrInitiateConnection
-		host: aHostname
-		port: aPortNumber.
-	^initiator connect
-]
-
-{ #category : 'instance creation' }
 RsrConnection class >> new [
+	"Instances of Connection should not be created via #new.
+	Instead use ConnectionSpecification.
+	See SystemTestCase>>#setUp for an example."
 
-	self error: 'Instance creation via #new is unsupported'
+	self shouldNotImplement: #new
 ]
 
 { #category : 'private-accessing' }
