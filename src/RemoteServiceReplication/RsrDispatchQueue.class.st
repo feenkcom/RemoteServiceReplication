@@ -1,9 +1,12 @@
 "
-No class-specific documentation for RsrDisaptchQueue, hierarchy is:
-Object
-  RsrObject
-    RsrDisaptchQueue( queue process)
+DispatchQueue
 
+This class serves one purpose -- evaluate actions serially. Certain parts of the framework require this. For instance, Command processing needs to happen in the order it was received. (Note, this is not true of SendMessage commands which should fork the actual message send.)
+
+
+Protections
+
+This class should provide some low-level #on:do:. I don't yet know what form this should take. I suspect it should coordinate w/ the Connection but I will leave this until I find an example error case.
 "
 Class {
 	#name : 'RsrDispatchQueue',
@@ -11,7 +14,6 @@ Class {
 	#instVars : [
 		'queue',
 		'process',
-		'isActive',
 		'isRunning'
 	],
 	#category : 'RemoteServiceReplication'
