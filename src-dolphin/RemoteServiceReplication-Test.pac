@@ -18,13 +18,16 @@ package classNames
 	add: #RsrConcurrentTestClient;
 	add: #RsrClientTestService;
 	add: #RsrSocketStreamTestCase;
+	add: #RsrInstrumentedServer;
 	add: #RsrServiceNoInstVars;
 	add: #RsrConnectionSpecificationTestCase;
+	add: #RsrInstrumentedService;
 	add: #RsrReflectedVariableTestClient;
 	add: #RsrValueHolderServer;
 	add: #RsrMessageSendingTest;
 	add: #RsrClientReferenceService;
 	add: #RsrPromiseTest;
+	add: #RsrInstrumentedClient;
 	add: #RsrRemoteActionServer;
 	add: #RsrCodecTest;
 	add: #RsrConcurrentTestServer;
@@ -89,6 +92,15 @@ RsrService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrConcurrentTestService categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrService
+	subclass: #RsrInstrumentedService
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInstrumentedService comment: 'No class-specific documentation for RsrInstrumentedService, hierarchy is:Object  RsrObject    RsrAbstractService      RsrService( _id _connection remoteSelf)        RsrInstrumentedService( sharedVariable preUpdateAction postUpdateAction)'!
+!RsrInstrumentedService categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
 	subclass: #RsrReflectedVariableTestServiceA
@@ -220,6 +232,24 @@ RsrTestCase
 	classInstanceVariableNames: ''!
 RsrForwarderTest comment: 'This class contains tests'!
 !RsrForwarderTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrInstrumentedService
+	subclass: #RsrInstrumentedClient
+	instanceVariableNames: 'preUpdateCount postUpdateCount'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInstrumentedClient comment: 'No class-specific documentation for RsrInstrumentedClient, hierarchy is:Object  RsrObject    RsrAbstractService      RsrService( _id _connection remoteSelf)        RsrInstrumentedService          RsrInstrumentedClient( preUpdateAction postUpdateAction)'!
+!RsrInstrumentedClient categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrInstrumentedService
+	subclass: #RsrInstrumentedServer
+	instanceVariableNames: 'preUpdateCount postUpdateCount action'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInstrumentedServer comment: 'No class-specific documentation for RsrInstrumentedServer, hierarchy is:Object  RsrObject    RsrAbstractService      RsrService( _id _connection remoteSelf)        RsrInstrumentedService          RsrInstrumentedServer( preUpdateAction postUpdateAction)'!
+!RsrInstrumentedServer categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrEncoder
 	subclass: #RsrMockEncoder
@@ -516,6 +546,15 @@ sharedVariable: anObject	^self new		sharedVariable: anObject;		yourself! !
 !RsrMockConnection class methodsFor!
 forwarderClass: aClass 	^self new		forwarderClass: aClass;		yourself! !
 
+!RsrInstrumentedService class methodsFor!
+clientClassName	^#RsrInstrumentedClient! !
+
+!RsrInstrumentedService class methodsFor!
+templateClassName	^#RsrInstrumentedService! !
+
+!RsrInstrumentedService class methodsFor!
+serverClassName	^#RsrInstrumentedServer! !
+
 !RsrReflectedVariableTestServiceB class methodsFor!
 clientClassName	^#RsrReflectedVariableTestClient! !
 
@@ -554,6 +593,30 @@ repetitions	^1000! !
 
 !RsrStressTest methodsFor!
 testRepeatedSendReceive1MBytes	self repeatedlySend: (ByteArray new: 1024 squared)! !
+
+!RsrInstrumentedServer methodsFor!
+action: aBlock	action := aBlock! !
+
+!RsrInstrumentedServer methodsFor!
+postUpdateCount	^postUpdateCount ifNil: [0]! !
+
+!RsrInstrumentedServer methodsFor!
+action	^action! !
+
+!RsrInstrumentedServer methodsFor!
+postUpdateCount: anInteger	postUpdateCount := anInteger! !
+
+!RsrInstrumentedServer methodsFor!
+preUpdateCount: anInteger	preUpdateCount := anInteger! !
+
+!RsrInstrumentedServer methodsFor!
+value	^self action value! !
+
+!RsrInstrumentedServer methodsFor!
+return: anObject	^anObject! !
+
+!RsrInstrumentedServer methodsFor!
+preUpdateCount	^preUpdateCount ifNil: [0]! !
 
 !RsrConcurrentTestServer methodsFor!
 counter: anArray	counter := anArray! !
@@ -627,6 +690,24 @@ setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore
 !RsrSystemTestCase methodsFor!
 serviceFactoryA	^connectionA serviceFactory! !
 
+!RsrInstrumentedClient methodsFor!
+postUpdateCount: anInteger	postUpdateCount := anInteger! !
+
+!RsrInstrumentedClient methodsFor!
+postUpdateCount	^postUpdateCount ifNil: [0]! !
+
+!RsrInstrumentedClient methodsFor!
+value	^remoteSelf value! !
+
+!RsrInstrumentedClient methodsFor!
+preUpdateCount: anInteger	preUpdateCount := anInteger! !
+
+!RsrInstrumentedClient methodsFor!
+return: anObject	^remoteSelf return: anObject! !
+
+!RsrInstrumentedClient methodsFor!
+preUpdateCount	^preUpdateCount ifNil: [0]! !
+
 !RsrServiceReferenceService methodsFor!
 service: anObject	service := anObject! !
 
@@ -650,6 +731,12 @@ private1: anObject	private1 := anObject! !
 
 !RsrSignalErrorInAsString methodsFor!
 asString	^Error signal! !
+
+!RsrInstrumentedService methodsFor!
+preUpdate	self preUpdateCount: self preUpdateCount + 1! !
+
+!RsrInstrumentedService methodsFor!
+postUpdate	self postUpdateCount: self postUpdateCount + 1! !
 
 !RsrServiceNoInstVars methodsFor!
 sendReturnArgument: anObject	^remoteSelf returnArgument: anObject! !
@@ -971,6 +1058,9 @@ testInitialization	| instance |	instance := RsrRemoteAction clientClass new.
 
 !RsrServiceTest methodsFor!
 testMessageDispatchedSeriallyAndToSameProcessForSingleService	"Ensure that when a message is sent to a Service it is always dispatched to the same process"	| client server process1 process2 |	client := self mirror: RsrConcurrentTestClient new.	server := connectionB registry serviceAt: client _id.	client stashProcess.	process1 := server stashedProcess.	client stashProcess.	process2 := server stashedProcess.	self		assert: process1		identicalTo: process2! !
+
+!RsrServiceTest methodsFor!
+testPrePostUpdate	| client server | 	client := connectionA serviceFor: #RsrInstrumentedServer.	self		assert: client preUpdateCount		equals: 0.	self		assert: client postUpdateCount		equals: 0.	client return: nil.	server := connectionB registry serviceAt: client _id.	self		assert: client preUpdateCount		equals: 1.	self		assert: client postUpdateCount		equals: 1.	self		assert: server preUpdateCount		equals: 1.	self		assert: server postUpdateCount		equals: 1.	client return: nil.	self		assert: client preUpdateCount		equals: 2.	self		assert: client postUpdateCount		equals: 2.	self		assert: server preUpdateCount		equals: 2.	self		assert: server postUpdateCount		equals: 2.! !
 
 !RsrServiceTest methodsFor!
 testCreateServiceWithSameClientAbstractService	| client server |	client := self serviceFactoryA serviceFor: #RsrSameTemplateAndClientService.	self		assert: client class		equals: RsrSameTemplateAndClientService.	client synchronize.	server := connectionB registry serviceAt: client _id.	self		assert: server replicated1		equals: nil.	self		assert: server replicated2		equals: nil.	client		replicated1: 1;		replicated2: 2;		synchronize.	self		assert: server replicated1		equals: 1.	self		assert: server replicated2		equals: 2.	server		replicated1: 10;		replicated2: 20;		private1: 3;		synchronize.	self		assert: client replicated1		equals: 10.	self		assert: client replicated2		equals: 20! !

@@ -948,7 +948,7 @@ decode: aStreamusing: aDecoder	| species instVarCount serviceName templateCla
 sid	^sid! !
 
 !RsrServiceSnapshot methodsFor!
-reifyIn: aConnection	| instance referenceStream |	instance := self instanceIn: aConnection.	(self class reflectedVariablesFor: instance) size = slots size		ifFalse: [self error: 'Incorrected encoded instance detected'].	referenceStream := ReadStream on: slots.	self class		reflectedVariableIndicesFor: instance		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection registry)].	^instance! !
+reifyIn: aConnection	| instance referenceStream |	instance := self instanceIn: aConnection.	(self class reflectedVariablesFor: instance) size = slots size		ifFalse: [self error: 'Incorrected encoded instance detected'].	referenceStream := ReadStream on: slots.	instance preUpdate.	self class		reflectedVariableIndicesFor: instance		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection registry)].	instance postUpdate.	^instance! !
 
 !RsrServiceSnapshot methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self snapshotIdentifier		onto: aStream.	anEncoder		encodeControlWord: self sid		onto: aStream.	anEncoder		encodeControlWord: self slots size		onto: aStream.	self targetClassNameReference		encode: aStream		using: anEncoder.	self slots do: [:each | each encode: aStream using: anEncoder]! !
@@ -1140,7 +1140,7 @@ snapshots	^snapshots! !
 response: anObject	response := anObject! !
 
 !RsrDeliverResponse methodsFor!
-executeFor: aConnection	| pendingMessage result |	snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection registry.	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	pendingMessage promise fulfill: result! !
+executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	[snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection registry.	pendingMessage promise fulfill: result]		on: Error		do: [:ex | pendingMessage promise fulfill: ex copy]! !
 
 !RsrDeliverResponse methodsFor!
 reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')'! !
@@ -1305,6 +1305,9 @@ registerWith: aConnection	aConnection ensureRegistered: self! !
 _id	^_id! !
 
 !RsrService methodsFor!
+postUpdate	"#postUpdate is called just after the Service's shared variables are updated by the framework.	This method can be overridden to ensure internal consistency."	^self! !
+
+!RsrService methodsFor!
 _id: anRsrIdconnection: aConnection	_id := anRsrId.	_connection := aConnection.	remoteSelf := aConnection _forwarderClass on: self! !
 
 !RsrService methodsFor!
@@ -1314,13 +1317,16 @@ isMirrored	^_connection ~~ nil! !
 _synchronize	"Return self to synchronize with the remote peer"	^self! !
 
 !RsrService methodsFor!
+preUpdate	"#preUpdate is called just before the Service's shared variables are updated by the framework.	This method can be overridden to ensure internal consistency.	Note: If this method raises an exception, RSR will not signal #postUpdate."	^self! !
+
+!RsrService methodsFor!
 isServer	^self class isServerClass! !
 
 !RsrService methodsFor!
 _connection	^_connection! !
 
 !RsrService methodsFor!
-synchronize	remoteSelf == nil		ifFalse: [remoteSelf _synchronize]! !
+synchronize	"Synchronize the service w/ its peer."	remoteSelf == nil		ifFalse: [remoteSelf _synchronize]! !
 
 !RsrService methodsFor!
 isNotMirrored	^self isMirrored not! !
