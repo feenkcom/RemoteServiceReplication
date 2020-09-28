@@ -127,6 +127,23 @@ RsrService >> isServer [
 	^self class isServerClass
 ]
 
+{ #category : 'public-events' }
+RsrService >> postUpdate [
+	"#postUpdate is called just after the Service's shared variables are updated by the framework.
+	This method can be overridden to ensure internal consistency."
+
+	^self
+]
+
+{ #category : 'public-events' }
+RsrService >> preUpdate [
+	"#preUpdate is called just before the Service's shared variables are updated by the framework.
+	This method can be overridden to ensure internal consistency.
+	Note: If this method raises an exception, RSR will not signal #postUpdate."
+
+	^self
+]
+
 { #category : 'public-accessing' }
 RsrService >> reflectedVariableNames [
 
@@ -141,6 +158,7 @@ RsrService >> registerWith: aConnection [
 
 { #category : 'public-synchronization' }
 RsrService >> synchronize [
+	"Synchronize the service w/ its peer."
 
 	remoteSelf == nil
 		ifFalse: [remoteSelf _synchronize]

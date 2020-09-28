@@ -176,6 +176,46 @@ RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
 ]
 
 { #category : 'running' }
+RsrServiceTest >> testPrePostUpdate [
+
+	| client server | 
+	client := connectionA serviceFor: #RsrInstrumentedServer.
+	self
+		assert: client preUpdateCount
+		equals: 0.
+	self
+		assert: client postUpdateCount
+		equals: 0.
+	client return: nil.
+	server := connectionB registry serviceAt: client _id.
+	self
+		assert: client preUpdateCount
+		equals: 1.
+	self
+		assert: client postUpdateCount
+		equals: 1.
+	self
+		assert: server preUpdateCount
+		equals: 1.
+	self
+		assert: server postUpdateCount
+		equals: 1.
+	client return: nil.
+	self
+		assert: client preUpdateCount
+		equals: 2.
+	self
+		assert: client postUpdateCount
+		equals: 2.
+	self
+		assert: server preUpdateCount
+		equals: 2.
+	self
+		assert: server postUpdateCount
+		equals: 2.
+]
+
+{ #category : 'running' }
 RsrServiceTest >> testReflectedVariableNames [
 
 	| client server clientNames serverNames |

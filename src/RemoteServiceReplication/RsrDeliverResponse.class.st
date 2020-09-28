@@ -67,13 +67,15 @@ using: anEncoder [
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| pendingMessage result |
-	snapshots do: [:each | each reifyIn: aConnection].
-	result := response resolve: aConnection registry.
 	pendingMessage := aConnection pendingMessages
 		removeKey: transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	pendingMessage promise fulfill: result
+	[snapshots do: [:each | each reifyIn: aConnection].
+	result := response resolve: aConnection registry.
+	pendingMessage promise fulfill: result]
+		on: Error
+		do: [:ex | pendingMessage promise fulfill: ex copy]
 ]
 
 { #category : 'reporting' }
