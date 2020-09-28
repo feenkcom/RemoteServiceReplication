@@ -6,13 +6,12 @@ package classNames
 	add: #RsrInitiateConnection;
 	add: #RsrSnapshotAnalysis;
 	add: #RsrReleaseServices;
-	add: #RsrDispatchEventLoop;
 	add: #RsrAcceptConnection;
 	add: #RsrRemoteError;
 	add: #RsrPendingMessage;
+	add: #RsrSocketChannelLoop;
 	add: #RsrCommand;
 	add: #RsrChannel;
-	add: #RsrEventLoop;
 	add: #RsrSocketStream;
 	add: #RsrSendMessage;
 	add: #RsrLogWithPrefix;
@@ -38,6 +37,7 @@ package classNames
 	add: #RsrBufferedSocketStream;
 	add: #RsrConnectionSpecification;
 	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrDispatchQueue;
 	add: #RsrEncoder;
 	add: #RsrCustomSink;
 	add: #RsrServiceFactoryServer;
@@ -90,7 +90,7 @@ RsrCommand comment: 'No class-specific documentation for RsrCommand, hierarchy i
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatcher log registry pendingMessages serviceFactory closeSemaphore'
+	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages serviceFactory closeSemaphore'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -107,13 +107,13 @@ RsrConnectionSpecification comment: 'This class is abstract and defines the inte
 !RsrConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
-	subclass: #RsrEventLoop
-	instanceVariableNames: 'process channel state'
+	subclass: #RsrDispatchQueue
+	instanceVariableNames: 'queue process isRunning'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrEventLoop comment: 'No class-specific documentation for RsrEventLoop, hierarchy is:Object  RsrObject    RsrEventLoop( process connection state)'!
-!RsrEventLoop categoriesForClass!RemoteServiceReplication! !
+RsrDispatchQueue comment: 'DispatchQueueThis class serves one purpose -- evaluate actions serially. Certain parts of the framework require this. For instance, Command processing needs to happen in the order it was received. (Note, this is not true of SendMessage commands which should fork the actual message send.)ProtectionsThis class should provide some low-level #on:do:. I don''t yet know what form this should take. I suspect it should coordinate w/ the Connection but I will leave this until I find an example error case.'!
+!RsrDispatchQueue categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrLog
@@ -191,6 +191,15 @@ RsrSnapshotAnalysis comment: 'No class-specific documentation for RsrSnapshotAna
 !RsrSnapshotAnalysis categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
+	subclass: #RsrSocketChannelLoop
+	instanceVariableNames: 'process channel state'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketChannelLoop comment: 'No class-specific documentation for RsrEventLoop, hierarchy is:Object  RsrObject    RsrEventLoop( process connection state)'!
+!RsrSocketChannelLoop categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
 	subclass: #RsrSocketStream
 	instanceVariableNames: 'socket'
 	classVariableNames: ''
@@ -215,7 +224,7 @@ RsrConnectionSpecification
 RsrAcceptConnection comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.| acceptor |acceptor := RsrAcceptConnection port: 51820.^acceptor connect'!
 !RsrAcceptConnection categoriesForClass!RemoteServiceReplication! !
 
-RsrEventLoop
+RsrSocketChannelLoop
 	subclass: #RsrCommandSink
 	instanceVariableNames: 'queue'
 	classVariableNames: ''
@@ -224,13 +233,13 @@ RsrEventLoop
 RsrCommandSink comment: 'No class-specific documentation for RsrCommandSink, hierarchy is:Object  RsrObject    RsrEventLoop( process connection state)      RsrCommandSink( queue)'!
 !RsrCommandSink categoriesForClass!RemoteServiceReplication! !
 
-RsrEventLoop
+RsrSocketChannelLoop
 	subclass: #RsrCommandSource
 	instanceVariableNames: 'decoder'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrCommandSource comment: 'No class-specific documentation for RsrCommandSource, hierarchy is:Object  RsrObject    RsrEventLoop( process connection state)      RsrCommandSource( decoder)'!
+RsrCommandSource comment: 'Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:For the Class part:  State a one line summary. For example, "I represent a paragraph of text".For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.For the Collaborators Part: State my main collaborators and one line about how I interact with them. Public API and Key Messages- message one   - message two - (for bonus points) how to create instances.   One simple example is simply gorgeous. Internal Representation and Key Implementation Points.    Instance Variables	decoder:		<Object>    Implementation Points'!
 !RsrCommandSource categoriesForClass!RemoteServiceReplication! !
 
 RsrLogSink
@@ -243,7 +252,7 @@ RsrLogSink
 
 RsrCodec
 	subclass: #RsrDecoder
-	instanceVariableNames: 'registry'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -267,15 +276,6 @@ RsrCommand
 	classInstanceVariableNames: ''!
 RsrDeliverResponse comment: 'No class-specific documentation for RsrDeliverResponse, hierarchy is:Object  RsrObject    RsrCommand( encoding)      RsrDeliverResponse( transaction response roots retainList)'!
 !RsrDeliverResponse categoriesForClass!RemoteServiceReplication! !
-
-RsrEventLoop
-	subclass: #RsrDispatchEventLoop
-	instanceVariableNames: 'queue'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrDispatchEventLoop comment: 'No class-specific documentation for RsrDispatchEventLoop, hierarchy is:Object  RsrObject    RsrEventLoop( process connection state)      RsrDispatchEventLoop( queue)'!
-!RsrDispatchEventLoop categoriesForClass!RemoteServiceReplication! !
 
 RsrCodec
 	subclass: #RsrEncoder
@@ -407,6 +407,9 @@ transaction: aTransactionIdresponse: anObjectroots: anArray	^self new		tran
 !RsrServiceFactory class methodsFor!
 templateClassName	^#RsrServiceFactory! !
 
+!RsrSocketChannelLoop class methodsFor!
+on: aChannel	^self new		channel: aChannel;		yourself! !
+
 !RsrService class methodsFor!
 clientClassName	^(self templateClassName, 'Client') asSymbol! !
 
@@ -455,8 +458,11 @@ transaction: aTransactionIdreceiver: aServiceselector: aSelectorarguments: an
 !RsrReleaseServices class methodsFor!
 sids: anArrayOfServiceIDs	^self new		sids: anArrayOfServiceIDs;		yourself! !
 
-!RsrEventLoop class methodsFor!
-on: aChannel	^self new		channel: aChannel;		yourself! !
+!RsrLogWithPrefix class methodsFor!
+prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
+
+!RsrLogWithPrefix class methodsFor!
+log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrBufferedSocketStream class methodsFor!
 on: aSocketStream	^self new		stream: aSocketStream;		yourself! !
@@ -469,12 +475,6 @@ wildcardAddress	^'0.0.0.0'! !
 
 !RsrAcceptConnection class methodsFor!
 port: aPortInteger	^self		host: self wildcardAddress		port: aPortInteger! !
-
-!RsrLogWithPrefix class methodsFor!
-prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
-
-!RsrLogWithPrefix class methodsFor!
-log: aLog	^self new		log: aLog;		yourself! !
 
 !RsrPendingMessage class methodsFor!
 services: aListpromise: aPromise	^self new		services: aList;		promise: aPromise;		yourself! !
@@ -489,16 +489,10 @@ signal: anObject	^self new		object: anObject;		signal! !
 roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
 
 !RsrConnection class methodsFor!
-new	self error: 'Instance creation via #new is unsupported'! !
+new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
 
 !RsrConnection class methodsFor!
 channel: aChanneltransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		channel: aChannel;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
-
-!RsrConnection class methodsFor!
-acceptOn: aPortNumber	| acceptor |	self deprecated: 'RsrConnection class>>#acceptOn: replaced by RsrAcceptConnection.'.	acceptor := RsrAcceptConnection port: aPortNumber.	^acceptor waitForConnection! !
-
-!RsrConnection class methodsFor!
-connectToHost: aHostnameport: aPortNumber	| initiator |	self deprecated: 'RsrConnection class>>#connectToHost:port: replaced by RsrInitiateConnection.'.	initiator := RsrInitiateConnection		host: aHostname		port: aPortNumber.	^initiator connect! !
 
 !RsrDeliverErrorResponse class methodsFor!
 transaction: aTransactionIdremoteError: anException	^self new		transaction: aTransactionId;		remoteError: anException;		yourself! !
@@ -586,60 +580,6 @@ create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver c
 
 !RsrServiceFactoryServer methodsFor!
 mirror: aService	^aService! !
-
-!RsrEventLoop methodsFor!
-channel	^channel! !
-
-!RsrEventLoop methodsFor!
-stop	self isActive ifFalse: [^self].	state := self stoppedState! !
-
-!RsrEventLoop methodsFor!
-log: aString	self log debug: aString! !
-
-!RsrEventLoop methodsFor!
-executeCycle	self subclassResponsibility! !
-
-!RsrEventLoop methodsFor!
-isProcessActive	^process ~~ nil! !
-
-!RsrEventLoop methodsFor!
-start	state := self runningState.	process := RsrProcessModel		fork: [self runLoop.				process := nil]		at: self priority! !
-
-!RsrEventLoop methodsFor!
-stoppedState	^#Stop! !
-
-!RsrEventLoop methodsFor!
-initialize	super initialize.	state := self stoppedState! !
-
-!RsrEventLoop methodsFor!
-priority	^Processor lowIOPriority! !
-
-!RsrEventLoop methodsFor!
-runningState	^#Running! !
-
-!RsrEventLoop methodsFor!
-channel: aChannel	channel := aChannel! !
-
-!RsrEventLoop methodsFor!
-report: aCommand	aCommand reportOn: self log! !
-
-!RsrEventLoop methodsFor!
-runLoop	[self isActive]		whileTrue:			[[self executeCycle]				on: Error				do:					[:ex |					self reportException: ex.					self connection unknownError: ex]]! !
-
-!RsrEventLoop methodsFor!
-isActive	^state == self runningState! !
-
-!RsrEventLoop methodsFor!
-log	^RsrLogWithPrefix		prefix: self class name asString		log: self connection log! !
-
-!RsrEventLoop methodsFor!
-reportException: anException	self log: '', self class name, '/', anException description! !
-
-!RsrEventLoop methodsFor!
-connection	^self channel connection! !
-
-!RsrEventLoop methodsFor!
-stream	^self channel stream! !
 
 !RsrCodec methodsFor!
 deliverResponseCommand	^2! !
@@ -744,19 +684,13 @@ encode: aStreamusing: anEncoder	anEncoder		encodeDeliverErrorResponse: self
 transaction: anInteger	transaction := anInteger! !
 
 !RsrCommandSource methodsFor!
-registry	^self connection registry! !
-
-!RsrCommandSource methodsFor!
-dispatcher	^self connection dispatcher! !
-
-!RsrCommandSource methodsFor!
 nextCommand	^self decoder decodeCommand: self stream! !
 
 !RsrCommandSource methodsFor!
-executeCycle	[| command |	command := self nextCommand.	self report: command.	self dispatcher dispatch: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
+executeCycle	[| command |	command := self nextCommand.	self report: command.	self channel received: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
 
 !RsrCommandSource methodsFor!
-decoder	^RsrDecoder registry: self registry! !
+decoder	^RsrDecoder new! !
 
 !RsrLogSink methodsFor!
 write: aMessage	self subclassResponsibility! !
@@ -832,6 +766,57 @@ stopToken	^self stoppedState! !
 
 !RsrCommandSink methodsFor!
 executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
+
+!RsrSocketChannelLoop methodsFor!
+stop	self isActive ifFalse: [^self].	state := self stoppedState! !
+
+!RsrSocketChannelLoop methodsFor!
+log: aString	self log debug: aString! !
+
+!RsrSocketChannelLoop methodsFor!
+executeCycle	self subclassResponsibility! !
+
+!RsrSocketChannelLoop methodsFor!
+isProcessActive	^process ~~ nil! !
+
+!RsrSocketChannelLoop methodsFor!
+start	state := self runningState.	process := RsrProcessModel		fork: [self runLoop.				process := nil]		at: self priority! !
+
+!RsrSocketChannelLoop methodsFor!
+stoppedState	^#Stop! !
+
+!RsrSocketChannelLoop methodsFor!
+initialize	super initialize.	state := self stoppedState! !
+
+!RsrSocketChannelLoop methodsFor!
+priority	^Processor lowIOPriority! !
+
+!RsrSocketChannelLoop methodsFor!
+channel: aChannel	channel := aChannel! !
+
+!RsrSocketChannelLoop methodsFor!
+runningState	^#Running! !
+
+!RsrSocketChannelLoop methodsFor!
+report: aCommand	aCommand reportOn: self log! !
+
+!RsrSocketChannelLoop methodsFor!
+runLoop	[self isActive]		whileTrue:			[[self executeCycle]				on: Error				do:					[:ex |					self reportException: ex.					self channel genericError: ex]]! !
+
+!RsrSocketChannelLoop methodsFor!
+isActive	^state == self runningState! !
+
+!RsrSocketChannelLoop methodsFor!
+log	^RsrLogWithPrefix		prefix: self class name asString		log: self channel log! !
+
+!RsrSocketChannelLoop methodsFor!
+reportException: anException	self log: anException description! !
+
+!RsrSocketChannelLoop methodsFor!
+channel	^channel! !
+
+!RsrSocketChannelLoop methodsFor!
+stream	^self channel stream! !
 
 !RsrSocketChannel methodsFor!
 socket: aSocket	socket := aSocket! !
@@ -957,7 +942,7 @@ slots	^slots! !
 snapshotIdentifier	^0! !
 
 !RsrServiceSnapshot methodsFor!
-decode: aStreamusing: aDecoder	| species instVarCount serviceName templateClass |	species := aDecoder decodeControlWord: aStream.	sid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := (aDecoder decodeReference: aStream) resolve: aDecoder registry.	templateClass := (RsrClassResolver classNamed: serviceName) templateClass.	template := templateClass templateClassName.	targetServiceType := templateClass clientClassName = serviceName		ifTrue: [#client]		ifFalse: [#server].	slots := OrderedCollection new: instVarCount.	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]! !
+decode: aStreamusing: aDecoder	| species instVarCount serviceName templateClass |	species := aDecoder decodeControlWord: aStream.	sid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := (aDecoder decodeReference: aStream) resolve: nil.	templateClass := (RsrClassResolver classNamed: serviceName) templateClass.	template := templateClass templateClassName.	targetServiceType := templateClass clientClassName = serviceName		ifTrue: [#client]		ifFalse: [#server].	slots := OrderedCollection new: instVarCount.	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]! !
 
 !RsrServiceSnapshot methodsFor!
 sid	^sid! !
@@ -995,6 +980,27 @@ cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
 !RsrAcceptConnection methodsFor!
 isWaitingForConnection	^listener ~~ nil! !
 
+!RsrDispatchQueue methodsFor!
+async: aBlock	"Evaluate the block asynchronously and do not return a result"	queue nextPut: aBlock.	^nil! !
+
+!RsrDispatchQueue methodsFor!
+initialize	super initialize.	queue := SharedQueue new! !
+
+!RsrDispatchQueue methodsFor!
+runLoop	[self isRunning]		whileTrue:			[queue next value]! !
+
+!RsrDispatchQueue methodsFor!
+dispatch: aBlock	^self async: aBlock! !
+
+!RsrDispatchQueue methodsFor!
+stop	"Stop process events in the dispatch queue."	isRunning := false.	self dispatch: []. "Ensure another action is added to the queue to ensure shutdown if it hasn't yet happened."	process := nil! !
+
+!RsrDispatchQueue methodsFor!
+start	"Start processing queued events."	isRunning := true.	process := RsrProcessModel fork: [self runLoop]! !
+
+!RsrDispatchQueue methodsFor!
+isRunning	^isRunning! !
+
 !RsrRemoteError methodsFor!
 originalClassName	^originalClassName! !
 
@@ -1011,13 +1017,13 @@ stack	^stack! !
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	channel close.	self dispatcher stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	pendingMessages := Dictionary new.	registry := nil.	closeSemaphore signal! !
+close	channel close.	self dispatchQueue stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	pendingMessages := Dictionary new.	registry := nil.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
 
 !RsrConnection methodsFor!
-initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	log := RsrLog new! !
+initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	closeSemaphore := Semaphore new.! !
 
 !RsrConnection methodsFor!
 transactionSpigot	^transactionSpigot! !
@@ -1033,9 +1039,6 @@ disconnected	self log info: 'Disconnected'.	self close! !
 
 !RsrConnection methodsFor!
 oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
-
-!RsrConnection methodsFor!
-dispatcher	^dispatcher! !
 
 !RsrConnection methodsFor!
 _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	self isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiver: receiverReference		selector: selectorReference		arguments: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
@@ -1071,10 +1074,13 @@ _forwarderClass	^RsrForwarder! !
 serviceFactory	^serviceFactory ifNil: [self initializeServiceFactory]! !
 
 !RsrConnection methodsFor!
-open	closeSemaphore := Semaphore new.	dispatcher := RsrDispatchEventLoop on: channel.	self dispatcher start.	channel open! !
+open	self dispatchQueue start.	channel open! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !
+
+!RsrConnection methodsFor!
+dispatchQueue	^dispatchQueue! !
 
 !RsrConnection methodsFor!
 isOpen	^channel isOpen! !
@@ -1086,13 +1092,7 @@ channel	^channel! !
 decodeReleaseServices: aStream	| count oids |	count := self decodeControlWord: aStream.	oids := Array new: count.	1		to: count		do:			[:i | | oid |			oid := self decodeControlWord: aStream.			oids at: i put: oid].	^RsrReleaseServices sids: oids! !
 
 !RsrDecoder methodsFor!
-registry: anRsrRegistry	registry := anRsrRegistry! !
-
-!RsrDecoder methodsFor!
 decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := self bytesAsInteger: bytes.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]! !
-
-!RsrDecoder methodsFor!
-registry	^registry! !
 
 !RsrDecoder methodsFor!
 instanceOfImmediate: aReferenceType	aReferenceType = 1		ifTrue: [^RsrSymbolReference new].	aReferenceType = 2		ifTrue: [^RsrStringReference new].	aReferenceType = 3		ifTrue: [^RsrPositiveIntegerReference new].	aReferenceType = 4		ifTrue: [^RsrNegativeIntegerReference new].	aReferenceType = 5		ifTrue: [^RsrCharacterReference new].	aReferenceType = 6		ifTrue: [^RsrNilReference new].	aReferenceType = 7		ifTrue: [^RsrTrueReference new].	aReferenceType = 8		ifTrue: [^RsrFalseReference new].	aReferenceType = 9		ifTrue: [^RsrArrayReference new].	aReferenceType = 10		ifTrue: [^RsrByteArrayReference new].	aReferenceType = 11		ifTrue: [^RsrSetReference new].	aReferenceType = 12		ifTrue: [^RsrOrderedCollectionReference new].	aReferenceType = 13		ifTrue: [^RsrDictionaryReference new].	aReferenceType = 14		ifTrue: [^RsrDateAndTimeReference new].	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.! !
@@ -1119,7 +1119,7 @@ decodeCommand: aStream	"Decode an object from the stream"	| command |	comman
 bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
 
 !RsrDecoder methodsFor!
-decodeDeliverErrorResponse: aStream	| transaction originalClassName tag messageText stack error |	transaction := self decodeControlWord: aStream.	originalClassName := (self decodeReference: aStream) resolve: self registry.	tag := (self decodeReference: aStream) resolve: self registry.	messageText := (self decodeReference: aStream) resolve: self registry.	stack := (self decodeReference: aStream) resolve: self registry.	error := RsrRemoteError new		originalClassName: originalClassName;		tag: tag;		messageText: messageText;		stack: stack;		yourself.	^RsrDeliverErrorResponse new		transaction: transaction;		remoteError: error;		yourself! !
+decodeDeliverErrorResponse: aStream	| transaction originalClassName tag messageText stack error |	transaction := self decodeControlWord: aStream.	originalClassName := (self decodeReference: aStream) resolve: nil.	tag := (self decodeReference: aStream) resolve: nil.	messageText := (self decodeReference: aStream) resolve: nil.	stack := (self decodeReference: aStream) resolve: nil.	error := RsrRemoteError new		originalClassName: originalClassName;		tag: tag;		messageText: messageText;		stack: stack;		yourself.	^RsrDeliverErrorResponse new		transaction: transaction;		remoteError: error;		yourself! !
 
 !RsrDecoder methodsFor!
 lookupClass: aClassName	^RsrClassResolver classNamed: aClassName! !
@@ -1158,6 +1158,9 @@ encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		ont
 snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
 
 !RsrChannel methodsFor!
+log	^self connection log! !
+
+!RsrChannel methodsFor!
 connection	^connection! !
 
 !RsrChannel methodsFor!
@@ -1171,6 +1174,12 @@ open	"Ensure the channel is open and ready for communication."	^self subclass
 
 !RsrChannel methodsFor!
 send: aCommand	"Send the provided command over the channel."	^self subclassResponsibility! !
+
+!RsrChannel methodsFor!
+genericError: anError	^self connection unknownError: anError! !
+
+!RsrChannel methodsFor!
+received: aCommand	"A command has come in over the channel. Evaluate it."	self connection dispatchQueue dispatch: [aCommand executeFor: self connection]! !
 
 !RsrChannel methodsFor!
 connection: aConnection	connection := aConnection! !
@@ -1282,24 +1291,6 @@ encodeReleaseServices: aReleaseServices	^ByteArray streamContents: [:stream | 
 
 !RsrEncoder methodsFor!
 integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes! !
-
-!RsrDispatchEventLoop methodsFor!
-initialize	super initialize.	queue := SharedQueue new! !
-
-!RsrDispatchEventLoop methodsFor!
-stopToken	^self stoppedState! !
-
-!RsrDispatchEventLoop methodsFor!
-priority	^super priority - 1! !
-
-!RsrDispatchEventLoop methodsFor!
-stop	super stop.	queue nextPut: self stopToken! !
-
-!RsrDispatchEventLoop methodsFor!
-dispatch: aCommand	queue nextPut: aCommand! !
-
-!RsrDispatchEventLoop methodsFor!
-executeCycle	| item |	item := queue next.	item == self stopToken		ifTrue: [^self].	self report: item.	item executeFor: self connection! !
 
 !RsrService methodsFor!
 isClient	^self class isClientClass! !

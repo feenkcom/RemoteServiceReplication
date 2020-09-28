@@ -913,7 +913,7 @@ testServiceReferenceService	| rootService referencedService |	referencedServi
 testDeliverResponse	| service response encoding command decodedService |	service := RsrServerNoInstVars		_id: 1		connection: self connection.	self decoder.	self registry		serviceAt: 1		put: service.	response := #responseSymbol.	encoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "Number of services"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrDeliverResponse.	self		assert: command transaction		equals: 1.	self		assert: command snapshots size		equals: 1.	decodedService := command snapshots first reifyIn: self connection.	self		assert: decodedService		equals: service.	self		assert: (command response resolve: self registry)		equals: response! !
 
 !RsrDecoderTest methodsFor!
-verifyImmediate: expectedencoding: encoding	| actual |	actual := (self decoder decodeReference: encoding readStream) resolve: self decoder registry.	self		assert: actual		equals: expected! !
+verifyImmediate: expectedencoding: encoding	| actual |	actual := (self decoder decodeReference: encoding readStream) resolve: self connection registry.	self		assert: actual		equals: expected! !
 
 !RsrDecoderTest methodsFor!
 testServiceNoInstVars	| decodedService |	decodedService := self decodeService: self serviceNoInstVarsEncoding.	self		assert: decodedService class		equals: RsrServerNoInstVars.	self		assert: decodedService _id		equals: 1! !
@@ -1030,7 +1030,7 @@ verifyControlWord: anIntegerencoding: bytes	self subclassResponsibility! !
 genericSymbol	^#genericSymbol! !
 
 !RsrCodecTest methodsFor!
-setUp	super setUp.	connection := RsrMockConnection new.	registry := connection registry.	decoder := RsrDecoder registry: registry! !
+setUp	super setUp.	connection := RsrMockConnection new.	registry := connection registry.	decoder := RsrDecoder new! !
 
 !RsrCodecTest methodsFor!
 testCharacter	| encoding |	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 5],		#[0 0 0 0 0 0 0 0].	self		verifyImmediate: (Character codePoint: 0)		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 5],		#[0 0 0 0 0 0 0 65].	self		verifyImmediate: (Character codePoint: 65)		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 5],		#[0 0 0 0 0 0 0 65].	self		verifyImmediate: $A		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 5],		#[0 0 0 0 0 0 1 212].	self		verifyImmediate: (Character codePoint: 16r01D4)		encoding: encoding.	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 5],		#[0 0 0 0 0 0 131 52].	self		verifyImmediate: (Character codePoint: 16r8334)		encoding: encoding.! !
