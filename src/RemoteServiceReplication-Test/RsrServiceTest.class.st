@@ -4,6 +4,12 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'testing' }
+RsrServiceTest class >> isAbstract [
+
+	^self == RsrServiceTest
+]
+
 { #category : 'running-utilities' }
 RsrServiceTest >> mirror: aService [
 

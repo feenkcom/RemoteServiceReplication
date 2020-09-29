@@ -10,6 +10,12 @@ RsrStressTest class >> defaultTimeLimit [
 	^20 seconds
 ]
 
+{ #category : 'testing' }
+RsrStressTest class >> isAbstract [
+
+	^self == RsrStressTest
+]
+
 { #category : 'running-utilities' }
 RsrStressTest >> repeatedlySend: anObject [
 

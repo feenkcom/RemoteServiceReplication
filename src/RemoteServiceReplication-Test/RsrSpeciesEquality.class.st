@@ -4,6 +4,12 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'testing' }
+RsrSpeciesEquality class >> isAbstract [
+
+	^self == RsrSpeciesEquality
+]
+
 { #category : 'accessing' }
 RsrSpeciesEquality >> basicExamples [
 	"Give a samples of each species to ensure Collection classes are able to encode each type successfully."

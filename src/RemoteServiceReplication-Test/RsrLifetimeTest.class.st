@@ -4,6 +4,12 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'testing' }
+RsrLifetimeTest class >> isAbstract [
+
+	^self == RsrLifetimeTest
+]
+
 { #category : 'running' }
 RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 	"Ensure objects created by the RsrServiceFactory maintain the same

@@ -4,6 +4,12 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'testing' }
+RsrConnectionTestCase class >> isAbstract [
+
+	^self == RsrConnectionTestCase
+]
+
 { #category : 'running' }
 RsrConnectionTestCase >> testWaitUntilClose [
 

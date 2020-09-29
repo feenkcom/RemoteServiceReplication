@@ -4,6 +4,12 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
+{ #category : 'testing' }
+RsrMessageSendingTest class >> isAbstract [
+
+	^self == RsrMessageSendingTest
+]
+
 { #category : 'running' }
 RsrMessageSendingTest >> testChangeRemoteState [
 
