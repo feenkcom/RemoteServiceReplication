@@ -7,6 +7,7 @@ package classNames
 	add: #RsrSnapshotAnalysisTest;
 	add: #RsrDifferentServerService;
 	add: #RsrEncoderTest;
+	add: #RsrInMemorySpeciesEquality;
 	add: #RsrReflectedVariableTestServiceB;
 	add: #RsrValueHolderClient;
 	add: #RsrLifetimeTest;
@@ -18,26 +19,34 @@ package classNames
 	add: #RsrConcurrentTestClient;
 	add: #RsrClientTestService;
 	add: #RsrSocketStreamTestCase;
+	add: #RsrInMemoryLifetimeTest;
 	add: #RsrInstrumentedServer;
 	add: #RsrServiceNoInstVars;
 	add: #RsrConnectionSpecificationTestCase;
+	add: #RsrSocketSpeciesEquality;
 	add: #RsrInstrumentedService;
 	add: #RsrReflectedVariableTestClient;
 	add: #RsrValueHolderServer;
 	add: #RsrMessageSendingTest;
+	add: #RsrInMemoryMessageSendingTest;
 	add: #RsrClientReferenceService;
 	add: #RsrPromiseTest;
+	add: #RsrSocketConnectionTestCase;
 	add: #RsrInstrumentedClient;
 	add: #RsrRemoteActionServer;
 	add: #RsrCodecTest;
+	add: #RsrSocketServiceTest;
 	add: #RsrConcurrentTestServer;
 	add: #RsrServerTestService;
 	add: #RsrSystemTestCase;
+	add: #RsrSocketLifetimeTest;
 	add: #RsrClientNoInstVars;
 	add: #RsrForwarderTest;
+	add: #RsrInMemoryStressTest;
 	add: #RsrReflectedVariableTestServer;
 	add: #RsrMockConnection;
 	add: #RsrServiceTest;
+	add: #RsrSocketMessageSendingTest;
 	add: #RsrMockEncoder;
 	add: #RsrServerReferenceService;
 	add: #RsrRegistryTestCase;
@@ -46,11 +55,14 @@ package classNames
 	add: #RsrReflectedVariableTestServiceA;
 	add: #RsrValueHolder;
 	add: #RsrConnectionTestCase;
+	add: #RsrInMemoryConnectionTestCase;
 	add: #RsrServerNoInstVars;
 	add: #RsrNumericSpigotTest;
+	add: #RsrSocketStressTest;
 	add: #RsrRemoteAction;
 	add: #RsrMockRegistry;
 	add: #RsrSpeciesEquality;
+	add: #RsrInMemoryServiceTest;
 	add: #RsrConcurrentTestService;
 	yourself.
 
@@ -474,6 +486,117 @@ RsrNumericSpigotTest
 RsrThreadSafeNumericSpigotTest comment: 'This class contains tests'!
 !RsrThreadSafeNumericSpigotTest categoriesForClass!RemoteServiceReplication-Test! !
 
+RsrConnectionTestCase
+	subclass: #RsrInMemoryConnectionTestCase
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemoryConnectionTestCase comment: 'This class contains tests'!
+!RsrInMemoryConnectionTestCase categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrLifetimeTest
+	subclass: #RsrInMemoryLifetimeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemoryLifetimeTest comment: 'This class contains tests'!
+!RsrInMemoryLifetimeTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrMessageSendingTest
+	subclass: #RsrInMemoryMessageSendingTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemoryMessageSendingTest comment: 'This class contains tests'!
+!RsrInMemoryMessageSendingTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrServiceTest
+	subclass: #RsrInMemoryServiceTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemoryServiceTest comment: 'This class contains tests'!
+!RsrInMemoryServiceTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrSpeciesEquality
+	subclass: #RsrInMemorySpeciesEquality
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemorySpeciesEquality comment: 'This class contains tests'!
+!RsrInMemorySpeciesEquality categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrStressTest
+	subclass: #RsrInMemoryStressTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemoryStressTest comment: 'This class contains tests'!
+!RsrInMemoryStressTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrConnectionTestCase
+	subclass: #RsrSocketConnectionTestCase
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketConnectionTestCase comment: 'This class contains tests'!
+!RsrSocketConnectionTestCase categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrLifetimeTest
+	subclass: #RsrSocketLifetimeTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketLifetimeTest comment: 'This class contains tests'!
+!RsrSocketLifetimeTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrMessageSendingTest
+	subclass: #RsrSocketMessageSendingTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketMessageSendingTest comment: 'This class contains tests'!
+!RsrSocketMessageSendingTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrServiceTest
+	subclass: #RsrSocketServiceTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketServiceTest comment: 'This class contains tests'!
+!RsrSocketServiceTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrSpeciesEquality
+	subclass: #RsrSocketSpeciesEquality
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketSpeciesEquality comment: 'This class contains tests'!
+!RsrSocketSpeciesEquality categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrStressTest
+	subclass: #RsrSocketStressTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketStressTest comment: 'This class contains tests'!
+!RsrSocketStressTest categoriesForClass!RemoteServiceReplication-Test! !
+
+!RsrServiceTest class methodsFor!
+isAbstract	^self == RsrServiceTest! !
+
 !RsrConcurrentTestService class methodsFor!
 clientClassName	^#RsrConcurrentTestClient! !
 
@@ -483,23 +606,44 @@ templateClassName	^#RsrConcurrentTestService! !
 !RsrConcurrentTestService class methodsFor!
 serverClassName	^#RsrConcurrentTestServer! !
 
+!RsrMessageSendingTest class methodsFor!
+isAbstract	^self == RsrMessageSendingTest! !
+
+!RsrSpeciesEquality class methodsFor!
+isAbstract	^self == RsrSpeciesEquality! !
+
+!RsrReflectedVariableTestServiceB class methodsFor!
+clientClassName	^#RsrReflectedVariableTestClient! !
+
+!RsrReflectedVariableTestServiceB class methodsFor!
+templateClassName	^#RsrReflectedVariableTestServiceB! !
+
+!RsrReflectedVariableTestServiceB class methodsFor!
+serverClassName	^#RsrReflectedVariableTestServer! !
+
+!RsrConnectionTestCase class methodsFor!
+isAbstract	^self == RsrConnectionTestCase! !
+
+!RsrSystemTestCase class methodsFor!
+isAbstract	^self == RsrSystemTestCase! !
+
 !RsrCodecTest class methodsFor!
 isAbstract	^self == RsrCodecTest! !
 
-!RsrConcurrentTestServer class methodsFor!
-initialCounter	^0! !
+!RsrSameTemplateAndClientService class methodsFor!
+clientClassName	^self templateClassName! !
 
-!RsrValueHolder class methodsFor!
-clientClassName	^#RsrValueHolderClient! !
+!RsrSameTemplateAndClientService class methodsFor!
+templateClassName	^#RsrSameTemplateAndClientService! !
 
-!RsrValueHolder class methodsFor!
-templateClassName	^#RsrValueHolder! !
+!RsrSameTemplateAndClientService class methodsFor!
+serverClassName	^#RsrDifferentServerService! !
 
-!RsrValueHolder class methodsFor!
-value: anRsrObject	^self new		value: anRsrObject;		yourself! !
+!RsrRemoteAction class methodsFor!
+templateClassName	^#RsrRemoteAction! !
 
-!RsrValueHolder class methodsFor!
-serverClassName	^#RsrValueHolderServer! !
+!RsrRemoteAction class methodsFor!
+sharedVariable: anObject	^self new		sharedVariable: anObject;		yourself! !
 
 !RsrServiceReferenceService class methodsFor!
 clientClassName	^#RsrClientReferenceService! !
@@ -513,20 +657,23 @@ templateClassName	^#RsrServiceReferenceService! !
 !RsrServiceReferenceService class methodsFor!
 serverClassName	^#RsrServerReferenceService! !
 
-!RsrSameTemplateAndClientService class methodsFor!
-clientClassName	^self templateClassName! !
+!RsrMockConnection class methodsFor!
+forwarderClass: aClass 	^self new		forwarderClass: aClass;		yourself! !
 
-!RsrSameTemplateAndClientService class methodsFor!
-templateClassName	^#RsrSameTemplateAndClientService! !
+!RsrLifetimeTest class methodsFor!
+isAbstract	^self == RsrLifetimeTest! !
 
-!RsrSameTemplateAndClientService class methodsFor!
-serverClassName	^#RsrDifferentServerService! !
+!RsrValueHolder class methodsFor!
+clientClassName	^#RsrValueHolderClient! !
 
-!RsrSystemTestCase class methodsFor!
-isAbstract	^self == RsrSystemTestCase! !
+!RsrValueHolder class methodsFor!
+templateClassName	^#RsrValueHolder! !
 
-!RsrStressTest class methodsFor!
-defaultTimeLimit	^20 seconds! !
+!RsrValueHolder class methodsFor!
+value: anRsrObject	^self new		value: anRsrObject;		yourself! !
+
+!RsrValueHolder class methodsFor!
+serverClassName	^#RsrValueHolderServer! !
 
 !RsrTestService class methodsFor!
 clientClassName	^#RsrClientTestService! !
@@ -537,15 +684,6 @@ templateClassName	^#RsrTestService! !
 !RsrTestService class methodsFor!
 serverClassName	^#RsrServerTestService! !
 
-!RsrRemoteAction class methodsFor!
-templateClassName	^#RsrRemoteAction! !
-
-!RsrRemoteAction class methodsFor!
-sharedVariable: anObject	^self new		sharedVariable: anObject;		yourself! !
-
-!RsrMockConnection class methodsFor!
-forwarderClass: aClass 	^self new		forwarderClass: aClass;		yourself! !
-
 !RsrInstrumentedService class methodsFor!
 clientClassName	^#RsrInstrumentedClient! !
 
@@ -555,14 +693,8 @@ templateClassName	^#RsrInstrumentedService! !
 !RsrInstrumentedService class methodsFor!
 serverClassName	^#RsrInstrumentedServer! !
 
-!RsrReflectedVariableTestServiceB class methodsFor!
-clientClassName	^#RsrReflectedVariableTestClient! !
-
-!RsrReflectedVariableTestServiceB class methodsFor!
-templateClassName	^#RsrReflectedVariableTestServiceB! !
-
-!RsrReflectedVariableTestServiceB class methodsFor!
-serverClassName	^#RsrReflectedVariableTestServer! !
+!RsrConcurrentTestServer class methodsFor!
+initialCounter	^0! !
 
 !RsrServiceNoInstVars class methodsFor!
 clientClassName	^#RsrClientNoInstVars! !
@@ -572,6 +704,12 @@ templateClassName	^#RsrServiceNoInstVars! !
 
 !RsrServiceNoInstVars class methodsFor!
 serverClassName	^#RsrServerNoInstVars! !
+
+!RsrStressTest class methodsFor!
+isAbstract	^self == RsrStressTest! !
+
+!RsrStressTest class methodsFor!
+defaultTimeLimit	^20 seconds! !
 
 !RsrForwarderTest methodsFor!
 testForwarding	| rsrObject id remoteInterface forwarder message |	rsrObject := RsrTestService clientClass new.	id := 1.	remoteInterface := RsrMockConnection forwarderClass: RsrForwarder.	rsrObject		_id: id		connection: remoteInterface.	forwarder := rsrObject remoteSelf.	forwarder		arg1: 15		arg2: 42.	message := remoteInterface lastMessage.	self		assert: message transaction		equals: 1.	self		assert: message receiver		equals: rsrObject.	self		assert: message selector		equals: #arg1:arg2:.	self		assert: message arguments		equals: #(15 42).! !
@@ -618,6 +756,9 @@ return: anObject	^anObject! !
 !RsrInstrumentedServer methodsFor!
 preUpdateCount	^preUpdateCount ifNil: [0]! !
 
+!RsrSocketConnectionTestCase methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
+
 !RsrConcurrentTestServer methodsFor!
 counter: anArray	counter := anArray! !
 
@@ -635,6 +776,12 @@ stashProcess	stashedProcess := Processor activeProcess! !
 
 !RsrConcurrentTestServer methodsFor!
 semaphore: aSemaphore	semaphore := aSemaphore! !
+
+!RsrSocketSpeciesEquality methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
+
+!RsrInMemoryStressTest methodsFor!
+setUp	super setUp.	self initializeInMemoryConnections! !
 
 !RsrPromiseTest methodsFor!
 testFulfillment	| promise expected semaphore |	promise := RsrPromise new.	expected := Object new.	self fork:		[(Delay forSeconds: 1) wait.		promise fulfill: expected].	self		assert: promise value		identicalTo: expected.	promise := RsrPromise new.	semaphore := Semaphore new.	[promise fulfill: expected.	semaphore signal] fork.	semaphore wait.	self		assert: promise value		identicalTo: expected! !
@@ -679,16 +826,22 @@ sharedVariable: anObject	sharedVariable := anObject! !
 sharedVariable	^sharedVariable! !
 
 !RsrSystemTestCase methodsFor!
-serviceFactoryB	^connectionB serviceFactory! !
+initializeSocketConnections	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := (RsrAcceptConnection port: port) waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := (RsrInitiateConnection host: '127.0.0.1' port: port) connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
+
+!RsrSystemTestCase methodsFor!
+initializeInMemoryConnections	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	channelA open.	channelB open.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
 
 !RsrSystemTestCase methodsFor!
 tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
 
 !RsrSystemTestCase methodsFor!
-setUp	| port semaphore |	super setUp.	port := 64455.	semaphore := Semaphore new.	self		fork: [[connectionA := (RsrAcceptConnection port: port) waitForConnection] ensure: [semaphore signal]];		fork: [[connectionB := (RsrInitiateConnection host: '127.0.0.1' port: port) connect] ensure: [semaphore signal]].	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen! !
+setUp	"Subclasses need to start their connections by calling	#initializeInMemoryConnections or #initializeSocketConnections.	#tearDown will close connections."	super setUp! !
 
 !RsrSystemTestCase methodsFor!
 serviceFactoryA	^connectionA serviceFactory! !
+
+!RsrSystemTestCase methodsFor!
+serviceFactoryB	^connectionB serviceFactory! !
 
 !RsrInstrumentedClient methodsFor!
 postUpdateCount: anInteger	postUpdateCount := anInteger! !
@@ -738,14 +891,26 @@ preUpdate	self preUpdateCount: self preUpdateCount + 1! !
 !RsrInstrumentedService methodsFor!
 postUpdate	self postUpdateCount: self postUpdateCount + 1! !
 
+!RsrSocketMessageSendingTest methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
+
+!RsrInMemoryConnectionTestCase methodsFor!
+setUp	super setUp.	self initializeInMemoryConnections! !
+
 !RsrServiceNoInstVars methodsFor!
 sendReturnArgument: anObject	^remoteSelf returnArgument: anObject! !
 
 !RsrServiceNoInstVars methodsFor!
 returnArgument: anObject	^anObject! !
 
+!RsrInMemoryLifetimeTest methodsFor!
+setUp	super setUp.	self initializeInMemoryConnections! !
+
 !RsrThreadSafeNumericSpigotTest methodsFor!
 spigotClass	^RsrThreadSafeNumericSpigot! !
+
+!RsrInMemoryMessageSendingTest methodsFor!
+setUp	super setUp.	self initializeInMemoryConnections! !
 
 !RsrMockRegistry methodsFor!
 objects	^objects! !
@@ -773,6 +938,9 @@ at: aKeyput: aService	self objects add: aService! !
 
 !RsrMockRegistry methodsFor!
 remember: anRsrObject	self objects add: anRsrObject! !
+
+!RsrInMemorySpeciesEquality methodsFor!
+setUp	super setUp.	self initializeInMemoryConnections! !
 
 !RsrSpeciesEquality methodsFor!
 testUnicodeString	self verify: self unicodeString! !
@@ -881,6 +1049,12 @@ replicated1: anObject	replicated1 := anObject! !
 
 !RsrSameTemplateAndClientService methodsFor!
 replicated2	^replicated2! !
+
+!RsrSocketStressTest methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
+
+!RsrSocketServiceTest methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
 
 !RsrMessageSendingTest methodsFor!
 testChangeRemoteState	| marker client server |	marker := false.	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB registry serviceAt: client _id.	server action: [marker := true].	client value.	self assert: marker! !
@@ -1071,6 +1245,9 @@ encode: anObject	^nil! !
 !RsrMockEncoder methodsFor!
 encodeObject: anObject	^ByteArray new! !
 
+!RsrInMemoryServiceTest methodsFor!
+setUp	super setUp.	self initializeInMemoryConnections! !
+
 !RsrServerTestService methodsFor!
 privateVariable	^privateVariable! !
 
@@ -1217,6 +1394,9 @@ releaseOid: anInteger! !
 
 !RsrMockConnection methodsFor!
 forwarderClass: aClass	forwarderClass := aClass! !
+
+!RsrSocketLifetimeTest methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
 
 !RsrReflectedVariableTestClient methodsFor!
 setVarsToAndReturn: anObject	^remoteSelf setVarsToAndReturn: anObject! !

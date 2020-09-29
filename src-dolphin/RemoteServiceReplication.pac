@@ -24,6 +24,7 @@ package classNames
 	add: #RsrSocketChannel;
 	add: #RsrCommandSink;
 	add: #RsrStream;
+	add: #RsrInMemoryChannel;
 	add: #RsrConnection;
 	add: #RsrNumericSpigot;
 	add: #RsrDecoder;
@@ -285,6 +286,15 @@ RsrCodec
 	classInstanceVariableNames: ''!
 !RsrEncoder categoriesForClass!RemoteServiceReplication! !
 
+RsrChannel
+	subclass: #RsrInMemoryChannel
+	instanceVariableNames: 'inQueue outQueue drainProcess'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInMemoryChannel comment: 'Example usage:	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.'!
+!RsrInMemoryChannel categoriesForClass!RemoteServiceReplication! !
+
 RsrConnectionSpecification
 	subclass: #RsrInitiateConnection
 	instanceVariableNames: ''
@@ -478,6 +488,9 @@ port: aPortInteger	^self		host: self wildcardAddress		port: aPortInteger! !
 
 !RsrPendingMessage class methodsFor!
 services: aListpromise: aPromise	^self new		services: aList;		promise: aPromise;		yourself! !
+
+!RsrInMemoryChannel class methodsFor!
+inQueue: inQueueoutQueue: outQueue	^self new		inQueue: inQueue;		outQueue: outQueue;		yourself! !
 
 !RsrStream class methodsFor!
 on: aStream	^self new		stream: aStream;		yourself! !
@@ -687,13 +700,40 @@ transaction: anInteger	transaction := anInteger! !
 nextCommand	^self decoder decodeCommand: self stream! !
 
 !RsrCommandSource methodsFor!
-executeCycle	[| command |	command := self nextCommand.	self report: command.	self channel received: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
+executeCycle	[| command |	command := self nextCommand.	self report: command.	self channel received: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel channelDisconnected]! !
 
 !RsrCommandSource methodsFor!
 decoder	^RsrDecoder new! !
 
 !RsrLogSink methodsFor!
 write: aMessage	self subclassResponsibility! !
+
+!RsrInMemoryChannel methodsFor!
+drainLoop	| command |	[command := inQueue next.	command isNil]		whileFalse:			[command executeFor: self connection].	self connection channelDisconnected! !
+
+!RsrInMemoryChannel methodsFor!
+outQueue: aSharedQueue	outQueue := aSharedQueue! !
+
+!RsrInMemoryChannel methodsFor!
+close	outQueue nextPut: nil.	inQueue nextPut: nil! !
+
+!RsrInMemoryChannel methodsFor!
+inQueue: aSharedQueue	inQueue := aSharedQueue! !
+
+!RsrInMemoryChannel methodsFor!
+isOpen	^drainProcess isNil not! !
+
+!RsrInMemoryChannel methodsFor!
+open	drainProcess := RsrProcessModel fork: [self drainLoop. drainProcess := nil]! !
+
+!RsrInMemoryChannel methodsFor!
+send: aCommand	outQueue nextPut: aCommand! !
+
+!RsrInMemoryChannel methodsFor!
+inQueue	^inQueue! !
+
+!RsrInMemoryChannel methodsFor!
+outQueue	^outQueue! !
 
 !RsrLog methodsFor!
 levelError	^1! !
@@ -765,7 +805,7 @@ stop	super stop.	queue nextPut: self stopToken! !
 stopToken	^self stoppedState! !
 
 !RsrCommandSink methodsFor!
-executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel disconnected]! !
+executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel channelDisconnected]! !
 
 !RsrSocketChannelLoop methodsFor!
 stop	self isActive ifFalse: [^self].	state := self stoppedState! !
@@ -840,7 +880,7 @@ sink	^sink! !
 initialize	super initialize.	source := RsrCommandSource on: self.	sink := RsrCommandSink on: self! !
 
 !RsrSocketChannel methodsFor!
-disconnected	"The socket has disconnected so the channel is no longer open."	self connection disconnected! !
+disconnected	"The socket has disconnected so the channel is no longer open."	self connection channelDisconnected! !
 
 !RsrSocketChannel methodsFor!
 open	"Ensure the Command sink and source are running"	source start.	sink start! !
@@ -1035,9 +1075,6 @@ channel: aChannel	channel := aChannel.	channel connection: self! !
 oidSpigot	^oidSpigot! !
 
 !RsrConnection methodsFor!
-disconnected	self log info: 'Disconnected'.	self close! !
-
-!RsrConnection methodsFor!
 oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
 
 !RsrConnection methodsFor!
@@ -1063,6 +1100,9 @@ initializeServiceFactory	| instance |	instance := RsrServiceFactory clientCla
 
 !RsrConnection methodsFor!
 waitUntilClose	closeSemaphore		wait;		signal! !
+
+!RsrConnection methodsFor!
+channelDisconnected	self log info: 'Disconnected'.	self close! !
 
 !RsrConnection methodsFor!
 releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace: 'Cleaning up OID:', anOid printString.	command := RsrReleaseServices sids: (Array with: anOid).	self _sendCommand: command! !
