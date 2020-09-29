@@ -34,8 +34,8 @@ RsrSystemTestCase >> initializeInMemoryConnections [
 		channel: channelB
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
-	channelA open.
-	channelB open.
+	connectionA open.
+	connectionB open.
 	self
 		assert: connectionA isOpen;
 		assert: connectionB isOpen
