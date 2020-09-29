@@ -39,7 +39,7 @@ RsrSocketChannel >> close [
 RsrSocketChannel >> disconnected [
 	"The socket has disconnected so the channel is no longer open."
 
-	self connection disconnected
+	self connection channelDisconnected
 ]
 
 { #category : 'initializing' }

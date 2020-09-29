@@ -104,6 +104,13 @@ RsrConnection >> channel: aChannel [
 	channel connection: self
 ]
 
+{ #category : 'private-events' }
+RsrConnection >> channelDisconnected [
+
+	self log info: 'Disconnected'.
+	self close
+]
+
 { #category : 'other' }
 RsrConnection >> close [
 
@@ -113,13 +120,6 @@ RsrConnection >> close [
 	pendingMessages := Dictionary new.
 	registry := nil.
 	closeSemaphore signal
-]
-
-{ #category : 'private-events' }
-RsrConnection >> disconnected [
-
-	self log info: 'Disconnected'.
-	self close
 ]
 
 { #category : 'private-accessing' }

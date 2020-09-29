@@ -57,7 +57,7 @@ RsrInMemoryChannel >> drainLoop [
 	command isNil]
 		whileFalse:
 			[command executeFor: self connection].
-	self connection disconnected
+	self connection channelDisconnected
 ]
 
 { #category : 'accessing' }
