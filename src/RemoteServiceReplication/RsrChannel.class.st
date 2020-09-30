@@ -61,9 +61,9 @@ RsrChannel >> open [
 
 { #category : 'events' }
 RsrChannel >> received: aCommand [
-	"A command has come in over the channel. Evaluate it."
+	"A command has come in over the channel. Propogate it to the Connection."
 
-	self connection dispatchQueue dispatch: [aCommand executeFor: self connection]
+	self connection _receivedCommand: aCommand
 ]
 
 { #category : 'events' }

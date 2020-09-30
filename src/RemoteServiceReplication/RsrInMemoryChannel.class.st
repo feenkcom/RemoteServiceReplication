@@ -56,7 +56,7 @@ RsrInMemoryChannel >> drainLoop [
 	[command := inQueue next.
 	command isNil]
 		whileFalse:
-			[command executeFor: self connection].
+			[self received: command].
 	self connection channelDisconnected
 ]
 

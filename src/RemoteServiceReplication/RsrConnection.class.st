@@ -49,6 +49,13 @@ RsrConnection >> _forwarderClass [
 	^RsrForwarder
 ]
 
+{ #category : 'private-handling commands' }
+RsrConnection >> _receivedCommand: aCommand [
+	"Execute the command in the context of the receiving Connection."
+
+	dispatchQueue dispatch: [aCommand executeFor: self]
+]
+
 { #category : 'private-service management' }
 RsrConnection >> _remoteClientReleased: aSID [
 	"Remotely, a Client instance has been garbage collected.
@@ -61,13 +68,13 @@ RsrConnection >> _remoteClientReleased: aSID [
 	entry becomeWeak.
 ]
 
-{ #category : 'private-sending' }
+{ #category : 'private-handling commands' }
 RsrConnection >> _sendCommand: aCommand [
 
 	channel send: aCommand
 ]
 
-{ #category : 'private-sending' }
+{ #category : 'private-handling commands' }
 RsrConnection >> _sendMessage: aMessage
 to: aService [
 
@@ -123,21 +130,15 @@ RsrConnection >> channelDisconnected [
 	self close
 ]
 
-{ #category : 'other' }
+{ #category : 'public-lifecycle' }
 RsrConnection >> close [
 
 	channel close.
-	self dispatchQueue stop.
+	dispatchQueue stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
 	pendingMessages := Dictionary new.
 	registry := nil.
 	closeSemaphore signal
-]
-
-{ #category : 'private-accessing' }
-RsrConnection >> dispatchQueue [
-
-	^dispatchQueue
 ]
 
 { #category : 'private-registration' }
@@ -156,7 +157,7 @@ RsrConnection >> ensureRegistered: aService [
 		put: aService
 ]
 
-{ #category : 'other' }
+{ #category : 'private-initialization' }
 RsrConnection >> initialize [
 
 	super initialize.
@@ -202,10 +203,10 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 	oidSpigot := anIntegerSpigot
 ]
 
-{ #category : 'other' }
+{ #category : 'public-lifecycle' }
 RsrConnection >> open [
 
-	self dispatchQueue start.
+	dispatchQueue start.
 	channel open
 ]
 
