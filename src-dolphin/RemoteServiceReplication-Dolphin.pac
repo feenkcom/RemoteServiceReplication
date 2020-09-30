@@ -338,6 +338,10 @@ RsrRegistry comment: 'I maintain the associations between locally stored objects
 !RsrRegistry categoriesForClass!RemoteServiceReplication-Dolphin! !
 !RsrRegistry methodsFor!
 
+_At: aKey ifAbsent: aBlock
+
+	^mutex critical: [map at: aKey ifAbsent: aBlock]!
+
 at: aKey put: anEntry
 	"Store anEntry into the registry"
 

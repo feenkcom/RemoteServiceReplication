@@ -479,7 +479,7 @@ object	^object! !
 object: anObject	object := anObject! !
 
 !RsrOrderedCollectionReference methodsFor!
-resolve: aRegistry	| oc |	oc := OrderedCollection new: value size.	value do: [:each | oc add: (each resolve: aRegistry)].	^oc! !
+resolve: aConnection	| oc |	oc := OrderedCollection new: value size.	value do: [:each | oc add: (each resolve: aConnection)].	^oc! !
 
 !RsrPositiveIntegerReference methodsFor!
 typeIdentifier	^3! !
@@ -488,7 +488,7 @@ typeIdentifier	^3! !
 messageText	^'The connection has closed'! !
 
 !RsrFalseReference methodsFor!
-resolve: aRegistry	^false! !
+resolve: aConnection	^false! !
 
 !RsrBooleanReference methodsFor!
 decode: aStreamusing: aDecoder	"Boolean has no additional value"! !
@@ -533,13 +533,16 @@ sid	^sid! !
 sid: aServiceID	sid := aServiceID! !
 
 !RsrServiceReference methodsFor!
-resolve: aRegistry	^aRegistry		serviceAt: self sid		ifAbsent: [^RsrUnknownOID signal: self sid printString]! !
+resolve: aConnection	^aConnection		serviceAt: self sid		ifAbsent: [RsrUnknownOID signal: self sid printString]! !
 
 !RsrServiceReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self sid		onto: aStream! !
 
 !RsrReference methodsFor!
 typeIdentifier	^self class typeIdentifier! !
+
+!RsrReference methodsFor!
+resolve: aConnection	"Resolve the reference in the context of the provided Connection."	^self subclassResponsibility! !
 
 !RsrNilReference methodsFor!
 typeIdentifier	^6! !
@@ -548,7 +551,7 @@ typeIdentifier	^6! !
 decode: aStreamusing: aDecoder	"Nil has no additional value"! !
 
 !RsrNilReference methodsFor!
-resolve: aRegistry	^nil! !
+resolve: aConnection	^nil! !
 
 !RsrNilReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream! !
@@ -569,7 +572,7 @@ encode: aStreamusing: anEncoder	| bytes |	anEncoder		encodeControlWord: anE
 decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value := (1 to: size * 2) collect: [:each | aDecoder decodeReference: aStream]! !
 
 !RsrDictionaryReference methodsFor!
-resolve: aRegistry	| stream numEntries dictionary |	stream := ReadStream on: value.	numEntries := value size / 2.	dictionary := Dictionary new: numEntries.	numEntries		timesRepeat:			[dictionary				at: (stream next resolve: aRegistry)				put: (stream next resolve: aRegistry)].	^dictionary! !
+resolve: aConnection	| stream numEntries dictionary |	stream := ReadStream on: value.	numEntries := value size / 2.	dictionary := Dictionary new: numEntries.	numEntries		timesRepeat:			[dictionary				at: (stream next resolve: aConnection)				put: (stream next resolve: aConnection)].	^dictionary! !
 
 !RsrDictionaryReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size / 2		onto: aStream.	value do: [:each | each encode: aStream using: anEncoder]! !
@@ -581,13 +584,10 @@ decode: aStreamusing: aDecoder	| microseconds |	microseconds := aDecoder dec
 encode: aStreamusing: anEncoder	| microseconds |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	microseconds := RsrDateAndTime microsecondsSinceEpoch: value.	anEncoder		encodeControlWord: microseconds		onto: aStream! !
 
 !RsrArrayReference methodsFor!
-resolve: aRegistry	^value collect: [:each | each resolve: aRegistry]! !
+resolve: aConnection	^value collect: [:each | each resolve: aConnection]! !
 
 !RsrImmediateReference methodsFor!
 immediateOID	^0! !
-
-!RsrImmediateReference methodsFor!
-resolve: aRegistry	^self subclassResponsibility! !
 
 !RsrCharacterReference methodsFor!
 typeIdentifier	^5! !
@@ -617,19 +617,19 @@ intendedConnection	^intendedConnection! !
 intendedConnection: aConnection	intendedConnection := aConnection! !
 
 !RsrValueReference methodsFor!
-resolve: aRegistry	^value! !
+resolve: aConnection	^value! !
 
 !RsrValueReference methodsFor!
 value: anObject	value := anObject! !
 
 !RsrTrueReference methodsFor!
-resolve: aRegistry	^true! !
+resolve: aConnection	^true! !
 
 !RsrSetReference methodsFor!
 decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value :=  (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
 
 !RsrSetReference methodsFor!
-resolve: aRegistry	| set |	set := Set new.	value do: [:each | set add: (each resolve: aRegistry)].	^set! !
+resolve: aConnection	| set |	set := Set new.	value do: [:each | set add: (each resolve: aConnection)].	^set! !
 
 !RsrSetReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !

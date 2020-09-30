@@ -33,6 +33,7 @@ package classNames
 	add: #RsrServiceSnapshot;
 	add: #RsrDeliverResponse;
 	add: #RsrTranscriptSink;
+	add: #RsrNullChannel;
 	add: #RsrCommandSource;
 	add: #RsrService;
 	add: #RsrBufferedSocketStream;
@@ -304,6 +305,14 @@ RsrConnectionSpecification
 RsrInitiateConnection comment: 'This class is responsible for initating a new RsrConnection. Sending #connect will result in an attempt to connect to the specified host and port. #connect is responsible for initating the attempted connection. If successful, an instance of RsrConnection is returned as a result.Example: | initiator |initiator := RsrInitiateConnection	host: ''127.0.0.1''	port: 51820.^initiator connect'!
 !RsrInitiateConnection categoriesForClass!RemoteServiceReplication! !
 
+RsrChannel
+	subclass: #RsrNullChannel
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrNullChannel categoriesForClass!RemoteServiceReplication! !
+
 RsrCommand
 	subclass: #RsrReleaseServices
 	instanceVariableNames: 'sids'
@@ -553,7 +562,7 @@ sids	^sids! !
 sids: anArrayOfServiceIDs	sids := anArrayOfServiceIDs! !
 
 !RsrReleaseServices methodsFor!
-executeFor: aConnection	| registry |	registry := aConnection registry.	sids do: [:sid | registry cleanupEntryFor: sid]! !
+executeFor: aConnection	sids do: [:sid | aConnection _remoteClientReleased: sid]! !
 
 !RsrReleaseServices methodsFor!
 reportOn: aLog	aLog debug: 'RsrReleaseObjects(', self sids printString, ')'! !
@@ -934,7 +943,7 @@ logException: anExceptionto: aLog	| message |	message := String		streamCont
 arguments: anObject	arguments := anObject! !
 
 !RsrSendMessage methodsFor!
-executeFor: aConnection	| result analysis resultReference response |	[| servs rec sel args |	servs := snapshots collect: [:each | each reifyIn: aConnection].	rec := receiver resolve: aConnection registry.	sel := selector resolve: aConnection registry.	args := arguments collect: [:each | each resolve: aConnection registry].	result := rec		perform: sel		withArguments: args.	analysis := RsrSnapshotAnalysis		roots: (Array with: rec with: result)		connection: aConnection.	analysis perform.	resultReference := RsrReference from: result.	response := RsrDeliverResponse		transaction: transaction		response: resultReference		snapshots: analysis snapshots.	aConnection _sendCommand: response]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex))]! !
+executeFor: aConnection	| result analysis resultReference response |	[| servs rec sel args |	servs := snapshots collect: [:each | each reifyIn: aConnection].	rec := receiver resolve: aConnection.	sel := selector resolve: aConnection.	args := arguments collect: [:each | each resolve: aConnection].	result := rec		perform: sel		withArguments: args.	analysis := RsrSnapshotAnalysis		roots: (Array with: rec with: result)		connection: aConnection.	analysis perform.	resultReference := RsrReference from: result.	response := RsrDeliverResponse		transaction: transaction		response: resultReference		snapshots: analysis snapshots.	aConnection _sendCommand: response]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex))]! !
 
 !RsrSendMessage methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeSendMessage: self		onto: aStream! !
@@ -973,7 +982,7 @@ template: aSymbol	template := aSymbol! !
 createBasicInstance	^self shouldCreateClient		ifTrue: [self templateClass clientClass basicNew]		ifFalse: [self templateClass serverClass basicNew]! !
 
 !RsrServiceSnapshot methodsFor!
-instanceIn: aConnection	^aConnection registry		serviceAt: self sid		ifAbsent:			[| instance |			instance := self createBasicInstance.			instance				_id: self sid				connection: aConnection.			aConnection registry				serviceAt: self sid				put: instance.			instance]! !
+instanceIn: aConnection	^aConnection		serviceAt: self sid		ifAbsent:			[| instance |			instance := self createBasicInstance.			instance				_id: self sid				connection: aConnection.			aConnection				serviceAt: self sid				put: instance.			instance]! !
 
 !RsrServiceSnapshot methodsFor!
 slots	^slots! !
@@ -988,7 +997,7 @@ decode: aStreamusing: aDecoder	| species instVarCount serviceName templateCla
 sid	^sid! !
 
 !RsrServiceSnapshot methodsFor!
-reifyIn: aConnection	| instance referenceStream |	instance := self instanceIn: aConnection.	(self class reflectedVariablesFor: instance) size = slots size		ifFalse: [self error: 'Incorrected encoded instance detected'].	referenceStream := ReadStream on: slots.	instance preUpdate.	self class		reflectedVariableIndicesFor: instance		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection registry)].	instance postUpdate.	^instance! !
+reifyIn: aConnection	| instance referenceStream |	instance := self instanceIn: aConnection.	(self class reflectedVariablesFor: instance) size = slots size		ifFalse: [self error: 'Incorrected encoded instance detected'].	referenceStream := ReadStream on: slots.	instance preUpdate.	self class		reflectedVariableIndicesFor: instance		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection)].	instance postUpdate.	^instance! !
 
 !RsrServiceSnapshot methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self snapshotIdentifier		onto: aStream.	anEncoder		encodeControlWord: self sid		onto: aStream.	anEncoder		encodeControlWord: self slots size		onto: aStream.	self targetClassNameReference		encode: aStream		using: anEncoder.	self slots do: [:each | each encode: aStream using: anEncoder]! !
@@ -1054,6 +1063,9 @@ originalClassName: aSymbol	originalClassName := aSymbol! !
 stack	^stack! !
 
 !RsrConnection methodsFor!
+serviceAt: aSIDifAbsent: aBlock	^registry serviceAt: aSID ifAbsent: aBlock! !
+
+!RsrConnection methodsFor!
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
@@ -1064,6 +1076,9 @@ log	^log! !
 
 !RsrConnection methodsFor!
 initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	closeSemaphore := Semaphore new.! !
+
+!RsrConnection methodsFor!
+_remoteClientReleased: aSID	"Remotely, a Client instance has been garbage collected.	Ensure we only reference the associated service weakly."	| entry |	entry := registry		_At: aSID		ifAbsent: [^self].	entry becomeWeak.! !
 
 !RsrConnection methodsFor!
 transactionSpigot	^transactionSpigot! !
@@ -1078,19 +1093,19 @@ oidSpigot	^oidSpigot! !
 oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
 
 !RsrConnection methodsFor!
+serviceAt: aSID	^registry serviceAt: aSID! !
+
+!RsrConnection methodsFor!
 _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	self isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiver: receiverReference		selector: selectorReference		arguments: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
 
 !RsrConnection methodsFor!
 pendingMessages	^pendingMessages! !
 
 !RsrConnection methodsFor!
-registry	^registry! !
-
-!RsrConnection methodsFor!
 unknownError: anException	self close! !
 
 !RsrConnection methodsFor!
-ensureRegistered: aService	aService isMirrored		ifTrue:			[^aService _connection == self				ifTrue: [self]				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].	aService		_id: oidSpigot next		connection: self.	self registry		serviceAt: aService _id		put: aService! !
+ensureRegistered: aService	aService isMirrored		ifTrue:			[^aService _connection == self				ifTrue: [self]				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].	aService		_id: oidSpigot next		connection: self.	self		serviceAt: aService _id		put: aService! !
 
 !RsrConnection methodsFor!
 _sendCommand: aCommand	channel send: aCommand! !
@@ -1103,6 +1118,9 @@ waitUntilClose	closeSemaphore		wait;		signal! !
 
 !RsrConnection methodsFor!
 channelDisconnected	self log info: 'Disconnected'.	self close! !
+
+!RsrConnection methodsFor!
+serviceAt: aSIDput: aService	^registry		serviceAt: aSID		put: aService! !
 
 !RsrConnection methodsFor!
 releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace: 'Cleaning up OID:', anOid printString.	command := RsrReleaseServices sids: (Array with: anOid).	self _sendCommand: command! !
@@ -1180,7 +1198,7 @@ snapshots	^snapshots! !
 response: anObject	response := anObject! !
 
 !RsrDeliverResponse methodsFor!
-executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	[snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection registry.	pendingMessage promise fulfill: result]		on: Error		do: [:ex | pendingMessage promise fulfill: ex copy]! !
+executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	[snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection.	pendingMessage promise fulfill: result]		on: Error		do: [:ex | pendingMessage promise fulfill: ex copy]! !
 
 !RsrDeliverResponse methodsFor!
 reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')'! !
@@ -1196,6 +1214,21 @@ encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		ont
 
 !RsrDeliverResponse methodsFor!
 snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
+
+!RsrNullChannel methodsFor!
+close	"NOP"! !
+
+!RsrNullChannel methodsFor!
+isOpen	^true! !
+
+!RsrNullChannel methodsFor!
+send: aCommand	"NOP"! !
+
+!RsrNullChannel methodsFor!
+open	"NOP"! !
+
+!RsrNullChannel methodsFor!
+received: aCommand	"NOP"! !
 
 !RsrChannel methodsFor!
 log	^self connection log! !
