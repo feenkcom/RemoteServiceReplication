@@ -49,6 +49,7 @@ RsrLifetimeTest >> testRemoteReferenceLifetime [
 	valueServiceRemote value: nil.
 	self maximumReclamation.
 	(Delay forSeconds: 1) wait. "Needed to ensure there is time for release to propogate to remote environment."
+	self maximumReclamation.
 	marker := Object new.
 	actual := connectionA serviceAt: id ifAbsent: [marker].
 	self
