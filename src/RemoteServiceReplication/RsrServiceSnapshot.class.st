@@ -120,12 +120,9 @@ RsrServiceSnapshot >> instanceIn: aConnection [
 		ifAbsent:
 			[| instance |
 			instance := self createBasicInstance.
-			instance
-				_id: self sid
-				connection: aConnection.
 			aConnection
-				serviceAt: self sid
-				put: instance.
+				_assign: self sid
+				to: instance.
 			instance]
 ]
 

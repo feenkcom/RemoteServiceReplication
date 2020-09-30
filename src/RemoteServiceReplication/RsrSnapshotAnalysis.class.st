@@ -104,7 +104,7 @@ RsrSnapshotAnalysis >> connection: aConnection [
 { #category : 'actions' }
 RsrSnapshotAnalysis >> ensureRegistered: aService [
 
-	self connection ensureRegistered: aService
+	self connection _ensureRegistered: aService
 ]
 
 { #category : 'initialization' }

@@ -48,9 +48,7 @@ using: anEncoder [
 { #category : 'resolving' }
 RsrServiceReference >> resolve: aConnection [
 
-	^aConnection
-		serviceAt: self sid
-		ifAbsent: [RsrUnknownOID signal: self sid printString]
+	^aConnection serviceAt: self sid
 ]
 
 { #category : 'accessing' }

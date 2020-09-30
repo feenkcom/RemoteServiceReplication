@@ -83,13 +83,8 @@ RsrDecoderTest >> testDeliverErrorResponse [
 RsrDecoderTest >> testDeliverResponse [
 
 	| service response encoding command decodedService |
-	service := RsrServerNoInstVars
-		_id: 1
-		connection: self connection.
-	self decoder.
-	self connection
-		serviceAt: 1
-		put: service.
+	service := RsrServerNoInstVars new.
+	self connection _ensureRegistered: service.
 	response := #responseSymbol.
 	encoding :=
 		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"
@@ -141,13 +136,8 @@ RsrDecoderTest >> testReleaseServices [
 RsrDecoderTest >> testSendMessage [
 
 	| service encoding command |
-	service := RsrServerNoInstVars
-		_id: 1
-		connection: self connection.
-	self decoder.
-	self connection
-		serviceAt: 1
-		put: service.
+	service := RsrServerNoInstVars new.
+	self connection _ensureRegistered: service.
 	encoding :=
 		#[0 0 0 0 0 0 0 1], "SendMessage Command"
 		#[0 0 0 0 0 0 0 1], "Transaction ID"

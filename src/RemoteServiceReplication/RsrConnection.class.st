@@ -43,6 +43,38 @@ RsrConnection class >> new [
 	self shouldNotImplement: #new
 ]
 
+{ #category : 'private-service management' }
+RsrConnection >> _assign: aSID
+to: aService [
+
+	| registryEntry mournAction |
+	aService
+		_id: aSID
+		connection: self.
+	mournAction := aService isClient
+		ifTrue: [self mournActionForClientSID: aSID]
+		ifFalse: [self mournActionForServerSID: aSID].
+	registryEntry := RsrRegistryEntry
+		service: aService
+		onMourn: mournAction.
+	registry
+		at: aSID
+		put: registryEntry
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> _ensureRegistered: aService [
+
+	aService isMirrored
+		ifTrue:
+			[^aService _connection == self
+				ifTrue: [self]
+				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].
+	self
+		_assign: oidSpigot next
+		to: aService
+]
+
 { #category : 'private-accessing' }
 RsrConnection >> _forwarderClass [
 
@@ -63,7 +95,7 @@ RsrConnection >> _remoteClientReleased: aSID [
 
 	| entry |
 	entry := registry
-		_At: aSID
+		at: aSID
 		ifAbsent: [^self].
 	entry becomeWeak.
 ]
@@ -141,29 +173,13 @@ RsrConnection >> close [
 	closeSemaphore signal
 ]
 
-{ #category : 'private-registration' }
-RsrConnection >> ensureRegistered: aService [
-
-	aService isMirrored
-		ifTrue:
-			[^aService _connection == self
-				ifTrue: [self]
-				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].
-	aService
-		_id: oidSpigot next
-		connection: self.
-	self
-		serviceAt: aService _id
-		put: aService
-]
-
 { #category : 'private-initialization' }
 RsrConnection >> initialize [
 
 	super initialize.
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	pendingMessages := Dictionary new.
-	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].
+	registry := RsrThreadSafeDictionary new.
 	dispatchQueue := RsrDispatchQueue new.
 	log := RsrLog new.
 	closeSemaphore := Semaphore new.
@@ -174,7 +190,7 @@ RsrConnection >> initializeServiceFactory [
 
 	| instance |
 	instance := RsrServiceFactory clientClass new.
-	self ensureRegistered: instance.
+	self _ensureRegistered: instance.
 	serviceFactory := instance.
 	^serviceFactory
 ]
@@ -189,6 +205,21 @@ RsrConnection >> isOpen [
 RsrConnection >> log [
 
 	^log
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> mournActionForClientSID: aSID [
+
+	^[dispatchQueue
+		dispatch:
+			[registry removeKey: aSID.
+			self releaseOid: aSID]]
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> mournActionForServerSID: aSID [
+
+	^[dispatchQueue dispatch: [registry removeKey: aSID]]
 ]
 
 { #category : 'private-accessing' }
@@ -230,23 +261,27 @@ RsrConnection >> releaseOid: anOid [
 { #category : 'private-service management' }
 RsrConnection >> serviceAt: aSID [
 
-	^registry serviceAt: aSID
+	^self
+		serviceAt: aSID
+		ifAbsent: [RsrUnknownSID signal: aSID printString]
 ]
 
 { #category : 'private-service management' }
 RsrConnection >> serviceAt: aSID
 ifAbsent: aBlock [
+	"Return the service associated with the provided SID."
 
-	^registry serviceAt: aSID ifAbsent: aBlock
-]
-
-{ #category : 'private-service management' }
-RsrConnection >> serviceAt: aSID
-put: aService [
-
-	^registry
-		serviceAt: aSID
-		put: aService
+	| entry |
+	entry := registry at: aSID ifAbsent: [nil].
+	"Ensure we do not hold the lock for long."
+	entry == nil
+		ifTrue: [^aBlock value].
+	"The Service may have been garbage collected but
+	the entry may not yet be removed. Ensure we
+	evaluate the block in that case as well."
+	^entry service
+		ifNil: aBlock
+		ifNotNil: [:service | service]
 ]
 
 { #category : 'public-service factory' }

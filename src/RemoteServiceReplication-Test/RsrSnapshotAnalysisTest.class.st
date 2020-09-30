@@ -1,6 +1,18 @@
+"
+No class-specific documentation for RsrSnapshotAnalysisTest, hierarchy is:
+Object
+  TestAsserter
+    TestCase( testSelector)
+      RsrTestCase
+        RsrSnapshotAnalysisTest
+
+"
 Class {
 	#name : 'RsrSnapshotAnalysisTest',
 	#superclass : 'RsrTestCase',
+	#instVars : [
+		'connection'
+	],
 	#category : 'RemoteServiceReplication-Test'
 }
 
@@ -10,7 +22,7 @@ RsrSnapshotAnalysisTest >> analyze: anObject [
 	| analysis |
 	analysis := RsrSnapshotAnalysis
 		roots: (Array with: anObject)
-		connection: RsrMockConnection new.
+		connection: connection.
 	analysis perform.
 	^analysis
 ]
@@ -21,6 +33,25 @@ RsrSnapshotAnalysisTest >> assertCycle: anObject [
 	self
 		should: [self analyze: anObject]
 		raise: RsrCycleDetected
+]
+
+{ #category : 'running' }
+RsrSnapshotAnalysisTest >> setUp [
+
+	super setUp.
+	connection := RsrConnection
+		channel: RsrNullChannel new
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals
+		oidSpigot: RsrThreadSafeNumericSpigot naturals.
+	connection open
+]
+
+{ #category : 'running' }
+RsrSnapshotAnalysisTest >> tearDown [
+
+	connection close.
+	connection := nil.
+	super tearDown
 ]
 
 { #category : 'running' }

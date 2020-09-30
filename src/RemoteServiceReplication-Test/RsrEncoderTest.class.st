@@ -17,12 +17,7 @@ Class {
 { #category : 'other' }
 RsrEncoderTest >> register: aService [
 
-	aService
-		_id: self connection oidSpigot next
-		connection: self connection.
-	self connection
-		serviceAt: aService _id
-		put: aService
+	self connection _ensureRegistered: aService
 ]
 
 { #category : 'running-immediates' }

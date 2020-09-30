@@ -153,7 +153,7 @@ RsrService >> reflectedVariableNames [
 { #category : 'public-registration' }
 RsrService >> registerWith: aConnection [
 
-	aConnection ensureRegistered: self
+	aConnection _ensureRegistered: self
 ]
 
 { #category : 'public-synchronization' }

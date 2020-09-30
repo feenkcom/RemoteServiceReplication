@@ -76,7 +76,7 @@ RsrMockConnection >> oidSpigot [
 { #category : 'accessing' }
 RsrMockConnection >> registry [
 
-	^registry ifNil: [registry := RsrRegistry new]
+	^registry ifNil: [registry := RsrThreadSafeDictionary new]
 ]
 
 { #category : 'commands' }
