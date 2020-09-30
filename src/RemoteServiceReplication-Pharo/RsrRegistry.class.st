@@ -27,6 +27,13 @@ RsrRegistry class >> reapAction: aBlock [
 		yourself
 ]
 
+{ #category : 'accessing' }
+RsrRegistry >> _At: aKey
+ifAbsent: aBlock [
+
+	^mutex critical: [map at: aKey ifAbsent: aBlock]
+]
+
 { #category : 'initialization' }
 RsrRegistry >> at: aKey
 put: anEntry [
