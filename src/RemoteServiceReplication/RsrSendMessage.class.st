@@ -58,9 +58,9 @@ RsrSendMessage >> executeFor: aConnection [
 	| result analysis resultReference response |
 	[| servs rec sel args |
 	servs := snapshots collect: [:each | each reifyIn: aConnection].
-	rec := receiver resolve: aConnection registry.
-	sel := selector resolve: aConnection registry.
-	args := arguments collect: [:each | each resolve: aConnection registry].
+	rec := receiver resolve: aConnection.
+	sel := selector resolve: aConnection.
+	args := arguments collect: [:each | each resolve: aConnection].
 	result := rec
 		perform: sel
 		withArguments: args.

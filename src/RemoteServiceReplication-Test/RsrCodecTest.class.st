@@ -2,9 +2,7 @@ Class {
 	#name : 'RsrCodecTest',
 	#superclass : 'RsrTestCase',
 	#instVars : [
-		'connection',
-		'registry',
-		'decoder'
+		'connection'
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
@@ -21,10 +19,10 @@ RsrCodecTest >> connection [
 	^connection
 ]
 
-{ #category : 'accessing' }
+{ #category : 'other' }
 RsrCodecTest >> decoder [
 
-	^decoder
+	^RsrDecoder new
 ]
 
 { #category : 'accessing' }
@@ -68,12 +66,6 @@ RsrCodecTest >> referencedServiceEncoding [
 	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"
 ]
 
-{ #category : 'accessing' }
-RsrCodecTest >> registry [
-
-	^registry
-]
-
 { #category : 'accessing-objects' }
 RsrCodecTest >> rootServiceEncoding [
 
@@ -99,19 +91,22 @@ RsrCodecTest >> serviceNoInstVarsEncoding [
 	#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115] "#RsrServerNoInstVars"
 ]
 
-{ #category : 'running' }
+{ #category : 'other' }
 RsrCodecTest >> setUp [
 
 	super setUp.
-	connection := RsrMockConnection new.
-	registry := connection registry.
-	decoder := RsrDecoder new
+	connection := RsrConnection
+		channel: RsrNullChannel new
+		transactionSpigot: RsrThreadSafeNumericSpigot naturals
+		oidSpigot: RsrThreadSafeNumericSpigot naturals.
+	connection open
 ]
 
-{ #category : 'running' }
+{ #category : 'other' }
 RsrCodecTest >> tearDown [
 
-	connection := registry := decoder := nil.
+	connection close.
+	connection := nil.
 	super tearDown
 ]
 
@@ -305,7 +300,7 @@ RsrCodecTest >> testDictionary [
 		at: false put: true;
 		yourself.
 	encoding := self encodeReferenceOf: dictionary.
-	result := (self decoder decodeReference: encoding readStream) resolve: self registry.
+	result := (self decoder decodeReference: encoding readStream) resolve: self connection.
 	self
 		assert: result
 		equals: dictionary.
@@ -445,7 +440,7 @@ RsrCodecTest >> testSet [
 		with: true
 		with: nil.
 	encoding := self encodeReferenceOf: set.
-	result := (self decoder decodeReference: encoding readStream) resolve: self registry.
+	result := (self decoder decodeReference: encoding readStream) resolve: self connection.
 	self
 		assert: result
 		equals: set.

@@ -67,7 +67,7 @@ using: anEncoder [
 ]
 
 { #category : 'resolving' }
-RsrDictionaryReference >> resolve: aRegistry [
+RsrDictionaryReference >> resolve: aConnection [
 
 	| stream numEntries dictionary |
 	stream := ReadStream on: value.
@@ -76,7 +76,7 @@ RsrDictionaryReference >> resolve: aRegistry [
 	numEntries
 		timesRepeat:
 			[dictionary
-				at: (stream next resolve: aRegistry)
-				put: (stream next resolve: aRegistry)].
+				at: (stream next resolve: aConnection)
+				put: (stream next resolve: aConnection)].
 	^dictionary
 ]

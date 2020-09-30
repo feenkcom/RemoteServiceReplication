@@ -198,7 +198,7 @@ RsrSpeciesEquality >> verify: anObject [
 	| client server |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [:object | server sharedVariable: object. object].
 	self
 		assert: (client value: anObject)

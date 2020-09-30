@@ -115,7 +115,7 @@ using: anEncoder [
 { #category : 'accessing' }
 RsrServiceSnapshot >> instanceIn: aConnection [
 
-	^aConnection registry
+	^aConnection
 		serviceAt: self sid
 		ifAbsent:
 			[| instance |
@@ -123,7 +123,7 @@ RsrServiceSnapshot >> instanceIn: aConnection [
 			instance
 				_id: self sid
 				connection: aConnection.
-			aConnection registry
+			aConnection
 				serviceAt: self sid
 				put: instance.
 			instance]
@@ -140,7 +140,7 @@ RsrServiceSnapshot >> reifyIn: aConnection [
 	instance preUpdate.
 	self class
 		reflectedVariableIndicesFor: instance
-		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection registry)].
+		do: [:index | instance instVarAt: index put: (referenceStream next resolve: aConnection)].
 	instance postUpdate.
 	^instance
 ]

@@ -60,10 +60,10 @@ using: anEncoder [
 ]
 
 { #category : 'resolving' }
-RsrSetReference >> resolve: aRegistry [
+RsrSetReference >> resolve: aConnection [
 
 	| set |
 	set := Set new.
-	value do: [:each | set add: (each resolve: aRegistry)].
+	value do: [:each | set add: (each resolve: aConnection)].
 	^set
 ]

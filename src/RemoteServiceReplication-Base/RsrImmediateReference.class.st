@@ -30,9 +30,3 @@ RsrImmediateReference >> immediateOID [
 
 	^0
 ]
-
-{ #category : 'resolving' }
-RsrImmediateReference >> resolve: aRegistry [
-
-	^self subclassResponsibility
-]

@@ -31,7 +31,7 @@ RsrValueReference class >> value: anObject [
 ]
 
 { #category : 'resolving' }
-RsrValueReference >> resolve: aRegistry [
+RsrValueReference >> resolve: aConnection [
 
 	^value
 ]

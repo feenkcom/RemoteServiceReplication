@@ -53,7 +53,7 @@ RsrServiceTest >> testCreateServiceWithSameClientAbstractService [
 		assert: client class
 		equals: RsrSameTemplateAndClientService.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	self
 		assert: server replicated1
 		equals: nil.
@@ -89,9 +89,9 @@ RsrServiceTest >> testEnsureServersAreCachedAndReused [
 	| client service1 service2 |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	service1 := connectionB registry serviceAt: client _id.
+	service1 := connectionB serviceAt: client _id.
 	self mirror: client.
-	service2 := connectionB registry serviceAt: client _id.
+	service2 := connectionB serviceAt: client _id.
 	self
 		assert: service1
 		identicalTo: service2
@@ -138,7 +138,7 @@ RsrServiceTest >> testMessageDispatchedSeriallyAndToSameProcessForSingleService 
 
 	| client server process1 process2 |
 	client := self mirror: RsrConcurrentTestClient new.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	client stashProcess.
 	process1 := server stashedProcess.
 	client stashProcess.
@@ -159,8 +159,8 @@ RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
 	self mirror: client.
 	initialCounter := 0.
 	counter := Array with: initialCounter.
-	delayServer := connectionB registry serviceAt: delayClient _id.
-	server := connectionB registry serviceAt: client _id.
+	delayServer := connectionB serviceAt: delayClient _id.
+	server := connectionB serviceAt: client _id.
 	delaySem := Semaphore new.
 	delayServer
 		counter: counter;
@@ -193,7 +193,7 @@ RsrServiceTest >> testPrePostUpdate [
 		assert: client postUpdateCount
 		equals: 0.
 	client return: nil.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	self
 		assert: client preUpdateCount
 		equals: 1.
@@ -227,7 +227,7 @@ RsrServiceTest >> testReflectedVariableNames [
 	| client server clientNames serverNames |
 	client := connectionA serviceFor: #RsrTestService.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	clientNames := client reflectedVariableNames.
 	serverNames := server reflectedVariableNames.
 	self
@@ -241,7 +241,7 @@ RsrServiceTest >> testReflectedVariableNames [
 		equals: #sharedVariable.
 	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	clientNames := client reflectedVariableNames.
 	serverNames := server reflectedVariableNames.
 	self
@@ -280,7 +280,7 @@ RsrServiceTest >> testVariableReflection [
 		privateVariable: #private;
 		yourself.
 	self mirror: localService.
-	remoteService := connectionB registry serviceAt: localService _id.
+	remoteService := connectionB serviceAt: localService _id.
 	self
 		assert: localService sharedVariable
 		identicalTo: remoteService sharedVariable.

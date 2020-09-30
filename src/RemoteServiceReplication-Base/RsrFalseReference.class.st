@@ -20,7 +20,7 @@ RsrFalseReference class >> typeIdentifier [
 ]
 
 { #category : 'resolving' }
-RsrFalseReference >> resolve: aRegistry [
+RsrFalseReference >> resolve: aConnection [
 
 	^false
 ]

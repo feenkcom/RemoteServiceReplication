@@ -39,7 +39,7 @@ using: anEncoder [
 ]
 
 { #category : 'resolving' }
-RsrNilReference >> resolve: aRegistry [
+RsrNilReference >> resolve: aConnection [
 
 	^nil
 ]

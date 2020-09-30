@@ -49,6 +49,18 @@ RsrConnection >> _forwarderClass [
 	^RsrForwarder
 ]
 
+{ #category : 'private-service management' }
+RsrConnection >> _remoteClientReleased: aSID [
+	"Remotely, a Client instance has been garbage collected.
+	Ensure we only reference the associated service weakly."
+
+	| entry |
+	entry := registry
+		_At: aSID
+		ifAbsent: [^self].
+	entry becomeWeak.
+]
+
 { #category : 'private-sending' }
 RsrConnection >> _sendCommand: aCommand [
 
@@ -139,7 +151,7 @@ RsrConnection >> ensureRegistered: aService [
 	aService
 		_id: oidSpigot next
 		connection: self.
-	self registry
+	self
 		serviceAt: aService _id
 		put: aService
 ]
@@ -203,12 +215,6 @@ RsrConnection >> pendingMessages [
 	^pendingMessages
 ]
 
-{ #category : 'private-accessing' }
-RsrConnection >> registry [
-
-	^registry
-]
-
 { #category : 'private-coordination' }
 RsrConnection >> releaseOid: anOid [
 
@@ -218,6 +224,28 @@ RsrConnection >> releaseOid: anOid [
 	self log trace: 'Cleaning up OID:', anOid printString.
 	command := RsrReleaseServices sids: (Array with: anOid).
 	self _sendCommand: command
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> serviceAt: aSID [
+
+	^registry serviceAt: aSID
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> serviceAt: aSID
+ifAbsent: aBlock [
+
+	^registry serviceAt: aSID ifAbsent: aBlock
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> serviceAt: aSID
+put: aService [
+
+	^registry
+		serviceAt: aSID
+		put: aService
 ]
 
 { #category : 'public-service factory' }

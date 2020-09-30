@@ -35,9 +35,7 @@ using: anEncoder [
 { #category : 'executing' }
 RsrReleaseServices >> executeFor: aConnection [
 
-	| registry |
-	registry := aConnection registry.
-	sids do: [:sid | registry cleanupEntryFor: sid]
+	sids do: [:sid | aConnection _remoteClientReleased: sid]
 ]
 
 { #category : 'reporting' }

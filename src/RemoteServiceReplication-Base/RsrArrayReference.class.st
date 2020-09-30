@@ -21,7 +21,7 @@ RsrArrayReference class >> typeIdentifier [
 ]
 
 { #category : 'resolving' }
-RsrArrayReference >> resolve: aRegistry [
+RsrArrayReference >> resolve: aConnection [
 
-	^value collect: [:each | each resolve: aRegistry]
+	^value collect: [:each | each resolve: aConnection]
 ]

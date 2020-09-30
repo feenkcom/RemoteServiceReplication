@@ -27,13 +27,11 @@ RsrRegistry class >> reapAction: aBlock [
 ]
 
 { #category : 'accessing' }
-RsrRegistry >> at: aKey
-put: anEntry [
+RsrRegistry >> _At: aKey
+ifAbsent: aBlock [
+	"Temporarily return the Registry's entry so we can properly maintain the lifetime."
 
-	(anEntry isKindOf: RsrService)
-		ifTrue: [self error].
-	mutex critical: [map at: aKey put: anEntry].
-	^anEntry
+	^mutex critical: [map at: aKey ifAbsent: aBlock]
 ]
 
 { #category : 'adding/removing' }
@@ -81,11 +79,11 @@ RsrRegistry >> removeKey: anRsrId [
 ]
 
 { #category : 'accessing' }
-RsrRegistry >> serviceAt: aKey [
+RsrRegistry >> serviceAt: aSID [
 
 	^self
-		serviceAt: aKey
-		ifAbsent: [self error: 'Unknown key(', aKey printString, ')']
+		serviceAt: aSID
+		ifAbsent: [RsrUnknownOID signal: aSID printString]
 ]
 
 { #category : 'accessing' }
@@ -99,7 +97,7 @@ ifAbsent: aBlock [
 		ifNotNil: [element service]
 ]
 
-{ #category : 'adding/removing' }
+{ #category : 'accessing' }
 RsrRegistry >> serviceAt: aKey
 put: aService [
 	"Store aService into the registry"

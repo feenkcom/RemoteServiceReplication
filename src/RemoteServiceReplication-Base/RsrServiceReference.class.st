@@ -46,11 +46,11 @@ using: anEncoder [
 ]
 
 { #category : 'resolving' }
-RsrServiceReference >> resolve: aRegistry [
+RsrServiceReference >> resolve: aConnection [
 
-	^aRegistry
+	^aConnection
 		serviceAt: self sid
-		ifAbsent: [^RsrUnknownOID signal: self sid printString]
+		ifAbsent: [RsrUnknownOID signal: self sid printString]
 ]
 
 { #category : 'accessing' }

@@ -19,7 +19,7 @@ RsrDecoderTest >> assertReference: bytes
 decodesTo: expected [
 
 	| actual |
-	actual := (self decoder decodeReference: bytes readStream) resolve: self decoder registry.
+	actual := (self decoder decodeReference: bytes readStream) resolve: self connection.
 	self
 		assert: actual
 		equals: expected
@@ -87,7 +87,7 @@ RsrDecoderTest >> testDeliverResponse [
 		_id: 1
 		connection: self connection.
 	self decoder.
-	self registry
+	self connection
 		serviceAt: 1
 		put: service.
 	response := #responseSymbol.
@@ -115,7 +115,7 @@ RsrDecoderTest >> testDeliverResponse [
 		assert: decodedService
 		equals: service.
 	self
-		assert: (command response resolve: self registry)
+		assert: (command response resolve: self connection)
 		equals: response
 ]
 
@@ -145,7 +145,7 @@ RsrDecoderTest >> testSendMessage [
 		_id: 1
 		connection: self connection.
 	self decoder.
-	self registry
+	self connection
 		serviceAt: 1
 		put: service.
 	encoding :=
@@ -167,10 +167,10 @@ RsrDecoderTest >> testSendMessage [
 		assert: command transaction
 		equals: 1.
 	self
-		assert: (command receiver resolve: self registry)
+		assert: (command receiver resolve: self connection)
 		identicalTo: service.
 	self
-		assert: (command selector resolve: self registry)
+		assert: (command selector resolve: self connection)
 		identicalTo: #return42.
 	self
 		assert: command arguments
@@ -242,7 +242,7 @@ RsrDecoderTest >> verifyImmediate: expected
 encoding: encoding [
 
 	| actual |
-	actual := (self decoder decodeReference: encoding readStream) resolve: self connection registry.
+	actual := (self decoder decodeReference: encoding readStream) resolve: self connection.
 	self
 		assert: actual
 		equals: expected

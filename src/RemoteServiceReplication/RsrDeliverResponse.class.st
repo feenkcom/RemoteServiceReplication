@@ -72,7 +72,7 @@ RsrDeliverResponse >> executeFor: aConnection [
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
 	[snapshots do: [:each | each reifyIn: aConnection].
-	result := response resolve: aConnection registry.
+	result := response resolve: aConnection.
 	pendingMessage promise fulfill: result]
 		on: Error
 		do: [:ex | pendingMessage promise fulfill: ex copy]

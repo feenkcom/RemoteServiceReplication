@@ -20,7 +20,7 @@ RsrTrueReference class >> typeIdentifier [
 ]
 
 { #category : 'resolving' }
-RsrTrueReference >> resolve: aRegistry [
+RsrTrueReference >> resolve: aConnection [
 
 	^true
 ]

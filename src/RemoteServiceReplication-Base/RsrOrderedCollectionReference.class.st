@@ -21,10 +21,10 @@ RsrOrderedCollectionReference class >> typeIdentifier [
 ]
 
 { #category : 'resolving' }
-RsrOrderedCollectionReference >> resolve: aRegistry [
+RsrOrderedCollectionReference >> resolve: aConnection [
 
 	| oc |
 	oc := OrderedCollection new: value size.
-	value do: [:each | oc add: (each resolve: aRegistry)].
+	value do: [:each | oc add: (each resolve: aConnection)].
 	^oc
 ]

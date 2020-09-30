@@ -15,12 +15,6 @@ put: aService [
 	self objects add: aService
 ]
 
-{ #category : 'accessing' }
-RsrMockRegistry >> connection [
-
-	^RsrMockConnection new
-]
-
 { #category : 'initializing' }
 RsrMockRegistry >> initialize [
 

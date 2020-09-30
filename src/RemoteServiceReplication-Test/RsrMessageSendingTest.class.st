@@ -17,7 +17,7 @@ RsrMessageSendingTest >> testChangeRemoteState [
 	marker := false.
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [marker := true].
 	client value.
 	self assert: marker
@@ -29,7 +29,7 @@ RsrMessageSendingTest >> testRemoteError [
 	| client server exception |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
 	[client value]
 		on: RsrRemoteError
@@ -57,7 +57,7 @@ RsrMessageSendingTest >> testRemoteErrorWithTag [
 	| client server tag messageText exception |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	tag := nil.
 	messageText := 'messageText'.
 	server action: [Error new tag: tag; messageText: messageText; signal].
@@ -103,7 +103,7 @@ RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
 	| client server value response |
 	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	value := 42.
 	self
 		deny: client varA
@@ -135,7 +135,7 @@ RsrMessageSendingTest >> testReturnArgument [
 	| client server arguments dt response |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [:object | object].
 	arguments := OrderedCollection new
 		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false );
@@ -182,7 +182,7 @@ RsrMessageSendingTest >> testReturnInvalidObject [
 	| client server exception |			
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [Object new].
 	self
 		should: [client value]
@@ -213,7 +213,7 @@ RsrMessageSendingTest >> testReturnNewService [
 	| client server returnedService |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [RsrValueHolderServer new].
 	returnedService := client value.
 	self
@@ -227,7 +227,7 @@ RsrMessageSendingTest >> testReturnNewServiceInArray [
 	| client server array returnedService |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [Array with: RsrValueHolderServer new].
 	array := client value.
 	returnedService := array first.
@@ -242,7 +242,7 @@ RsrMessageSendingTest >> testReturnSymbol [
 	| client server symbol result |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	symbol := #testSymbol.
 	server action: [symbol].
 	result := client value.
@@ -257,7 +257,7 @@ RsrMessageSendingTest >> testSendInvalidObject [
 	| client server |			
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [:arg | arg].
 	self
 		should: [client value: Object new]

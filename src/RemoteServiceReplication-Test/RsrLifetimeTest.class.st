@@ -18,12 +18,12 @@ RsrLifetimeTest >> testObjectCreatedViaServiceFactory [
 	| client server remoteService |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
-	server := connectionB registry serviceAt: client _id.
+	server := connectionB serviceAt: client _id.
 	server action: [:object | object].
 	self
-		assert: (connectionA registry serviceAt: client _id)
+		assert: (connectionA serviceAt: client _id)
 		identicalTo: client.
-	remoteService := connectionB registry serviceAt: client _id.
+	remoteService := connectionB serviceAt: client _id.
 	self
 		assert: remoteService class
 		equals: RsrRemoteActionServer.
@@ -39,7 +39,7 @@ RsrLifetimeTest >> testRemoteReferenceLifetime [
 	serviceLocal := RsrClientNoInstVars new.
 	valueServiceLocal := connectionA serviceFor: #RsrValueHolderClient.
 	valueServiceLocal value: serviceLocal.
-	valueServiceRemote := connectionB registry serviceAt: valueServiceLocal _id.
+	valueServiceRemote := connectionB serviceAt: valueServiceLocal _id.
 	serviceRemote := valueServiceRemote value.
 	id := serviceLocal _id.
 	self
@@ -50,11 +50,11 @@ RsrLifetimeTest >> testRemoteReferenceLifetime [
 	self maximumReclamation.
 	(Delay forSeconds: 1) wait. "Needed to ensure there is time for release to propogate to remote environment."
 	marker := Object new.
-	actual := connectionA registry serviceAt: id ifAbsent: [marker].
+	actual := connectionA serviceAt: id ifAbsent: [marker].
 	self
 		assert: actual
 		equals: marker.
-	actual := connectionB registry serviceAt: id ifAbsent: [marker].
+	actual := connectionB serviceAt: id ifAbsent: [marker].
 	self
 		assert: actual
 		equals: marker

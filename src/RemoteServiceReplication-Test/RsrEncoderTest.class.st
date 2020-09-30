@@ -20,7 +20,7 @@ RsrEncoderTest >> register: aService [
 	aService
 		_id: self connection oidSpigot next
 		connection: self connection.
-	self registry
+	self connection
 		serviceAt: aService _id
 		put: aService
 ]
