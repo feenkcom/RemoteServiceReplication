@@ -9,8 +9,13 @@ Class {
 }
 
 { #category : 'instance creation' }
-RsrRegistryEntry class >> service: aService [
+RsrRegistryEntry class >> service: aService
+onMourn: aBlock [
 
+	aService
+		toFinalizeSend: #cull:
+		to: aBlock
+		with: nil.
 	^self new
 		service: aService;
 		yourself
