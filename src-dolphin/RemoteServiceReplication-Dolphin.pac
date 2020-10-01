@@ -11,7 +11,6 @@ package classNames
 	add: #RsrForwarder;
 	add: #RsrGarbageCollector;
 	add: #RsrProtoObject;
-	add: #RsrRegistry;
 	add: #RsrRegistryEntry;
 	add: #RsrScientist;
 	add: #RsrSocket;
@@ -39,11 +38,7 @@ package binaryGlobalNames: (Set new
 package globalAliases: (Set new
 	yourself).
 
-package setPrerequisites: #(
-	'..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin'
-	'..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Base\Dolphin Legacy Date & Time'
-	'..\..\..\Documents\Dolphin Smalltalk 7\Core\Object Arts\Dolphin\Sockets\Dolphin Sockets'
-	'RemoteServiceReplication-Base').
+package setPrerequisites: #('RemoteServiceReplication-Base').
 
 package!
 
@@ -66,11 +61,6 @@ RsrObject subclass: #RsrEnvironment
 	classInstanceVariableNames: ''!
 RsrObject subclass: #RsrGarbageCollector
 	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrObject subclass: #RsrRegistry
-	instanceVariableNames: 'mutex map reapAction'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -322,7 +312,7 @@ maximumReclamation
 			sema signal].
 	element := RsrRegistryEntry
 		service: service
-		finalizationAction: action.
+		onMourn: action.
 	service := nil.
 	self invokeGarbageCollector.
 	
@@ -332,144 +322,6 @@ maximumReclamation
 	^didFinalize! !
 !RsrGarbageCollector class categoriesFor: #invokeGarbageCollector!public! !
 !RsrGarbageCollector class categoriesFor: #maximumReclamation!public! !
-
-RsrRegistry guid: (GUID fromString: '{5192e31f-c2f6-463e-b545-31a8190ee6be}')!
-RsrRegistry comment: 'I maintain the associations between locally stored objects and their remote counterparts.'!
-!RsrRegistry categoriesForClass!RemoteServiceReplication-Dolphin! !
-!RsrRegistry methodsFor!
-
-_At: aKey ifAbsent: aBlock
-
-	^mutex critical: [map at: aKey ifAbsent: aBlock]!
-
-at: aKey put: anEntry
-	"Store anEntry into the registry"
-
-	mutex critical: [map at: aKey put: anEntry]!
-
-cleanupEntryFor: aKey
-
-	self removeKey: aKey!
-
-dispatcherAt: aKey
-
-	^self
-		dispatcherAt: aKey
-		ifAbsent: [Error signal: 'Unknown key(', aKey asString, ')']!
-
-dispatcherAt: aKey
-ifAbsent: aBlock
-
-	| entry |
-	entry := mutex critical: [map at: aKey ifAbsent: []].
-	^entry
-		ifNil: aBlock
-		ifNotNil: [entry dispatcher]!
-
-elementValue: anElement
-ifNil: aBlock
-
-	| value |
-	anElement isNil
-		ifTrue: [^aBlock value].
-	value := anElement service.
-	^value == DeadObject current
-		ifTrue: [aBlock value]
-		ifFalse: [value]!
-
-includesKey: aKey
-
-	^mutex critical: [map includesKey: aKey]!
-
-initialize
-
-	super initialize.
-	map := Dictionary new.
-	mutex := Semaphore forMutualExclusion!
-
-reapAction
-
-	^reapAction!
-
-reapAction: aBlock
-
-	reapAction := aBlock!
-
-reapClient: aKey
-
-	self cleanupEntryFor: aKey.
-	self reapAction value: aKey!
-
-reapServer: aKey
-
-	self cleanupEntryFor: aKey!
-
-removeKey: aKey
-
-	^mutex critical: [map removeKey: aKey ifAbsent: [nil]]!
-
-serviceAt: aKey
-
-	^self serviceAt: aKey ifAbsent: [Error signal: 'Unknown key: ', aKey asString]!
-
-serviceAt: aKey
-ifAbsent: aBlock
-
-	| element |
-	element := mutex critical: [map at: aKey ifAbsent: []].
-	^self
-		elementValue: element
-		ifNil: aBlock!
-
-serviceAt: aKey
-put: aService
-	"Store aService into the registry"
-
-	| reapSelector finalizeSend entry |
-	reapSelector := aService isServer
-		ifTrue: [#reapServer:]
-		ifFalse: [#reapClient:].
-	finalizeSend := MessageSend
-		receiver: self
-		selector: reapSelector
-		argument: aKey.
-	entry := RsrRegistryEntry
-		service: aService
-		finalizationAction: finalizeSend.
-	aService isServer ifTrue: [entry becomeStrong].
-	self
-		at: aKey
-		put: entry.
-	^aService! !
-!RsrRegistry categoriesFor: #at:put:!public! !
-!RsrRegistry categoriesFor: #cleanupEntryFor:!public! !
-!RsrRegistry categoriesFor: #dispatcherAt:!public! !
-!RsrRegistry categoriesFor: #dispatcherAt:ifAbsent:!public! !
-!RsrRegistry categoriesFor: #elementValue:ifNil:!public! !
-!RsrRegistry categoriesFor: #includesKey:!public! !
-!RsrRegistry categoriesFor: #initialize!public! !
-!RsrRegistry categoriesFor: #reapAction!public! !
-!RsrRegistry categoriesFor: #reapAction:!public! !
-!RsrRegistry categoriesFor: #reapClient:!public! !
-!RsrRegistry categoriesFor: #reapServer:!public! !
-!RsrRegistry categoriesFor: #removeKey:!public! !
-!RsrRegistry categoriesFor: #serviceAt:!public! !
-!RsrRegistry categoriesFor: #serviceAt:ifAbsent:!public! !
-!RsrRegistry categoriesFor: #serviceAt:put:!public! !
-
-!RsrRegistry class methodsFor!
-
-new
-
-	^self reapAction: [:key | ]!
-
-reapAction: aBlock
-
-	^super new
-		reapAction: aBlock;
-		yourself! !
-!RsrRegistry class categoriesFor: #new!public! !
-!RsrRegistry class categoriesFor: #reapAction:!public! !
 
 RsrRegistryEntry guid: (GUID fromString: '{636f9a23-234c-4a7a-ab6d-6d1700364857}')!
 RsrRegistryEntry comment: ''!
@@ -505,7 +357,11 @@ initializeStorage
 
 service
 
-	^storage at: 1!
+	| service |
+	service := storage at: 1.
+	service == DeadObject current
+		ifTrue: [^nil].
+	^service!
 
 service: aService
 
@@ -524,13 +380,13 @@ service: aService
 !RsrRegistryEntry class methodsFor!
 
 service: aService
-finalizationAction: aBlock
+onMourn: aBlock
 
 	^self new
 		service: aService;
 		finalizationAction: aBlock;
 		yourself! !
-!RsrRegistryEntry class categoriesFor: #service:finalizationAction:!public! !
+!RsrRegistryEntry class categoriesFor: #service:onMourn:!public! !
 
 RsrScientist guid: (GUID fromString: '{ca700baf-795f-44da-aef0-cc7d2ad19d68}')!
 RsrScientist comment: ''!
