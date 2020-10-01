@@ -31,10 +31,10 @@ package classNames
 	add: #RsrSetReference;
 	add: #RsrConnectionClosed;
 	add: #RsrValueReference;
-	add: #RsrUnknownOID;
 	add: #RsrOrderedCollectionReference;
 	add: #RsrAlreadyRegistered;
 	add: #RsrNilReference;
+	add: #RsrUnknownSID;
 	add: #RsrDictionaryReference;
 	add: #RsrError;
 	add: #RsrTrueReference;
@@ -158,12 +158,12 @@ RsrError
 !RsrUnknownClass categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
-	subclass: #RsrUnknownOID
+	subclass: #RsrUnknownSID
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrUnknownOID categoriesForClass!RemoteServiceReplication-Base! !
+!RsrUnknownSID categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
 	subclass: #RsrUnsupportedObject
@@ -533,7 +533,7 @@ sid	^sid! !
 sid: aServiceID	sid := aServiceID! !
 
 !RsrServiceReference methodsFor!
-resolve: aConnection	^aConnection		serviceAt: self sid		ifAbsent: [RsrUnknownOID signal: self sid printString]! !
+resolve: aConnection	^aConnection serviceAt: self sid! !
 
 !RsrServiceReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self sid		onto: aStream! !

@@ -10,6 +10,7 @@ package classNames
 	add: #RsrRemoteError;
 	add: #RsrPendingMessage;
 	add: #RsrSocketChannelLoop;
+	add: #RsrThreadSafeDictionary;
 	add: #RsrCommand;
 	add: #RsrChannel;
 	add: #RsrSocketStream;
@@ -216,6 +217,15 @@ RsrObject
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrStream categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
+	subclass: #RsrThreadSafeDictionary
+	instanceVariableNames: 'mutex map'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrThreadSafeDictionary comment: 'I maintain the associations between locally stored objects and their remote counterparts.'!
+!RsrThreadSafeDictionary categoriesForClass!RemoteServiceReplication! !
 
 RsrConnectionSpecification
 	subclass: #RsrAcceptConnection
@@ -718,7 +728,7 @@ decoder	^RsrDecoder new! !
 write: aMessage	self subclassResponsibility! !
 
 !RsrInMemoryChannel methodsFor!
-drainLoop	| command |	[command := inQueue next.	command isNil]		whileFalse:			[command executeFor: self connection].	self connection channelDisconnected! !
+drainLoop	| command |	[command := inQueue next.	command isNil]		whileFalse:			[self received: command].	self connection channelDisconnected! !
 
 !RsrInMemoryChannel methodsFor!
 outQueue: aSharedQueue	outQueue := aSharedQueue! !
@@ -966,6 +976,18 @@ transaction	^ transaction! !
 !RsrSendMessage methodsFor!
 transaction: anObject	transaction := anObject! !
 
+!RsrThreadSafeDictionary methodsFor!
+at: aKeyifAbsent: aBlock	^mutex critical: [map at: aKey ifAbsent: aBlock]! !
+
+!RsrThreadSafeDictionary methodsFor!
+initialize	super initialize.	mutex := Semaphore forMutualExclusion.	map := Dictionary new! !
+
+!RsrThreadSafeDictionary methodsFor!
+removeKey: anRsrId	^mutex critical: [map removeKey: anRsrId ifAbsent: [nil]]! !
+
+!RsrThreadSafeDictionary methodsFor!
+at: aKeyput: aValue	mutex critical: [map at: aKey put: aValue].	^aValue! !
+
 !RsrServiceSnapshot methodsFor!
 snapshot: aService	sid := aService _id.	template := aService class templateClassName.	targetServiceType := aService isClient		ifTrue: [#server]		ifFalse: [#client].	slots := OrderedCollection new.	RsrServiceSnapshot		reflectedVariablesFor: aService		do: [:each | slots add: (RsrReference from: each)]! !
 
@@ -979,10 +1001,7 @@ targetServiceType: aSymbol	targetServiceType := aSymbol! !
 template: aSymbol	template := aSymbol! !
 
 !RsrServiceSnapshot methodsFor!
-createBasicInstance	^self shouldCreateClient		ifTrue: [self templateClass clientClass basicNew]		ifFalse: [self templateClass serverClass basicNew]! !
-
-!RsrServiceSnapshot methodsFor!
-instanceIn: aConnection	^aConnection		serviceAt: self sid		ifAbsent:			[| instance |			instance := self createBasicInstance.			instance				_id: self sid				connection: aConnection.			aConnection				serviceAt: self sid				put: instance.			instance]! !
+instanceIn: aConnection	| instance |	instance := aConnection		serviceAt: self sid		ifAbsent: [self createInstanceRegisteredIn: aConnection].	self shouldCreateServer		ifTrue: [aConnection _stronglyRetain: instance].	^instance! !
 
 !RsrServiceSnapshot methodsFor!
 slots	^slots! !
@@ -1003,16 +1022,19 @@ reifyIn: aConnection	| instance referenceStream |	instance := self instanceIn
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self snapshotIdentifier		onto: aStream.	anEncoder		encodeControlWord: self sid		onto: aStream.	anEncoder		encodeControlWord: self slots size		onto: aStream.	self targetClassNameReference		encode: aStream		using: anEncoder.	self slots do: [:each | each encode: aStream using: anEncoder]! !
 
 !RsrServiceSnapshot methodsFor!
-targetClassNameReference	| targetClassName |	targetClassName := self shouldCreateClient		ifTrue: [self templateClass clientClassName]		ifFalse: [self templateClass serverClassName].	^RsrSymbolReference symbol: targetClassName! !
+targetClassNameReference	| targetClassName |	targetClassName := self shouldCreateServer		ifTrue: [self templateClass serverClassName]		ifFalse: [self templateClass clientClassName].	^RsrSymbolReference symbol: targetClassName! !
 
 !RsrServiceSnapshot methodsFor!
-shouldCreateClient	^self targetServiceType == #client! !
+createInstanceRegisteredIn: aConnection	| instance |	instance := self shouldCreateServer		ifTrue: [self templateClass serverClass basicNew]		ifFalse: [self templateClass clientClass basicNew].	aConnection		_register: instance		as: self sid.	^instance! !
 
 !RsrServiceSnapshot methodsFor!
 sid: aServiceID	sid := aServiceID! !
 
 !RsrServiceSnapshot methodsFor!
 targetServiceType	^targetServiceType! !
+
+!RsrServiceSnapshot methodsFor!
+shouldCreateServer	^self targetServiceType == #server! !
 
 !RsrServiceSnapshot methodsFor!
 template	^template! !
@@ -1063,22 +1085,22 @@ originalClassName: aSymbol	originalClassName := aSymbol! !
 stack	^stack! !
 
 !RsrConnection methodsFor!
-serviceAt: aSIDifAbsent: aBlock	^registry serviceAt: aSID ifAbsent: aBlock! !
+serviceAt: aSIDifAbsent: aBlock	"Return the service associated with the provided SID."	| entry |	entry := registry at: aSID ifAbsent: [nil].	"Ensure we do not hold the lock for long."	entry == nil		ifTrue: [^aBlock value].	"The Service may have been garbage collected but	the entry may not yet be removed. Ensure we	evaluate the block in that case as well."	^entry service		ifNil: aBlock		ifNotNil: [:service | service]! !
 
 !RsrConnection methodsFor!
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	channel close.	self dispatchQueue stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	pendingMessages := Dictionary new.	registry := nil.	closeSemaphore signal! !
+close	channel close.	dispatchQueue stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	"The following assignments probably shouldn't exist in this form.	Close needs to be idempotent."	pendingMessages := Dictionary new.	registry := RsrThreadSafeDictionary new.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
 
 !RsrConnection methodsFor!
-initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrRegistry reapAction: [:oid | self releaseOid: oid].	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	closeSemaphore := Semaphore new.! !
+initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrThreadSafeDictionary new.	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	closeSemaphore := Semaphore new.! !
 
 !RsrConnection methodsFor!
-_remoteClientReleased: aSID	"Remotely, a Client instance has been garbage collected.	Ensure we only reference the associated service weakly."	| entry |	entry := registry		_At: aSID		ifAbsent: [^self].	entry becomeWeak.! !
+_remoteClientReleased: aSID	"Remotely, a Client instance has been garbage collected.	Ensure we only reference the associated service weakly."	| entry |	entry := registry		at: aSID		ifAbsent: [^self].	entry becomeWeak.! !
 
 !RsrConnection methodsFor!
 transactionSpigot	^transactionSpigot! !
@@ -1090,10 +1112,19 @@ channel: aChannel	channel := aChannel.	channel connection: self! !
 oidSpigot	^oidSpigot! !
 
 !RsrConnection methodsFor!
+mournActionForServerSID: aSID	^[dispatchQueue dispatch: [registry removeKey: aSID]]! !
+
+!RsrConnection methodsFor!
+_ensureRegistered: aService	aService _connection == nil		ifTrue: [^self _register: aService as: oidSpigot next].	aService _connection == self		ifFalse: [^RsrAlreadyRegistered signalService: aService intendedConnection: self]! !
+
+!RsrConnection methodsFor!
 oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
 
 !RsrConnection methodsFor!
-serviceAt: aSID	^registry serviceAt: aSID! !
+_register: aServiceas: sid	| registryEntry mournAction |	aService		_id: sid		connection: self.	mournAction := aService isClient		ifTrue: [self mournActionForClientSID: sid]		ifFalse: [self mournActionForServerSID: sid].	registryEntry := RsrRegistryEntry		service: aService		onMourn: mournAction.	registry		at: sid		put: registryEntry! !
+
+!RsrConnection methodsFor!
+serviceAt: aSID	^self		serviceAt: aSID		ifAbsent: [RsrUnknownSID signal: aSID printString]! !
 
 !RsrConnection methodsFor!
 _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	self isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiver: receiverReference		selector: selectorReference		arguments: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
@@ -1102,25 +1133,25 @@ _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty tra
 pendingMessages	^pendingMessages! !
 
 !RsrConnection methodsFor!
-unknownError: anException	self close! !
+_receivedCommand: aCommand	"Execute the command in the context of the receiving Connection."	dispatchQueue dispatch: [aCommand executeFor: self]! !
 
 !RsrConnection methodsFor!
-ensureRegistered: aService	aService isMirrored		ifTrue:			[^aService _connection == self				ifTrue: [self]				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].	aService		_id: oidSpigot next		connection: self.	self		serviceAt: aService _id		put: aService! !
+unknownError: anException	self close! !
 
 !RsrConnection methodsFor!
 _sendCommand: aCommand	channel send: aCommand! !
 
 !RsrConnection methodsFor!
-initializeServiceFactory	| instance |	instance := RsrServiceFactory clientClass new.	self ensureRegistered: instance.	serviceFactory := instance.	^serviceFactory! !
+initializeServiceFactory	| instance |	instance := RsrServiceFactory clientClass new.	self _ensureRegistered: instance.	serviceFactory := instance.	^serviceFactory! !
+
+!RsrConnection methodsFor!
+mournActionForClientSID: aSID	^[dispatchQueue		dispatch:			[registry removeKey: aSID.			self releaseOid: aSID]]! !
 
 !RsrConnection methodsFor!
 waitUntilClose	closeSemaphore		wait;		signal! !
 
 !RsrConnection methodsFor!
 channelDisconnected	self log info: 'Disconnected'.	self close! !
-
-!RsrConnection methodsFor!
-serviceAt: aSIDput: aService	^registry		serviceAt: aSID		put: aService! !
 
 !RsrConnection methodsFor!
 releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace: 'Cleaning up OID:', anOid printString.	command := RsrReleaseServices sids: (Array with: anOid).	self _sendCommand: command! !
@@ -1132,13 +1163,13 @@ _forwarderClass	^RsrForwarder! !
 serviceFactory	^serviceFactory ifNil: [self initializeServiceFactory]! !
 
 !RsrConnection methodsFor!
-open	self dispatchQueue start.	channel open! !
+open	dispatchQueue start.	channel open! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !
 
 !RsrConnection methodsFor!
-dispatchQueue	^dispatchQueue! !
+_stronglyRetain: aServer	"Retain the already registered server strongly."	| entry |	entry := registry		at: aServer _id		ifAbsent: [RsrUnknownSID signal: aServer _id printString].	entry becomeStrong! !
 
 !RsrConnection methodsFor!
 isOpen	^channel isOpen! !
@@ -1252,7 +1283,7 @@ send: aCommand	"Send the provided command over the channel."	^self subclassRe
 genericError: anError	^self connection unknownError: anError! !
 
 !RsrChannel methodsFor!
-received: aCommand	"A command has come in over the channel. Evaluate it."	self connection dispatchQueue dispatch: [aCommand executeFor: self connection]! !
+received: aCommand	"A command has come in over the channel. Propogate it to the Connection."	self connection _receivedCommand: aCommand! !
 
 !RsrChannel methodsFor!
 connection: aConnection	connection := aConnection! !
@@ -1372,7 +1403,7 @@ isClient	^self class isClientClass! !
 reflectedVariableNames	^RsrServiceSnapshot reflectedVariablesFor: self! !
 
 !RsrService methodsFor!
-registerWith: aConnection	aConnection ensureRegistered: self! !
+registerWith: aConnection	aConnection _ensureRegistered: self! !
 
 !RsrService methodsFor!
 _id	^_id! !
@@ -1423,7 +1454,7 @@ analyzeImmediate: anImmediateObject	^anImmediateObject! !
 analyze: anObject	^(self referenceClassFor: anObject)		analyze: anObject		using: self! !
 
 !RsrSnapshotAnalysis methodsFor!
-ensureRegistered: aService	self connection ensureRegistered: aService! !
+ensureRegistered: aService	self connection _ensureRegistered: aService.	aService isServer		ifTrue: [self connection _stronglyRetain: aService]! !
 
 !RsrSnapshotAnalysis methodsFor!
 snapshots: anOrderedCollection	snapshots := anOrderedCollection! !
