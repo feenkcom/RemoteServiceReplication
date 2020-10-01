@@ -44,35 +44,12 @@ RsrConnection class >> new [
 ]
 
 { #category : 'private-service management' }
-RsrConnection >> _assign: aSID
-to: aService [
-
-	| registryEntry mournAction |
-	aService
-		_id: aSID
-		connection: self.
-	mournAction := aService isClient
-		ifTrue: [self mournActionForClientSID: aSID]
-		ifFalse: [self mournActionForServerSID: aSID].
-	registryEntry := RsrRegistryEntry
-		service: aService
-		onMourn: mournAction.
-	registry
-		at: aSID
-		put: registryEntry
-]
-
-{ #category : 'private-service management' }
 RsrConnection >> _ensureRegistered: aService [
 
-	aService isMirrored
-		ifTrue:
-			[^aService _connection == self
-				ifTrue: [self]
-				ifFalse: [RsrAlreadyRegistered signalService: aService intendedConnection: self]].
-	self
-		_assign: oidSpigot next
-		to: aService
+	aService _connection == nil
+		ifTrue: [^self _register: aService as: oidSpigot next].
+	aService _connection == self
+		ifFalse: [^RsrAlreadyRegistered signalService: aService intendedConnection: self]
 ]
 
 { #category : 'private-accessing' }
@@ -86,6 +63,25 @@ RsrConnection >> _receivedCommand: aCommand [
 	"Execute the command in the context of the receiving Connection."
 
 	dispatchQueue dispatch: [aCommand executeFor: self]
+]
+
+{ #category : 'private-service management' }
+RsrConnection >> _register: aService
+as: sid [
+
+	| registryEntry mournAction |
+	aService
+		_id: sid
+		connection: self.
+	mournAction := aService isClient
+		ifTrue: [self mournActionForClientSID: sid]
+		ifFalse: [self mournActionForServerSID: sid].
+	registryEntry := RsrRegistryEntry
+		service: aService
+		onMourn: mournAction.
+	registry
+		at: sid
+		put: registryEntry
 ]
 
 { #category : 'private-service management' }
@@ -142,6 +138,17 @@ to: aService [
 	^promise
 ]
 
+{ #category : 'private-service management' }
+RsrConnection >> _stronglyRetain: aServer [
+	"Retain the already registered server strongly."
+
+	| entry |
+	entry := registry
+		at: aServer _id
+		ifAbsent: [RsrUnknownSID signal: aServer _id printString].
+	entry becomeStrong
+]
+
 { #category : 'private-accessing' }
 RsrConnection >> channel [
 
@@ -168,8 +175,10 @@ RsrConnection >> close [
 	channel close.
 	dispatchQueue stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
+	"The following assignments probably shouldn't exist in this form.
+	Close needs to be idempotent."
 	pendingMessages := Dictionary new.
-	registry := nil.
+	registry := RsrThreadSafeDictionary new.
 	closeSemaphore signal
 ]
 

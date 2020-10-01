@@ -159,7 +159,7 @@ RsrSnapshotAnalysisTest >> testServiceNoInstVars [
 	self
 		assert: snapshot slots size
 		equals: 0.
-	self deny: snapshot shouldCreateClient.
+	self assert: snapshot shouldCreateServer.
 	self
 		assert: snapshot templateClass
 		equals: client class templateClass

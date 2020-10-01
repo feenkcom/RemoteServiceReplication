@@ -68,11 +68,16 @@ do: aBlock [
 ]
 
 { #category : 'accessing' }
-RsrServiceSnapshot >> createBasicInstance [
+RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 
-	^self shouldCreateClient
-		ifTrue: [self templateClass clientClass basicNew]
-		ifFalse: [self templateClass serverClass basicNew]
+	| instance |
+	instance := self shouldCreateServer
+		ifTrue: [self templateClass serverClass basicNew]
+		ifFalse: [self templateClass clientClass basicNew].
+	aConnection
+		_register: instance
+		as: self sid.
+	^instance
 ]
 
 { #category : 'encoding/decoding' }
@@ -115,15 +120,13 @@ using: anEncoder [
 { #category : 'accessing' }
 RsrServiceSnapshot >> instanceIn: aConnection [
 
-	^aConnection
+	| instance |
+	instance := aConnection
 		serviceAt: self sid
-		ifAbsent:
-			[| instance |
-			instance := self createBasicInstance.
-			aConnection
-				_assign: self sid
-				to: instance.
-			instance]
+		ifAbsent: [self createInstanceRegisteredIn: aConnection].
+	self shouldCreateServer
+		ifTrue: [aConnection _stronglyRetain: instance].
+	^instance
 ]
 
 { #category : 'reifying' }
@@ -143,9 +146,9 @@ RsrServiceSnapshot >> reifyIn: aConnection [
 ]
 
 { #category : 'testing' }
-RsrServiceSnapshot >> shouldCreateClient [
+RsrServiceSnapshot >> shouldCreateServer [
 
-	^self targetServiceType == #client
+	^self targetServiceType == #server
 ]
 
 { #category : 'accessing' }
@@ -196,9 +199,9 @@ RsrServiceSnapshot >> snapshotIdentifier [
 RsrServiceSnapshot >> targetClassNameReference [
 
 	| targetClassName |
-	targetClassName := self shouldCreateClient
-		ifTrue: [self templateClass clientClassName]
-		ifFalse: [self templateClass serverClassName].
+	targetClassName := self shouldCreateServer
+		ifTrue: [self templateClass serverClassName]
+		ifFalse: [self templateClass clientClassName].
 	^RsrSymbolReference symbol: targetClassName
 ]
 
