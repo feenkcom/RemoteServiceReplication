@@ -187,7 +187,7 @@ RsrConnection >> initialize [
 
 	super initialize.
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
-	pendingMessages := Dictionary new.
+	pendingMessages := RsrThreadSafeDictionary new.
 	registry := RsrThreadSafeDictionary new.
 	dispatchQueue := RsrDispatchQueue new.
 	log := RsrLog new.
