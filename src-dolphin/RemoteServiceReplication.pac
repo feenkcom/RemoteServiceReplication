@@ -977,7 +977,13 @@ transaction	^ transaction! !
 transaction: anObject	transaction := anObject! !
 
 !RsrThreadSafeDictionary methodsFor!
-at: aKeyifAbsent: aBlock	^mutex critical: [map at: aKey ifAbsent: aBlock]! !
+removeKey: anRsrIdifAbsent: aBlock	| element wasRemoved |	wasRemoved := true.	element := mutex critical: [map removeKey: anRsrId ifAbsent: [wasRemoved := false]].	^wasRemoved		ifTrue: [element]		ifFalse: [aBlock value]! !
+
+!RsrThreadSafeDictionary methodsFor!
+do: aBlock	| values |	values := mutex critical: [map values].	values do: aBlock! !
+
+!RsrThreadSafeDictionary methodsFor!
+at: aKeyifAbsent: aBlock	| isPresent result |	isPresent := true.	result := mutex critical: [map at: aKey ifAbsent: [isPresent := false]].	^isPresent		ifTrue: [result]		ifFalse: [aBlock value]! !
 
 !RsrThreadSafeDictionary methodsFor!
 initialize	super initialize.	mutex := Semaphore forMutualExclusion.	map := Dictionary new! !
@@ -1097,7 +1103,7 @@ close	channel close.	dispatchQueue stop.	pendingMessages do: [:each | each p
 log	^log! !
 
 !RsrConnection methodsFor!
-initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := Dictionary new.	registry := RsrThreadSafeDictionary new.	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	closeSemaphore := Semaphore new.! !
+initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := RsrThreadSafeDictionary new.	registry := RsrThreadSafeDictionary new.	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	closeSemaphore := Semaphore new.! !
 
 !RsrConnection methodsFor!
 _remoteClientReleased: aSID	"Remotely, a Client instance has been garbage collected.	Ensure we only reference the associated service weakly."	| entry |	entry := registry		at: aSID		ifAbsent: [^self].	entry becomeWeak.! !
