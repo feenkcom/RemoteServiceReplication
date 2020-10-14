@@ -1,4 +1,4 @@
-# Message Send Semantics
+# Remote Message Send Semantics
 
 Message sends to `#remoteSelf` are asynchronous. The current thread will not wait for a response. Instead, the framework will provide a `Promise` object in lieu of the result. RSR guarantees that the `Promise` will be resolved at a future time.
 

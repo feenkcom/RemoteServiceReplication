@@ -6,66 +6,104 @@ To describe the handling of user code in RSR.
 
 ## User Code
 
-User code refers to user defined code activated by RSR. This happens when a message is sent to #remoteSelf in a Service. The message sent to #remoteSelf defines a calling context. #remoteSelf is a proxy that will automatically forward a message to the Service's remote peer. The remote evaluation defines the evaluation context.
+User code refers to any code written by the user of RSR. All methods in Services, excluding methods starting with $_ and sent by the framework, are considered user code.
+
+### User Code Evaluation
 
 User code is evaluated in a concurrent (forked) context. Applications may be implemented concurrently and the framework should reflect this property.
 
 User code handling must exhibit the follow properties.
 
-- A response must be sent to the calling context
-- Unhandled errors that are not handled by a Service should be signaled in the calling context
+- The `Promise` associated with a send must be resolved
+- Errors not handled by the Service should break the `Promise`
 - Badly behaved user code should not break RSR
 - Consistent framework behavior across supported Smalltalk environments
 
+## Resolver
+
+Each message send is associated with a `Resolver`. The `Resolver` provides an interface similar to the resolution interface of the remote `Promise`. This interface is used resolve the remote `Promise`. 
+
+### Resolver Interface
+
+- Resolution Methods
+    - `#fulfillIfUnresolved:`
+    - `#breakIfUnresolved:`
+- Testing Methods
+    - `#hasResolved`
+
+The argument to either resolution method must be an object supported by RSR -- Services or data objects. In the event that it is not, the promise will be broken. Information about the unsupported object will be provided as the reason the `Promise` was broken.
+
+Only the first call to a resolution method is meaningful. Further calls will result in an error.
+
 ## High Level Plan for User Code Evaluation
 
-The result of evaluating this pseudocode should be provided to the client. If the result is a RemoteError, it should be signal in the calling context. Otherwise, the result should be returned as the result of the send to #remoteSelf in the calling context.
+This pseudocode represents the basic semantics of handling the activation of user code. The behavior should be implemented on each supported platform and should conform to the behavior of GemStone's implementation.
 
 ```smalltalk
 send: aMessage
 to: aService
+using: aResolver
 
-    self
-        protectedEvaluation: [^aMessage sendTo: aService]
-        onUnhandledException:
-            [:unhandledException | | handleResult |
-            handleResult := self
-                protectedEvaluation:
-                    [aService
-                        debugMessage: aMessage
-                        signaling: unhandledException]
-                onUnhandledException:
-                    [:debugException |
-                    ^RemoteError reportingOn: debugException].
-            ^unhandledException isResumable
-                ifTrue: [unhandledException resume: handleResult]
-                ifFalse: [RemoteError reportingOn: unhandledException]]
+    [[^aResolver fulfill: (aMessage sendTo: aService)]
+        on: UnhandledException
+        do:
+            [:wrapper |
+            [ | exception debugResult |
+            exception := wrapper exception.
+            debugResult := aService
+                debugMessage: aMessage
+                raising: exception
+                using: aResolver.
+            ^aResolver hasResolved
+                ifTrue:
+                    ["If the debugger resolved the Promise, we consider the message
+                    as having been fully processes and end the current process."
+                    self]
+                ifFalse:
+                    [exception isResumable
+                        ifTrue:
+                            ["Match the behavior of #defaultAction. If the exception is resumable,
+                            the result of #signal should be whatever was returned by the debug call."
+                            wrapper resume: debugResult]
+                        ifFalse:
+                            ["If the exception is not resumable and the debugger did not cut the stack,
+                            we do all we can -- break the Promise w/ as much debug information as possible."
+                            aResolver break: (Reason forException: exception)]]]
+                on: UnhandledException
+                do:
+                    [:debugExceptionWrapper |
+                    ^aResolver break: (Reason forException: debugExceptionWrapper exception)]]]
+        ensure:
+            [aResolver hasResolved
+                ifFalse: [aResolver break: 'Message send terminated without a result']]
 ```
 
-The result of #send:to: will function of the response for the message send. A normal object will be returned as a result in the calling context. A RemoteError will be signaled in the calling context.
-
-#protectedEvaluation:onUnhandledException: in this pseudocode will never return normally. The block arguments are expected to handle evaluation and returning of a result. In this case, the block arguments use explicit returns.
-
-Each platform is free to implement the activation and handling of user code, as long as it behaves correctly.
-
-RSR defines an exception as unhandled if and only if an an #on:do: and #defaultAction have not resolved the exception.
-
-### GemStone - Protected Evaluation
-
-GemStone will intercept an unhandled exception through the use of #debugActionBlock on each forked Process. This block is activated by the default implementation of #defaultAction. Exceptions implementing #defaultAction are expected to either resolve the exceptional state or defer to #debugActionBlock if they cannot resolve the exceptional state.
-
-GemStone's semantics allow a simple implementation of #protectedEvaluation:onUnhandledException:.
+By default, `#debugMessage:raising:using:` would have an implementation similar to this. This method is treated just like #defaultAction. If it returns a result and the exception is resumable, we resume with the result of its evaluation. If not, we break the promise and provide debug information as the reason.
 
 ```smalltalk
-protectedEvaluation: aProtectedBlock
-onUnhandledException: aHandlerBlock
+debugMessage: aMessage
+raising: anException
+using: aResolver
 
-    | process cachedDebugActionBlock |
-    process := Process activeProcess.
-    cachedDebugActionBlock := process debugActionBlock.
-    ^[process debugActionBlock: aHandlerBlock.
-    aProtectedBlock value]
-        ensure: [process debugActionBlock: cachedDebugActionBlock]
+    aResolver break: (Reason forException: anException)
+```
+
+In both of these examples, `Reason` is a stand-in for an Object which converts an Exception into a String containing sufficient debug information. For instance, the string may contain the class of the original exception, its messageText, and the stack as captured at time of reporting.
+
+### Service Debugging Hook
+
+Should an unhandled exception occur during the evaluation of a `Message`, RSR will call into the receiving `Service` giving it an opportunity to debug the exception. This is accomplished through the use of the `#debugMessage:raising:using:` selector. RSR will provide a default implementation which breaks the promise with information about the exception and stack.
+
+This method could also fulfill the `Promise` using the provided `Resolver`.
+
+## GemStone Specific Hooks
+
+GemStone will hook into the `#debugActionBlock` hook associated with the `Process`. The block will signal an UnhandledException containing the original exception.
+
+This will traverse the stack and eventually find the `#on:do:` handler created in the `#send:to:using:` method which will handle the exception.
+
+```smalltalk
+[:exception | UnhandledException signalWith: exception]
 ```
 
 ## Restrictions
