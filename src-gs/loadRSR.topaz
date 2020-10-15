@@ -2,14 +2,9 @@
 ! Topaz format...
 
 run
-	| rowanRoot loadSpecFile loadSpec resolvedProject |
-	Rowan projectTools trace startTracing.
-	rowanRoot := '$ROWAN_PROJECTS_HOME' asFileReference.
-	loadSpecFile := rowanRoot / 'RemoteServiceReplication' / 'rowan' / 'specs' / 'RemoteServiceReplication', 'ston'.
-	loadSpec := (Rowan projectTools load loadProjectSpecFromFile: loadSpecFile)
-		projectsHome: rowanRoot;
-		yourself.
-	resolvedProject := loadSpec resolve.
-
-	resolvedProject load.
+[
+	(Rowan
+		projectFromUrl: 'file:$ROWAN_PROJECTS_HOME/RemoteServiceReplication/rowan/specs/RemoteServiceReplication.ston'
+		gitUrl: 'file:$ROWAN_PROJECTS_HOME/RemoteServiceReplication') load ] 
+	on: Warning do: [:ex | ex resume]
 %
