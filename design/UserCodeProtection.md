@@ -26,8 +26,8 @@ Each message send is associated with a `Resolver`. The `Resolver` provides an in
 ### Resolver Interface
 
 - Resolution Methods
-    - `#fulfillIfUnresolved:`
-    - `#breakIfUnresolved:`
+    - `#fulfill:`
+    - `#break:`
 - Testing Methods
     - `#hasResolved`
 
