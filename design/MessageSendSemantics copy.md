@@ -1,6 +1,6 @@
-# Remote Message Send Semantics
+# Message Send Semantics
 
-Message sends to `#remoteSelf` are asynchronous. The current thread will not wait for a response. Instead, the framework will provide a `Promise` object in lieu of the result. RSR guarantees that the `Promise` will be resolved at a future time.
+Message sends to `#remoteSelf` are asynchronous. The current thread will not wait for a response. Instead, the framework quickly answers a `Promise` object in lieu of the result. RSR guarantees that the `Promise` will be resolved at a future time.
 
 ```smalltalk
   | promise |
@@ -13,17 +13,18 @@ Message sends to `#remoteSelf` are asynchronous. The current thread will not wai
 
 ## Promise
 
-A `Promise` represents a placeholder value. `Promise`'s are later resolved with a result or broken if a result cannot be obtained.
+A `Promise` represents a placeholder value. `Promise`'s are later resolved -- either fulfilled with a result or broken if a result cannot be obtained.
 
 ### `Promise` Interface
 
-- Resolution
+- Resolution  _**Do we really want to allow the resolution messages to be sent to the promise itself, rather than the resolver?**_
   - `#fulfill:`
   - `#break:`
 - Observation
   - `#when:catch:`
   - `#wait`
-  - `#value`
+
+_**Do we want a message that retrieves the value from a previously-fulfilled promise? Besides #wait, which probably also does that.**_
 
 ### `Promise` Resolution
 
@@ -31,15 +32,15 @@ A `Promise` can be resolved either through fulfillment or through breaking. Fulf
 
 ### `Promise` Observation
 
-`Promise`'s offer a synchronous and an asynchronous way of observing their resolution. A `Promise` may have multiple observers using a mix of synchronous and asynchronous observation mechanisms.
+`Promise`s offer a synchronous and an asynchronous way of observing their resolution. A `Promise` may have multiple observers using a mix of synchronous and asynchronous observation mechanisms.
+
+**Ooh, multiple observers. I hadn't thought that far, but yes, that seems good.**
 
 #### Synchronous Observation
 
-Sending the message `#wait` to a `Promise`, will cause the current thread to suspend until it is resolved. After resolution, the thread will resume. If the `Promise` was fulfilled, the value of the `Promise` will be returned from `#wait`. If the `Promise` was broken, a `BrokenPromise` error will be signaled. Sending `#reason` to the `BrokenPromise` exception will return the reason the `Promise` was broken.
+Sending the message `#wait` to a `Promise` will cause the current thread to suspend until it is resolved. After resolution, the thread will resume. If the `Promise` was fulfilled, the value of the `Promise` will be returned from `#wait`. If the `Promise` was broken, a `BrokenPromise` error will be signaled. Sending `#reason` to the `BrokenPromise` exception will return the reason the `Promise` was broken.
 
-The `#value` method is a synonym for `#wait`.
-
-`BrokenPromise` is an `Error` and as such should be explicitly protected against.
+_**Is BrokenPromise a subclass of Error? I suppose it should be. Normally you want to handle it, and if you don't you should expect normal unhandled Error response.**_
 
 #### Asynchronous Observation
 
