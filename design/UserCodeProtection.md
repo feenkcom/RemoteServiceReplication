@@ -44,21 +44,25 @@ send: aMessage
 to: aService
 using: aResolver
 
-    [[^aResolver fulfill: (aMessage sendTo: aService)]
+    [[aResolver fulfill: (aMessage sendTo: aService)]
         on: UnhandledException
         do:
-            [:wrapper |
-            [ | exception debugResult |
+            [:wrapper | | exception debugResult |
             exception := wrapper exception.
-            debugResult := aService
-                debugMessage: aMessage
-                raising: exception
-                using: aResolver.
-            ^aResolver hasResolved
+            debugResult := [aService
+                            debugMessage: aMessage
+                            raising: exception
+                            using: aResolver]
+                            on: UnhandledException
+                            do:
+                                [:debugExceptionHandler |
+                                aResolver break: (Reason forException: debugExceptionWrapper exception).
+                                wrapper return].
+            aResolver hasResolved
                 ifTrue:
                     ["If the debugger resolved the Promise, we consider the message
                     as having been fully processes and end the current process."
-                    self]
+                    wrapper return]
                 ifFalse:
                     [exception isResumable
                         ifTrue:
@@ -68,11 +72,8 @@ using: aResolver
                         ifFalse:
                             ["If the exception is not resumable and the debugger did not cut the stack,
                             we do all we can -- break the Promise w/ as much debug information as possible."
-                            aResolver break: (Reason forException: exception)]]]
-                on: UnhandledException
-                do:
-                    [:debugExceptionWrapper |
-                    ^aResolver break: (Reason forException: debugExceptionWrapper exception)]]]
+                            aResolver break: (Reason forException: exception).
+                            wrapper return]]]]
         ensure:
             [aResolver hasResolved
                 ifFalse: [aResolver break: 'Message send terminated without a result']]
