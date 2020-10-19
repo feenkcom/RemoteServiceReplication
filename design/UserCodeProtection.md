@@ -44,21 +44,25 @@ send: aMessage
 to: aService
 using: aResolver
 
-    [[^aResolver fulfill: (aMessage sendTo: aService)]
+    [[aResolver fulfill: (aMessage sendTo: aService)]
         on: UnhandledException
         do:
-            [:wrapper |
-            [ | exception debugResult |
+            [:wrapper | | exception debugResult |
             exception := wrapper exception.
-            debugResult := aService
-                debugMessage: aMessage
-                raising: exception
-                using: aResolver.
-            ^aResolver hasResolved
+            debugResult := [aService
+                            debug: exception
+                            raisedDuring: aMessage
+                            answerUsing: aResolver]
+                            on: UnhandledException
+                            do:
+                                [:debugExceptionHandler |
+                                aResolver break: (Reason forException: debugExceptionWrapper exception).
+                                wrapper return].
+            aResolver hasResolved
                 ifTrue:
                     ["If the debugger resolved the Promise, we consider the message
                     as having been fully processes and end the current process."
-                    self]
+                    wrapper return]
                 ifFalse:
                     [exception isResumable
                         ifTrue:
@@ -68,22 +72,19 @@ using: aResolver
                         ifFalse:
                             ["If the exception is not resumable and the debugger did not cut the stack,
                             we do all we can -- break the Promise w/ as much debug information as possible."
-                            aResolver break: (Reason forException: exception)]]]
-                on: UnhandledException
-                do:
-                    [:debugExceptionWrapper |
-                    ^aResolver break: (Reason forException: debugExceptionWrapper exception)]]]
+                            aResolver break: (Reason forException: exception).
+                            wrapper return]]]]
         ensure:
             [aResolver hasResolved
                 ifFalse: [aResolver break: 'Message send terminated without a result']]
 ```
 
-By default, `#debugMessage:raising:using:` would have an implementation similar to this. This method is treated just like #defaultAction. If it returns a result and the exception is resumable, we resume with the result of its evaluation. If not, we break the promise and provide debug information as the reason.
+By default, `#debug:raisedDuring:answerUsing:` would have an implementation similar to this. This method is treated just like #defaultAction. If it returns a result and the exception is resumable, we resume with the result of its evaluation. If not, we break the promise and provide debug information as the reason.
 
 ```smalltalk
-debugMessage: aMessage
-raising: anException
-using: aResolver
+debug: anException
+raisedDuring: aMessage
+answerUsing: aResolver
 
     aResolver break: (Reason forException: anException)
 ```
@@ -92,7 +93,7 @@ In both of these examples, `Reason` is a stand-in for an Object which converts a
 
 ### Service Debugging Hook
 
-Should an unhandled exception occur during the evaluation of a `Message`, RSR will call into the receiving `Service` giving it an opportunity to debug the exception. This is accomplished through the use of the `#debugMessage:raising:using:` selector. RSR will provide a default implementation which breaks the promise with information about the exception and stack.
+Should an unhandled exception occur during the evaluation of a `Message`, RSR will call into the receiving `Service` giving it an opportunity to debug the exception. This is accomplished through the use of the `#debug:raisedDuring:answerUsing:` selector. RSR will provide a default implementation which breaks the promise with information about the exception and stack.
 
 This method could also fulfill the `Promise` using the provided `Resolver`.
 
