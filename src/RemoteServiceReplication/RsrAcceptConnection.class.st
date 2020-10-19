@@ -52,7 +52,7 @@ RsrAcceptConnection >> waitForConnection [
 		port: self port.
 	listener listen: 1.
 	socket := [listener accept]
-		on: RsrSocketClosed
+		on: RsrSocketError
 		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]
 			ensure:
 				[listener close.

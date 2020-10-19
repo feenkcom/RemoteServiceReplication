@@ -120,7 +120,7 @@ RsrSocketTestCase >> testCloseDuringAccept [
 	self fork: [(Delay forSeconds: 1) wait. listener close].
 	self
 		should: [listener accept]
-		raise: RsrSocketClosed
+		raise: RsrSocketError
 ]
 
 { #category : 'running-client' }
