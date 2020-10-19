@@ -50,9 +50,9 @@ using: aResolver
             [:wrapper | | exception debugResult |
             exception := wrapper exception.
             debugResult := [aService
-                            debugMessage: aMessage
-                            raising: exception
-                            using: aResolver]
+                            debug: exception
+                            raisedDuring: aMessage
+                            answerUsing: aResolver]
                             on: UnhandledException
                             do:
                                 [:debugExceptionHandler |
@@ -79,12 +79,12 @@ using: aResolver
                 ifFalse: [aResolver break: 'Message send terminated without a result']]
 ```
 
-By default, `#debugMessage:raising:using:` would have an implementation similar to this. This method is treated just like #defaultAction. If it returns a result and the exception is resumable, we resume with the result of its evaluation. If not, we break the promise and provide debug information as the reason.
+By default, `#debug:raisedDuring:answerUsing:` would have an implementation similar to this. This method is treated just like #defaultAction. If it returns a result and the exception is resumable, we resume with the result of its evaluation. If not, we break the promise and provide debug information as the reason.
 
 ```smalltalk
-debugMessage: aMessage
-raising: anException
-using: aResolver
+debug: anException
+raisedDuring: aMessage
+answerUsing: aResolver
 
     aResolver break: (Reason forException: anException)
 ```
@@ -93,7 +93,7 @@ In both of these examples, `Reason` is a stand-in for an Object which converts a
 
 ### Service Debugging Hook
 
-Should an unhandled exception occur during the evaluation of a `Message`, RSR will call into the receiving `Service` giving it an opportunity to debug the exception. This is accomplished through the use of the `#debugMessage:raising:using:` selector. RSR will provide a default implementation which breaks the promise with information about the exception and stack.
+Should an unhandled exception occur during the evaluation of a `Message`, RSR will call into the receiving `Service` giving it an opportunity to debug the exception. This is accomplished through the use of the `#debug:raisedDuring:answerUsing:` selector. RSR will provide a default implementation which breaks the promise with information about the exception and stack.
 
 This method could also fulfill the `Promise` using the provided `Resolver`.
 
