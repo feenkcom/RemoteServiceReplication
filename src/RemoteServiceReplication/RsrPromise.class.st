@@ -4,60 +4,105 @@ Class {
 	#instVars : [
 		'mutex',
 		'value',
-		'error',
-		'markerValue'
+		'state',
+		'resolvedMutex'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'private-asserting' }
+RsrPromise >> assertNotResolved [
+
+	self isResolved
+		ifTrue: [RsrPromiseAlreadyResolved signal].
+]
+
+{ #category : 'fulfillment' }
+RsrPromise >> break: aReason [
+
+	mutex
+		critical:
+			[self assertNotResolved.
+			value := aReason.
+			state := #Broken].
+	resolvedMutex signal
+]
+
 { #category : 'fulfillment' }
 RsrPromise >> error: anException [
+	"Temporary synonym of #break:"
 
-	self isFulfilled
-		ifTrue: [^self error: 'Promise value already set'].
-	error := anException.
-	mutex signal
-
-	
+	^self break: anException
 ]
 
 { #category : 'fulfillment' }
 RsrPromise >> fulfill: anObject [
 
-	self isFulfilled
-		ifTrue: [^self error: 'Promise value already set'].
-	value := anObject.
-	mutex signal
+	mutex
+		critical:
+			[self assertNotResolved.
+			value := anObject.
+			state := #Fulfilled].
+	resolvedMutex signal
 ]
 
 { #category : 'initialization' }
 RsrPromise >> initialize [
 
 	super initialize.
-	value := markerValue := Object new.
-	mutex := Semaphore new
+	mutex := Semaphore forMutualExclusion.
+	resolvedMutex := Semaphore new.
+	state := #PendingResolution
 ]
 
-{ #category : 'private-waiting' }
+{ #category : 'testing' }
+RsrPromise >> isBroken [
+
+	^state == #Broken
+]
+
+{ #category : 'testing' }
 RsrPromise >> isFulfilled [
 
-	^value ~~ markerValue
+	^state == #Fulfilled
 ]
 
-{ #category : 'accessing' }
-RsrPromise >> value [
+{ #category : 'testing' }
+RsrPromise >> isResolved [
 
-	self waitForFulfillment.
-	error isNil
-		ifFalse: [error copy signal].
-	^value
+	^self isBroken or: [self isFulfilled]
+]
+
+{ #category : 'synchronous-accessing' }
+RsrPromise >> value [
+	"Alias for #wait"
+
+	^self wait
+]
+
+{ #category : 'synchronous-accessing' }
+RsrPromise >> wait [
+	"Wait for a the receiver to be Resolved.
+	If fulfilled - return the fulfillment value.
+	If broken - raise an RsrBrokenPromise exception w/ the reason."
+
+	self waitForResolution.
+	^self isBroken
+		ifTrue: [RsrBrokenPromise signalReason: value]
+		ifFalse: [value]
 ]
 
 { #category : 'private-waiting' }
-RsrPromise >> waitForFulfillment [
+RsrPromise >> waitForResolution [
+	"There doesn't seem to be a great way to implement this method.
+	The ensure below is generally safe but does have a side-effect of signaling
+	the mutex when the process is terminated while waiting.
+	Removing the ensure allows the signal to be lost if the process is terminated
+	just after #wait but before #signal is processed.
+	In order to solve this, the loop verifies the promise is actually resolved before
+	continuing."
 
-	self isFulfilled
+	self isResolved
 		ifTrue: [^self].
-	mutex wait.
-	mutex signal
+	[[self isResolved] whileFalse: [resolvedMutex wait]] ensure: [resolvedMutex signal]
 ]

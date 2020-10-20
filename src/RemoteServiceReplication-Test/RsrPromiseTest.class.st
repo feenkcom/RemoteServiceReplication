@@ -4,45 +4,63 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'running' }
-RsrPromiseTest >> testError [
+{ #category : 'utilities' }
+RsrPromiseTest >> shortWait [
 
-	| promise semaphore |
-	promise := RsrPromise new.
-	self fork:
-		[(Delay forSeconds: 1) wait.
-		promise error: Error new].
-	self
-		should: [promise value]
-		raise: Error.
-	promise := RsrPromise new.
-	semaphore := Semaphore new.
-	self fork:
-		[promise error: Error new.
-		semaphore signal].
-	self
-		should: [promise value]
-		raise: Error
+	(Delay forMilliseconds: 100) wait
 ]
 
 { #category : 'running' }
-RsrPromiseTest >> testFulfillment [
+RsrPromiseTest >> testWaitBreak [
 
-	| promise expected semaphore |
+	| promise reason exception |
 	promise := RsrPromise new.
-	expected := Object new.
-	self fork:
-		[(Delay forSeconds: 1) wait.
-		promise fulfill: expected].
+	reason := #testWaitBreak.
+	self deny: promise isResolved.
 	self
-		assert: promise value
-		identicalTo: expected.
+		fork:
+			[self shortWait.
+			promise break: reason].
+	self
+		should: [promise wait]
+		raise: RsrBrokenPromise.
+	"Does it raise multiple times?
+	And assertions about exception"
+	exception := [promise wait]
+		on: RsrBrokenPromise
+		do: [:ex | ex return: ex].
+	self
+		assert: exception class
+		equals: RsrBrokenPromise.
+	self
+		assert: exception reason
+		equals: reason.
+	self
+		assert: promise isResolved;
+		assert: promise isBroken;
+		deny: promise isFulfilled
+]
+
+{ #category : 'running' }
+RsrPromiseTest >> testWaitFulfilled [
+
+	| promise expected |
 	promise := RsrPromise new.
-	semaphore := Semaphore new.
-	[promise fulfill: expected.
-	semaphore signal] fork.
-	semaphore wait.
+	expected := #testWaitFulfilled.
+	self deny: promise isResolved.
 	self
-		assert: promise value
-		identicalTo: expected
+		fork:
+			[self shortWait.
+			promise fulfill: expected].
+	self
+		assert: promise wait
+		equals: expected.
+	"Ensure waiting multiple times gives same result."
+	self
+		assert: promise wait
+		equals: expected.
+	self
+		assert: promise isResolved;
+		assert: promise isFulfilled;
+		deny: promise isBroken
 ]
