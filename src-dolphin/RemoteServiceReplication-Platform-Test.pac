@@ -138,7 +138,7 @@ defaultTimeLimit	"This is needed for Pharo"	^5 seconds! !
 deferClose: aSocket	sockets add: aSocket.	^aSocket! !
 
 !RsrSocketTestCase methodsFor!
-testCloseDuringAccept	| listener |	listener := self newSocket.	listener		bindAddress: '127.0.0.1'		port: 45300.	listener listen: 1.	self fork: [(Delay forSeconds: 1) wait. listener close].	self		should: [listener accept]		raise: RsrSocketClosed! !
+testCloseDuringAccept	| listener |	listener := self newSocket.	listener		bindAddress: '127.0.0.1'		port: 45300.	listener listen: 1.	self fork: [(Delay forSeconds: 1) wait. listener close].	self		should: [listener accept]		raise: RsrSocketError! !
 
 !RsrSocketTestCase methodsFor!
 tearDown	sockets do: [:each | each close].	super tearDown! !
