@@ -26,35 +26,36 @@ RsrMessageSendingTest >> testChangeRemoteState [
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteError [
 
-	| client server exception |
+	| client server exception reason |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
 	[client value]
-		on: RsrRemoteError
+		on: RsrBrokenPromise
 		do: [:ex | exception := ex. ex return].
+	reason := exception reason.
 	self
-		assert: exception class
+		assert: reason class
 		equals: RsrRemoteError.
 	self
-		assert: exception originalClassName
+		assert: reason originalClassName
 		equals: #Error.
 	self
-		assert: exception tag
+		assert: reason tag
 		equals: 'tag'.
 	self
-		assert: exception messageText
+		assert: reason messageText
 		equals: 'messageText'.
 	self
-		assert: exception stack isString;
-		assert: exception stack size > 0
+		assert: reason stack isString;
+		assert: reason stack size > 0
 ]
 
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteErrorWithTag [
 
-	| client server tag messageText exception |
+	| client server tag messageText exception reason |
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
 	server := connectionB serviceAt: client _id.
@@ -62,36 +63,39 @@ RsrMessageSendingTest >> testRemoteErrorWithTag [
 	messageText := 'messageText'.
 	server action: [Error new tag: tag; messageText: messageText; signal].
 	exception := [client value]
-		on: RsrRemoteError
+		on: RsrBrokenPromise
 		do: [:ex | ex return: ex].
+	reason := exception reason.
 	self
-		assert: exception class
+		assert: reason class
 		equals: RsrRemoteError.
 	self
-		assert: exception originalClassName
+		assert: reason originalClassName
 		equals: #Error.
 	self
-		assert: exception tag
+		assert: reason tag
 		equals: 'messageText'.
 	self
-		assert: exception messageText
+		assert: reason messageText
 		equals: 'messageText'.
 	self
-		assert: exception stack isString;
-		assert: exception stack size > 0.
+		assert: reason stack isString;
+		assert: reason stack size > 0.
 	tag := 42.
 	exception := [client value]
-		on: RsrRemoteError
+		on: RsrBrokenPromise
 		do: [:ex | ex return: ex].
+	reason := exception reason.
 	self
-		assert: exception tag
+		assert: reason tag
 		equals: '42'.
 	tag := RsrSignalErrorInAsString new.
 	exception := [client value]
-		on: RsrRemoteError
+		on: RsrBrokenPromise
 		do: [:ex | ex return: ex].
+	reason := exception reason.
 	self
-		assert: exception tag
+		assert: reason tag
 		equals: 'Unable to pack #tag containing an instance of RsrSignalErrorInAsString'
 ]
 
@@ -179,32 +183,33 @@ RsrMessageSendingTest >> testReturnArgument [
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testReturnInvalidObject [
 
-	| client server exception |			
+	| client server exception reason |			
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [Object new].
 	self
 		should: [client value]
-		raise: RsrRemoteError.
-	[client value]
-		on: RsrRemoteError
-		do: [:ex | exception := ex. ex return].
+		raise: RsrBrokenPromise.
+	exception := [client value]
+		on: RsrBrokenPromise
+		do: [:ex | ex return: ex].
+	reason := exception reason.
 	self
-		assert: exception class
+		assert: reason class
 		equals: RsrRemoteError.
 	self
-		assert: exception originalClassName
+		assert: reason originalClassName
 		equals: #RsrUnsupportedObject.
 	self
-		assert: exception tag
+		assert: reason tag
 		equals: 'Instances of Object cannot be serialized'.
 	self
-		assert: exception messageText
+		assert: reason messageText
 		equals: 'Instances of Object cannot be serialized'.
 	self
-		assert: exception stack isString;
-		assert: exception stack size > 0
+		assert: reason stack isString;
+		assert: reason stack size > 0
 ]
 
 { #category : 'running' }
