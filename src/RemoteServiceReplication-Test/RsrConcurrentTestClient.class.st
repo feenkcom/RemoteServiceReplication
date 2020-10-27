@@ -7,17 +7,17 @@ Class {
 { #category : 'accessing' }
 RsrConcurrentTestClient >> counterWithIncrement [
 
-	^remoteSelf counterWithIncrement
+	^remoteSelf counterWithIncrement wait
 ]
 
 { #category : 'accessing' }
 RsrConcurrentTestClient >> delayedCounter [
 
-	^remoteSelf delayedCounter
+	^remoteSelf delayedCounter wait
 ]
 
 { #category : 'actions' }
 RsrConcurrentTestClient >> stashProcess [
 
-	remoteSelf stashProcess
+	remoteSelf stashProcess wait
 ]

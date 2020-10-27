@@ -31,5 +31,5 @@ RsrServiceNoInstVars >> returnArgument: anObject [
 { #category : 'testing-methods' }
 RsrServiceNoInstVars >> sendReturnArgument: anObject [
 
-	^remoteSelf returnArgument: anObject
+	^(remoteSelf returnArgument: anObject) wait
 ]

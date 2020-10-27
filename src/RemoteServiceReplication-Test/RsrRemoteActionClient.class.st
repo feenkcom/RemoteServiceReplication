@@ -7,17 +7,17 @@ Class {
 { #category : 'evaluating' }
 RsrRemoteActionClient >> value [
 
-	^remoteSelf value
+	^remoteSelf value wait
 ]
 
 { #category : 'evaluating' }
 RsrRemoteActionClient >> value: anObject [
 
-	^remoteSelf value: anObject
+	^(remoteSelf value: anObject) wait
 ]
 
 { #category : 'evaluating' }
 RsrRemoteActionClient >> valueWithArguments: anArray [
 
-	^remoteSelf valueWithArguments: anArray
+	^(remoteSelf valueWithArguments: anArray) wait
 ]

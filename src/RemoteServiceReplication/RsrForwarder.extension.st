@@ -18,9 +18,7 @@ RsrForwarder >> _service: aService [
 { #category : '*remoteservicereplication' }
 RsrForwarder >> doesNotUnderstand: aMessage [
 
-	| promise |
-	promise := _service _connection
+	^_service _connection
 		_sendMessage: aMessage
-		to: _service.
-	^promise value
+		to: _service
 ]

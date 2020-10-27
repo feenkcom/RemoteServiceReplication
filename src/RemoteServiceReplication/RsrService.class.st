@@ -161,5 +161,5 @@ RsrService >> synchronize [
 	"Synchronize the service w/ its peer."
 
 	remoteSelf == nil
-		ifFalse: [remoteSelf _synchronize]
+		ifFalse: [remoteSelf _synchronize wait]
 ]

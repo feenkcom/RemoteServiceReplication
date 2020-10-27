@@ -45,11 +45,11 @@ RsrInstrumentedClient >> preUpdateCount: anInteger [
 { #category : 'evaluating' }
 RsrInstrumentedClient >> return: anObject [
 
-	^remoteSelf return: anObject
+	^(remoteSelf return: anObject) wait
 ]
 
 { #category : 'evaluating' }
 RsrInstrumentedClient >> value [
 
-	^remoteSelf value
+	^remoteSelf value wait
 ]

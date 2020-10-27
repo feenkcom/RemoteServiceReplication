@@ -10,5 +10,5 @@ Class {
 { #category : 'accessing' }
 RsrReflectedVariableTestClient >> setVarsToAndReturn: anObject [
 
-	^remoteSelf setVarsToAndReturn: anObject
+	^(remoteSelf setVarsToAndReturn: anObject) wait
 ]
