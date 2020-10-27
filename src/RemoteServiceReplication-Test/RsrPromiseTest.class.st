@@ -64,3 +64,36 @@ RsrPromiseTest >> testWaitFulfilled [
 		assert: promise isFulfilled;
 		deny: promise isBroken
 ]
+
+{ #category : 'running' }
+RsrPromiseTest >> testWhenCatchFulfilled [
+
+	| promise semaphore marker whenArg catchArg |
+	promise := RsrPromise new.
+	semaphore := Semaphore new.
+	marker := whenArg := catchArg := Object new.
+	promise
+		when: [:anObject | whenArg := anObject. semaphore signal]
+		catch: [:reason | catchArg := reason. semaphore signal].
+	promise fulfill: 42.
+	semaphore wait.
+	self shortWait. "Give enough time for the semaphore to be signaled again if both blocks activate."
+	self
+		assert: whenArg
+		equals: 42.
+	self
+		assert: catchArg
+		equals: marker.
+	whenArg := catchArg := marker.
+	promise
+		when: [:anObject | whenArg := anObject. semaphore signal]
+		catch: [:reason | catchArg := reason. semaphore signal].
+	semaphore wait.
+	self shortWait. "Give enough time for the semaphore to be signaled again if both blocks activate."
+	self
+		assert: whenArg
+		equals: 42.
+	self
+		assert: catchArg
+		equals: marker.
+]

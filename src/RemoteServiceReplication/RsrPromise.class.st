@@ -5,7 +5,8 @@ Class {
 		'mutex',
 		'value',
 		'state',
-		'resolvedMutex'
+		'resolvedMutex',
+		'resolutionActions'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -25,6 +26,7 @@ RsrPromise >> break: aReason [
 			[self assertNotResolved.
 			value := aReason.
 			state := #Broken].
+	self notifyActions.
 	resolvedMutex signal
 ]
 
@@ -43,6 +45,7 @@ RsrPromise >> fulfill: anObject [
 			[self assertNotResolved.
 			value := anObject.
 			state := #Fulfilled].
+	self notifyActions.
 	resolvedMutex signal
 ]
 
@@ -52,7 +55,8 @@ RsrPromise >> initialize [
 	super initialize.
 	mutex := Semaphore forMutualExclusion.
 	resolvedMutex := Semaphore new.
-	state := #PendingResolution
+	state := #PendingResolution.
+	resolutionActions := OrderedCollection new
 ]
 
 { #category : 'testing' }
@@ -71,6 +75,22 @@ RsrPromise >> isFulfilled [
 RsrPromise >> isResolved [
 
 	^self isBroken or: [self isFulfilled]
+]
+
+{ #category : 'fulfillment' }
+RsrPromise >> notifyActions [
+
+	| actions |
+	mutex
+		critical:
+			[actions := resolutionActions.
+			resolutionActions := OrderedCollection new].
+	actions
+		do:
+			[:each |
+			self isFulfilled
+				ifTrue: [RsrProcessModel fork: [each when value: value]]
+				ifFalse: [RsrProcessModel fork: [each catch value: value]]]
 ]
 
 { #category : 'synchronous-accessing' }
@@ -105,4 +125,19 @@ RsrPromise >> waitForResolution [
 	self isResolved
 		ifTrue: [^self].
 	[[self isResolved] whileFalse: [resolvedMutex wait]] ensure: [resolvedMutex signal]
+]
+
+{ #category : 'other' }
+RsrPromise >> when: aWhenBlock
+catch: aCatchBlock [
+
+	| action shouldNotifyActions |
+	action := RsrPromiseResolutionAction
+		when: aWhenBlock
+		catch: aCatchBlock.
+	mutex
+		critical:
+			[shouldNotifyActions := self isResolved.
+			resolutionActions add: action].
+	shouldNotifyActions ifTrue: [self notifyActions]
 ]
