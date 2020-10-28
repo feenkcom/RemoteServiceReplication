@@ -11,89 +11,123 @@ RsrPromiseTest >> shortWait [
 ]
 
 { #category : 'running' }
-RsrPromiseTest >> testWaitBreak [
+RsrPromiseTest >> testAsyncBreak [
 
-	| promise reason exception |
+	| promise semaphore expected whenRan first second third |
 	promise := RsrPromise new.
-	reason := #testWaitBreak.
-	self deny: promise isResolved.
+	semaphore := Semaphore new.
+	expected := Object new.
+	whenRan := false.
+	promise
+		when: [:object | whenRan := true. semaphore signal]
+		catch: [:reason | first := reason. semaphore signal].
+	promise
+		when: [:object | whenRan := true. semaphore signal]
+		catch: [:reason | second := reason. semaphore signal].
+	promise break: expected.
+	semaphore wait; wait.
+	self shortWait. "Ensure any when blocks run if they are going to schedule."
+	self deny: whenRan.
 	self
-		fork:
-			[self shortWait.
-			promise break: reason].
+		assert: first
+		identicalTo: expected.
+	self
+		assert: second
+		identicalTo: expected.
+	promise
+		when: [:object | whenRan := true. semaphore signal]
+		catch: [:reason | third := reason. semaphore signal].
+	semaphore wait.
+	self shortWait.
+	self deny: whenRan.
+	self
+		assert: third
+		identicalTo: expected
+]
+
+{ #category : 'running' }
+RsrPromiseTest >> testAsyncFulfill [
+
+	| promise semaphore expected catchRan first second third |
+	promise := RsrPromise new.
+	semaphore := Semaphore new.
+	expected := Object new.
+	catchRan := false.
+	promise
+		when: [:object | first := object. semaphore signal]
+		catch: [:reason | catchRan := true. semaphore signal].
+	promise
+		when: [:object | second := object. semaphore signal]
+		catch: [:reason | catchRan := true. semaphore signal].
+	promise fulfill: expected.
+	semaphore wait; wait.
+	self shortWait. "Ensure any catch blocks run if they are going to schedule."
+	self deny: catchRan.
+	self
+		assert: first
+		identicalTo: expected.
+	self
+		assert: second
+		identicalTo: expected.
+	promise
+		when: [:object | third := object. semaphore signal]
+		catch: [:reason | catchRan := true. semaphore signal].
+	semaphore wait.
+	self shortWait.
+	self deny: catchRan.
+	self
+		assert: third
+		identicalTo: expected
+]
+
+{ #category : 'running' }
+RsrPromiseTest >> testSyncBreak [
+
+	| promise expected exceptionRaised first second third |
+	promise := RsrPromise new.
+	expected := Object new.
+	exceptionRaised := false.
+	self fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. first := ex reason. ex return]].
+	self fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. second := ex reason. ex return]].
+	promise break: expected.
+	self shortWait. "Allow results to process."
+	self assert: exceptionRaised.
+	self
+		assert: first
+		identicalTo: expected.
+	self
+		assert: second
+		identicalTo: expected.
 	self
 		should: [promise wait]
 		raise: RsrBrokenPromise.
-	"Does it raise multiple times?
-	And assertions about exception"
-	exception := [promise wait]
+	third := [promise wait]
 		on: RsrBrokenPromise
-		do: [:ex | ex return: ex].
+		do: [:ex | ex return: ex reason].
 	self
-		assert: exception class
-		equals: RsrBrokenPromise.
-	self
-		assert: exception reason
-		equals: reason.
-	self
-		assert: promise isResolved;
-		assert: promise isBroken;
-		deny: promise isFulfilled
+		assert: third
+		identicalTo: expected
 ]
 
 { #category : 'running' }
-RsrPromiseTest >> testWaitFulfilled [
+RsrPromiseTest >> testSyncFulfill [
 
-	| promise expected |
+	| promise expected exceptionRaised first second |
 	promise := RsrPromise new.
-	expected := #testWaitFulfilled.
-	self deny: promise isResolved.
+	expected := Object new.
+	exceptionRaised := false.
+	self fork: [[first := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]].
+	self fork: [[second := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]].
+	promise fulfill: expected.
+	self shortWait. "Allow results to process."
+	self deny: exceptionRaised.
 	self
-		fork:
-			[self shortWait.
-			promise fulfill: expected].
+		assert: first
+		identicalTo: expected.
+	self
+		assert: second
+		identicalTo: expected.
 	self
 		assert: promise wait
-		equals: expected.
-	"Ensure waiting multiple times gives same result."
-	self
-		assert: promise wait
-		equals: expected.
-	self
-		assert: promise isResolved;
-		assert: promise isFulfilled;
-		deny: promise isBroken
-]
-
-{ #category : 'running' }
-RsrPromiseTest >> testWhenCatchFulfilled [
-
-	| promise semaphore marker whenArg catchArg |
-	promise := RsrPromise new.
-	semaphore := Semaphore new.
-	marker := whenArg := catchArg := Object new.
-	promise
-		when: [:anObject | whenArg := anObject. semaphore signal]
-		catch: [:reason | catchArg := reason. semaphore signal].
-	promise fulfill: 42.
-	semaphore wait.
-	self shortWait. "Give enough time for the semaphore to be signaled again if both blocks activate."
-	self
-		assert: whenArg
-		equals: 42.
-	self
-		assert: catchArg
-		equals: marker.
-	whenArg := catchArg := marker.
-	promise
-		when: [:anObject | whenArg := anObject. semaphore signal]
-		catch: [:reason | catchArg := reason. semaphore signal].
-	semaphore wait.
-	self shortWait. "Give enough time for the semaphore to be signaled again if both blocks activate."
-	self
-		assert: whenArg
-		equals: 42.
-	self
-		assert: catchArg
-		equals: marker.
+		identicalTo: expected
 ]
