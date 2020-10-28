@@ -5,19 +5,25 @@ Class {
 }
 
 { #category : 'evaluating' }
+RsrRemoteActionClient >> asyncValue [
+
+	^remoteSelf value
+]
+
+{ #category : 'evaluating' }
+RsrRemoteActionClient >> asyncValue: anObject [
+
+	^remoteSelf value: anObject
+]
+
+{ #category : 'evaluating' }
 RsrRemoteActionClient >> value [
 
-	^remoteSelf value wait
+	^self asyncValue wait
 ]
 
 { #category : 'evaluating' }
 RsrRemoteActionClient >> value: anObject [
 
-	^(remoteSelf value: anObject) wait
-]
-
-{ #category : 'evaluating' }
-RsrRemoteActionClient >> valueWithArguments: anArray [
-
-	^(remoteSelf valueWithArguments: anArray) wait
+	^(self asyncValue: anObject) wait
 ]

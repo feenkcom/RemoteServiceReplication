@@ -10,6 +10,81 @@ RsrMessageSendingTest class >> isAbstract [
 	^self == RsrMessageSendingTest
 ]
 
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testAsyncRemoteError [
+
+	| client server promise semaphore whenRan reason |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
+	promise := client asyncValue.
+	semaphore := Semaphore new.
+	whenRan := false.
+	promise
+		when: [:x | whenRan := true. semaphore signal]
+		catch: [:theReason | reason := theReason. semaphore signal].
+	semaphore wait.
+	self deny: whenRan.
+	self
+		assert: reason class
+		equals: RsrRemoteError.
+	self
+		assert: reason originalClassName
+		equals: #Error.
+	self
+		assert: reason tag
+		equals: 'tag'.
+	self
+		assert: reason messageText
+		equals: 'messageText'.
+	self
+		assert: reason stack isString;
+		assert: reason stack size > 0
+]
+
+{ #category : 'running' }
+RsrMessageSendingTest >> testAsyncReturnArgument [
+
+	| client server promise returnedArgument semaphore catchRan |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [:arg | arg].
+	promise := client asyncValue: client.
+	semaphore := Semaphore new.
+	catchRan := false.
+	promise
+		when: [:service | returnedArgument := service. semaphore signal]
+		catch: [:reason | catchRan := true. semaphore signal].
+	semaphore wait.
+	self deny: catchRan.
+	self
+		assert: returnedArgument
+		identicalTo: client
+]
+
+{ #category : 'running' }
+RsrMessageSendingTest >> testAsyncReturnService [
+
+	| client server promise returnedService semaphore catchRan |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrValueHolderServer new].
+	promise := client asyncValue.
+	semaphore := Semaphore new.
+	catchRan := false.
+	promise
+		when: [:service | returnedService := service. semaphore signal]
+		catch: [:reason | catchRan := true. semaphore signal].
+	semaphore wait.
+	self deny: catchRan.
+	self
+		assert: returnedService class
+		equals: RsrValueHolderClient
+]
+
 { #category : 'running' }
 RsrMessageSendingTest >> testChangeRemoteState [
 
