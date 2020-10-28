@@ -24,7 +24,15 @@ RsrPromiseTest >> testAsyncBreak [
 	promise
 		when: [:object | whenRan := true. semaphore signal]
 		catch: [:reason | second := reason. semaphore signal].
+	self
+		deny: promise isResolved;
+		deny: promise isBroken;
+		deny: promise isFulfilled.
 	promise break: expected.
+	self
+		assert: promise isResolved;
+		assert: promise isBroken;
+		deny: promise isFulfilled.
 	semaphore wait; wait.
 	self shortWait. "Ensure any when blocks run if they are going to schedule."
 	self deny: whenRan.
@@ -59,7 +67,15 @@ RsrPromiseTest >> testAsyncFulfill [
 	promise
 		when: [:object | second := object. semaphore signal]
 		catch: [:reason | catchRan := true. semaphore signal].
+	self
+		deny: promise isResolved;
+		deny: promise isBroken;
+		deny: promise isFulfilled.
 	promise fulfill: expected.
+	self
+		assert: promise isResolved;
+		deny: promise isBroken;
+		assert: promise isFulfilled.
 	semaphore wait; wait.
 	self shortWait. "Ensure any catch blocks run if they are going to schedule."
 	self deny: catchRan.

@@ -43,7 +43,7 @@ RsrDeliverErrorResponse >> executeFor: aConnection [
 	pendingMessage := aConnection pendingMessages
 		removeKey: transaction
 		ifAbsent: [^self error: 'Handle unknown transaction'].
-	pendingMessage promise error: self remoteError
+	pendingMessage promise break: self remoteError
 ]
 
 { #category : 'accessing' }

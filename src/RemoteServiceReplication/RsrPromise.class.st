@@ -1,3 +1,36 @@
+"
+Purpose: Provide a simple Promise interface for use in RSR.
+
+A Promise may be in two high level states -- unresolved and resolved. Resolving a promise means either breaking or fulfilling the promise. Any users of the Notification Interface will be notified of the resolution. See individual methods for details.
+
+Resolution Interface:
+- #break:
+- #fulfill:
+
+Notification Interface:
+- #when:catch:
+- #wait
+- #value
+
+Example Usage:
+
+```
+	| promise |
+	promise := Promise new.
+	promise
+		when: [:anObject | Transcript show: 'Promise fulfilled to: ', anObject asString; cr]
+		catch: [:reason | Transcript show: 'Promise broken because of ', reason asString; cr].
+	""Time passes""
+	promise fulfill: Object new
+```
+
+```
+	| promise |
+	promise := Promise new.
+	self runAsynCalculationThenFulfill: promise.
+	promise wait.
+```
+"
 Class {
 	#name : 'RsrPromise',
 	#superclass : 'RsrObject',
@@ -11,15 +44,16 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'private-asserting' }
+{ #category : 'private' }
 RsrPromise >> assertNotResolved [
 
 	self isResolved
 		ifTrue: [RsrPromiseAlreadyResolved signal].
 ]
 
-{ #category : 'fulfillment' }
+{ #category : 'resolving' }
 RsrPromise >> break: aReason [
+	"Notify the receiver's observers that the Promise will not be fulfilled."
 
 	mutex
 		critical:
@@ -30,15 +64,9 @@ RsrPromise >> break: aReason [
 	resolvedMutex signal
 ]
 
-{ #category : 'fulfillment' }
-RsrPromise >> error: anException [
-	"Temporary synonym of #break:"
-
-	^self break: anException
-]
-
-{ #category : 'fulfillment' }
+{ #category : 'resolving' }
 RsrPromise >> fulfill: anObject [
+	"Fulfill the receiver and notify any observers."
 
 	mutex
 		critical:
@@ -49,7 +77,7 @@ RsrPromise >> fulfill: anObject [
 	resolvedMutex signal
 ]
 
-{ #category : 'initialization' }
+{ #category : 'private' }
 RsrPromise >> initialize [
 
 	super initialize.
@@ -61,24 +89,30 @@ RsrPromise >> initialize [
 
 { #category : 'testing' }
 RsrPromise >> isBroken [
+	"Report if the receiver is currently broken"
 
 	^state == #Broken
 ]
 
 { #category : 'testing' }
 RsrPromise >> isFulfilled [
+	"Report is the receiver is currently fulfilled"
 
 	^state == #Fulfilled
 ]
 
 { #category : 'testing' }
 RsrPromise >> isResolved [
+	"Report if the receiver is currently resolved."
 
-	^self isBroken or: [self isFulfilled]
+	^self isFulfilled or: [self isBroken]
 ]
 
-{ #category : 'fulfillment' }
+{ #category : 'private' }
 RsrPromise >> notifyActions [
+	"Activate any registered action's fulfillment blocks.
+	Ensure that they are activated only once and that
+	future actions are allowed."
 
 	| actions |
 	mutex
@@ -93,14 +127,14 @@ RsrPromise >> notifyActions [
 				ifFalse: [RsrProcessModel fork: [each catch value: value]]]
 ]
 
-{ #category : 'synchronous-accessing' }
+{ #category : 'observing' }
 RsrPromise >> value [
 	"Alias for #wait"
 
 	^self wait
 ]
 
-{ #category : 'synchronous-accessing' }
+{ #category : 'observing' }
 RsrPromise >> wait [
 	"Wait for a the receiver to be Resolved.
 	If fulfilled - return the fulfillment value.
@@ -112,7 +146,7 @@ RsrPromise >> wait [
 		ifFalse: [value]
 ]
 
-{ #category : 'private-waiting' }
+{ #category : 'private' }
 RsrPromise >> waitForResolution [
 	"There doesn't seem to be a great way to implement this method.
 	The ensure below is generally safe but does have a side-effect of signaling
@@ -127,9 +161,15 @@ RsrPromise >> waitForResolution [
 	[[self isResolved] whileFalse: [resolvedMutex wait]] ensure: [resolvedMutex signal]
 ]
 
-{ #category : 'other' }
+{ #category : 'observing' }
 RsrPromise >> when: aWhenBlock
 catch: aCatchBlock [
+	"Activate an appropriate block when the receiver is resolved.
+	If the receiver is currently resolved, schedule the block activation.
+	The block is activated in a new thread. The thread is not given any specific
+	error handler.
+	<aWhenBlock> will be sent #value: with the same value provided to #fulfill:.
+	<aCatchBlock> will be sent #value: with the same reason provided to #break:."
 
 	| action shouldNotifyActions |
 	action := RsrPromiseResolutionAction
