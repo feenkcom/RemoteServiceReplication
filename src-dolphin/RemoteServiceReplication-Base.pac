@@ -3,42 +3,45 @@ package := Package name: 'RemoteServiceReplication-Base'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrArrayReference;
-	add: #RsrObject;
-	add: #RsrProcessModel;
-	add: #RsrFalseReference;
-	add: #RsrUnsupportedObject;
-	add: #RsrCollectionReference;
-	add: #RsrServiceReference;
-	add: #RsrBooleanReference;
-	add: #RsrUnknownClass;
-	add: #RsrCharacterReference;
-	add: #RsrPositiveIntegerReference;
-	add: #RsrImmediateReference;
-	add: #RsrSocketClosed;
-	add: #RsrSymbolReference;
-	add: #RsrNegativeIntegerReference;
 	add: #RsrReference;
-	add: #RsrInvalidBind;
-	add: #RsrStringReference;
 	add: #RsrIntegerReference;
-	add: #RsrDateAndTime;
-	add: #RsrConnectFailed;
-	add: #RsrCharacterArrayReference;
-	add: #RsrDateAndTimeReference;
-	add: #RsrSocketError;
-	add: #RsrByteArrayReference;
-	add: #RsrSetReference;
-	add: #RsrConnectionClosed;
-	add: #RsrValueReference;
-	add: #RsrOrderedCollectionReference;
-	add: #RsrAlreadyRegistered;
-	add: #RsrNilReference;
-	add: #RsrUnknownSID;
-	add: #RsrDictionaryReference;
-	add: #RsrError;
-	add: #RsrTrueReference;
 	add: #RsrWaitForConnectionCancelled;
+	add: #RsrCharacterReference;
+	add: #RsrSocketError;
+	add: #RsrTrueReference;
+	add: #RsrProcessModel;
+	add: #RsrOrderedCollectionReference;
+	add: #RsrUnknownClass;
+	add: #RsrCharacterArrayReference;
+	add: #RsrPromiseError;
+	add: #RsrImmediateReference;
+	add: #RsrNegativeIntegerReference;
+	add: #RsrCollectionReference;
+	add: #RsrConnectFailed;
+	add: #RsrNilReference;
+	add: #RsrError;
+	add: #RsrObject;
+	add: #RsrSetReference;
+	add: #RsrUnknownSID;
+	add: #RsrStringReference;
+	add: #RsrBrokenPromise;
+	add: #RsrBooleanReference;
+	add: #RsrPositiveIntegerReference;
+	add: #RsrArrayReference;
+	add: #RsrInvalidBind;
+	add: #RsrValueReference;
+	add: #RsrAlreadyRegistered;
+	add: #RsrDateAndTime;
+	add: #RsrDateAndTimeReference;
+	add: #RsrUnsupportedObject;
+	add: #RsrSymbolReference;
+	add: #RsrPromiseAlreadyResolved;
+	add: #RsrFalseReference;
+	add: #RsrServiceReference;
+	add: #RsrDictionaryReference;
+	add: #RsrSocketClosed;
+	add: #RsrByteArrayReference;
+	add: #RsrConnectionClosed;
 	yourself.
 
 package methodNames
@@ -142,6 +145,14 @@ RsrNilReference comment: 'No class-specific documentation for RsrNilReference, h
 !RsrNilReference categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
+	subclass: #RsrPromiseError
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrPromiseError categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
 	subclass: #RsrSocketError
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -189,6 +200,14 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrWaitForConnectionCancelled categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrPromiseError
+	subclass: #RsrBrokenPromise
+	instanceVariableNames: 'reason'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrBrokenPromise categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrValueReference
 	subclass: #RsrByteArrayReference
@@ -268,6 +287,14 @@ RsrSocketError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrInvalidBind categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrPromiseError
+	subclass: #RsrPromiseAlreadyResolved
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrPromiseAlreadyResolved categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrSocketError
 	subclass: #RsrSocketClosed
@@ -388,6 +415,9 @@ analyze: aCollectionusing: anAnalyzer	^anAnalyzer analyzeCollection: aCollect
 !RsrCollectionReference class methodsFor!
 from: aSequencedCollection	| references |	references := (1 to: aSequencedCollection size) collect: [:i | RsrReference from: (aSequencedCollection at: i)].	^self value: references! !
 
+!RsrBrokenPromise class methodsFor!
+signalReason: aReason	^self new		reason: aReason;		signal! !
+
 !RsrServiceReference class methodsFor!
 sid: aServiceID	^self new		sid: aServiceID;		yourself! !
 
@@ -401,10 +431,10 @@ from: aService	^self sid: aService _id! !
 referenceMapping	^referenceMapping ifNil: [self initializeReferenceMapping]! !
 
 !RsrReference class methodsFor!
-analyze: anObjectusing: anAnalyzer	^self subclassResponsibility! !
+typeIdentifier	^self subclassResponsibility! !
 
 !RsrReference class methodsFor!
-typeIdentifier	^self subclassResponsibility! !
+analyze: anObjectusing: anAnalyzer	^self subclassResponsibility! !
 
 !RsrReference class methodsFor!
 from: anObject	| referenceClass |	referenceClass := self referenceClassFor: anObject.	^referenceClass from: anObject! !
@@ -516,6 +546,12 @@ decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: 
 
 !RsrCollectionReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
+
+!RsrBrokenPromise methodsFor!
+reason: aReason	reason := aReason! !
+
+!RsrBrokenPromise methodsFor!
+reason	^reason! !
 
 !RsrByteArrayReference methodsFor!
 typeIdentifier	^10! !
