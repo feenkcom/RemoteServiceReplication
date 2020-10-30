@@ -57,32 +57,44 @@ using: anEncoder [
 { #category : 'executing' }
 RsrSendMessage >> executeFor: aConnection [
 
-	| result analysis resultReference response |
-	[| servs rec sel args |
-	servs := self snapshots collect: [:each | each reifyIn: aConnection].
-	rec := self receiverReference resolve: aConnection.
-	sel := self selectorReference resolve: aConnection.
-	args := self argumentReferences collect: [:each | each resolve: aConnection].
-	result := rec
-		perform: sel
-		withArguments: args.
-	analysis := RsrSnapshotAnalysis
-		roots: (Array with: rec with: result)
-		connection: aConnection.
-	analysis perform.
-	resultReference := RsrReference from: result.
-	response := RsrDeliverResponse
-		transaction: self transaction
-		responseReference: resultReference
-		snapshots: analysis snapshots.
-	aConnection _sendCommand: response]
+	true ifTrue: [^self executeFor2: aConnection].
+	^[self executeFor2: aConnection]
+		on: Error
+		do:
+			[:ex |
+			self trace.
+			Transcript
+				show: ex messageText;
+				cr.
+			ex pass]
+]
+
+{ #category : 'executing' }
+RsrSendMessage >> executeFor2: aConnection [
+
+	| resolver services receiver selector arguments messageSend |
+	resolver := RsrRemotePromiseResolver
+		for: self
+		over: aConnection.
+	[services := self snapshots collect: [:each | each reifyIn: aConnection].
+	receiver := self receiverReference resolve: aConnection.
+	selector := self selectorReference resolve: aConnection.
+	arguments := self argumentReferences collect: [:each | each resolve: aConnection]]
 		on: Error
 		do:
 			[:ex |
 			self
 				logException: ex
 				to: aConnection log.
-			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: self transaction remoteError: (RsrRemoteError from: ex))]
+			^resolver break: (RsrRemoteError from: ex)].
+	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."
+	messageSend := RsrMessageSend
+		receiver: receiver
+		selector: selector
+		arguments: arguments.
+	self
+		perform: messageSend
+		answerUsing: resolver
 ]
 
 { #category : 'reporting' }
@@ -100,6 +112,22 @@ to: aLog [
 				nextPutAll: ' due to: ';
 				nextPutAll: anException description].
 	aLog error: message
+]
+
+{ #category : 'executing' }
+RsrSendMessage >> perform: aMessageSend
+answerUsing: aResolver [
+
+	| result |
+	result := [aResolver fulfill: aMessageSend perform]
+		on: Error
+		do:
+			[:ex |
+			self
+				logException: ex
+				to: aResolver connection log.
+			aResolver break: (RsrRemoteError from: ex).
+			^self]
 ]
 
 { #category : 'accessing' }

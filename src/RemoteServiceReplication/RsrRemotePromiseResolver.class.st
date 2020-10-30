@@ -1,10 +1,11 @@
 Class {
 	#name : 'RsrRemotePromiseResolver',
-	#superclass : 'Object',
+	#superclass : 'RsrObject',
 	#instVars : [
 		'sendMessage',
-		'service',
-		'connection'
+		'connection',
+		'extraRoots',
+		'hasResolved'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -19,11 +20,19 @@ over: aConnection [
 		yourself
 ]
 
+{ #category : 'accessing' }
+RsrRemotePromiseResolver >> addRoot: aService [
+
+	extraRoots add: aService
+]
+
 { #category : 'resolving' }
 RsrRemotePromiseResolver >> break: aReason [
 	"<aReason> can be any object supported by RSR."
 
-	self resolution: (Array with: #break with: aReason)
+	self connection _sendCommand: (RsrDeliverErrorResponse transaction: self sendMessage transaction remoteError: aReason).
+	hasResolved := true
+	"self resolution: (Array with: #break with: aReason)"
 ]
 
 { #category : 'accessing' }
@@ -39,10 +48,35 @@ RsrRemotePromiseResolver >> connection: aConnection [
 ]
 
 { #category : 'resolving' }
-RsrRemotePromiseResolver >> fulfill: anObject [
-	"Fulfill the remote promise with a fulfilled value of <anObject>"
+RsrRemotePromiseResolver >> fulfill: result [
+	"Fulfill the remote promise with a fulfilled value of <result>"
 
-	self resolution: (Array with: #fulfill with: anObject)
+	| analysis resultReference response |
+	analysis := RsrSnapshotAnalysis
+		roots: (Array with: result), extraRoots
+		connection: self connection.
+	analysis perform.
+	resultReference := RsrReference from: result.
+	response := RsrDeliverResponse
+		transaction: self sendMessage transaction
+		responseReference: resultReference
+		snapshots: analysis snapshots.
+	self connection _sendCommand: response.
+	hasResolved := true.
+	"self resolution: (Array with: #fulfill with: anObject)"
+]
+
+{ #category : 'other' }
+RsrRemotePromiseResolver >> hasResolved [
+
+	^hasResolved
+]
+
+{ #category : 'private' }
+RsrRemotePromiseResolver >> initialize [
+
+	super initialize.
+	extraRoots := OrderedCollection new
 ]
 
 { #category : 'resolving' }
