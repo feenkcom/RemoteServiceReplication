@@ -115,9 +115,9 @@ RsrEncoderTest >> testSendMessage [
 	analysis perform.
 	command := RsrSendMessage
 		transaction: 1
-		receiver: (RsrReference from: service)
-		selector: (RsrSymbolReference from: #return42)
-		arguments: #().
+		receiverReference: (RsrReference from: service)
+		selectorReference: (RsrSymbolReference from: #return42)
+		argumentReferences: #().
 	command snapshots: analysis snapshots.
 	result := self encoder encodeSendMessage: command.
 	expectedEncoding :=

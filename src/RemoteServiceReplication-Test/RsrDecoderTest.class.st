@@ -157,13 +157,13 @@ RsrDecoderTest >> testSendMessage [
 		assert: command transaction
 		equals: 1.
 	self
-		assert: (command receiver resolve: self connection)
+		assert: (command receiverReference resolve: self connection)
 		identicalTo: service.
 	self
-		assert: (command selector resolve: self connection)
+		assert: (command selectorReference resolve: self connection)
 		identicalTo: #return42.
 	self
-		assert: command arguments
+		assert: command argumentReferences
 		equals: #().
 	self
 		assert: command snapshots size

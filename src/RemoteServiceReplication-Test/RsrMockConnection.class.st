@@ -30,9 +30,9 @@ to: anRsrObject [
 
 	lastMessage := RsrSendMessage
 		transaction: 1
-		receiver: anRsrObject
-		selector: aMessage selector
-		arguments: aMessage arguments.
+		receiverReference: anRsrObject
+		selectorReference: aMessage selector
+		argumentReferences: aMessage arguments.
 	^RsrPromise new
 		fulfill: nil;
 		yourself

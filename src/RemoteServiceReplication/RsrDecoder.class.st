@@ -136,9 +136,9 @@ RsrDecoder >> decodeSendMessage: aStream [
 	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].
 	instance := RsrSendMessage
 		transaction: transaction
-		receiver: receiverReference
-		selector: selector
-		arguments: arguments.
+		receiverReference: receiverReference
+		selectorReference: selector
+		argumentReferences: arguments.
 	instance snapshots: serviceSnapshots.
 	^instance
 ]

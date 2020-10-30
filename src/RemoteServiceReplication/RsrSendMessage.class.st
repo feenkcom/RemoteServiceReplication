@@ -11,9 +11,9 @@ Class {
 	#superclass : 'RsrCommand',
 	#instVars : [
 		'transaction',
-		'receiver',
-		'selector',
-		'arguments',
+		'receiverReference',
+		'selectorReference',
+		'argumentReferences',
 		'snapshots'
 	],
 	#category : 'RemoteServiceReplication'
@@ -21,26 +21,28 @@ Class {
 
 { #category : 'instance creation' }
 RsrSendMessage class >> transaction: aTransactionId
-receiver: aService
-selector: aSelector
-arguments: anArray [
+receiverReference: aServiceReference
+selectorReference: aSelectorReference
+argumentReferences: anArrayOfReferences [
 
 	^self new
 		transaction: aTransactionId;
-		receiver: aService;
-		selector: aSelector;
-		arguments: anArray;
+		receiverReference: aServiceReference;
+		selectorReference: aSelectorReference;
+		argumentReferences: anArrayOfReferences;
 		yourself
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> arguments [
-	^ arguments
+RsrSendMessage >> argumentReferences [
+
+	^argumentReferences
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> arguments: anObject [
-	arguments := anObject
+RsrSendMessage >> argumentReferences: anArrayOfReferences [
+
+	argumentReferences := anArrayOfReferences
 ]
 
 { #category : 'encoding' }
@@ -57,10 +59,10 @@ RsrSendMessage >> executeFor: aConnection [
 
 	| result analysis resultReference response |
 	[| servs rec sel args |
-	servs := snapshots collect: [:each | each reifyIn: aConnection].
-	rec := receiver resolve: aConnection.
-	sel := selector resolve: aConnection.
-	args := arguments collect: [:each | each resolve: aConnection].
+	servs := self snapshots collect: [:each | each reifyIn: aConnection].
+	rec := self receiverReference resolve: aConnection.
+	sel := self selectorReference resolve: aConnection.
+	args := self argumentReferences collect: [:each | each resolve: aConnection].
 	result := rec
 		perform: sel
 		withArguments: args.
@@ -70,7 +72,7 @@ RsrSendMessage >> executeFor: aConnection [
 	analysis perform.
 	resultReference := RsrReference from: result.
 	response := RsrDeliverResponse
-		transaction: transaction
+		transaction: self transaction
 		response: resultReference
 		snapshots: analysis snapshots.
 	aConnection _sendCommand: response]
@@ -80,7 +82,7 @@ RsrSendMessage >> executeFor: aConnection [
 			self
 				logException: ex
 				to: aConnection log.
-			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex))]
+			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: self transaction remoteError: (RsrRemoteError from: ex))]
 ]
 
 { #category : 'reporting' }
@@ -92,38 +94,42 @@ to: aLog [
 		streamContents:
 			[:stream |
 			stream
-				print: receiver;
+				print: self receiverReference;
 				nextPutAll: '>>';
-				print: selector;
+				print: self selectorReference;
 				nextPutAll: ' due to: ';
 				nextPutAll: anException description].
 	aLog error: message
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> receiver [
-	^ receiver
+RsrSendMessage >> receiverReference [
+
+	^receiverReference
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> receiver: anObject [
-	receiver := anObject
+RsrSendMessage >> receiverReference: aServiceReference [
+
+	receiverReference := aServiceReference
 ]
 
 { #category : 'reporting' }
 RsrSendMessage >> reportOn: aLog [
 
-	aLog debug: 'RsrSendMessage(', self receiver asString, '>>', self selector asString, ')'
+	aLog debug: 'RsrSendMessage(', self receiverReference asString, '>>', self selectorReference asString, ')'
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> selector [
-	^ selector
+RsrSendMessage >> selectorReference [
+
+	^selectorReference
 ]
 
 { #category : 'accessing' }
-RsrSendMessage >> selector: anObject [
-	selector := anObject
+RsrSendMessage >> selectorReference: aSymbolReference [
+
+	selectorReference := aSymbolReference
 ]
 
 { #category : 'accessing' }

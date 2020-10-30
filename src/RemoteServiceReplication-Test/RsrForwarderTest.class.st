@@ -6,6 +6,7 @@ Class {
 
 { #category : 'running' }
 RsrForwarderTest >> testForwarding [
+	"This test needs to be improved. It is out of sync."
 
 	| rsrObject id remoteInterface forwarder message |
 	rsrObject := RsrTestService clientClass new.
@@ -23,12 +24,12 @@ RsrForwarderTest >> testForwarding [
 		assert: message transaction
 		equals: 1.
 	self
-		assert: message receiver
+		assert: message receiverReference
 		equals: rsrObject.
 	self
-		assert: message selector
+		assert: message selectorReference
 		equals: #arg1:arg2:.
 	self
-		assert: message arguments
+		assert: message argumentReferences
 		equals: #(15 42).
 ]

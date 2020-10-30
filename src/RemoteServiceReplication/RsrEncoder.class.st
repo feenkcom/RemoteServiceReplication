@@ -136,15 +136,15 @@ onto: aStream [
 				encodeServiceSnapshot: each
 				onto: aStream].
 	self
-		encodeReference:  aSendMessage receiver
+		encodeReference:  aSendMessage receiverReference
 		onto: aStream.
 	self
-		encodeReference: aSendMessage selector
+		encodeReference: aSendMessage selectorReference
 		onto: aStream.
 	self
-		encodeControlWord: aSendMessage arguments size
+		encodeControlWord: aSendMessage argumentReferences size
 		onto: aStream.
-	aSendMessage arguments
+	aSendMessage argumentReferences
 		do:
 			[:each |
 			self

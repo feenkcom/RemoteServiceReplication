@@ -123,9 +123,9 @@ to: aService [
 	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].
 	dispatchCommand := RsrSendMessage
 		transaction: self transactionSpigot next
-		receiver: receiverReference
-		selector: selectorReference
-		arguments: argumentReferences.
+		receiverReference: receiverReference
+		selectorReference: selectorReference
+		argumentReferences: argumentReferences.
 	dispatchCommand snapshots: analysis snapshots.
 	promise := RsrPromise new.
 	pendingMessage := RsrPendingMessage
