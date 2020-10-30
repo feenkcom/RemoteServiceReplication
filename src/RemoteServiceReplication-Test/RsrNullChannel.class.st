@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'lastCommand'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'lifecycle' }
