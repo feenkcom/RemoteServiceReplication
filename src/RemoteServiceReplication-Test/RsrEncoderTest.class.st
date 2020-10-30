@@ -67,7 +67,7 @@ RsrEncoderTest >> testDeliverResponse [
 	response := #responseSymbol.
 	command := RsrDeliverResponse
 		transaction: 1
-		response: (RsrReference from: response)
+		responseReference: (RsrReference from: response)
 		snapshots: (Array with: (RsrServiceSnapshot from: service)).
 	result := self encoder encodeDeliverResponse: command.
 	expectedEncoding :=

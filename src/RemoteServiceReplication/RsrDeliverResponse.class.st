@@ -11,7 +11,7 @@ Class {
 	#superclass : 'RsrCommand',
 	#instVars : [
 		'transaction',
-		'response',
+		'responseReference',
 		'snapshots'
 	],
 	#category : 'RemoteServiceReplication'
@@ -19,38 +19,13 @@ Class {
 
 { #category : 'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
-error: anException
-roots: anArray [
+responseReference: aReference
+snapshots: anArrayOfSnapshots [
 
 	^self new
 		transaction: aTransactionId;
-		errorName: anException class name;
-		response: anException messageText;
-		roots: anArray;
-		yourself
-]
-
-{ #category : 'instance creation' }
-RsrDeliverResponse class >> transaction: aTransactionId
-response: anObject
-roots: anArray [
-
-	^self new
-		transaction: aTransactionId;
-		response: anObject;
-		roots: anArray;
-		yourself
-]
-
-{ #category : 'instance creation' }
-RsrDeliverResponse class >> transaction: aTransactionId
-response: anObject
-snapshots: anArray [
-
-	^self new
-		transaction: aTransactionId;
-		response: anObject;
-		snapshots: anArray;
+		responseReference: aReference;
+		snapshots: anArrayOfSnapshots;
 		yourself
 ]
 
@@ -68,11 +43,11 @@ RsrDeliverResponse >> executeFor: aConnection [
 
 	| pendingMessage result |
 	pendingMessage := aConnection pendingMessages
-		removeKey: transaction
+		removeKey: self transaction
 		ifAbsent:
 			[^self error: 'Handle unknown transaction'].
-	[snapshots do: [:each | each reifyIn: aConnection].
-	result := response resolve: aConnection.
+	[self snapshots do: [:each | each reifyIn: aConnection].
+	result := self responseReference resolve: aConnection.
 	pendingMessage promise fulfill: result]
 		on: Error
 		do: [:ex | pendingMessage promise fulfill: ex copy]
@@ -87,13 +62,25 @@ RsrDeliverResponse >> reportOn: aLog [
 { #category : 'accessing' }
 RsrDeliverResponse >> response [
 
-	^response
+	^self responseReference
 ]
 
 { #category : 'accessing' }
 RsrDeliverResponse >> response: anObject [
 
-	response := anObject
+	^self responseReference: anObject
+]
+
+{ #category : 'accessing' }
+RsrDeliverResponse >> responseReference [
+
+	^responseReference
+]
+
+{ #category : 'accessing' }
+RsrDeliverResponse >> responseReference: aReference [
+
+	responseReference := aReference
 ]
 
 { #category : 'accessing' }

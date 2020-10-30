@@ -73,7 +73,7 @@ RsrSendMessage >> executeFor: aConnection [
 	resultReference := RsrReference from: result.
 	response := RsrDeliverResponse
 		transaction: self transaction
-		response: resultReference
+		responseReference: resultReference
 		snapshots: analysis snapshots.
 	aConnection _sendCommand: response]
 		on: Error
