@@ -1,6 +1,9 @@
 Class {
 	#name : 'RsrNullChannel',
 	#superclass : 'RsrChannel',
+	#instVars : [
+		'lastCommand'
+	],
 	#category : 'RemoteServiceReplication'
 }
 
@@ -16,6 +19,12 @@ RsrNullChannel >> isOpen [
 	^true
 ]
 
+{ #category : 'accessing' }
+RsrNullChannel >> lastCommand [
+
+	^lastCommand
+]
+
 { #category : 'lifecycle' }
 RsrNullChannel >> open [
 
@@ -24,10 +33,12 @@ RsrNullChannel >> open [
 
 { #category : 'events' }
 RsrNullChannel >> received: aCommand [
-	"NOP"
+
+	lastCommand := aCommand
 ]
 
 { #category : 'events' }
 RsrNullChannel >> send: aCommand [
-	"NOP"
+
+	lastCommand := aCommand
 ]
