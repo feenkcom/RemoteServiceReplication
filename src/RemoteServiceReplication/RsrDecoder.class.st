@@ -38,7 +38,6 @@ RsrDecoder >> decodeCommand: aStream [
 	command == self sendMessageCommand ifTrue: [^self decodeSendMessage: aStream].
 	command == self deliverResponseCommand ifTrue: [^self decodeDeliverResponse: aStream].
 	command == self releaseObjectsCommand ifTrue: [^self decodeReleaseServices: aStream].
-	command == self deliverErrorResponseCommand ifTrue: [^self decodeDeliverErrorResponse: aStream].
 	^RsrError signal: 'Unknown command identifier: ', command printString
 ]
 
@@ -51,27 +50,6 @@ RsrDecoder >> decodeControlWord: aStream [
 	^unsignedResult > self controlWordMax
 		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]
 		ifFalse: [unsignedResult]
-]
-
-{ #category : 'decoding-commands' }
-RsrDecoder >> decodeDeliverErrorResponse: aStream [
-
-	| transaction originalClassName tag messageText stack error |
-	transaction := self decodeControlWord: aStream.
-	originalClassName := (self decodeReference: aStream) resolve: nil.
-	tag := (self decodeReference: aStream) resolve: nil.
-	messageText := (self decodeReference: aStream) resolve: nil.
-	stack := (self decodeReference: aStream) resolve: nil.
-	error := RsrRemoteError new
-		originalClassName: originalClassName;
-		tag: tag;
-		messageText: messageText;
-		stack: stack;
-		yourself.
-	^RsrDeliverErrorResponse new
-		transaction: transaction;
-		remoteError: error;
-		yourself
 ]
 
 { #category : 'decoding-commands' }

@@ -30,9 +30,7 @@ RsrRemotePromiseResolver >> addRoot: aService [
 RsrRemotePromiseResolver >> break: aReason [
 	"<aReason> can be any object supported by RSR."
 
-	self connection _sendCommand: (RsrDeliverErrorResponse transaction: self sendMessage transaction remoteError: aReason).
-	hasResolved := true
-	"self resolution: (Array with: #break with: aReason)"
+	self resolution: (Array with: #break with: aReason)
 ]
 
 { #category : 'accessing' }
@@ -51,19 +49,7 @@ RsrRemotePromiseResolver >> connection: aConnection [
 RsrRemotePromiseResolver >> fulfill: result [
 	"Fulfill the remote promise with a fulfilled value of <result>"
 
-	| analysis resultReference response |
-	analysis := RsrSnapshotAnalysis
-		roots: (Array with: result), extraRoots
-		connection: self connection.
-	analysis perform.
-	resultReference := RsrReference from: result.
-	response := RsrDeliverResponse
-		transaction: self sendMessage transaction
-		responseReference: resultReference
-		snapshots: analysis snapshots.
-	self connection _sendCommand: response.
-	hasResolved := true.
-	"self resolution: (Array with: #fulfill with: anObject)"
+	self resolution: (Array with: #fulfill with: result)
 ]
 
 { #category : 'other' }
@@ -80,8 +66,21 @@ RsrRemotePromiseResolver >> initialize [
 ]
 
 { #category : 'resolving' }
-RsrRemotePromiseResolver >> resolution: aResult [
-	"Actually dispatch the result"
+RsrRemotePromiseResolver >> resolution: result [
+	"Process and dispatch the result"
+
+	| analysis resultReference response |
+	analysis := RsrSnapshotAnalysis
+		roots: (Array with: result), extraRoots
+		connection: self connection.
+	analysis perform.
+	resultReference := RsrReference from: result.
+	response := RsrDeliverResponse
+		transaction: self sendMessage transaction
+		responseReference: resultReference
+		snapshots: analysis snapshots.
+	self connection _sendCommand: response.
+	hasResolved := true.
 ]
 
 { #category : 'accessing' }

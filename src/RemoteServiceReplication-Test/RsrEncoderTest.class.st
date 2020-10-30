@@ -21,44 +21,6 @@ RsrEncoderTest >> register: aService [
 ]
 
 { #category : 'running-immediates' }
-RsrEncoderTest >> testDeliverErrorResponse [
-
-	| error remoteError command result expectedEncoding |
-	error := Error new
-		tag: 'tag';
-		messageText: 'message text';
-		yourself.
-	remoteError := RsrRemoteError from: error.
-	remoteError stack: 'stack dump'.
-	command := RsrDeliverErrorResponse
-		transaction: 1
-		remoteError: remoteError.
-	result := self encoder encodeDeliverErrorResponse: command.
-	expectedEncoding :=
-		#[0 0 0 0 0 0 0 4], "DeliverErrorResponse Command"
-		#[0 0 0 0 0 0 0 1], "Transaction Id"
-		#[0 0 0 0 0 0 0 0], "originalClassName: Symbol encoding"
-		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"
-		#[0 0 0 0 0 0 0 5], "Length of UTF-8 bytes"
-		#[69 114 114 111 114], "#Error"
-		#[0 0 0 0 0 0 0 0], "OID = 0"
-		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
-		#[0 0 0 0 0 0 0 3], "length"
-		#[116 97 103],	 "tag"
-		#[0 0 0 0 0 0 0 0], "OID = 0"
-		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
-		#[0 0 0 0 0 0 0 12], "length"
-		#[109 101 115 115 97 103 101 32 116 101 120 116],	 "message text"
-		#[0 0 0 0 0 0 0 0], "OID = 0"
-		#[0 0 0 0 0 0 0 2], "Immediate Type = 2"
-		#[0 0 0 0 0 0 0 10], "length"
-		#[115 116 97 99 107 32 100 117 109 112].	 "stack dump"
-	self
-		assert: result
-		equals: expectedEncoding
-]
-
-{ #category : 'running-immediates' }
 RsrEncoderTest >> testDeliverResponse [
 
 	| service response command result expectedEncoding |

@@ -86,7 +86,8 @@ RsrSendMessage >> executeFor2: aConnection [
 			self
 				logException: ex
 				to: aConnection log.
-			^resolver break: (RsrRemoteError from: ex)].
+			self note: 'This code path needs to be tested'.
+			^resolver break: (RsrRemoteException from: ex)].
 	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."
 	messageSend := RsrMessageSend
 		receiver: receiver
@@ -126,7 +127,7 @@ answerUsing: aResolver [
 			self
 				logException: ex
 				to: aResolver connection log.
-			aResolver break: (RsrRemoteError from: ex).
+			aResolver break: (RsrRemoteException from: ex).
 			^self]
 ]
 

@@ -16,12 +16,6 @@ RsrUnsupportedObject class >> signal: anObject [
 ]
 
 { #category : 'accessing' }
-RsrUnsupportedObject >> messageText [
-
-	^'Instances of ', object class name, ' cannot be serialized'
-]
-
-{ #category : 'accessing' }
 RsrUnsupportedObject >> object [
 
 	^object
@@ -30,5 +24,6 @@ RsrUnsupportedObject >> object [
 { #category : 'accessing' }
 RsrUnsupportedObject >> object: anObject [
 
-	object := anObject
+	object := anObject.
+	self messageText: 'Instances of ', object class name, ' cannot be serialized'
 ]

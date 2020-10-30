@@ -48,7 +48,9 @@ RsrDeliverResponse >> executeFor: aConnection [
 			[^self error: 'Handle unknown transaction'].
 	[self snapshots do: [:each | each reifyIn: aConnection].
 	result := self responseReference resolve: aConnection.
-	pendingMessage promise fulfill: result]
+	result first == #fulfill
+		ifTrue: [pendingMessage promise fulfill: result last]
+		ifFalse: [pendingMessage promise break: result last]]
 		on: Error
 		do: [:ex | pendingMessage promise fulfill: ex copy]
 ]

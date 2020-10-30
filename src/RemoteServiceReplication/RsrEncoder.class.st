@@ -21,38 +21,6 @@ onto: aStream [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse [
-
-	^ByteArray streamContents: [:stream | self encodeDeliverErrorResponse: aDeliverErrorResponse onto: stream]
-]
-
-{ #category : 'private-encoding' }
-RsrEncoder >> encodeDeliverErrorResponse: aDeliverErrorResponse
-onto: aStream [
-
-	| error |
-	error := aDeliverErrorResponse remoteError.
-	self
-		encodeControlWord: self deliverErrorResponseCommand
-		onto: aStream.
-	self
-		encodeControlWord: aDeliverErrorResponse transaction
-		onto: aStream.
-	self
-		encodeReference: (RsrReference from: error originalClassName)
-		onto: aStream.
-	self
-		encodeReference: (RsrReference from: error tag)
-		onto: aStream.
-	self
-		encodeReference: (RsrReference from: error messageText)
-		onto: aStream.
-	self
-		encodeReference: (RsrReference from: error stack)
-		onto: aStream
-]
-
-{ #category : 'private-encoding' }
 RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
 
 	^ByteArray streamContents: [:stream | self encodeDeliverResponse: aDeliverResponse onto: stream]
