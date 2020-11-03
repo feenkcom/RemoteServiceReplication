@@ -10,6 +10,34 @@ RsrMessageSendingTest class >> isAbstract [
 	^self == RsrMessageSendingTest
 ]
 
+{ #category : 'expecting' }
+RsrMessageSendingTest >> expectCatch: aPromise [
+
+	| semaphore wasFulfilled result |
+	semaphore := Semaphore new.
+	wasFulfilled := false.
+	aPromise
+		when: [:value | wasFulfilled := true. semaphore signal]
+		catch: [:reason | result := reason. semaphore signal].
+	semaphore wait.
+	self deny: wasFulfilled.
+	^result
+]
+
+{ #category : 'expecting' }
+RsrMessageSendingTest >> expectWhen: aPromise [
+
+	| semaphore wasBroken result |
+	semaphore := Semaphore new.
+	wasBroken := false.
+	aPromise
+		when: [:value | result := value. semaphore signal]
+		catch: [:r | wasBroken := true. semaphore signal].
+	semaphore wait.
+	self deny: wasBroken.
+	^result
+]
+
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testAsyncRemoteError [
 
@@ -94,6 +122,25 @@ RsrMessageSendingTest >> testChangeRemoteState [
 	server action: [marker := true].
 	client value.
 	self assert: marker
+]
+
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testDebugHandlerNoResolutionWithNonresumableException [
+	"Ensure that if the debug handler does not resolve the exception
+	and the exception is resumable, we resume with the evaluation
+	result of the debug handler."
+
+	| marker client server reason |
+	marker := #testMarker.
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrNonresumableError signal].
+	server debugHandler: [:exception :messageSend :resolver | marker].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason exceptionClassName
+		equals: #RsrNonresumableError
 ]
 
 { #category : 'running-errors' }

@@ -141,8 +141,10 @@ answerUsing: aResolver [
 			aResolver hasResolved
 				ifFalse:
 					[ex isResumable
-						ifTrue: [ex resume: debugResult]].
-].
+						ifTrue: [ex resume: debugResult]
+						ifFalse:
+							[aResolver break: (RsrRemoteException from: ex).
+							ex return]]].
 	raisedException
 		ifTrue: [aResolver break: reason]
 ]
