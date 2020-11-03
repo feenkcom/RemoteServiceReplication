@@ -97,6 +97,24 @@ RsrMessageSendingTest >> testChangeRemoteState [
 ]
 
 { #category : 'running-errors' }
+RsrMessageSendingTest >> testDebugHandlerNoResolutionWithResumableHandler [
+	"Ensure that if the debug handler does not resolve the exception
+	and the exception is resumable, we resume with the evaluation
+	result of the debug handler."
+
+	| marker client server |
+	marker := #testMarker.
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrResumableError signal].
+	server debugHandler: [:exception :messageSend :resolver | marker].
+	self
+		assert: client value
+		equals: marker
+]
+
+{ #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteError [
 
 	| client server reason |

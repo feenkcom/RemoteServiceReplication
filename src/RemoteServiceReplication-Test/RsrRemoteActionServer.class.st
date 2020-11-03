@@ -2,7 +2,8 @@ Class {
 	#name : 'RsrRemoteActionServer',
 	#superclass : 'RsrRemoteAction',
 	#instVars : [
-		'action'
+		'action',
+		'debugHandler'
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
@@ -17,6 +18,31 @@ RsrRemoteActionServer >> action [
 RsrRemoteActionServer >> action: aBlock [
 
 	action := aBlock
+]
+
+{ #category : 'debugging' }
+RsrRemoteActionServer >> debug: anException
+raisedDuring: aMessageSend
+answerUsing: aResolver [
+
+	self debugHandler isNil
+		ifTrue: [RsrError signal: '#debug:raidedDuring:answerUsing: called without a debugHandler'].
+	^self debugHandler
+		value: anException
+		value: aMessageSend
+		value: aResolver
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> debugHandler [
+
+	^debugHandler
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> debugHandler: aBlock [
+
+	debugHandler := aBlock
 ]
 
 { #category : 'evaluating' }

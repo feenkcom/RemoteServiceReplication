@@ -122,15 +122,27 @@ answerUsing: aResolver [
 	| raisedException reason |
 	raisedException := false.
 	[aResolver fulfill: aMessageSend perform]
-		on: Error
+		on: self unhandledExceptionClass
 		do:
-			[:ex |
-			raisedException := true.
-			self
-				logException: ex
-				to: aResolver connection log.
-			reason := (RsrRemoteException from: ex).
-			ex return].
+			[:ex | | debugResult |
+			debugResult := [aMessageSend receiver
+				debug: ex
+				raisedDuring: aMessageSend
+				answerUsing: aResolver]
+				on: self unhandledExceptionClass
+				do:
+					[:debugEx | 
+					raisedException := true.
+					self
+						logException: ex
+						to: aResolver connection log.
+					reason := (RsrRemoteException from: ex).
+					ex return].
+			aResolver hasResolved
+				ifFalse:
+					[ex isResumable
+						ifTrue: [ex resume: debugResult]].
+].
 	raisedException
 		ifTrue: [aResolver break: reason]
 ]
@@ -185,4 +197,11 @@ RsrSendMessage >> transaction [
 { #category : 'accessing' }
 RsrSendMessage >> transaction: anObject [
 	transaction := anObject
+]
+
+{ #category : 'accessing' }
+RsrSendMessage >> unhandledExceptionClass [
+	"Temporarily, use Error until we have appropriate GemStone hooks."
+
+	^Error
 ]
