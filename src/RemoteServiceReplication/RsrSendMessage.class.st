@@ -119,16 +119,20 @@ to: aLog [
 RsrSendMessage >> perform: aMessageSend
 answerUsing: aResolver [
 
-	| result |
-	result := [aResolver fulfill: aMessageSend perform]
+	| raisedException reason |
+	raisedException := false.
+	[aResolver fulfill: aMessageSend perform]
 		on: Error
 		do:
 			[:ex |
+			raisedException := true.
 			self
 				logException: ex
 				to: aResolver connection log.
-			aResolver break: (RsrRemoteException from: ex).
-			^self]
+			reason := (RsrRemoteException from: ex).
+			ex return].
+	raisedException
+		ifTrue: [aResolver break: reason]
 ]
 
 { #category : 'accessing' }

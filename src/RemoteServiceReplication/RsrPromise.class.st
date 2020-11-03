@@ -48,7 +48,7 @@ Class {
 RsrPromise >> assertNotResolved [
 
 	self isResolved
-		ifTrue: [RsrPromiseAlreadyResolved signal].
+		ifTrue: [RsrAlreadyResolved signal].
 ]
 
 { #category : 'resolving' }

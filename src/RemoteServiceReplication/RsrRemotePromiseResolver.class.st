@@ -1,7 +1,13 @@
+"
+This class is responsible for taking breaking or fulfilling its associated Promise. The Promise exists in the remote RSR instance.
+
+This class may be mutated outside of the thread which created it. Therefore, it contains a protection mutex to ensure consistency.
+"
 Class {
 	#name : 'RsrRemotePromiseResolver',
 	#superclass : 'RsrObject',
 	#instVars : [
+		'mutex',
 		'sendMessage',
 		'connection',
 		'extraRoots',
@@ -23,7 +29,14 @@ over: aConnection [
 { #category : 'accessing' }
 RsrRemotePromiseResolver >> addRoot: aService [
 
-	extraRoots add: aService
+	mutex critical: [extraRoots add: aService]
+]
+
+{ #category : 'private' }
+RsrRemotePromiseResolver >> assertNotResolved [
+
+	self hasResolved
+		ifTrue: [RsrAlreadyResolved signal]
 ]
 
 { #category : 'resolving' }
@@ -52,7 +65,7 @@ RsrRemotePromiseResolver >> fulfill: result [
 	self resolution: (Array with: #fulfill with: result)
 ]
 
-{ #category : 'other' }
+{ #category : 'testing' }
 RsrRemotePromiseResolver >> hasResolved [
 
 	^hasResolved
@@ -62,25 +75,30 @@ RsrRemotePromiseResolver >> hasResolved [
 RsrRemotePromiseResolver >> initialize [
 
 	super initialize.
-	extraRoots := OrderedCollection new
+	extraRoots := OrderedCollection new.
+	hasResolved := false.
+	mutex := Semaphore forMutualExclusion
 ]
 
 { #category : 'resolving' }
 RsrRemotePromiseResolver >> resolution: result [
 	"Process and dispatch the result"
 
-	| analysis resultReference response |
-	analysis := RsrSnapshotAnalysis
-		roots: (Array with: result), extraRoots
-		connection: self connection.
-	analysis perform.
-	resultReference := RsrReference from: result.
-	response := RsrDeliverResponse
-		transaction: self sendMessage transaction
-		responseReference: resultReference
-		snapshots: analysis snapshots.
-	self connection _sendCommand: response.
-	hasResolved := true.
+	mutex
+		critical:
+			[| analysis resultReference response |
+			self hasResolved ifTrue: [^self].
+			analysis := RsrSnapshotAnalysis
+				roots: (Array with: result), extraRoots
+				connection: self connection.
+			analysis perform.
+			resultReference := RsrReference from: result.
+			response := RsrDeliverResponse
+				transaction: self sendMessage transaction
+				responseReference: resultReference
+				snapshots: analysis snapshots.
+			self connection _sendCommand: response.
+			hasResolved := true]
 ]
 
 { #category : 'accessing' }

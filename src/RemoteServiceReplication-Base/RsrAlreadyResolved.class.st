@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrPromiseAlreadyResolved',
+	#name : 'RsrAlreadyResolved',
 	#superclass : 'RsrPromiseError',
 	#category : 'RemoteServiceReplication-Base'
 }
