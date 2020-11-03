@@ -1,11 +1,11 @@
 Class {
-	#name : 'RsrUnresumableError',
+	#name : 'RsrNonresumableError',
 	#superclass : 'RsrError',
 	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'testing' }
-RsrUnresumableError >> isResumable [
+RsrNonresumableError >> isResumable [
 
 	^false
 ]

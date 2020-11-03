@@ -97,7 +97,7 @@ RsrMessageSendingTest >> testChangeRemoteState [
 ]
 
 { #category : 'running-errors' }
-RsrMessageSendingTest >> testDebugHandlerNoResolutionWithResumableHandler [
+RsrMessageSendingTest >> testDebugHandlerNoResolutionWithResumableException [
 	"Ensure that if the debug handler does not resolve the exception
 	and the exception is resumable, we resume with the evaluation
 	result of the debug handler."
