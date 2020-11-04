@@ -25,8 +25,6 @@ RsrRemoteActionServer >> debug: anException
 raisedDuring: aMessageSend
 answerUsing: aResolver [
 
-	self debugHandler isNil
-		ifTrue: [RsrError signal: '#debug:raidedDuring:answerUsing: called without a debugHandler'].
 	^self debugHandler
 		value: anException
 		value: aMessageSend
@@ -36,7 +34,7 @@ answerUsing: aResolver [
 { #category : 'accessing' }
 RsrRemoteActionServer >> debugHandler [
 
-	^debugHandler
+	^debugHandler ifNil: [[:x :y :z | nil]]
 ]
 
 { #category : 'accessing' }

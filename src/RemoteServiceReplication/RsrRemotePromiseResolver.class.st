@@ -86,18 +86,20 @@ RsrRemotePromiseResolver >> resolution: result [
 
 	mutex
 		critical:
-			[| analysis resultReference response |
-			self hasResolved ifTrue: [^self].
-			analysis := RsrSnapshotAnalysis
-				roots: (Array with: result), extraRoots
-				connection: self connection.
-			analysis perform.
-			resultReference := RsrReference from: result.
-			response := RsrDeliverResponse
-				transaction: self sendMessage transaction
-				responseReference: resultReference
-				snapshots: analysis snapshots.
-			self connection _sendCommand: response.
+			[self hasResolved ifTrue: [^self].
+			[self
+				sendResult: result
+				closureRoots: (Array with: result), extraRoots]
+				on: self sendMessage unhandledExceptionClass
+				do:
+					[:ex | | answer |
+					answer := Array
+						with: #break
+						with: (RsrRemoteException from: ex).
+					self
+						sendResult: answer
+						closureRoots: answer.
+					ex return].
 			hasResolved := true]
 ]
 
@@ -111,4 +113,31 @@ RsrRemotePromiseResolver >> sendMessage [
 RsrRemotePromiseResolver >> sendMessage: aSendMessage [
 
 	sendMessage := aSendMessage
+]
+
+{ #category : 'resolving' }
+RsrRemotePromiseResolver >> sendResult: result
+closureRoots: roots [
+
+	| analysis resultReference |
+	analysis := RsrSnapshotAnalysis
+		roots: roots
+		connection: self connection.
+	analysis perform.
+	resultReference := RsrReference from: result.
+	self
+		sendResultReference: resultReference
+		snapshots: analysis snapshots
+]
+
+{ #category : 'resolving' }
+RsrRemotePromiseResolver >> sendResultReference: resultReference
+snapshots: snapshots [
+
+	| response |
+	response := RsrDeliverResponse
+				transaction: self sendMessage transaction
+				responseReference: resultReference
+				snapshots: snapshots.
+	self connection _sendCommand: response
 ]

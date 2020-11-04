@@ -103,6 +103,14 @@ RsrService >> _synchronize [
 	^self
 ]
 
+{ #category : 'public-debugging' }
+RsrService >> debug: anException
+raisedDuring: aMessageSend
+answerUsing: aResolver [
+
+	^nil
+]
+
 { #category : 'public-testing' }
 RsrService >> isClient [
 

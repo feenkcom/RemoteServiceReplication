@@ -125,10 +125,77 @@ RsrMessageSendingTest >> testChangeRemoteState [
 ]
 
 { #category : 'running-errors' }
+RsrMessageSendingTest >> testDebugHandlerBreak [
+	"Ensure that if a debug handler resolves the message,
+	that the correct reason is received remotely."
+
+	| marker client server reason |
+	marker := #testMarker.
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].
+	server debugHandler: [:exception :messageSend :resolver | resolver break: marker. nil "ensure we do not return the marker"].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason
+		equals: marker.
+	server action: [RsrNonresumableError signal. 42 "ensure we do not return the marker"].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason
+		equals: marker
+]
+
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testDebugHandlerException [
+	"Ensure that an exception that occurs in the debug handler
+	is reported back as the reason for Promise breaking."
+
+	| marker client server reason |
+	marker := #testMarker.
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrResumableError signal].
+	server debugHandler: [:exception :messageSend :resolver | Error signal].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason exceptionClassName
+		equals: #Error.
+	server action: [RsrNonresumableError signal].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason exceptionClassName
+		equals: #Error.
+]
+
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testDebugHandlerFulfill [
+	"Ensure that if a debug handler resolves the message,
+	that the fulfillment value is received remotely."
+
+	| marker client server |
+	marker := #testMarker.
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].
+	server debugHandler: [:exception :messageSend :resolver | resolver fulfill: marker. nil "ensure we do not return the marker"].
+	self
+		assert: client value
+		equals: marker.
+	server action: [RsrNonresumableError signal. 42 "ensure we do not return the marker"].
+	self
+		assert: client value
+		equals: marker
+]
+
+{ #category : 'running-errors' }
 RsrMessageSendingTest >> testDebugHandlerNoResolutionWithNonresumableException [
 	"Ensure that if the debug handler does not resolve the exception
-	and the exception is resumable, we resume with the evaluation
-	result of the debug handler."
+	and the exception is nonresumable, that we Break the Promise
+	reporting on the unresolved exception."
 
 	| marker client server reason |
 	marker := #testMarker.

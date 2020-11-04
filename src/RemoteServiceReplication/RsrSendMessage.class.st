@@ -136,7 +136,7 @@ answerUsing: aResolver [
 					self
 						logException: ex
 						to: aResolver connection log.
-					reason := (RsrRemoteException from: ex).
+					reason := (RsrRemoteException from: debugEx).
 					ex return].
 			aResolver hasResolved
 				ifFalse:

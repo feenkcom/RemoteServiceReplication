@@ -53,7 +53,7 @@ RsrDispatchQueue >> runLoop [
 		whileTrue:
 			[[queue next value]
 				on: Error
-				do: [:ex | self trace. Transcript show: ex messageText; cr. ex pas]]
+				do: [:ex | self trace. Transcript show: ex messageText; cr. ex pass]]
 ]
 
 { #category : 'lifecycle' }
