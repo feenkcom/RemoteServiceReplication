@@ -126,19 +126,17 @@ answerUsing: aResolver [
 		do:
 			[:ex | | debugResult |
 			debugResult := [aMessageSend receiver
-				debug: ex
-				raisedDuring: aMessageSend
-				answerUsing: aResolver]
-				on: self unhandledExceptionClass
-				do:
-					[:debugEx | 
-					raisedException := true.
-					self
-						logException: ex
-						to: aResolver connection log.
-					reason := (RsrRemoteException from: debugEx).
-					ex return].
+									debug: ex
+									raisedDuring: aMessageSend
+									answerUsing: aResolver]
+									on: self unhandledExceptionClass
+									do:
+										[:debugEx | 
+										raisedException := true.
+										reason := (RsrRemoteException from: debugEx).
+										ex return].
 			aResolver hasResolved
+				ifTrue: [ex return]
 				ifFalse:
 					[ex isResumable
 						ifTrue: [ex resume: debugResult]
