@@ -6,7 +6,6 @@ package classNames
 	add: #RsrReflectedVariableTestServiceA;
 	add: #RsrValueHolder;
 	add: #RsrLifetimeTest;
-	add: #RsrRemoteExceptionServer;
 	add: #RsrServerNoInstVars;
 	add: #RsrPromiseTest;
 	add: #RsrSocketSpeciesEquality;
@@ -16,7 +15,6 @@ package classNames
 	add: #RsrInstrumentedService;
 	add: #RsrTestService;
 	add: #RsrConnectionTestCase;
-	add: #RsrAbstractReason;
 	add: #RsrDifferentServerService;
 	add: #RsrForwarderTest;
 	add: #RsrSocketServiceTest;
@@ -33,7 +31,6 @@ package classNames
 	add: #RsrInstrumentedClient;
 	add: #RsrClientTestService;
 	add: #RsrInMemoryConnectionTestCase;
-	add: #RsrRemoteException;
 	add: #RsrServiceNoInstVars;
 	add: #RsrNumericSpigotTest;
 	add: #RsrSpeciesEquality;
@@ -50,7 +47,6 @@ package classNames
 	add: #RsrInstrumentedServer;
 	add: #RsrServerTestService;
 	add: #RsrSocketConnectionTestCase;
-	add: #RsrRemoteExceptionClient;
 	add: #RsrClientNoInstVars;
 	add: #RsrThreadSafeNumericSpigotTest;
 	add: #RsrInMemorySpeciesEquality;
@@ -81,15 +77,6 @@ RsrObject
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrSignalErrorInAsString categoriesForClass!RemoteServiceReplication-Test! !
-
-RsrService
-	subclass: #RsrAbstractReason
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrAbstractReason comment: 'This Service services as an abstract superclass for various Promise break reasons generated via the framework.'!
-!RsrAbstractReason categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
 	subclass: #RsrConcurrentTestService
@@ -307,14 +294,6 @@ RsrRemoteAction
 	classInstanceVariableNames: ''!
 !RsrRemoteActionServer categoriesForClass!RemoteServiceReplication-Test! !
 
-RsrAbstractReason
-	subclass: #RsrRemoteException
-	instanceVariableNames: 'exceptionClassName tag messageText stack'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrRemoteException categoriesForClass!RemoteServiceReplication-Test! !
-
 RsrServiceNoInstVars
 	subclass: #RsrServerNoInstVars
 	instanceVariableNames: 'marker'
@@ -442,22 +421,6 @@ RsrReflectedVariableTestServiceB
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrReflectedVariableTestServer categoriesForClass!RemoteServiceReplication-Test! !
-
-RsrRemoteException
-	subclass: #RsrRemoteExceptionClient
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrRemoteExceptionClient categoriesForClass!RemoteServiceReplication-Test! !
-
-RsrRemoteException
-	subclass: #RsrRemoteExceptionServer
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrRemoteExceptionServer categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrSystemTestCase
 	subclass: #RsrServiceTest
@@ -680,18 +643,6 @@ value: anRsrObject	^self new		value: anRsrObject;		yourself! !
 
 !RsrValueHolder class methodsFor!
 serverClassName	^#RsrValueHolderServer! !
-
-!RsrRemoteException class methodsFor!
-clientClassName	^#RsrRemoteExceptionClient! !
-
-!RsrRemoteException class methodsFor!
-serverClassName	^#RsrRemoteExceptionServer! !
-
-!RsrRemoteException class methodsFor!
-templateClassName	^#RsrRemoteException! !
-
-!RsrRemoteException class methodsFor!
-from: anException	"Create an instance of the RemoteException reason.	The client is used here because once we send it, we are done with it.	The client will GC and the server will later GC. We don't care to have	a server hanging around if we don't need it."	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self clientClass new		exceptionClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
 !RsrTestService class methodsFor!
 clientClassName	^#RsrClientTestService! !
@@ -1316,33 +1267,6 @@ asyncValue: anObject	^remoteSelf value: anObject! !
 
 !RsrRemoteActionClient methodsFor!
 value: anObject	^(self asyncValue: anObject) wait! !
-
-!RsrRemoteException methodsFor!
-stack: aString	stack := aString! !
-
-!RsrRemoteException methodsFor!
-tag	^tag! !
-
-!RsrRemoteException methodsFor!
-tag: aString	tag := aString! !
-
-!RsrRemoteException methodsFor!
-messageText: aString	messageText := aString! !
-
-!RsrRemoteException methodsFor!
-exceptionClassName	^exceptionClassName! !
-
-!RsrRemoteException methodsFor!
-exceptionClassName: aSymbol	exceptionClassName := aSymbol! !
-
-!RsrRemoteException methodsFor!
-isRemoteException	"This is a RemoteException reason"	^true! !
-
-!RsrRemoteException methodsFor!
-messageText	^messageText! !
-
-!RsrRemoteException methodsFor!
-stack	^stack! !
 
 !RsrNumericSpigotTest methodsFor!
 testNext	| spigot |	spigot := self spigotClass naturals.	self		assert: (Array with: 1 with: 2 with: 3)		equals: (spigot next: 3)! !

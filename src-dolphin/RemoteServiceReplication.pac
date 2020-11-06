@@ -5,6 +5,7 @@ package paxVersion: 1; basicComment: ''.
 package classNames
 	add: #RsrLog;
 	add: #RsrReleaseServices;
+	add: #RsrRemoteExceptionClient;
 	add: #RsrRemotePromiseResolver;
 	add: #RsrStream;
 	add: #RsrInMemoryChannel;
@@ -18,12 +19,14 @@ package classNames
 	add: #RsrSendMessage;
 	add: #RsrServiceSnapshot;
 	add: #RsrThreadSafeDictionary;
+	add: #RsrRemoteExceptionServer;
 	add: #RsrSocketChannel;
 	add: #RsrMessageSend;
 	add: #RsrService;
 	add: #RsrInitiateConnection;
-	add: #RsrCommand;
+	add: #RsrAbstractReason;
 	add: #RsrCommandSource;
+	add: #RsrCommand;
 	add: #RsrPromise;
 	add: #RsrBufferedSocketStream;
 	add: #RsrCustomSink;
@@ -36,6 +39,7 @@ package classNames
 	add: #RsrDispatchQueue;
 	add: #RsrDeliverResponse;
 	add: #RsrPromiseResolutionAction;
+	add: #RsrRemoteException;
 	add: #RsrSocketStream;
 	add: #RsrChannel;
 	add: #RsrTranscriptSink;
@@ -254,6 +258,15 @@ RsrObject
 RsrThreadSafeDictionary comment: 'I maintain the associations between locally stored objects and their remote counterparts.'!
 !RsrThreadSafeDictionary categoriesForClass!RemoteServiceReplication! !
 
+RsrService
+	subclass: #RsrAbstractReason
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrAbstractReason comment: 'This Service services as an abstract superclass for various Promise break reasons generated via the framework.'!
+!RsrAbstractReason categoriesForClass!RemoteServiceReplication! !
+
 RsrConnectionSpecification
 	subclass: #RsrAcceptConnection
 	instanceVariableNames: 'listener'
@@ -399,6 +412,14 @@ RsrError
 	classInstanceVariableNames: ''!
 !RsrRemoteError categoriesForClass!RemoteServiceReplication! !
 
+RsrAbstractReason
+	subclass: #RsrRemoteException
+	instanceVariableNames: 'exceptionClassName tag messageText stack'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrRemoteException categoriesForClass!RemoteServiceReplication! !
+
 RsrServiceFactory
 	subclass: #RsrServiceFactoryClient
 	instanceVariableNames: ''
@@ -414,6 +435,22 @@ RsrServiceFactory
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrServiceFactoryServer categoriesForClass!RemoteServiceReplication! !
+
+RsrRemoteException
+	subclass: #RsrRemoteExceptionClient
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrRemoteExceptionClient categoriesForClass!RemoteServiceReplication! !
+
+RsrRemoteException
+	subclass: #RsrRemoteExceptionServer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrRemoteExceptionServer categoriesForClass!RemoteServiceReplication! !
 
 !RsrReference class methodsFor!
 referenceClassFor: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceReference].	^self referenceMapping		at: anObject class		ifAbsent: [RsrUnsupportedObject signal: anObject]! !
@@ -534,6 +571,18 @@ on: aStream	^self new		stream: aStream;		yourself! !
 
 !RsrCycleDetected class methodsFor!
 signal: anObject	^self new		object: anObject;		signal! !
+
+!RsrRemoteException class methodsFor!
+clientClassName	^#RsrRemoteExceptionClient! !
+
+!RsrRemoteException class methodsFor!
+serverClassName	^#RsrRemoteExceptionServer! !
+
+!RsrRemoteException class methodsFor!
+templateClassName	^#RsrRemoteException! !
+
+!RsrRemoteException class methodsFor!
+from: anException	"Create an instance of the RemoteException reason.	The client is used here because once we send it, we are done with it.	The client will GC and the server will later GC. We don't care to have	a server hanging around if we don't need it."	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self clientClass new		exceptionClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
 !RsrConnection class methodsFor!
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
@@ -1323,6 +1372,33 @@ responseReference: aReference	responseReference := aReference! !
 
 !RsrDeliverResponse methodsFor!
 transaction: aTransactionId	transaction := aTransactionId! !
+
+!RsrRemoteException methodsFor!
+stack: aString	stack := aString! !
+
+!RsrRemoteException methodsFor!
+tag	^tag! !
+
+!RsrRemoteException methodsFor!
+tag: aString	tag := aString! !
+
+!RsrRemoteException methodsFor!
+messageText: aString	messageText := aString! !
+
+!RsrRemoteException methodsFor!
+exceptionClassName	^exceptionClassName! !
+
+!RsrRemoteException methodsFor!
+exceptionClassName: aSymbol	exceptionClassName := aSymbol! !
+
+!RsrRemoteException methodsFor!
+isRemoteException	"This is a RemoteException reason"	^true! !
+
+!RsrRemoteException methodsFor!
+messageText	^messageText! !
+
+!RsrRemoteException methodsFor!
+stack	^stack! !
 
 !RsrChannel methodsFor!
 log	^self connection log! !
