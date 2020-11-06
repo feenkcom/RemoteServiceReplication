@@ -4,6 +4,7 @@ package paxVersion: 1; basicComment: ''.
 
 package classNames
 	add: #RsrReference;
+	add: #RsrResumableError;
 	add: #RsrIntegerReference;
 	add: #RsrWaitForConnectionCancelled;
 	add: #RsrCharacterReference;
@@ -12,8 +13,9 @@ package classNames
 	add: #RsrProcessModel;
 	add: #RsrOrderedCollectionReference;
 	add: #RsrUnknownClass;
-	add: #RsrCharacterArrayReference;
+	add: #RsrAlreadyResolved;
 	add: #RsrPromiseError;
+	add: #RsrCharacterArrayReference;
 	add: #RsrImmediateReference;
 	add: #RsrNegativeIntegerReference;
 	add: #RsrCollectionReference;
@@ -32,10 +34,10 @@ package classNames
 	add: #RsrValueReference;
 	add: #RsrAlreadyRegistered;
 	add: #RsrDateAndTime;
+	add: #RsrNonresumableError;
 	add: #RsrDateAndTimeReference;
 	add: #RsrUnsupportedObject;
 	add: #RsrSymbolReference;
-	add: #RsrPromiseAlreadyResolved;
 	add: #RsrFalseReference;
 	add: #RsrServiceReference;
 	add: #RsrDictionaryReference;
@@ -145,12 +147,28 @@ RsrNilReference comment: 'No class-specific documentation for RsrNilReference, h
 !RsrNilReference categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
+	subclass: #RsrNonresumableError
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrNonresumableError categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
 	subclass: #RsrPromiseError
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrPromiseError categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
+	subclass: #RsrResumableError
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrResumableError categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
 	subclass: #RsrSocketError
@@ -200,6 +218,14 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrWaitForConnectionCancelled categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrPromiseError
+	subclass: #RsrAlreadyResolved
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrAlreadyResolved categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrPromiseError
 	subclass: #RsrBrokenPromise
@@ -287,14 +313,6 @@ RsrSocketError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrInvalidBind categoriesForClass!RemoteServiceReplication-Base! !
-
-RsrPromiseError
-	subclass: #RsrPromiseAlreadyResolved
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrPromiseAlreadyResolved categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrSocketError
 	subclass: #RsrSocketClosed
@@ -490,6 +508,9 @@ value: anObject	^self new		value: anObject;		yourself! !
 !RsrValueReference class methodsFor!
 from: anObject	^self value: anObject! !
 
+!RsrObject class methodsFor!
+trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
+
 !RsrTrueReference class methodsFor!
 typeIdentifier	^7! !
 
@@ -500,13 +521,10 @@ typeIdentifier	^11! !
 from: aSet	| referenceStream |	referenceStream := WriteStream on: (Array new: aSet size).	aSet do:  [:each | referenceStream nextPut: (RsrReference from: each)].	^self value: referenceStream contents! !
 
 !RsrUnsupportedObject methodsFor!
-messageText	^'Instances of ', object class name, ' cannot be serialized'! !
-
-!RsrUnsupportedObject methodsFor!
 object	^object! !
 
 !RsrUnsupportedObject methodsFor!
-object: anObject	object := anObject! !
+object: anObject	object := anObject.	self messageText: 'Instances of ', object class name, ' cannot be serialized'! !
 
 !RsrOrderedCollectionReference methodsFor!
 resolve: aConnection	| oc |	oc := OrderedCollection new: value size.	value do: [:each | oc add: (each resolve: aConnection)].	^oc! !
@@ -552,6 +570,9 @@ reason: aReason	reason := aReason! !
 
 !RsrBrokenPromise methodsFor!
 reason	^reason! !
+
+!RsrNonresumableError methodsFor!
+isResumable	^false! !
 
 !RsrByteArrayReference methodsFor!
 typeIdentifier	^10! !
@@ -657,6 +678,15 @@ resolve: aConnection	^value! !
 
 !RsrValueReference methodsFor!
 value: anObject	value := anObject! !
+
+!RsrResumableError methodsFor!
+isResumable	^true! !
+
+!RsrObject methodsFor!
+note: aString	"This method can be used to leave a note in code. For instance, a code path that needs to be tested."! !
+
+!RsrObject methodsFor!
+trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
 
 !RsrTrueReference methodsFor!
 resolve: aConnection	^true! !

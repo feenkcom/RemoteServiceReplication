@@ -14,9 +14,9 @@ package classNames
 	add: #RsrServiceFactoryServer;
 	add: #RsrDispatchQueue;
 	add: #RsrThreadSafeDictionary;
+	add: #RsrMessageSend;
 	add: #RsrDeliverResponse;
 	add: #RsrServiceSnapshot;
-	add: #RsrNullChannel;
 	add: #RsrTranscriptSink;
 	add: #RsrService;
 	add: #RsrConnectionSpecification;
@@ -45,7 +45,6 @@ package classNames
 	add: #RsrServiceFactoryClient;
 	add: #RsrInitiateConnection;
 	add: #RsrStream;
-	add: #RsrDeliverErrorResponse;
 	yourself.
 
 package methodNames
@@ -58,14 +57,6 @@ package methodNames
 package setPrerequisites: #('RemoteServiceReplication-Dolphin').
 
 package!
-
-Object
-	subclass: #RsrRemotePromiseResolver
-	instanceVariableNames: 'sendMessage service connection'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrRemotePromiseResolver categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrBufferedSocketStream
@@ -153,6 +144,14 @@ RsrObject
 !RsrLogWithPrefix categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
+	subclass: #RsrMessageSend
+	instanceVariableNames: 'receiver selector arguments'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrMessageSend categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
 	subclass: #RsrNumericSpigot
 	instanceVariableNames: 'current step'
 	classVariableNames: ''
@@ -184,6 +183,15 @@ RsrObject
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrPromiseResolutionAction categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
+	subclass: #RsrRemotePromiseResolver
+	instanceVariableNames: 'mutex sendMessage connection extraRoots hasResolved'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrRemotePromiseResolver comment: 'This class is responsible for taking breaking or fulfilling its associated Promise. The Promise exists in the remote RSR instance.This class may be mutated outside of the thread which created it. Therefore, it contains a protection mutex to ensure consistency.'!
+!RsrRemotePromiseResolver categoriesForClass!RemoteServiceReplication! !
 
 RsrAbstractService
 	subclass: #RsrService
@@ -290,17 +298,8 @@ RsrDecoder comment: 'No class-specific documentation for RsrDecoder, hierarchy i
 !RsrDecoder categoriesForClass!RemoteServiceReplication! !
 
 RsrCommand
-	subclass: #RsrDeliverErrorResponse
-	instanceVariableNames: 'transaction originalClass remoteError'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrDeliverErrorResponse comment: 'No class-specific documentation for RsrDeliverErrorResponse, hierarchy is:Object  RsrObject    RsrCommand( encoding)      RsrDeliverErrorResponse( transaction originalClass remoteError)'!
-!RsrDeliverErrorResponse categoriesForClass!RemoteServiceReplication! !
-
-RsrCommand
 	subclass: #RsrDeliverResponse
-	instanceVariableNames: 'transaction response snapshots'
+	instanceVariableNames: 'transaction responseReference snapshots'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -333,14 +332,6 @@ RsrConnectionSpecification
 RsrInitiateConnection comment: 'This class is responsible for initating a new RsrConnection. Sending #connect will result in an attempt to connect to the specified host and port. #connect is responsible for initating the attempted connection. If successful, an instance of RsrConnection is returned as a result.Example: | initiator |initiator := RsrInitiateConnection	host: ''127.0.0.1''	port: 51820.^initiator connect'!
 !RsrInitiateConnection categoriesForClass!RemoteServiceReplication! !
 
-RsrChannel
-	subclass: #RsrNullChannel
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrNullChannel categoriesForClass!RemoteServiceReplication! !
-
 RsrCommand
 	subclass: #RsrReleaseServices
 	instanceVariableNames: 'sids'
@@ -352,7 +343,7 @@ RsrReleaseServices comment: 'No class-specific documentation for RsrReleaseServi
 
 RsrCommand
 	subclass: #RsrSendMessage
-	instanceVariableNames: 'transaction receiver selector arguments snapshots'
+	instanceVariableNames: 'transaction receiverReference selectorReference argumentReferences snapshots'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -449,13 +440,7 @@ start: aNumberstep: anIncrement	^super new		start: aNumber;		step: anIncrem
 from: anException	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
 !RsrDeliverResponse class methodsFor!
-transaction: aTransactionIdresponse: anObjectsnapshots: anArray	^self new		transaction: aTransactionId;		response: anObject;		snapshots: anArray;		yourself! !
-
-!RsrDeliverResponse class methodsFor!
-transaction: aTransactionIderror: anExceptionroots: anArray	^self new		transaction: aTransactionId;		errorName: anException class name;		response: anException messageText;		roots: anArray;		yourself! !
-
-!RsrDeliverResponse class methodsFor!
-transaction: aTransactionIdresponse: anObjectroots: anArray	^self new		transaction: aTransactionId;		response: anObject;		roots: anArray;		yourself! !
+transaction: aTransactionIdresponseReference: aReferencesnapshots: anArrayOfSnapshots	^self new		transaction: aTransactionId;		responseReference: aReference;		snapshots: anArrayOfSnapshots;		yourself! !
 
 !RsrServiceFactory class methodsFor!
 templateClassName	^#RsrServiceFactory! !
@@ -506,7 +491,7 @@ reflectedVariableIndicesFor: aServicedo: aBlock	| allVariables |	allVariable
 from: aService	^self new		snapshot: aService;		yourself! !
 
 !RsrSendMessage class methodsFor!
-transaction: aTransactionIdreceiver: aServiceselector: aSelectorarguments: anArray	^self new		transaction: aTransactionId;		receiver: aService;		selector: aSelector;		arguments: anArray;		yourself! !
+transaction: aTransactionIdreceiverReference: aServiceReferenceselectorReference: aSelectorReferenceargumentReferences: anArrayOfReferences	^self new		transaction: aTransactionId;		receiverReference: aServiceReference;		selectorReference: aSelectorReference;		argumentReferences: anArrayOfReferences;		yourself! !
 
 !RsrPromiseResolutionAction class methodsFor!
 when: aWhenBlockcatch: aCatchBlock	^self new		when: aWhenBlock;		catch: aCatchBlock;		yourself! !
@@ -547,6 +532,9 @@ for: aSendMessageover: aConnection	^self new		sendMessage: aSendMessage;		c
 !RsrCycleDetected class methodsFor!
 signal: anObject	^self new		object: anObject;		signal! !
 
+!RsrMessageSend class methodsFor!
+receiver: anObjectselector: aSelectorarguments: anArray	^self new		receiver: anObject;		selector: aSelector;		arguments: anArray;		yourself! !
+
 !RsrConnection class methodsFor!
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
 
@@ -555,9 +543,6 @@ channel: aChanneltransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^su
 
 !RsrSnapshotAnalysis class methodsFor!
 roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
-
-!RsrDeliverErrorResponse class methodsFor!
-transaction: aTransactionIdremoteError: anException	^self new		transaction: aTransactionId;		remoteError: anException;		yourself! !
 
 !RsrDecoder class methodsFor!
 registry: aRegistry	^self new		registry: aRegistry;		yourself! !
@@ -615,6 +600,27 @@ reportOn: aLog	aLog debug: 'RsrReleaseObjects(', self sids printString, ')'! !
 
 !RsrReleaseServices methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeReleaseServices: self		onto: aStream! !
+
+!RsrMessageSend methodsFor!
+selector: aSelector	selector := aSelector! !
+
+!RsrMessageSend methodsFor!
+arguments: anArray	arguments := anArray! !
+
+!RsrMessageSend methodsFor!
+receiver	^receiver! !
+
+!RsrMessageSend methodsFor!
+receiver: anObject	receiver := anObject! !
+
+!RsrMessageSend methodsFor!
+arguments	^arguments! !
+
+!RsrMessageSend methodsFor!
+selector	^selector! !
+
+!RsrMessageSend methodsFor!
+perform	^self receiver		perform: self selector		withArguments: self arguments! !
 
 !RsrSocketStream methodsFor!
 isConnected	"Is the stream still connected to a partner?"	^socket isConnected! !
@@ -688,26 +694,26 @@ promise	^promise! !
 !RsrPendingMessage methodsFor!
 promise: aPromise	promise := aPromise! !
 
-!RsrDeliverErrorResponse methodsFor!
-transaction	^transaction! !
+!RsrStream methodsFor!
+nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
 
-!RsrDeliverErrorResponse methodsFor!
-reportOn: aLog	aLog debug: 'RsrDeliverErrorResponse(', self remoteError class name, ')'! !
+!RsrStream methodsFor!
+close	stream close! !
 
-!RsrDeliverErrorResponse methodsFor!
-executeFor: aConnection	| pendingMessage |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent: [^self error: 'Handle unknown transaction'].	pendingMessage promise break: self remoteError! !
+!RsrStream methodsFor!
+next	^self next: 1! !
 
-!RsrDeliverErrorResponse methodsFor!
-remoteError	^remoteError! !
+!RsrStream methodsFor!
+next: aLength	| bytes |	bytes := stream next: aLength.	bytes size ~~ aLength		ifTrue: [RsrSocketClosed signal].	^bytes! !
 
-!RsrDeliverErrorResponse methodsFor!
-remoteError: aRemoteError	remoteError := aRemoteError! !
+!RsrStream methodsFor!
+flush	stream flush! !
 
-!RsrDeliverErrorResponse methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeDeliverErrorResponse: self		onto: aStream! !
+!RsrStream methodsFor!
+binary	stream binary! !
 
-!RsrDeliverErrorResponse methodsFor!
-transaction: anInteger	transaction := anInteger! !
+!RsrStream methodsFor!
+stream: aStream	stream := aStream! !
 
 !RsrServiceFactoryClient methodsFor!
 mirror: aService	^remoteSelf mirror: aService! !
@@ -730,47 +736,44 @@ debug: aString	^self log debug: self prefix, '/', aString! !
 !RsrLogWithPrefix methodsFor!
 prefix: aString	prefix := aString! !
 
-!RsrStream methodsFor!
-nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
-
-!RsrStream methodsFor!
-close	stream close! !
-
-!RsrStream methodsFor!
-next	^self next: 1! !
-
-!RsrStream methodsFor!
-next: aLength	| bytes |	bytes := stream next: aLength.	bytes size ~~ aLength		ifTrue: [RsrSocketClosed signal].	^bytes! !
-
-!RsrStream methodsFor!
-flush	stream flush! !
-
-!RsrStream methodsFor!
-binary	stream binary! !
-
-!RsrStream methodsFor!
-stream: aStream	stream := aStream! !
-
 !RsrRemotePromiseResolver methodsFor!
 sendMessage	^sendMessage! !
+
+!RsrRemotePromiseResolver methodsFor!
+fulfill: result	"Fulfill the remote promise with a fulfilled value of <result>"	self resolution: (Array with: #fulfill with: result)! !
+
+!RsrRemotePromiseResolver methodsFor!
+sendResultReference: resultReferencesnapshots: snapshots	| response |	response := RsrDeliverResponse				transaction: self sendMessage transaction				responseReference: resultReference				snapshots: snapshots.	self connection _sendCommand: response! !
+
+!RsrRemotePromiseResolver methodsFor!
+hasResolved	^hasResolved! !
+
+!RsrRemotePromiseResolver methodsFor!
+initialize	super initialize.	extraRoots := OrderedCollection new.	hasResolved := false.	mutex := Semaphore forMutualExclusion! !
+
+!RsrRemotePromiseResolver methodsFor!
+connection: aConnection	connection := aConnection! !
+
+!RsrRemotePromiseResolver methodsFor!
+resolution: result	"Process and dispatch the result"	mutex		critical:			[self hasResolved ifTrue: [^self].			[self				sendResult: result				closureRoots: (Array with: result), extraRoots]				on: self sendMessage unhandledExceptionClass				do:					[:ex | | answer |					answer := Array						with: #break						with: (RsrRemoteException from: ex).					self						sendResult: answer						closureRoots: answer.					ex return].			hasResolved := true]! !
+
+!RsrRemotePromiseResolver methodsFor!
+addRoot: aService	mutex critical: [extraRoots add: aService]! !
 
 !RsrRemotePromiseResolver methodsFor!
 break: aReason	"<aReason> can be any object supported by RSR."	self resolution: (Array with: #break with: aReason)! !
 
 !RsrRemotePromiseResolver methodsFor!
-connection	^connection! !
-
-!RsrRemotePromiseResolver methodsFor!
 sendMessage: aSendMessage	sendMessage := aSendMessage! !
 
 !RsrRemotePromiseResolver methodsFor!
-fulfill: anObject	"Fulfill the remote promise with a fulfilled value of <anObject>"	self resolution: (Array with: #fulfill with: anObject)! !
+sendResult: resultclosureRoots: roots	| analysis resultReference |	analysis := RsrSnapshotAnalysis		roots: roots		connection: self connection.	analysis perform.	resultReference := RsrReference from: result.	self		sendResultReference: resultReference		snapshots: analysis snapshots! !
 
 !RsrRemotePromiseResolver methodsFor!
-resolution: aResult	"Actually dispatch the result"! !
+connection	^connection! !
 
 !RsrRemotePromiseResolver methodsFor!
-connection: aConnection	connection := aConnection! !
+assertNotResolved	self hasResolved		ifTrue: [RsrAlreadyResolved signal]! !
 
 !RsrInMemoryChannel methodsFor!
 drainLoop	| command |	[command := inQueue next.	command isNil]		whileFalse:			[self received: command].	self connection channelDisconnected! !
@@ -992,7 +995,13 @@ action	^action! !
 write: aMessage	self action value: aMessage! !
 
 !RsrSendMessage methodsFor!
-receiver	^ receiver! !
+receiverReference: aServiceReference	receiverReference := aServiceReference! !
+
+!RsrSendMessage methodsFor!
+selectorReference: aSymbolReference	selectorReference := aSymbolReference! !
+
+!RsrSendMessage methodsFor!
+unhandledExceptionClass	"Temporarily, use Error until we have appropriate GemStone hooks."	^Error! !
 
 !RsrSendMessage methodsFor!
 snapshots	^snapshots! !
@@ -1001,37 +1010,40 @@ snapshots	^snapshots! !
 snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
 
 !RsrSendMessage methodsFor!
-arguments	^ arguments! !
+logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				print: self receiverReference;				nextPutAll: '>>';				print: self selectorReference;				nextPutAll: ' due to: ';				nextPutAll: anException description].	aLog error: message! !
 
 !RsrSendMessage methodsFor!
-logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				print: receiver;				nextPutAll: '>>';				print: selector;				nextPutAll: ' due to: ';				nextPutAll: anException description].	aLog error: message! !
-
-!RsrSendMessage methodsFor!
-arguments: anObject	arguments := anObject! !
-
-!RsrSendMessage methodsFor!
-executeFor: aConnection	| result analysis resultReference response |	[| servs rec sel args |	servs := snapshots collect: [:each | each reifyIn: aConnection].	rec := receiver resolve: aConnection.	sel := selector resolve: aConnection.	args := arguments collect: [:each | each resolve: aConnection].	result := rec		perform: sel		withArguments: args.	analysis := RsrSnapshotAnalysis		roots: (Array with: rec with: result)		connection: aConnection.	analysis perform.	resultReference := RsrReference from: result.	response := RsrDeliverResponse		transaction: transaction		response: resultReference		snapshots: analysis snapshots.	aConnection _sendCommand: response]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			aConnection _sendCommand: (RsrDeliverErrorResponse transaction: transaction remoteError: (RsrRemoteError from: ex))]! !
+executeFor: aConnection	true ifTrue: [^self executeFor2: aConnection].	^[self executeFor2: aConnection]		on: Error		do:			[:ex |			self trace.			Transcript				show: ex messageText;				cr.			ex pass]! !
 
 !RsrSendMessage methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeSendMessage: self		onto: aStream! !
 
 !RsrSendMessage methodsFor!
-selector	^ selector! !
-
-!RsrSendMessage methodsFor!
-selector: anObject	selector := anObject! !
-
-!RsrSendMessage methodsFor!
-receiver: anObject	receiver := anObject! !
-
-!RsrSendMessage methodsFor!
-reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiver asString, '>>', self selector asString, ')'! !
+selectorReference	^selectorReference! !
 
 !RsrSendMessage methodsFor!
 transaction	^ transaction! !
 
 !RsrSendMessage methodsFor!
+executeFor2: aConnection	| resolver services receiver selector arguments messageSend |	resolver := RsrRemotePromiseResolver		for: self		over: aConnection.	[services := self snapshots collect: [:each | each reifyIn: aConnection].	receiver := self receiverReference resolve: aConnection.	selector := self selectorReference resolve: aConnection.	arguments := self argumentReferences collect: [:each | each resolve: aConnection]]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			self note: 'This code path needs to be tested'.			^resolver break: (RsrRemoteException from: ex)].	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."	messageSend := RsrMessageSend		receiver: receiver		selector: selector		arguments: arguments.	self		perform: messageSend		answerUsing: resolver! !
+
+!RsrSendMessage methodsFor!
+perform: aMessageSendanswerUsing: aResolver	| raisedException reason |	raisedException := false.	[aResolver fulfill: aMessageSend perform]		on: self unhandledExceptionClass		do:			[:ex | | debugResult |			debugResult := [aMessageSend receiver									debug: ex									raisedDuring: aMessageSend									answerUsing: aResolver]									on: self unhandledExceptionClass									do:										[:debugEx | 										raisedException := true.										reason := (RsrRemoteException from: debugEx).										ex return].			aResolver hasResolved				ifTrue: [ex return]				ifFalse:					[ex isResumable						ifTrue: [ex resume: debugResult]						ifFalse:							[aResolver break: (RsrRemoteException from: ex).							ex return]]].	raisedException		ifTrue: [aResolver break: reason]! !
+
+!RsrSendMessage methodsFor!
+reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiverReference asString, '>>', self selectorReference asString, ')'! !
+
+!RsrSendMessage methodsFor!
+argumentReferences	^argumentReferences! !
+
+!RsrSendMessage methodsFor!
 transaction: anObject	transaction := anObject! !
+
+!RsrSendMessage methodsFor!
+argumentReferences: anArrayOfReferences	argumentReferences := anArrayOfReferences! !
+
+!RsrSendMessage methodsFor!
+receiverReference	^receiverReference! !
 
 !RsrThreadSafeDictionary methodsFor!
 removeKey: anRsrIdifAbsent: aBlock	| element wasRemoved |	wasRemoved := true.	element := mutex critical: [map removeKey: anRsrId ifAbsent: [wasRemoved := false]].	^wasRemoved		ifTrue: [element]		ifFalse: [aBlock value]! !
@@ -1121,7 +1133,7 @@ async: aBlock	"Evaluate the block asynchronously and do not return a result"	
 initialize	super initialize.	queue := SharedQueue new! !
 
 !RsrDispatchQueue methodsFor!
-runLoop	[self isRunning]		whileTrue:			[queue next value]! !
+runLoop	[self isRunning]		whileTrue:			[[queue next value]				on: Error				do: [:ex | self trace. Transcript show: ex messageText; cr. ex pass]]! !
 
 !RsrDispatchQueue methodsFor!
 dispatch: aBlock	^self async: aBlock! !
@@ -1178,7 +1190,7 @@ transactionSpigot	^transactionSpigot! !
 serviceAt: aSID	^self		serviceAt: aSID		ifAbsent: [RsrUnknownSID signal: aSID printString]! !
 
 !RsrConnection methodsFor!
-_sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	self isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiver: receiverReference		selector: selectorReference		arguments: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
+_sendMessage: aMessageto: aService"Open coordination window"	"Send dirty transitive closure of aRemoteMessage"	"Send DispatchMessage command""Coorination window closed"	"Return Promise"	| analysis receiverReference selectorReference argumentReferences dispatchCommand promise pendingMessage |	self isOpen		ifFalse: [self error: 'Connection is not open'].	analysis := RsrSnapshotAnalysis		roots: (Array with: aService), aMessage arguments		connection: self.	analysis perform.	receiverReference := RsrReference from: aService.	selectorReference := RsrReference from: aMessage selector.	argumentReferences := aMessage arguments collect: [:each | RsrReference from: each].	dispatchCommand := RsrSendMessage		transaction: self transactionSpigot next		receiverReference: receiverReference		selectorReference: selectorReference		argumentReferences: argumentReferences.	dispatchCommand snapshots: analysis snapshots.	promise := RsrPromise new.	pendingMessage := RsrPendingMessage		services: nil "I don't think we need to cache services here. They will remain on the stack unless they were removed from the transitive closure by another proc"		promise: promise.	self pendingMessages		at: dispatchCommand transaction		put: pendingMessage.	self _sendCommand: dispatchCommand.	^promise! !
 
 !RsrConnection methodsFor!
 pendingMessages	^pendingMessages! !
@@ -1247,19 +1259,16 @@ decodeDeliverResponse: aStream    | transaction numServices serviceSnapshots r
 decodeServiceSnapshot: aStream	| snapshot |	snapshot := RsrServiceSnapshot new.	snapshot		decode: aStream		using: self.	^snapshot! !
 
 !RsrDecoder methodsFor!
-decodeSendMessage: aStream	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |	transaction := self decodeControlWord: aStream.	numServices := self decodeControlWord: aStream.	serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].	receiverReference := self decodeReference: aStream.	selector := self decodeReference: aStream.	argCount := self decodeControlWord: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].	instance := RsrSendMessage		transaction: transaction		receiver: receiverReference		selector: selector		arguments: arguments.	instance snapshots: serviceSnapshots.	^instance! !
+decodeSendMessage: aStream	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |	transaction := self decodeControlWord: aStream.	numServices := self decodeControlWord: aStream.	serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].	receiverReference := self decodeReference: aStream.	selector := self decodeReference: aStream.	argCount := self decodeControlWord: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].	instance := RsrSendMessage		transaction: transaction		receiverReference: receiverReference		selectorReference: selector		argumentReferences: arguments.	instance snapshots: serviceSnapshots.	^instance! !
 
 !RsrDecoder methodsFor!
 decodeImmediateReference: aStream	| referenceType |	referenceType := self decodeControlWord: aStream.	^(self instanceOfImmediate: referenceType)		decode: aStream		using: self! !
 
 !RsrDecoder methodsFor!
-decodeCommand: aStream	"Decode an object from the stream"	| command |	command := self decodeControlWord: aStream.	command == self sendMessageCommand ifTrue: [^self decodeSendMessage: aStream].	command == self deliverResponseCommand ifTrue: [^self decodeDeliverResponse: aStream].	command == self releaseObjectsCommand ifTrue: [^self decodeReleaseServices: aStream].	command == self deliverErrorResponseCommand ifTrue: [^self decodeDeliverErrorResponse: aStream].	^RsrError signal: 'Unknown command identifier: ', command printString! !
+decodeCommand: aStream	"Decode an object from the stream"	| command |	command := self decodeControlWord: aStream.	command == self sendMessageCommand ifTrue: [^self decodeSendMessage: aStream].	command == self deliverResponseCommand ifTrue: [^self decodeDeliverResponse: aStream].	command == self releaseObjectsCommand ifTrue: [^self decodeReleaseServices: aStream].	^RsrError signal: 'Unknown command identifier: ', command printString! !
 
 !RsrDecoder methodsFor!
 bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
-
-!RsrDecoder methodsFor!
-decodeDeliverErrorResponse: aStream	| transaction originalClassName tag messageText stack error |	transaction := self decodeControlWord: aStream.	originalClassName := (self decodeReference: aStream) resolve: nil.	tag := (self decodeReference: aStream) resolve: nil.	messageText := (self decodeReference: aStream) resolve: nil.	stack := (self decodeReference: aStream) resolve: nil.	error := RsrRemoteError new		originalClassName: originalClassName;		tag: tag;		messageText: messageText;		stack: stack;		yourself.	^RsrDeliverErrorResponse new		transaction: transaction;		remoteError: error;		yourself! !
 
 !RsrDecoder methodsFor!
 lookupClass: aClassName	^RsrClassResolver classNamed: aClassName! !
@@ -1283,46 +1292,37 @@ messageText	^'Cycle detected on: ', object printString! !
 object: anObject	object := anObject! !
 
 !RsrDeliverResponse methodsFor!
-transaction: aTransactionId	transaction := aTransactionId! !
-
-!RsrDeliverResponse methodsFor!
 snapshots	^snapshots! !
 
 !RsrDeliverResponse methodsFor!
-response: anObject	response := anObject! !
+snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
 
 !RsrDeliverResponse methodsFor!
-executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	[snapshots do: [:each | each reifyIn: aConnection].	result := response resolve: aConnection.	pendingMessage promise fulfill: result]		on: Error		do: [:ex | pendingMessage promise fulfill: ex copy]! !
+response	^self responseReference! !
 
 !RsrDeliverResponse methodsFor!
-reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')'! !
+responseReference	^responseReference! !
 
 !RsrDeliverResponse methodsFor!
-transaction	^transaction! !
-
-!RsrDeliverResponse methodsFor!
-response	^response! !
+executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: self transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	[self snapshots do: [:each | each reifyIn: aConnection].	result := self responseReference resolve: aConnection.	result first == #fulfill		ifTrue: [pendingMessage promise fulfill: result last]		ifFalse: [pendingMessage promise break: result last]]		on: Error		do: [:ex | pendingMessage promise fulfill: ex copy]! !
 
 !RsrDeliverResponse methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		onto: aStream! !
 
 !RsrDeliverResponse methodsFor!
-snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
+response: anObject	^self responseReference: anObject! !
 
-!RsrNullChannel methodsFor!
-close	"NOP"! !
+!RsrDeliverResponse methodsFor!
+transaction	^transaction! !
 
-!RsrNullChannel methodsFor!
-isOpen	^true! !
+!RsrDeliverResponse methodsFor!
+reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')'! !
 
-!RsrNullChannel methodsFor!
-send: aCommand	"NOP"! !
+!RsrDeliverResponse methodsFor!
+transaction: aTransactionId	transaction := aTransactionId! !
 
-!RsrNullChannel methodsFor!
-open	"NOP"! !
-
-!RsrNullChannel methodsFor!
-received: aCommand	"NOP"! !
+!RsrDeliverResponse methodsFor!
+responseReference: aReference	responseReference := aReference! !
 
 !RsrChannel methodsFor!
 log	^self connection log! !
@@ -1433,16 +1433,13 @@ isBroken	"Report if the receiver is currently broken"	^state == #Broken! !
 isFulfilled	"Report is the receiver is currently fulfilled"	^state == #Fulfilled! !
 
 !RsrPromise methodsFor!
-assertNotResolved	self isResolved		ifTrue: [RsrPromiseAlreadyResolved signal].! !
+assertNotResolved	self isResolved		ifTrue: [RsrAlreadyResolved signal].! !
 
 !RsrPromise methodsFor!
 waitForResolution	"There doesn't seem to be a great way to implement this method.	The ensure below is generally safe but does have a side-effect of signaling	the mutex when the process is terminated while waiting.	Removing the ensure allows the signal to be lost if the process is terminated	just after #wait but before #signal is processed.	In order to solve this, the loop verifies the promise is actually resolved before	continuing."	self isResolved		ifTrue: [^self].	[[self isResolved] whileFalse: [resolvedMutex wait]] ensure: [resolvedMutex signal]! !
 
 !RsrEncoder methodsFor!
 encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedInteger := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]).	encodedBytes := self		integerAsByteArray: encodedInteger		ofSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes! !
-
-!RsrEncoder methodsFor!
-encodeDeliverErrorResponse: aDeliverErrorResponse	^ByteArray streamContents: [:stream | self encodeDeliverErrorResponse: aDeliverErrorResponse onto: stream]! !
 
 !RsrEncoder methodsFor!
 encodeReference: aReferenceonto: aStream	aReference		encode: aStream		using: self! !
@@ -1460,13 +1457,10 @@ encodeDeliverResponse: aDeliverResponse	^ByteArray streamContents: [:stream | 
 encodeDeliverResponse: aDeliverResponseonto: aStream	self		encodeControlWord: self deliverResponseCommand		onto: aStream.	self		encodeControlWord: aDeliverResponse transaction		onto: aStream.	self		encodeControlWord: aDeliverResponse snapshots size		onto: aStream.	aDeliverResponse snapshots do: [:each | self encodeServiceSnapshot: each onto: aStream].	self		encodeReference: aDeliverResponse response		onto: aStream! !
 
 !RsrEncoder methodsFor!
-encodeSendMessage: aSendMessageonto: aStream	self		encodeControlWord: self sendMessageCommand		onto: aStream.	self		encodeControlWord: aSendMessage transaction		onto: aStream.	self		encodeControlWord: aSendMessage snapshots size		onto: aStream.	aSendMessage snapshots		do:			[:each |			self				encodeServiceSnapshot: each				onto: aStream].	self		encodeReference:  aSendMessage receiver		onto: aStream.	self		encodeReference: aSendMessage selector		onto: aStream.	self		encodeControlWord: aSendMessage arguments size		onto: aStream.	aSendMessage arguments		do:			[:each |			self				encodeReference: each				onto: aStream]! !
+encodeSendMessage: aSendMessageonto: aStream	self		encodeControlWord: self sendMessageCommand		onto: aStream.	self		encodeControlWord: aSendMessage transaction		onto: aStream.	self		encodeControlWord: aSendMessage snapshots size		onto: aStream.	aSendMessage snapshots		do:			[:each |			self				encodeServiceSnapshot: each				onto: aStream].	self		encodeReference:  aSendMessage receiverReference		onto: aStream.	self		encodeReference: aSendMessage selectorReference		onto: aStream.	self		encodeControlWord: aSendMessage argumentReferences size		onto: aStream.	aSendMessage argumentReferences		do:			[:each |			self				encodeReference: each				onto: aStream]! !
 
 !RsrEncoder methodsFor!
 encodeSendMessage: aSendMessage	^ByteArray streamContents: [:stream | self encodeSendMessage: aSendMessage onto: stream]! !
-
-!RsrEncoder methodsFor!
-encodeDeliverErrorResponse: aDeliverErrorResponseonto: aStream	| error |	error := aDeliverErrorResponse remoteError.	self		encodeControlWord: self deliverErrorResponseCommand		onto: aStream.	self		encodeControlWord: aDeliverErrorResponse transaction		onto: aStream.	self		encodeReference: (RsrReference from: error originalClassName)		onto: aStream.	self		encodeReference: (RsrReference from: error tag)		onto: aStream.	self		encodeReference: (RsrReference from: error messageText)		onto: aStream.	self		encodeReference: (RsrReference from: error stack)		onto: aStream! !
 
 !RsrEncoder methodsFor!
 encodeReleaseServices: aReleaseServicesonto: aStream	self		encodeControlWord: self releaseObjectsCommand		onto: aStream.	self		encodeControlWord: aReleaseServices sids size		onto: aStream.	aReleaseServices sids		do:			[:sid |			self				encodeControlWord: sid				onto: aStream]! !
@@ -1491,6 +1485,9 @@ _id	^_id! !
 
 !RsrService methodsFor!
 postUpdate	"#postUpdate is called just after the Service's shared variables are updated by the framework.	This method can be overridden to ensure internal consistency."	^self! !
+
+!RsrService methodsFor!
+debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^nil! !
 
 !RsrService methodsFor!
 _id: anRsrIdconnection: aConnection	_id := anRsrId.	_connection := aConnection.	remoteSelf := aConnection _forwarderClass on: self! !
