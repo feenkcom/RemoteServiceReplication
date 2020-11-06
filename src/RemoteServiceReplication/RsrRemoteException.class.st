@@ -7,7 +7,7 @@ Class {
 		'messageText',
 		'stack'
 	],
-	#category : 'RemoteServiceReplication-Test'
+	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'accessing' }
