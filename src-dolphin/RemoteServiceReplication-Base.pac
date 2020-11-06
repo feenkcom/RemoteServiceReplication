@@ -4,44 +4,44 @@ package paxVersion: 1; basicComment: ''.
 
 package classNames
 	add: #RsrReference;
-	add: #RsrResumableError;
 	add: #RsrIntegerReference;
-	add: #RsrWaitForConnectionCancelled;
+	add: #RsrUnknownSID;
 	add: #RsrCharacterReference;
-	add: #RsrSocketError;
+	add: #RsrBrokenPromise;
 	add: #RsrTrueReference;
 	add: #RsrProcessModel;
 	add: #RsrOrderedCollectionReference;
-	add: #RsrUnknownClass;
-	add: #RsrAlreadyResolved;
-	add: #RsrPromiseError;
+	add: #RsrInvalidBind;
 	add: #RsrCharacterArrayReference;
+	add: #RsrNonresumableError;
 	add: #RsrImmediateReference;
 	add: #RsrNegativeIntegerReference;
+	add: #RsrUnsupportedObject;
 	add: #RsrCollectionReference;
-	add: #RsrConnectFailed;
+	add: #RsrResumableError;
 	add: #RsrNilReference;
 	add: #RsrError;
 	add: #RsrObject;
 	add: #RsrSetReference;
-	add: #RsrUnknownSID;
+	add: #RsrSocketClosed;
 	add: #RsrStringReference;
-	add: #RsrBrokenPromise;
+	add: #RsrPromiseError;
 	add: #RsrBooleanReference;
 	add: #RsrPositiveIntegerReference;
+	add: #RsrWaitForConnectionCancelled;
 	add: #RsrArrayReference;
-	add: #RsrInvalidBind;
+	add: #RsrSocketError;
 	add: #RsrValueReference;
 	add: #RsrAlreadyRegistered;
 	add: #RsrDateAndTime;
-	add: #RsrNonresumableError;
 	add: #RsrDateAndTimeReference;
-	add: #RsrUnsupportedObject;
+	add: #RsrUnknownClass;
 	add: #RsrSymbolReference;
+	add: #RsrAlreadyResolved;
 	add: #RsrFalseReference;
 	add: #RsrServiceReference;
 	add: #RsrDictionaryReference;
-	add: #RsrSocketClosed;
+	add: #RsrConnectFailed;
 	add: #RsrByteArrayReference;
 	add: #RsrConnectionClosed;
 	yourself.
@@ -565,14 +565,14 @@ decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: 
 !RsrCollectionReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
 
+!RsrNonresumableError methodsFor!
+isResumable	^false! !
+
 !RsrBrokenPromise methodsFor!
 reason: aReason	reason := aReason! !
 
 !RsrBrokenPromise methodsFor!
 reason	^reason! !
-
-!RsrNonresumableError methodsFor!
-isResumable	^false! !
 
 !RsrByteArrayReference methodsFor!
 typeIdentifier	^10! !
@@ -613,17 +613,17 @@ resolve: aConnection	^nil! !
 !RsrNilReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream! !
 
-!RsrNegativeIntegerReference methodsFor!
-convertBytes: aByteArray	^(super convertBytes: aByteArray) negated! !
-
-!RsrNegativeIntegerReference methodsFor!
-typeIdentifier	^4! !
-
 !RsrCharacterArrayReference methodsFor!
 decode: aStreamusing: aDecoder	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	value := self convertBytes: bytes! !
 
 !RsrCharacterArrayReference methodsFor!
 encode: aStreamusing: anEncoder	| bytes |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	bytes := self convertToBytes: value.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+
+!RsrNegativeIntegerReference methodsFor!
+convertBytes: aByteArray	^(super convertBytes: aByteArray) negated! !
+
+!RsrNegativeIntegerReference methodsFor!
+typeIdentifier	^4! !
 
 !RsrDictionaryReference methodsFor!
 decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value := (1 to: size * 2) collect: [:each | aDecoder decodeReference: aStream]! !
@@ -688,9 +688,6 @@ note: aString	"This method can be used to leave a note in code. For instance, a
 !RsrObject methodsFor!
 trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
 
-!RsrTrueReference methodsFor!
-resolve: aConnection	^true! !
-
 !RsrSetReference methodsFor!
 decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value :=  (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
 
@@ -699,3 +696,6 @@ resolve: aConnection	| set |	set := Set new.	value do: [:each | set add: (ea
 
 !RsrSetReference methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
+
+!RsrTrueReference methodsFor!
+resolve: aConnection	^true! !

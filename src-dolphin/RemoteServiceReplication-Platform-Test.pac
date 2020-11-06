@@ -3,6 +3,8 @@ package := Package name: 'RemoteServiceReplication-Platform-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
+	add: #RsrMockServer;
+	add: #RsrGarbageCollectorTestCase;
 	add: #RsrTestingProcessModel;
 	add: #RsrSocketTestCase;
 	add: #RsrMockService;
@@ -11,8 +13,6 @@ package classNames
 	add: #RsrMockClient;
 	add: #RsrClassResolverTestCase;
 	add: #RsrSocketPair;
-	add: #RsrMockServer;
-	add: #RsrGarbageCollectorTestCase;
 	yourself.
 
 package methodNames

@@ -3,48 +3,48 @@ package := Package name: 'RemoteServiceReplication'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrPromiseResolutionAction;
-	add: #RsrInMemoryChannel;
-	add: #RsrCustomSink;
+	add: #RsrLog;
+	add: #RsrReleaseServices;
 	add: #RsrRemotePromiseResolver;
-	add: #RsrConnection;
-	add: #RsrCommandSink;
-	add: #RsrDecoder;
-	add: #RsrThreadSafeNumericSpigot;
-	add: #RsrServiceFactoryServer;
-	add: #RsrDispatchQueue;
-	add: #RsrThreadSafeDictionary;
-	add: #RsrMessageSend;
-	add: #RsrDeliverResponse;
-	add: #RsrServiceSnapshot;
-	add: #RsrTranscriptSink;
-	add: #RsrService;
-	add: #RsrConnectionSpecification;
-	add: #RsrCommandSource;
+	add: #RsrStream;
+	add: #RsrInMemoryChannel;
+	add: #RsrLogWithPrefix;
+	add: #RsrAcceptConnection;
 	add: #RsrEncoder;
 	add: #RsrPendingMessage;
-	add: #RsrBufferedSocketStream;
-	add: #RsrLog;
-	add: #RsrCycleDetected;
-	add: #RsrReleaseServices;
-	add: #RsrSnapshotAnalysis;
-	add: #RsrSocketChannel;
-	add: #RsrLogWithPrefix;
-	add: #RsrServiceFactory;
-	add: #RsrAcceptConnection;
-	add: #RsrSocketStream;
-	add: #RsrCommand;
-	add: #RsrPromise;
-	add: #RsrChannel;
+	add: #RsrCommandSink;
+	add: #RsrServiceFactoryServer;
 	add: #RsrLogSink;
-	add: #RsrRemoteError;
 	add: #RsrSendMessage;
-	add: #RsrSocketChannelLoop;
+	add: #RsrServiceSnapshot;
+	add: #RsrThreadSafeDictionary;
+	add: #RsrSocketChannel;
+	add: #RsrMessageSend;
+	add: #RsrService;
+	add: #RsrInitiateConnection;
+	add: #RsrCommand;
+	add: #RsrCommandSource;
+	add: #RsrPromise;
+	add: #RsrBufferedSocketStream;
+	add: #RsrCustomSink;
+	add: #RsrConnection;
+	add: #RsrCycleDetected;
+	add: #RsrSnapshotAnalysis;
 	add: #RsrCodec;
 	add: #RsrNumericSpigot;
+	add: #RsrServiceFactory;
+	add: #RsrDispatchQueue;
+	add: #RsrDeliverResponse;
+	add: #RsrPromiseResolutionAction;
+	add: #RsrSocketStream;
+	add: #RsrChannel;
+	add: #RsrTranscriptSink;
+	add: #RsrConnectionSpecification;
+	add: #RsrRemoteError;
+	add: #RsrSocketChannelLoop;
+	add: #RsrDecoder;
+	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrServiceFactoryClient;
-	add: #RsrInitiateConnection;
-	add: #RsrStream;
 	yourself.
 
 package methodNames
@@ -496,11 +496,8 @@ transaction: aTransactionIdreceiverReference: aServiceReferenceselectorReferen
 !RsrPromiseResolutionAction class methodsFor!
 when: aWhenBlockcatch: aCatchBlock	^self new		when: aWhenBlock;		catch: aCatchBlock;		yourself! !
 
-!RsrLogWithPrefix class methodsFor!
-prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
-
-!RsrLogWithPrefix class methodsFor!
-log: aLog	^self new		log: aLog;		yourself! !
+!RsrRemotePromiseResolver class methodsFor!
+for: aSendMessageover: aConnection	^self new		sendMessage: aSendMessage;		connection: aConnection;		yourself! !
 
 !RsrBufferedSocketStream class methodsFor!
 on: aSocketStream	^self new		stream: aSocketStream;		yourself! !
@@ -517,6 +514,15 @@ port: aPortInteger	^self		host: self wildcardAddress		port: aPortInteger! !
 !RsrCustomSink class methodsFor!
 action: aBlock	^self new		action: aBlock;		yourself! !
 
+!RsrMessageSend class methodsFor!
+receiver: anObjectselector: aSelectorarguments: anArray	^self new		receiver: anObject;		selector: aSelector;		arguments: anArray;		yourself! !
+
+!RsrLogWithPrefix class methodsFor!
+prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
+
+!RsrLogWithPrefix class methodsFor!
+log: aLog	^self new		log: aLog;		yourself! !
+
 !RsrReleaseServices class methodsFor!
 sids: anArrayOfServiceIDs	^self new		sids: anArrayOfServiceIDs;		yourself! !
 
@@ -526,14 +532,8 @@ services: aListpromise: aPromise	^self new		services: aList;		promise: aPro
 !RsrStream class methodsFor!
 on: aStream	^self new		stream: aStream;		yourself! !
 
-!RsrRemotePromiseResolver class methodsFor!
-for: aSendMessageover: aConnection	^self new		sendMessage: aSendMessage;		connection: aConnection;		yourself! !
-
 !RsrCycleDetected class methodsFor!
 signal: anObject	^self new		object: anObject;		signal! !
-
-!RsrMessageSend class methodsFor!
-receiver: anObjectselector: aSelectorarguments: anArray	^self new		receiver: anObject;		selector: aSelector;		arguments: anArray;		yourself! !
 
 !RsrConnection class methodsFor!
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
@@ -995,10 +995,10 @@ action	^action! !
 write: aMessage	self action value: aMessage! !
 
 !RsrSendMessage methodsFor!
-receiverReference: aServiceReference	receiverReference := aServiceReference! !
+selectorReference: aSymbolReference	selectorReference := aSymbolReference! !
 
 !RsrSendMessage methodsFor!
-selectorReference: aSymbolReference	selectorReference := aSymbolReference! !
+transaction: anObject	transaction := anObject! !
 
 !RsrSendMessage methodsFor!
 unhandledExceptionClass	"Temporarily, use Error until we have appropriate GemStone hooks."	^Error! !
@@ -1037,13 +1037,13 @@ reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiverReference asString,
 argumentReferences	^argumentReferences! !
 
 !RsrSendMessage methodsFor!
-transaction: anObject	transaction := anObject! !
-
-!RsrSendMessage methodsFor!
 argumentReferences: anArrayOfReferences	argumentReferences := anArrayOfReferences! !
 
 !RsrSendMessage methodsFor!
 receiverReference	^receiverReference! !
+
+!RsrSendMessage methodsFor!
+receiverReference: aServiceReference	receiverReference := aServiceReference! !
 
 !RsrThreadSafeDictionary methodsFor!
 removeKey: anRsrIdifAbsent: aBlock	| element wasRemoved |	wasRemoved := true.	element := mutex critical: [map removeKey: anRsrId ifAbsent: [wasRemoved := false]].	^wasRemoved		ifTrue: [element]		ifFalse: [aBlock value]! !
@@ -1292,10 +1292,10 @@ messageText	^'Cycle detected on: ', object printString! !
 object: anObject	object := anObject! !
 
 !RsrDeliverResponse methodsFor!
-snapshots	^snapshots! !
+snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
 
 !RsrDeliverResponse methodsFor!
-snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
+snapshots	^snapshots! !
 
 !RsrDeliverResponse methodsFor!
 response	^self responseReference! !
@@ -1319,10 +1319,10 @@ transaction	^transaction! !
 reportOn: aLog	aLog debug: 'RsrDeliverResponse(', self response class name, ')'! !
 
 !RsrDeliverResponse methodsFor!
-transaction: aTransactionId	transaction := aTransactionId! !
+responseReference: aReference	responseReference := aReference! !
 
 !RsrDeliverResponse methodsFor!
-responseReference: aReference	responseReference := aReference! !
+transaction: aTransactionId	transaction := aTransactionId! !
 
 !RsrChannel methodsFor!
 log	^self connection log! !
@@ -1484,10 +1484,10 @@ registerWith: aConnection	aConnection _ensureRegistered: self! !
 _id	^_id! !
 
 !RsrService methodsFor!
-postUpdate	"#postUpdate is called just after the Service's shared variables are updated by the framework.	This method can be overridden to ensure internal consistency."	^self! !
+debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^nil! !
 
 !RsrService methodsFor!
-debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^nil! !
+postUpdate	"#postUpdate is called just after the Service's shared variables are updated by the framework.	This method can be overridden to ensure internal consistency."	^self! !
 
 !RsrService methodsFor!
 _id: anRsrIdconnection: aConnection	_id := anRsrId.	_connection := aConnection.	remoteSelf := aConnection _forwarderClass on: self! !

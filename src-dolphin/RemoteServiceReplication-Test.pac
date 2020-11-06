@@ -3,67 +3,68 @@ package := Package name: 'RemoteServiceReplication-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrRemoteExceptionClient;
-	add: #RsrSameTemplateAndClientService;
-	add: #RsrDecoderTest;
-	add: #RsrSocketMessageSendingTest;
 	add: #RsrReflectedVariableTestServiceA;
 	add: #RsrValueHolder;
-	add: #RsrInMemoryConnectionTestCase;
-	add: #RsrServerNoInstVars;
-	add: #RsrNumericSpigotTest;
-	add: #RsrSpeciesEquality;
-	add: #RsrRemoteAction;
-	add: #RsrSocketLifetimeTest;
-	add: #RsrInstrumentedService;
-	add: #RsrTestService;
-	add: #RsrSocketStreamTestCase;
-	add: #RsrInMemoryStressTest;
-	add: #RsrRemoteExceptionServer;
-	add: #RsrDifferentServerService;
-	add: #RsrEncoderTest;
-	add: #RsrServiceTest;
-	add: #RsrReflectedVariableTestServiceB;
-	add: #RsrValueHolderClient;
-	add: #RsrSocketConnectionTestCase;
-	add: #RsrConcurrentTestService;
-	add: #RsrServiceReferenceService;
-	add: #RsrThreadSafeNumericSpigotTest;
-	add: #RsrInMemorySpeciesEquality;
-	add: #RsrAbstractReason;
-	add: #RsrRemoteActionClient;
-	add: #RsrSignalErrorInAsString;
-	add: #RsrMessageSendingTest;
-	add: #RsrInstrumentedClient;
-	add: #RsrClientTestService;
-	add: #RsrSystemTestCase;
-	add: #RsrSocketStressTest;
-	add: #RsrServiceNoInstVars;
-	add: #RsrConnectionSpecificationTestCase;
-	add: #RsrInMemoryServiceTest;
-	add: #RsrReflectedVariableTestClient;
-	add: #RsrValueHolderServer;
 	add: #RsrLifetimeTest;
-	add: #RsrConcurrentTestClient;
-	add: #RsrClientReferenceService;
+	add: #RsrRemoteExceptionServer;
+	add: #RsrServerNoInstVars;
 	add: #RsrPromiseTest;
 	add: #RsrSocketSpeciesEquality;
-	add: #RsrRemoteException;
-	add: #RsrRemoteActionServer;
+	add: #RsrRemoteAction;
 	add: #RsrCodecTest;
 	add: #RsrInMemoryMessageSendingTest;
-	add: #RsrInstrumentedServer;
-	add: #RsrServerTestService;
+	add: #RsrInstrumentedService;
+	add: #RsrTestService;
 	add: #RsrConnectionTestCase;
-	add: #RsrClientNoInstVars;
+	add: #RsrAbstractReason;
+	add: #RsrDifferentServerService;
 	add: #RsrForwarderTest;
 	add: #RsrSocketServiceTest;
-	add: #RsrReflectedVariableTestServer;
+	add: #RsrReflectedVariableTestServiceB;
+	add: #RsrValueHolderClient;
 	add: #RsrInMemoryLifetimeTest;
-	add: #RsrConcurrentTestServer;
-	add: #RsrServerReferenceService;
+	add: #RsrConcurrentTestService;
+	add: #RsrServiceReferenceService;
 	add: #RsrSnapshotAnalysisTest;
 	add: #RsrStressTest;
+	add: #RsrRemoteActionClient;
+	add: #RsrDecoderTest;
+	add: #RsrSocketMessageSendingTest;
+	add: #RsrInstrumentedClient;
+	add: #RsrClientTestService;
+	add: #RsrInMemoryConnectionTestCase;
+	add: #RsrRemoteException;
+	add: #RsrServiceNoInstVars;
+	add: #RsrNumericSpigotTest;
+	add: #RsrSpeciesEquality;
+	add: #RsrReflectedVariableTestClient;
+	add: #RsrValueHolderServer;
+	add: #RsrSocketLifetimeTest;
+	add: #RsrConcurrentTestClient;
+	add: #RsrClientReferenceService;
+	add: #RsrSocketStreamTestCase;
+	add: #RsrInMemoryStressTest;
+	add: #RsrRemoteActionServer;
+	add: #RsrEncoderTest;
+	add: #RsrServiceTest;
+	add: #RsrInstrumentedServer;
+	add: #RsrServerTestService;
+	add: #RsrSocketConnectionTestCase;
+	add: #RsrRemoteExceptionClient;
+	add: #RsrClientNoInstVars;
+	add: #RsrThreadSafeNumericSpigotTest;
+	add: #RsrInMemorySpeciesEquality;
+	add: #RsrReflectedVariableTestServer;
+	add: #RsrSignalErrorInAsString;
+	add: #RsrMessageSendingTest;
+	add: #RsrConcurrentTestServer;
+	add: #RsrServerReferenceService;
+	add: #RsrSystemTestCase;
+	add: #RsrSocketStressTest;
+	add: #RsrNullChannel;
+	add: #RsrSameTemplateAndClientService;
+	add: #RsrConnectionSpecificationTestCase;
+	add: #RsrInMemoryServiceTest;
 	yourself.
 
 package methodNames
@@ -106,6 +107,14 @@ RsrService
 	classInstanceVariableNames: ''!
 RsrInstrumentedService comment: 'No class-specific documentation for RsrInstrumentedService, hierarchy is:Object  RsrObject    RsrAbstractService      RsrService( _id _connection remoteSelf)        RsrInstrumentedService( sharedVariable preUpdateAction postUpdateAction)'!
 !RsrInstrumentedService categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrChannel
+	subclass: #RsrNullChannel
+	instanceVariableNames: 'lastCommand'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrNullChannel categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
 	subclass: #RsrReflectedVariableTestServiceA
@@ -808,10 +817,19 @@ testAsyncBreak	| promise semaphore expected whenRan first second third |	prom
 testSyncFulfill	| promise expected exceptionRaised first second |	promise := RsrPromise new.	expected := Object new.	exceptionRaised := false.	self fork: [[first := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]].	self fork: [[second := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]].	promise fulfill: expected.	self shortWait. "Allow results to process."	self deny: exceptionRaised.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	self		assert: promise wait		identicalTo: expected! !
 
 !RsrEncoderTest methodsFor!
+register: aService	self connection _ensureRegistered: aService! !
+
+!RsrEncoderTest methodsFor!
+testReleaseServices	| command result expectedEncoding |	command := RsrReleaseServices sids: #(1 2 3 4 5).	result := self encoder encodeReleaseServices: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"		#[0 0 0 0 0 0 0 5], "Num OIDS"		#[0 0 0 0 0 0 0 1], "First OID"		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5]. "Last OID"	self		assert: result		equals: expectedEncoding! !
+
+!RsrEncoderTest methodsFor!
+testServiceNoInstVars	| rootService encodedBytes expectedEncoding |	rootService := RsrClientNoInstVars new.	self register: rootService.	encodedBytes := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: rootService).	expectedEncoding := self serviceNoInstVarsEncoding.	self		assert: encodedBytes		equals: expectedEncoding! !
+
+!RsrEncoderTest methodsFor!
 testUnsupportedObject	self		should: [self encoder encodeReference: (RsrReference from: Object new) onto: (WriteStream on: ByteArray new)]		raise: RsrUnsupportedObject! !
 
 !RsrEncoderTest methodsFor!
-testServiceReferenceService	| rootService referencedService encodedObject expectedEncoding |	referencedService := RsrClientNoInstVars new.	rootService := RsrClientReferenceService service: referencedService.	self		register: rootService;		register: referencedService.	encodedObject := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: rootService).	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 1], "rootService's OID = 1"		#[0 0 0 0 0 0 0 1], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 25], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 82 101 102 101 114 101 110 99 101 83 101 114 118 105 99 101],		#[0 0 0 0 0 0 0 2]. "#RsrServerReferenceService"	self		assert: encodedObject		equals: expectedEncoding.	encodedObject := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: referencedService).	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 2], "referencedService's OID = 2"		#[0 0 0 0 0 0 0 0], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"	self		assert: encodedObject		equals: expectedEncoding! !
+testSendMessage	| service analysis command result expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	analysis := RsrSnapshotAnalysis		roots: (Array with: service)		connection: self connection.	analysis perform.	command := RsrSendMessage		transaction: 1		receiverReference: (RsrReference from: service)		selectorReference: (RsrSymbolReference from: #return42)		argumentReferences: #().	command snapshots: analysis snapshots.	result := self encoder encodeSendMessage: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	self		assert: result		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
 testDeliverResponse	| service response command result expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	response := #responseSymbol.	command := RsrDeliverResponse		transaction: 1		responseReference: (RsrReference from: response)		snapshots: (Array with: (RsrServiceSnapshot from: service)).	result := self encoder encodeDeliverResponse: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "One service is part of this response"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	self		assert: result		equals: expectedEncoding! !
@@ -820,19 +838,10 @@ testDeliverResponse	| service response command result expectedEncoding |	serv
 verifyImmediate: anObjectencoding: expected	| actual |	actual := ByteArray streamContents: [:stream | self encoder encodeReference: (RsrReference from: anObject) onto: stream].	self		assert: actual		equals: expected! !
 
 !RsrEncoderTest methodsFor!
-testServiceNoInstVars	| rootService encodedBytes expectedEncoding |	rootService := RsrClientNoInstVars new.	self register: rootService.	encodedBytes := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: rootService).	expectedEncoding := self serviceNoInstVarsEncoding.	self		assert: encodedBytes		equals: expectedEncoding! !
+testServiceReferenceService	| rootService referencedService encodedObject expectedEncoding |	referencedService := RsrClientNoInstVars new.	rootService := RsrClientReferenceService service: referencedService.	self		register: rootService;		register: referencedService.	encodedObject := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: rootService).	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 1], "rootService's OID = 1"		#[0 0 0 0 0 0 0 1], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 25], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 82 101 102 101 114 101 110 99 101 83 101 114 118 105 99 101],		#[0 0 0 0 0 0 0 2]. "#RsrServerReferenceService"	self		assert: encodedObject		equals: expectedEncoding.	encodedObject := self encoder encodeServiceSnapshot: (RsrServiceSnapshot from: referencedService).	expectedEncoding :=		#[0 0 0 0 0 0 0 0], "type"		#[0 0 0 0 0 0 0 2], "referencedService's OID = 2"		#[0 0 0 0 0 0 0 0], "Inst Var Count"		#[0 0 0 0 0 0 0 0], "Start of service name. OID = 0"		#[0 0 0 0 0 0 0 1], "Service name = 1 -> Symbol"		#[0 0 0 0 0 0 0 19], "Length of UTF-8 encoded bytes"		#[82 115 114 83 101 114 118 101 114 78 111 73 110 115 116 86 97 114 115]. "#RsrServerNoInstVars"	self		assert: encodedObject		equals: expectedEncoding! !
 
 !RsrEncoderTest methodsFor!
 verifyControlWord: anIntegerencoding: expected	| actual |	actual := ByteArray streamContents: [:stream | self encoder encodeControlWord: anInteger onto: stream].	self		assert: actual		equals: expected! !
-
-!RsrEncoderTest methodsFor!
-testReleaseServices	| command result expectedEncoding |	command := RsrReleaseServices sids: #(1 2 3 4 5).	result := self encoder encodeReleaseServices: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 3], "ReleaseObjects Command"		#[0 0 0 0 0 0 0 5], "Num OIDS"		#[0 0 0 0 0 0 0 1], "First OID"		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 3],		#[0 0 0 0 0 0 0 4],		#[0 0 0 0 0 0 0 5]. "Last OID"	self		assert: result		equals: expectedEncoding! !
-
-!RsrEncoderTest methodsFor!
-register: aService	self connection _ensureRegistered: aService! !
-
-!RsrEncoderTest methodsFor!
-testSendMessage	| service analysis command result expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	analysis := RsrSnapshotAnalysis		roots: (Array with: service)		connection: self connection.	analysis perform.	command := RsrSendMessage		transaction: 1		receiverReference: (RsrReference from: service)		selectorReference: (RsrSymbolReference from: #return42)		argumentReferences: #().	command snapshots: analysis snapshots.	result := self encoder encodeSendMessage: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	self		assert: result		equals: expectedEncoding! !
 
 !RsrRemoteAction methodsFor!
 sharedVariable: anObject	sharedVariable := anObject! !
@@ -1108,10 +1117,10 @@ testDebugHandlerException	"Ensure that an exception that occurs in the debug ha
 testReturnAlsoUpdatesLocalService	"Ensure that when the remote peer service returns a value,	that it is also sent to update the local service."	| client server value response |	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.	client synchronize.	server := connectionB serviceAt: client _id.	value := 42.	self		deny: client varA		equals: value.	self		deny: client varB		equals: value.	response := client setVarsToAndReturn: value.	self		assert: response		equals: value.	self		assert: server varA		equals: value.	self		assert: server varB		equals: value.	self		assert: client varA		equals: value.	self		assert: client varB		equals: value! !
 
 !RsrMessageSendingTest methodsFor!
-testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTime now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server value: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server value: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
+expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !
 
 !RsrMessageSendingTest methodsFor!
-expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !
+testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTime now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server value: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server value: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
 
 !RsrMessageSendingTest methodsFor!
 testDebugHandlerFulfill	"Ensure that if a debug handler resolves the message,	that the fulfillment value is received remotely."	| marker client server |	marker := #testMarker.	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].	server debugHandler: [:exception :messageSend :resolver | resolver fulfill: marker. nil "ensure we do not return the marker"].	self		assert: client value		equals: marker.	server action: [RsrNonresumableError signal. 42 "ensure we do not return the marker"].	self		assert: client value		equals: marker! !
@@ -1138,25 +1147,25 @@ testSendInvalidObject	| client server |				client := connectionA serviceFor: 
 action: aBlock	action := aBlock! !
 
 !RsrRemoteActionServer methodsFor!
-value	^self action value! !
+debugHandler: aBlock	debugHandler := aBlock! !
 
 !RsrRemoteActionServer methodsFor!
 action	^action! !
 
 !RsrRemoteActionServer methodsFor!
-value: anObject	^self action value: anObject! !
+value	^self action value! !
 
 !RsrRemoteActionServer methodsFor!
-debugHandler: aBlock	debugHandler := aBlock! !
+value: anObject	^self action value: anObject! !
 
 !RsrRemoteActionServer methodsFor!
 debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^self debugHandler		value: anException		value: aMessageSend		value: aResolver! !
 
 !RsrRemoteActionServer methodsFor!
-valueWithArguments: anArray	^self action valueWithArguments: anArray! !
+debugHandler	^debugHandler ifNil: [[:x :y :z | nil]]! !
 
 !RsrRemoteActionServer methodsFor!
-debugHandler	^debugHandler ifNil: [[:x :y :z | nil]]! !
+valueWithArguments: anArray	^self action valueWithArguments: anArray! !
 
 !RsrReflectedVariableTestServiceA methodsFor!
 varA	^varA! !
@@ -1201,10 +1210,10 @@ testServiceDecodeIdentity	"Ensure that decoding an object multiple times result
 testServiceReferenceService	| rootService referencedService |	referencedService := self decodeService: self referencedServiceEncoding.	self		assert: referencedService class		equals: RsrServerNoInstVars.	self		assert: referencedService _id		equals: 2.	rootService := self decodeService: self rootServiceEncoding.	self		assert: rootService class		equals: RsrServerReferenceService.	self		assert: rootService service		equals: referencedService! !
 
 !RsrDecoderTest methodsFor!
-testDeliverResponse	| service response encoding command decodedService |	service := RsrServerNoInstVars new.	self connection _ensureRegistered: service.	response := #responseSymbol.	encoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "Number of services"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrDeliverResponse.	self		assert: command transaction		equals: 1.	self		assert: command snapshots size		equals: 1.	decodedService := command snapshots first reifyIn: self connection.	self		assert: decodedService		equals: service.	self		assert: (command response resolve: self connection)		equals: response! !
+verifyImmediate: expectedencoding: encoding	| actual |	actual := (self decoder decodeReference: encoding readStream) resolve: self connection.	self		assert: actual		equals: expected! !
 
 !RsrDecoderTest methodsFor!
-verifyImmediate: expectedencoding: encoding	| actual |	actual := (self decoder decodeReference: encoding readStream) resolve: self connection.	self		assert: actual		equals: expected! !
+testDeliverResponse	| service response encoding command decodedService |	service := RsrServerNoInstVars new.	self connection _ensureRegistered: service.	response := #responseSymbol.	encoding :=		#[0 0 0 0 0 0 0 2], "DeliverResponse Command"		#[0 0 0 0 0 0 0 1], "Transaction Id"		#[0 0 0 0 0 0 0 1], "Number of services"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 0], "Service Name Symbol Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 14], "Length of UTF-8 bytes"		#[114 101 115 112 111 110 115 101 83 121 109 98 111 108]. "#responseSymbol"	command := self decoder decodeCommand: encoding readStream.	self		assert: command class		equals: RsrDeliverResponse.	self		assert: command transaction		equals: 1.	self		assert: command snapshots size		equals: 1.	decodedService := command snapshots first reifyIn: self connection.	self		assert: decodedService		equals: service.	self		assert: (command response resolve: self connection)		equals: response! !
 
 !RsrDecoderTest methodsFor!
 testServiceNoInstVars	| decodedService |	decodedService := self decodeService: self serviceNoInstVarsEncoding.	self		assert: decodedService class		equals: RsrServerNoInstVars.	self		assert: decodedService _id		equals: 1! !
@@ -1277,6 +1286,24 @@ privateVariable	^privateVariable! !
 
 !RsrServerTestService methodsFor!
 privateVariable: anObject	privateVariable := anObject! !
+
+!RsrNullChannel methodsFor!
+close	"NOP"! !
+
+!RsrNullChannel methodsFor!
+isOpen	^true! !
+
+!RsrNullChannel methodsFor!
+open	"NOP"! !
+
+!RsrNullChannel methodsFor!
+send: aCommand	lastCommand := aCommand! !
+
+!RsrNullChannel methodsFor!
+received: aCommand	lastCommand := aCommand! !
+
+!RsrNullChannel methodsFor!
+lastCommand	^lastCommand! !
 
 !RsrRemoteActionClient methodsFor!
 asyncValue	^remoteSelf value! !
