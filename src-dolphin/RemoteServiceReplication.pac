@@ -1245,7 +1245,7 @@ _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty tra
 pendingMessages	^pendingMessages! !
 
 !RsrConnection methodsFor!
-_receivedCommand: aCommand	"Execute the command in the context of the receiving Connection."	dispatchQueue dispatch: [aCommand executeFor: self]! !
+_receivedCommand: aCommand	"Execute the command in the context of the receiving Connection."	RsrProcessModel fork: [aCommand executeFor: self]! !
 
 !RsrConnection methodsFor!
 unknownError: anException	self close! !
@@ -1254,7 +1254,7 @@ unknownError: anException	self close! !
 initializeServiceFactory	| instance |	instance := RsrServiceFactory clientClass new.	self _ensureRegistered: instance.	serviceFactory := instance.	^serviceFactory! !
 
 !RsrConnection methodsFor!
-_sendCommand: aCommand	channel send: aCommand! !
+_sendCommand: aCommand	"Send the provided Command to our peer."	channel send: aCommand! !
 
 !RsrConnection methodsFor!
 mournActionForClientSID: aSID	^[dispatchQueue		dispatch:			[registry removeKey: aSID.			self releaseOid: aSID]]! !

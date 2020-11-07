@@ -270,6 +270,9 @@ hack: aString	"Placeholder for things that need to be fixed"! !
 assert: anObjectidenticalTo: bObject	self assert: anObject == bObject! !
 
 !RsrTestCase methodsFor!
+shortWait	(Delay forMilliseconds: 100) wait! !
+
+!RsrTestCase methodsFor!
 fork: aBlock	^RsrProcessModel fork: aBlock! !
 
 !RsrTestCase methodsFor!
