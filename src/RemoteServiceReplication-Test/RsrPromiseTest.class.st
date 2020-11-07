@@ -4,12 +4,6 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'utilities' }
-RsrPromiseTest >> shortWait [
-
-	(Delay forMilliseconds: 100) wait
-]
-
 { #category : 'running' }
 RsrPromiseTest >> testAsyncBreak [
 

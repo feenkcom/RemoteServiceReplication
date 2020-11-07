@@ -62,7 +62,8 @@ RsrConnection >> _forwarderClass [
 RsrConnection >> _receivedCommand: aCommand [
 	"Execute the command in the context of the receiving Connection."
 
-	dispatchQueue dispatch: [aCommand executeFor: self]
+	RsrProcessModel fork: [aCommand executeFor: self]
+	"dispatchQueue dispatch: [aCommand executeFor: self]"
 ]
 
 { #category : 'private-service management' }

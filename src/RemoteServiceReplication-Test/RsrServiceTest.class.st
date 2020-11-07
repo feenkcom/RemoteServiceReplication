@@ -133,52 +133,53 @@ RsrServiceTest >> testIsMirrored [
 ]
 
 { #category : 'running' }
-RsrServiceTest >> testMessageDispatchedSeriallyAndToSameProcessForSingleService [
-	"Ensure that when a message is sent to a Service it is always dispatched to the same process"
+RsrServiceTest >> testMessageDispatchedConcurrentlyToSingleService [
+	"Ensure all messages are sent concurrently (including those sent to a single service)"
 
-	| client server process1 process2 |
-	client := self mirror: RsrConcurrentTestClient new.
+	| client server counter promise1 promise2 |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
 	server := connectionB serviceAt: client _id.
-	client stashProcess.
-	process1 := server stashedProcess.
-	client stashProcess.
-	process2 := server stashedProcess.
+	counter := 0.
+	server action: [counter := counter + 1. self shortWait. counter].
+	promise1 := client asyncValue.
+	promise2 := client asyncValue.
 	self
-		assert: process1
-		identicalTo: process2
+		assert: promise1 wait
+		equals: 2. "The #shortWait will cause the second counter increment before the counter is returned."
+	self
+		assert: promise2 wait
+		equals: 2
 ]
 
 { #category : 'running' }
-RsrServiceTest >> testMessagesDispatchedSeriallyForMultipleServices [
-	"Ensure a long-running process in one Service will not cause startvation of other Services"
+RsrServiceTest >> testMessagesDispactchedConcurrentlyForMultipleServices [
+	"Ensure messages are dispatched concurrently"
 
-	| delayClient delayServer client server initialCounter counter delayedResult delaySem immediateResult |
-	delayClient := RsrConcurrentTestClient new.
-	client := RsrConcurrentTestClient new.
-	self mirror: delayClient.
-	self mirror: client.
-	initialCounter := 0.
-	counter := Array with: initialCounter.
-	delayServer := connectionB serviceAt: delayClient _id.
-	server := connectionB serviceAt: client _id.
-	delaySem := Semaphore new.
-	delayServer
-		counter: counter;
-		semaphore: delaySem.
-	server counter: counter.
+	| client1 server1 client2 server2 semaphore expected1 expected2 promise1 promise2 |
+	client1 := connectionA serviceFor: #RsrRemoteAction.
+	client2 := connectionA serviceFor: #RsrRemoteAction.
+	client1 synchronize.
+	client2 synchronize.
+	server1 := connectionB serviceAt: client1 _id.
+	server2 := connectionB serviceAt: client2 _id.
+	semaphore := Semaphore new.
+	expected1 := #expected1.
+	expected2 := #expected2.
+	server1 action: [semaphore wait. expected1].
+	server2 action: [semaphore signal. expected2].
+	promise1 := client1 asyncValue.
+	promise2 := client2 asyncValue.
+	self shortWait.
 	self
-		assumption: 'The call to #delayedCounter needs to run before the methods continues.';
-		assumption: 'The delay period in #delayedCounter will be enough to ensure #counterWithIncrement processes'.
-	RsrProcessModel fork: [delayedResult := delayClient delayedCounter. delaySem signal].
-	delaySem wait.
-	immediateResult := client counterWithIncrement.
+		assert: promise1 isResolved;
+		assert: promise2 isResolved.
 	self
-		assert: immediateResult
-		equals: initialCounter.
-	delaySem wait.
+		assert: promise1 value
+		equals: expected1.
 	self
-		assert: delayedResult
-		equals: initialCounter
+		assert: promise2 value
+		equals: expected2
 ]
 
 { #category : 'running' }

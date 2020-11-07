@@ -68,3 +68,9 @@ RsrTestCase >> runCase [
 			[RsrProcessModel resetCurrent].
 	pm forkedException ifNotNil: [:ex | ex signal]
 ]
+
+{ #category : 'utilities' }
+RsrTestCase >> shortWait [
+
+	(Delay forMilliseconds: 100) wait
+]
