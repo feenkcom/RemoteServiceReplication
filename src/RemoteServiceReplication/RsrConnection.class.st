@@ -63,7 +63,6 @@ RsrConnection >> _receivedCommand: aCommand [
 	"Execute the command in the context of the receiving Connection."
 
 	RsrProcessModel fork: [aCommand executeFor: self]
-	"dispatchQueue dispatch: [aCommand executeFor: self]"
 ]
 
 { #category : 'private-service management' }
@@ -99,6 +98,7 @@ RsrConnection >> _remoteClientReleased: aSID [
 
 { #category : 'private-handling commands' }
 RsrConnection >> _sendCommand: aCommand [
+	"Send the provided Command to our peer."
 
 	channel send: aCommand
 ]
