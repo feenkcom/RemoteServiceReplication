@@ -61,18 +61,10 @@ RsrSendMessage >> executeFor: aConnection [
 	resolver := RsrRemotePromiseResolver
 		for: self
 		over: aConnection.
-	[services := self snapshots collect: [:each | each reifyIn: aConnection].
+	[[services := self snapshots collect: [:each | each reifyIn: aConnection].
 	receiver := self receiverReference resolve: aConnection.
 	selector := self selectorReference resolve: aConnection.
-	arguments := self argumentReferences collect: [:each | each resolve: aConnection]]
-		on: Error
-		do:
-			[:ex |
-			self
-				logException: ex
-				to: aConnection log.
-			self note: 'This code path needs to be tested'.
-			^resolver break: (RsrRemoteException from: ex)].
+	arguments := self argumentReferences collect: [:each | each resolve: aConnection].
 	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."
 	messageSend := RsrMessageSend
 		receiver: receiver
@@ -80,7 +72,15 @@ RsrSendMessage >> executeFor: aConnection [
 		arguments: arguments.
 	self
 		perform: messageSend
-		answerUsing: resolver
+		answerUsing: resolver]
+		on: self unhandledExceptionClass
+		do:
+			[:ex |
+			resolver break: (RsrRemoteException from: ex).
+			ex return]]
+		ensure:
+			[resolver hasResolved
+				ifFalse: [resolver break: 'Message send terminated without a result']]
 ]
 
 { #category : 'reporting' }
@@ -104,8 +104,6 @@ to: aLog [
 RsrSendMessage >> perform: aMessageSend
 answerUsing: aResolver [
 
-	[| raisedException |
-	raisedException := false.
 	[aResolver fulfill: aMessageSend perform]
 		on: self unhandledExceptionClass
 		do:
@@ -117,7 +115,6 @@ answerUsing: aResolver [
 									on: self unhandledExceptionClass
 									do:
 										[:debugEx | 
-										raisedException := true.
 										aResolver break: (RsrRemoteException from: debugEx).
 										ex return].
 			aResolver hasResolved
@@ -127,10 +124,7 @@ answerUsing: aResolver [
 						ifTrue: [ex resume: debugResult]
 						ifFalse:
 							[aResolver break: (RsrRemoteException from: ex).
-							ex return]]]]
-		ensure:
-			[aResolver hasResolved
-				ifFalse: [aResolver break: 'Message send terminated without a result']]
+							ex return]]]
 ]
 
 { #category : 'accessing' }
@@ -143,6 +137,20 @@ RsrSendMessage >> receiverReference [
 RsrSendMessage >> receiverReference: aServiceReference [
 
 	receiverReference := aServiceReference
+]
+
+{ #category : 'decoding' }
+RsrSendMessage >> reifyMessageSendIn: aConnection [
+
+	| services receiver selector arguments |
+	services := self snapshots collect: [:each | each reifyIn: aConnection].
+	receiver := self receiverReference resolve: aConnection.
+	selector := self selectorReference resolve: aConnection.
+	arguments := self argumentReferences collect: [:each | each resolve: aConnection].
+	^RsrMessageSend
+		receiver: receiver
+		selector: selector
+		arguments: arguments
 ]
 
 { #category : 'reporting' }

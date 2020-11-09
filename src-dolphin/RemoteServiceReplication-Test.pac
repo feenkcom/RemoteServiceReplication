@@ -288,7 +288,7 @@ RsrRemoteAction
 
 RsrRemoteAction
 	subclass: #RsrRemoteActionServer
-	instanceVariableNames: 'action debugHandler'
+	instanceVariableNames: 'action debugHandler preUpdateHandler postUpdateHandler'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -1044,7 +1044,10 @@ testChangeRemoteState	| marker client server |	marker := false.	client := co
 terminateCurrentProcess	Processor activeProcess terminate! !
 
 !RsrMessageSendingTest methodsFor!
-expectCatch: aPromise	| semaphore wasFulfilled result |	semaphore := Semaphore new.	wasFulfilled := false.	aPromise		when: [:value | wasFulfilled := true. semaphore signal]		catch: [:reason | result := reason. semaphore signal].	semaphore wait.	self deny: wasFulfilled.	^result! !
+testPrePostUpdate	| client server pre post |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	pre := post := false.	server		preUpdateHandler: [pre := true];		postUpdateHandler: [post := true];		action: [].	client value.	self		assert: pre;		assert: post! !
+
+!RsrMessageSendingTest methodsFor!
+expectCatch: aPromise	| semaphore wasFulfilled result whenValue |	semaphore := Semaphore new.	wasFulfilled := false.	aPromise		when: [:value | whenValue := value. wasFulfilled := true. semaphore signal]		catch: [:reason | result := reason. semaphore signal].	semaphore wait.	self deny: wasFulfilled.	^result! !
 
 !RsrMessageSendingTest methodsFor!
 testDebugHandlerNoResolutionWithResumableException	"Ensure that if the debug handler does not resolve the exception	and the exception is resumable, we resume with the evaluation	result of the debug handler."	| marker client server |	marker := #testMarker.	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal].	server debugHandler: [:exception :messageSend :resolver | marker].	self		assert: client value		equals: marker! !
@@ -1083,6 +1086,9 @@ testDebugHandlerFulfill	"Ensure that if a debug handler resolves the message,	
 testAsyncReturnArgument	| client server promise returnedArgument semaphore catchRan |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:arg | arg].	promise := client asyncValue: client.	semaphore := Semaphore new.	catchRan := false.	promise		when: [:service | returnedArgument := service. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	semaphore wait.	self deny: catchRan.	self		assert: returnedArgument		identicalTo: client! !
 
 !RsrMessageSendingTest methodsFor!
+testPrePostUpdateError	| client server reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [true].	self assert: client value.	server		preUpdateHandler: [Error signal: 'preUpdate'];		postUpdateHandler: [].	reason := self expectCatch: client asyncValue.	self		assert: reason exceptionClassName		equals: #Error.	self		assert: reason messageText		equals: 'preUpdate'.	server		preUpdateHandler: [];		postUpdateHandler:  [Error signal: 'postUpdate'].	reason := self expectCatch: client asyncValue.	self		assert: reason exceptionClassName		equals: #Error.	self		assert: reason messageText		equals: 'postUpdate'.! !
+
+!RsrMessageSendingTest methodsFor!
 testAsyncReturnService	| client server promise returnedService semaphore catchRan |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrValueHolderServer new].	promise := client asyncValue.	semaphore := Semaphore new.	catchRan := false.	promise		when: [:service | returnedService := service. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	semaphore wait.	self deny: catchRan.	self		assert: returnedService class		equals: RsrValueHolderClient! !
 
 !RsrMessageSendingTest methodsFor!
@@ -1090,6 +1096,9 @@ testReturnNewServiceInArray	| client server array returnedService |	client :=
 
 !RsrMessageSendingTest methodsFor!
 testRemoteProcessTerminationDuringDebugHandler	| client server reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server		action: [Error signal];		debugHandler: [:ex :message :resolver | self terminateCurrentProcess].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
+
+!RsrMessageSendingTest methodsFor!
+testRemoteProcessTerminationDuringPrePostUpdate	| client server reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server		preUpdateHandler: [self terminateCurrentProcess];		postUpdateHandler: [];		action: [].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
 
 !RsrMessageSendingTest methodsFor!
 testReturnInvalidObject	| client server reason |				client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [Object new].	self		should: [client value]		raise: RsrBrokenPromise.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self assert: reason isRemoteException.	self		assert: reason exceptionClassName		equals: #RsrUnsupportedObject.	self		assert: reason tag		equals: 'Instances of Object cannot be serialized'.	self		assert: reason messageText		equals: 'Instances of Object cannot be serialized'.	self		assert: reason stack isString;		assert: reason stack size > 0! !
@@ -1101,13 +1110,16 @@ testAsyncRemoteError	| client server promise semaphore whenRan reason |	clien
 testSendInvalidObject	| client server |				client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:arg | arg].	self		should: [client value: Object new]		raise: RsrUnsupportedObject! !
 
 !RsrRemoteActionServer methodsFor!
-action: aBlock	action := aBlock! !
+debugHandler	^debugHandler ifNil: [[:x :y :z | nil]]! !
+
+!RsrRemoteActionServer methodsFor!
+debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^self debugHandler		value: anException		value: aMessageSend		value: aResolver! !
+
+!RsrRemoteActionServer methodsFor!
+postUpdate	self postUpdateHandler value! !
 
 !RsrRemoteActionServer methodsFor!
 debugHandler: aBlock	debugHandler := aBlock! !
-
-!RsrRemoteActionServer methodsFor!
-action	^action! !
 
 !RsrRemoteActionServer methodsFor!
 value	^self action value! !
@@ -1116,13 +1128,28 @@ value	^self action value! !
 value: anObject	^self action value: anObject! !
 
 !RsrRemoteActionServer methodsFor!
-debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^self debugHandler		value: anException		value: aMessageSend		value: aResolver! !
+action	^action! !
 
 !RsrRemoteActionServer methodsFor!
-debugHandler	^debugHandler ifNil: [[:x :y :z | nil]]! !
+preUpdateHandler	^preUpdateHandler ifNil: [[]]! !
+
+!RsrRemoteActionServer methodsFor!
+postUpdateHandler: aBlock	postUpdateHandler := aBlock! !
 
 !RsrRemoteActionServer methodsFor!
 valueWithArguments: anArray	^self action valueWithArguments: anArray! !
+
+!RsrRemoteActionServer methodsFor!
+action: aBlock	action := aBlock! !
+
+!RsrRemoteActionServer methodsFor!
+preUpdate	self preUpdateHandler value! !
+
+!RsrRemoteActionServer methodsFor!
+preUpdateHandler: aBlock	preUpdateHandler := aBlock! !
+
+!RsrRemoteActionServer methodsFor!
+postUpdateHandler	^postUpdateHandler ifNil: [[]]! !
 
 !RsrReflectedVariableTestServiceA methodsFor!
 varA	^varA! !

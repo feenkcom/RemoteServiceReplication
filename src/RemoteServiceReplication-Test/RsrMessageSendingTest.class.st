@@ -13,11 +13,11 @@ RsrMessageSendingTest class >> isAbstract [
 { #category : 'expecting' }
 RsrMessageSendingTest >> expectCatch: aPromise [
 
-	| semaphore wasFulfilled result |
+	| semaphore wasFulfilled result whenValue |
 	semaphore := Semaphore new.
 	wasFulfilled := false.
 	aPromise
-		when: [:value | wasFulfilled := true. semaphore signal]
+		when: [:value | whenValue := value. wasFulfilled := true. semaphore signal]
 		catch: [:reason | result := reason. semaphore signal].
 	semaphore wait.
 	self deny: wasFulfilled.
@@ -234,6 +234,55 @@ RsrMessageSendingTest >> testDebugHandlerNoResolutionWithResumableException [
 		equals: marker
 ]
 
+{ #category : 'running' }
+RsrMessageSendingTest >> testPrePostUpdate [
+
+	| client server pre post |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	pre := post := false.
+	server
+		preUpdateHandler: [pre := true];
+		postUpdateHandler: [post := true];
+		action: [].
+	client value.
+	self
+		assert: pre;
+		assert: post
+]
+
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testPrePostUpdateError [
+
+	| client server reason |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [true].
+	self assert: client value.
+	server
+		preUpdateHandler: [Error signal: 'preUpdate'];
+		postUpdateHandler: [].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason exceptionClassName
+		equals: #Error.
+	self
+		assert: reason messageText
+		equals: 'preUpdate'.
+	server
+		preUpdateHandler: [];
+		postUpdateHandler:  [Error signal: 'postUpdate'].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason exceptionClassName
+		equals: #Error.
+	self
+		assert: reason messageText
+		equals: 'postUpdate'.
+]
+
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testRemoteError [
 
@@ -323,6 +372,23 @@ RsrMessageSendingTest >> testRemoteProcessTerminationDuringMessageSend [
 	client synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [self terminateCurrentProcess].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason
+		equals: 'Message send terminated without a result'
+]
+
+{ #category : 'running-termination' }
+RsrMessageSendingTest >> testRemoteProcessTerminationDuringPrePostUpdate [
+
+	| client server reason |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server
+		preUpdateHandler: [self terminateCurrentProcess];
+		postUpdateHandler: [];
+		action: [].
 	reason := self expectCatch: client asyncValue.
 	self
 		assert: reason

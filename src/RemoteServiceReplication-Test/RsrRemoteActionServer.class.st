@@ -3,7 +3,9 @@ Class {
 	#superclass : 'RsrRemoteAction',
 	#instVars : [
 		'action',
-		'debugHandler'
+		'debugHandler',
+		'preUpdateHandler',
+		'postUpdateHandler'
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
@@ -41,6 +43,42 @@ RsrRemoteActionServer >> debugHandler [
 RsrRemoteActionServer >> debugHandler: aBlock [
 
 	debugHandler := aBlock
+]
+
+{ #category : 'processing' }
+RsrRemoteActionServer >> postUpdate [
+
+	self postUpdateHandler value
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> postUpdateHandler [
+
+	^postUpdateHandler ifNil: [[]]
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> postUpdateHandler: aBlock [
+
+	postUpdateHandler := aBlock
+]
+
+{ #category : 'processing' }
+RsrRemoteActionServer >> preUpdate [
+
+	self preUpdateHandler value
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> preUpdateHandler [
+
+	^preUpdateHandler ifNil: [[]]
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> preUpdateHandler: aBlock [
+
+	preUpdateHandler := aBlock
 ]
 
 { #category : 'evaluating' }
