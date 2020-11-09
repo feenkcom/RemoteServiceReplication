@@ -192,7 +192,7 @@ setUp	super setUp.	sockets := OrderedCollection new! !
 forkedException	^forkedException! !
 
 !RsrTestingProcessModel methodsFor!
-protect: aBlock	^[aBlock on: Exception do: [:ex | forkedException := ex copy. ex return]]! !
+protect: aBlock	^[aBlock on: Error do: [:ex | forkedException := ex copy. ex return]]! !
 
 !RsrTestingProcessModel methodsFor!
 fork: aBlockat: aPriority	^super		fork: (self protect: aBlock)		at: aPriority! !
