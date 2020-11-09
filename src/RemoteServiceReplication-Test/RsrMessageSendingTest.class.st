@@ -38,6 +38,12 @@ RsrMessageSendingTest >> expectWhen: aPromise [
 	^result
 ]
 
+{ #category : 'utilities' }
+RsrMessageSendingTest >> terminateCurrentProcess [
+
+	Processor activeProcess terminate
+]
+
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testAsyncRemoteError [
 
@@ -291,6 +297,36 @@ RsrMessageSendingTest >> testRemoteErrorWithTag [
 	self
 		assert: reason tag
 		equals: 'Unable to pack #tag containing an instance of RsrSignalErrorInAsString'
+]
+
+{ #category : 'running-termination' }
+RsrMessageSendingTest >> testRemoteProcessTerminationDuringDebugHandler [
+
+	| client server reason |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server
+		action: [Error signal];
+		debugHandler: [:ex :message :resolver | self terminateCurrentProcess].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason
+		equals: 'Message send terminated without a result'
+]
+
+{ #category : 'running-termination' }
+RsrMessageSendingTest >> testRemoteProcessTerminationDuringMessageSend [
+
+	| client server reason |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [self terminateCurrentProcess].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason
+		equals: 'Message send terminated without a result'
 ]
 
 { #category : 'running' }

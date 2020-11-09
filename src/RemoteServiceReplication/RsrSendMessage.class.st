@@ -57,21 +57,6 @@ using: anEncoder [
 { #category : 'executing' }
 RsrSendMessage >> executeFor: aConnection [
 
-	true ifTrue: [^self executeFor2: aConnection].
-	^[self executeFor2: aConnection]
-		on: Error
-		do:
-			[:ex |
-			self trace.
-			Transcript
-				show: ex messageText;
-				cr.
-			ex pass]
-]
-
-{ #category : 'executing' }
-RsrSendMessage >> executeFor2: aConnection [
-
 	| resolver services receiver selector arguments messageSend |
 	resolver := RsrRemotePromiseResolver
 		for: self
@@ -119,7 +104,7 @@ to: aLog [
 RsrSendMessage >> perform: aMessageSend
 answerUsing: aResolver [
 
-	| raisedException reason |
+	[| raisedException |
 	raisedException := false.
 	[aResolver fulfill: aMessageSend perform]
 		on: self unhandledExceptionClass
@@ -133,7 +118,7 @@ answerUsing: aResolver [
 									do:
 										[:debugEx | 
 										raisedException := true.
-										reason := (RsrRemoteException from: debugEx).
+										aResolver break: (RsrRemoteException from: debugEx).
 										ex return].
 			aResolver hasResolved
 				ifTrue: [ex return]
@@ -142,9 +127,10 @@ answerUsing: aResolver [
 						ifTrue: [ex resume: debugResult]
 						ifFalse:
 							[aResolver break: (RsrRemoteException from: ex).
-							ex return]]].
-	raisedException
-		ifTrue: [aResolver break: reason]
+							ex return]]]]
+		ensure:
+			[aResolver hasResolved
+				ifFalse: [aResolver break: 'Message send terminated without a result']]
 ]
 
 { #category : 'accessing' }
