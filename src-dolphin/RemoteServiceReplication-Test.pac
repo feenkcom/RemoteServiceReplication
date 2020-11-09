@@ -1041,6 +1041,9 @@ testDebugHandlerNoResolutionWithNonresumableException	"Ensure that if the debug
 testChangeRemoteState	| marker client server |	marker := false.	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [marker := true].	client value.	self assert: marker! !
 
 !RsrMessageSendingTest methodsFor!
+terminateCurrentProcess	Processor activeProcess terminate! !
+
+!RsrMessageSendingTest methodsFor!
 expectCatch: aPromise	| semaphore wasFulfilled result |	semaphore := Semaphore new.	wasFulfilled := false.	aPromise		when: [:value | wasFulfilled := true. semaphore signal]		catch: [:reason | result := reason. semaphore signal].	semaphore wait.	self deny: wasFulfilled.	^result! !
 
 !RsrMessageSendingTest methodsFor!
@@ -1054,6 +1057,9 @@ testRemoteError	| client server reason |	client := connectionA serviceFor: #R
 
 !RsrMessageSendingTest methodsFor!
 testDebugHandlerBreak	"Ensure that if a debug handler resolves the message,	that the correct reason is received remotely."	| marker client server reason |	marker := #testMarker.	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].	server debugHandler: [:exception :messageSend :resolver | resolver break: marker. nil "ensure we do not return the marker"].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: marker.	server action: [RsrNonresumableError signal. 42 "ensure we do not return the marker"].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: marker! !
+
+!RsrMessageSendingTest methodsFor!
+testRemoteProcessTerminationDuringMessageSend	| client server reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [self terminateCurrentProcess].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
 
 !RsrMessageSendingTest methodsFor!
 testRemoteErrorWithTag	| client server tag messageText reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	tag := nil.	messageText := 'messageText'.	server action: [Error new tag: tag; messageText: messageText; signal].	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self assert: reason isRemoteException.	self		assert: reason tag		equals: 'messageText'.	self		assert: reason messageText		equals: 'messageText'.	self		assert: reason stack isString;		assert: reason stack size > 0.	tag := 42.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self		assert: reason tag		equals: '42'.	tag := RsrSignalErrorInAsString new.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self		assert: reason tag		equals: 'Unable to pack #tag containing an instance of RsrSignalErrorInAsString'! !
@@ -1081,6 +1087,9 @@ testAsyncReturnService	| client server promise returnedService semaphore catch
 
 !RsrMessageSendingTest methodsFor!
 testReturnNewServiceInArray	| client server array returnedService |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [Array with: RsrValueHolderServer new].	array := client value.	returnedService := array first.	self		assert: returnedService class		equals: RsrValueHolderClient! !
+
+!RsrMessageSendingTest methodsFor!
+testRemoteProcessTerminationDuringDebugHandler	| client server reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server		action: [Error signal];		debugHandler: [:ex :message :resolver | self terminateCurrentProcess].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
 
 !RsrMessageSendingTest methodsFor!
 testReturnInvalidObject	| client server reason |				client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [Object new].	self		should: [client value]		raise: RsrBrokenPromise.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self assert: reason isRemoteException.	self		assert: reason exceptionClassName		equals: #RsrUnsupportedObject.	self		assert: reason tag		equals: 'Instances of Object cannot be serialized'.	self		assert: reason messageText		equals: 'Instances of Object cannot be serialized'.	self		assert: reason stack isString;		assert: reason stack size > 0! !

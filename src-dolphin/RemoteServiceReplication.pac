@@ -1050,9 +1050,6 @@ selectorReference: aSymbolReference	selectorReference := aSymbolReference! !
 transaction: anObject	transaction := anObject! !
 
 !RsrSendMessage methodsFor!
-unhandledExceptionClass	"Temporarily, use Error until we have appropriate GemStone hooks."	^Error! !
-
-!RsrSendMessage methodsFor!
 snapshots	^snapshots! !
 
 !RsrSendMessage methodsFor!
@@ -1062,7 +1059,7 @@ snapshots: anArrayOfSnapshots	snapshots := anArrayOfSnapshots! !
 logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				print: self receiverReference;				nextPutAll: '>>';				print: self selectorReference;				nextPutAll: ' due to: ';				nextPutAll: anException description].	aLog error: message! !
 
 !RsrSendMessage methodsFor!
-executeFor: aConnection	true ifTrue: [^self executeFor2: aConnection].	^[self executeFor2: aConnection]		on: Error		do:			[:ex |			self trace.			Transcript				show: ex messageText;				cr.			ex pass]! !
+executeFor: aConnection	| resolver services receiver selector arguments messageSend |	resolver := RsrRemotePromiseResolver		for: self		over: aConnection.	[services := self snapshots collect: [:each | each reifyIn: aConnection].	receiver := self receiverReference resolve: aConnection.	selector := self selectorReference resolve: aConnection.	arguments := self argumentReferences collect: [:each | each resolve: aConnection]]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			self note: 'This code path needs to be tested'.			^resolver break: (RsrRemoteException from: ex)].	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."	messageSend := RsrMessageSend		receiver: receiver		selector: selector		arguments: arguments.	self		perform: messageSend		answerUsing: resolver! !
 
 !RsrSendMessage methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeSendMessage: self		onto: aStream! !
@@ -1074,10 +1071,10 @@ selectorReference	^selectorReference! !
 transaction	^ transaction! !
 
 !RsrSendMessage methodsFor!
-executeFor2: aConnection	| resolver services receiver selector arguments messageSend |	resolver := RsrRemotePromiseResolver		for: self		over: aConnection.	[services := self snapshots collect: [:each | each reifyIn: aConnection].	receiver := self receiverReference resolve: aConnection.	selector := self selectorReference resolve: aConnection.	arguments := self argumentReferences collect: [:each | each resolve: aConnection]]		on: Error		do:			[:ex |			self				logException: ex				to: aConnection log.			self note: 'This code path needs to be tested'.			^resolver break: (RsrRemoteException from: ex)].	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."	messageSend := RsrMessageSend		receiver: receiver		selector: selector		arguments: arguments.	self		perform: messageSend		answerUsing: resolver! !
+perform: aMessageSendanswerUsing: aResolver	[| raisedException |	raisedException := false.	[aResolver fulfill: aMessageSend perform]		on: self unhandledExceptionClass		do:			[:ex | | debugResult |			debugResult := [aMessageSend receiver									debug: ex									raisedDuring: aMessageSend									answerUsing: aResolver]									on: self unhandledExceptionClass									do:										[:debugEx | 										raisedException := true.										aResolver break: (RsrRemoteException from: debugEx).										ex return].			aResolver hasResolved				ifTrue: [ex return]				ifFalse:					[ex isResumable						ifTrue: [ex resume: debugResult]						ifFalse:							[aResolver break: (RsrRemoteException from: ex).							ex return]]]]		ensure:			[aResolver hasResolved				ifFalse: [aResolver break: 'Message send terminated without a result']]! !
 
 !RsrSendMessage methodsFor!
-perform: aMessageSendanswerUsing: aResolver	| raisedException reason |	raisedException := false.	[aResolver fulfill: aMessageSend perform]		on: self unhandledExceptionClass		do:			[:ex | | debugResult |			debugResult := [aMessageSend receiver									debug: ex									raisedDuring: aMessageSend									answerUsing: aResolver]									on: self unhandledExceptionClass									do:										[:debugEx | 										raisedException := true.										reason := (RsrRemoteException from: debugEx).										ex return].			aResolver hasResolved				ifTrue: [ex return]				ifFalse:					[ex isResumable						ifTrue: [ex resume: debugResult]						ifFalse:							[aResolver break: (RsrRemoteException from: ex).							ex return]]].	raisedException		ifTrue: [aResolver break: reason]! !
+unhandledExceptionClass	"Temporarily, use Error until we have appropriate GemStone hooks."	^Error! !
 
 !RsrSendMessage methodsFor!
 reportOn: aLog	aLog debug: 'RsrSendMessage(', self receiverReference asString, '>>', self selectorReference asString, ')'! !
