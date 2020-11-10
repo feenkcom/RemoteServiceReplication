@@ -176,10 +176,9 @@ RsrConnection >> close [
 	channel close.
 	dispatchQueue stop.
 	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
-	"The following assignments probably shouldn't exist in this form.
-	Close needs to be idempotent."
 	pendingMessages := Dictionary new.
 	registry := RsrThreadSafeDictionary new.
+	serviceFactory := nil.
 	closeSemaphore signal
 ]
 

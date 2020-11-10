@@ -1203,7 +1203,7 @@ serviceAt: aSIDifAbsent: aBlock	"Return the service associated with the provid
 serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
 
 !RsrConnection methodsFor!
-close	channel close.	dispatchQueue stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	"The following assignments probably shouldn't exist in this form.	Close needs to be idempotent."	pendingMessages := Dictionary new.	registry := RsrThreadSafeDictionary new.	closeSemaphore signal! !
+close	channel close.	dispatchQueue stop.	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].	pendingMessages := Dictionary new.	registry := RsrThreadSafeDictionary new.	serviceFactory := nil.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
