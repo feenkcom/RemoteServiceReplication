@@ -1,6 +1,10 @@
 Class {
 	#name : 'RsrStressTest',
 	#superclass : 'RsrSystemTestCase',
+	#instVars : [
+		'client',
+		'server'
+	],
 	#category : 'RemoteServiceReplication-Test'
 }
 
@@ -16,16 +20,54 @@ RsrStressTest class >> isAbstract [
 	^self == RsrStressTest
 ]
 
-{ #category : 'running-utilities' }
-RsrStressTest >> repeatedlySend: anObject [
+{ #category : 'initialize/release' }
+RsrStressTest >> cleanupServices [
 
-	| client server |
+	client := server := nil
+]
+
+{ #category : 'accessing' }
+RsrStressTest >> client [
+
+	^client
+]
+
+{ #category : 'running-utilities' }
+RsrStressTest >> concurrentlyRun: aBlock [
+
+	| anyCurtailed semaphores |
+	anyCurtailed := false.
+	semaphores := (1 to: self numThreads) collect: [:each | Semaphore new].
+	semaphores do: [:semaphore | RsrProcessModel fork: [[self repeatedlyRun: aBlock. semaphore signal] ifCurtailed: [anyCurtailed := true. semaphore signal]]].
+	semaphores do: [:semaphore | semaphore wait].
+	self deny: anyCurtailed
+]
+
+{ #category : 'initialize/release' }
+RsrStressTest >> initializeServices [
+
 	client := connectionA serviceFor: #RsrRemoteAction.
 	client synchronize.
 	server := connectionB serviceAt: client _id.
-	server action: [:object | object].
-	self repetitions timesRepeat: [client value: anObject].
-	self assert: true. "If we get to this point, the sends have all successed"
+	server action: [:x | x]
+]
+
+{ #category : 'accessing' }
+RsrStressTest >> numThreads [
+
+	^15
+]
+
+{ #category : 'running-utilities' }
+RsrStressTest >> repeatedlyRun: aBlock [
+
+	self repetitions timesRepeat: aBlock
+]
+
+{ #category : 'running-utilities' }
+RsrStressTest >> repeatedlySend: anObject [
+
+	self repeatedlyRun: [self client value: anObject]
 ]
 
 { #category : 'accessing' }
@@ -34,32 +76,66 @@ RsrStressTest >> repetitions [
 	^1000
 ]
 
+{ #category : 'accessing' }
+RsrStressTest >> server [
+
+	^server
+]
+
+{ #category : 'initialize/release' }
+RsrStressTest >> setUp [
+
+	super setUp.
+	self
+		initializeConnections;
+		initializeServices
+]
+
+{ #category : 'initialize/release' }
+RsrStressTest >> tearDown [
+
+	self cleanupServices.
+	super tearDown
+]
+
 { #category : 'running' }
-RsrStressTest >> testRepeatedSendReceive1KBytes [
+RsrStressTest >> test1KBytes [
 
 	self repeatedlySend: (ByteArray new: 1024)
 ]
 
 { #category : 'running' }
-RsrStressTest >> testRepeatedSendReceive1MBytes [
+RsrStressTest >> test1MBytes [
 
 	self repeatedlySend: (ByteArray new: 1024 squared)
 ]
 
 { #category : 'running' }
-RsrStressTest >> testRepeatedSendReceive2KBytes [
+RsrStressTest >> test2KBytes [
 
 	self repeatedlySend: (ByteArray new: 1024 *2)
 ]
 
 { #category : 'running' }
-RsrStressTest >> testRepeatedUnarySends [
+RsrStressTest >> testBasicSends [
 
-	| client server |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
-	server := connectionB serviceAt: client _id.
-	server action: [server].
-	self repetitions timesRepeat: [client value].
-	self assert: true. "If we get to this point, the sends have all successed"
+	self repeatedlySend: nil
+]
+
+{ #category : 'running' }
+RsrStressTest >> testConcurrent1KBytes [
+
+	self concurrentlyRun: [self client value: (ByteArray new: 1024)]
+]
+
+{ #category : 'running' }
+RsrStressTest >> testConcurrent2KBytes [
+
+	self concurrentlyRun: [self client value: (ByteArray new: 2 * 1024)]
+]
+
+{ #category : 'running' }
+RsrStressTest >> testConcurrentBasicSends [
+
+	self concurrentlyRun: [self client value: nil]
 ]

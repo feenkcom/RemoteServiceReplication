@@ -4,9 +4,8 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'running' }
-RsrSocketStressTest >> setUp [
+{ #category : 'initializing' }
+RsrSocketStressTest >> initializeConnections [
 
-	super setUp.
 	self initializeSocketConnections
 ]

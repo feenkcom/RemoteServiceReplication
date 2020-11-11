@@ -442,7 +442,7 @@ RsrSpeciesEquality comment: 'This class contains tests'!
 
 RsrSystemTestCase
 	subclass: #RsrStressTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'client server'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -708,22 +708,58 @@ return: anObject	^anObject! !
 preUpdateCount	^preUpdateCount ifNil: [0]! !
 
 !RsrStressTest methodsFor!
-testRepeatedSendReceive1KBytes	self repeatedlySend: (ByteArray new: 1024)! !
+setUp	super setUp.	self		initializeConnections;		initializeServices! !
 
 !RsrStressTest methodsFor!
-testRepeatedSendReceive2KBytes	self repeatedlySend: (ByteArray new: 1024 *2)! !
+test2KBytes	self repeatedlySend: (ByteArray new: 1024 *2)! !
 
 !RsrStressTest methodsFor!
-repeatedlySend: anObject	| client server |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:object | object].	self repetitions timesRepeat: [client value: anObject].	self assert: true. "If we get to this point, the sends have all successed"! !
+tearDown	self cleanupServices.	super tearDown! !
 
 !RsrStressTest methodsFor!
-testRepeatedUnarySends	| client server |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [server].	self repetitions timesRepeat: [client value].	self assert: true. "If we get to this point, the sends have all successed"! !
+testBasicSends	self repeatedlySend: nil! !
+
+!RsrStressTest methodsFor!
+testConcurrent2KBytes	self concurrentlyRun: [self client value: (ByteArray new: 2 * 1024)]! !
+
+!RsrStressTest methodsFor!
+repeatedlyRun: aBlock	self repetitions timesRepeat: aBlock! !
+
+!RsrStressTest methodsFor!
+testConcurrentBasicSends	self concurrentlyRun: [self client value: nil]! !
 
 !RsrStressTest methodsFor!
 repetitions	^1000! !
 
 !RsrStressTest methodsFor!
-testRepeatedSendReceive1MBytes	self repeatedlySend: (ByteArray new: 1024 squared)! !
+testConcurrent1KBytes	self concurrentlyRun: [self client value: (ByteArray new: 1024)]! !
+
+!RsrStressTest methodsFor!
+numThreads	^15! !
+
+!RsrStressTest methodsFor!
+initializeServices	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:x | x]! !
+
+!RsrStressTest methodsFor!
+server	^server! !
+
+!RsrStressTest methodsFor!
+test1MBytes	self repeatedlySend: (ByteArray new: 1024 squared)! !
+
+!RsrStressTest methodsFor!
+test1KBytes	self repeatedlySend: (ByteArray new: 1024)! !
+
+!RsrStressTest methodsFor!
+repeatedlySend: anObject	self repeatedlyRun: [self client value: anObject]! !
+
+!RsrStressTest methodsFor!
+concurrentlyRun: aBlock	| anyCurtailed semaphores |	anyCurtailed := false.	semaphores := (1 to: self numThreads) collect: [:each | Semaphore new].	semaphores do: [:semaphore | RsrProcessModel fork: [[self repeatedlyRun: aBlock. semaphore signal] ifCurtailed: [anyCurtailed := true. semaphore signal]]].	semaphores do: [:semaphore | semaphore wait].	self deny: anyCurtailed! !
+
+!RsrStressTest methodsFor!
+cleanupServices	client := server := nil! !
+
+!RsrStressTest methodsFor!
+client	^client! !
 
 !RsrSocketConnectionTestCase methodsFor!
 setUp	super setUp.	self initializeSocketConnections! !
@@ -750,7 +786,7 @@ semaphore: aSemaphore	semaphore := aSemaphore! !
 setUp	super setUp.	self initializeSocketConnections! !
 
 !RsrInMemoryStressTest methodsFor!
-setUp	super setUp.	self initializeInMemoryConnections! !
+initializeConnections	self initializeInMemoryConnections! !
 
 !RsrPromiseTest methodsFor!
 testAsyncFulfill	| promise semaphore expected catchRan first second third |	promise := RsrPromise new.	semaphore := Semaphore new.	expected := Object new.	catchRan := false.	promise		when: [:object | first := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	promise		when: [:object | second := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	self		deny: promise isResolved;		deny: promise isBroken;		deny: promise isFulfilled.	promise fulfill: expected.	self		assert: promise isResolved;		deny: promise isBroken;		assert: promise isFulfilled.	semaphore wait; wait.	self shortWait. "Ensure any catch blocks run if they are going to schedule."	self deny: catchRan.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	promise		when: [:object | third := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	semaphore wait.	self shortWait.	self deny: catchRan.	self		assert: third		identicalTo: expected! !
@@ -1002,7 +1038,7 @@ replicated1: anObject	replicated1 := anObject! !
 replicated2	^replicated2! !
 
 !RsrSocketStressTest methodsFor!
-setUp	super setUp.	self initializeSocketConnections! !
+initializeConnections	self initializeSocketConnections! !
 
 !RsrSocketServiceTest methodsFor!
 setUp	super setUp.	self initializeSocketConnections! !

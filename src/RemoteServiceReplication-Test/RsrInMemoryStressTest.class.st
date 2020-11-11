@@ -4,9 +4,8 @@ Class {
 	#category : 'RemoteServiceReplication-Test'
 }
 
-{ #category : 'running' }
-RsrInMemoryStressTest >> setUp [
+{ #category : 'initializing' }
+RsrInMemoryStressTest >> initializeConnections [
 
-	super setUp.
 	self initializeInMemoryConnections
 ]
