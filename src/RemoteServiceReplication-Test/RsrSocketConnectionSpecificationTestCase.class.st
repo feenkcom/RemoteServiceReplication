@@ -1,29 +1,29 @@
 Class {
-	#name : 'RsrConnectionSpecificationTestCase',
+	#name : 'RsrSocketConnectionSpecificationTestCase',
 	#superclass : 'RsrTestCase',
 	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
-RsrConnectionSpecificationTestCase >> alternativeLocalhost [
+RsrSocketConnectionSpecificationTestCase >> alternativeLocalhost [
 
 	^'127.0.1.1'
 ]
 
 { #category : 'accessing' }
-RsrConnectionSpecificationTestCase >> localhost [
+RsrSocketConnectionSpecificationTestCase >> localhost [
 
 	^'127.0.0.1'
 ]
 
 { #category : 'accessing' }
-RsrConnectionSpecificationTestCase >> port [
+RsrSocketConnectionSpecificationTestCase >> port [
 
 	^47652
 ]
 
 { #category : 'running' }
-RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
+RsrSocketConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 
 	| acceptor initiator semaphore connectionA connectionB |
 	acceptor := RsrAcceptConnection
@@ -45,7 +45,7 @@ RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 ]
 
 { #category : 'running' }
-RsrConnectionSpecificationTestCase >> testCancelWaitForConnection [
+RsrSocketConnectionSpecificationTestCase >> testCancelWaitForConnection [
 
 	| acceptor |
 	acceptor := RsrAcceptConnection port: self port.
@@ -56,7 +56,7 @@ RsrConnectionSpecificationTestCase >> testCancelWaitForConnection [
 ]
 
 { #category : 'running' }
-RsrConnectionSpecificationTestCase >> testEstablishConnection [
+RsrSocketConnectionSpecificationTestCase >> testEstablishConnection [
 
 	| acceptor initiator semaphore connectionA connectionB |
 	acceptor := RsrAcceptConnection port: self port.
@@ -76,7 +76,7 @@ RsrConnectionSpecificationTestCase >> testEstablishConnection [
 ]
 
 { #category : 'running' }
-RsrConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
+RsrSocketConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
 
 	| acceptor initiator semaphore |
 	acceptor := RsrAcceptConnection

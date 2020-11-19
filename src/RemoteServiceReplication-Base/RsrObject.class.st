@@ -13,6 +13,13 @@ RsrObject class >> trace [
 		cr
 ]
 
+{ #category : 'delaying' }
+RsrObject >> minimalWait [
+	"Ensure the calling process is not schedulable for a short period of time."
+
+	(Delay forMilliseconds: 1) wait
+]
+
 { #category : 'notes' }
 RsrObject >> note: aString [
 	"This method can be used to leave a note in code. For instance, a code path that needs to be tested."

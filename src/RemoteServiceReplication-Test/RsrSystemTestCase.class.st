@@ -17,25 +17,11 @@ RsrSystemTestCase class >> isAbstract [
 { #category : 'initialization' }
 RsrSystemTestCase >> initializeInMemoryConnections [
 
-	| aQueue bQueue channelA channelB |
-	aQueue := SharedQueue new.
-	bQueue := SharedQueue new.
-	channelA := RsrInMemoryChannel
-		inQueue: aQueue
-		outQueue: bQueue.
-	channelB := RsrInMemoryChannel
-		inQueue: bQueue
-		outQueue: aQueue.
-	connectionA := RsrConnection
-		channel: channelA
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals
-		oidSpigot: RsrThreadSafeNumericSpigot naturals.
-	connectionB := RsrConnection
-		channel: channelB
-		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
-		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
-	connectionA open.
-	connectionB open.
+	| spec |
+	spec := RsrInMemoryConnectionSpecification new.
+	spec connect.
+	connectionA := spec connectionA.
+	connectionB := spec connectionB.
 	self
 		assert: connectionA isOpen;
 		assert: connectionB isOpen
@@ -44,14 +30,11 @@ RsrSystemTestCase >> initializeInMemoryConnections [
 { #category : 'initialization' }
 RsrSystemTestCase >> initializeSocketConnections [
 
-	| port semaphore |
-	super setUp.
-	port := 64455.
-	semaphore := Semaphore new.
-	self
-		fork: [[connectionA := (RsrAcceptConnection port: port) waitForConnection] ensure: [semaphore signal]];
-		fork: [[connectionB := (RsrInitiateConnection host: '127.0.0.1' port: port) connect] ensure: [semaphore signal]].
-	semaphore wait; wait.
+	| spec |
+	spec := RsrInternalSocketConnectionSpecification new.
+	spec connect.
+	connectionA := spec connectionA.
+	connectionB := spec connectionB.
 	self
 		assert: connectionA isOpen;
 		assert: connectionB isOpen

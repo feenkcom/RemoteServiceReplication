@@ -11,7 +11,7 @@ initiator := RsrInitiateConnection
 "
 Class {
 	#name : 'RsrInitiateConnection',
-	#superclass : 'RsrConnectionSpecification',
+	#superclass : 'RsrSocketConnectionSpecification',
 	#category : 'RemoteServiceReplication'
 }
 

@@ -9,7 +9,7 @@ acceptor := RsrAcceptConnection port: 51820.
 "
 Class {
 	#name : 'RsrAcceptConnection',
-	#superclass : 'RsrConnectionSpecification',
+	#superclass : 'RsrSocketConnectionSpecification',
 	#instVars : [
 		'listener'
 	],
