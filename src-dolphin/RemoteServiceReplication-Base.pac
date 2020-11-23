@@ -14,6 +14,7 @@ package classNames
 	add: #RsrInvalidBind;
 	add: #RsrCharacterArrayReference;
 	add: #RsrNonresumableError;
+	add: #RsrConnectionFailed;
 	add: #RsrImmediateReference;
 	add: #RsrNegativeIntegerReference;
 	add: #RsrUnsupportedObject;
@@ -136,6 +137,14 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrConnectionClosed categoriesForClass!RemoteServiceReplication-Base! !
+
+RsrError
+	subclass: #RsrConnectionFailed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrConnectionFailed categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrImmediateReference
 	subclass: #RsrNilReference
@@ -687,6 +696,9 @@ note: aString	"This method can be used to leave a note in code. For instance, a
 
 !RsrObject methodsFor!
 trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
+
+!RsrObject methodsFor!
+minimalWait	"Ensure the calling process is not schedulable for a short period of time."	(Delay forMilliseconds: 1) wait! !
 
 !RsrSetReference methodsFor!
 decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value :=  (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !

@@ -11,6 +11,7 @@ package classNames
 	add: #RsrInMemoryChannel;
 	add: #RsrLogWithPrefix;
 	add: #RsrAcceptConnection;
+	add: #RsrInternalSocketConnectionSpecification;
 	add: #RsrEncoder;
 	add: #RsrPendingMessage;
 	add: #RsrCommandSink;
@@ -30,22 +31,25 @@ package classNames
 	add: #RsrPromise;
 	add: #RsrBufferedSocketStream;
 	add: #RsrCustomSink;
+	add: #RsrSocketConnectionSpecification;
 	add: #RsrConnection;
 	add: #RsrCycleDetected;
 	add: #RsrSnapshotAnalysis;
+	add: #RsrInternalConnectionSpecification;
 	add: #RsrCodec;
 	add: #RsrNumericSpigot;
 	add: #RsrServiceFactory;
 	add: #RsrDispatchQueue;
 	add: #RsrDeliverResponse;
 	add: #RsrPromiseResolutionAction;
-	add: #RsrRemoteException;
 	add: #RsrSocketStream;
+	add: #RsrRemoteException;
 	add: #RsrChannel;
 	add: #RsrTranscriptSink;
 	add: #RsrConnectionSpecification;
 	add: #RsrRemoteError;
 	add: #RsrSocketChannelLoop;
+	add: #RsrInMemoryConnectionSpecification;
 	add: #RsrDecoder;
 	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrServiceFactoryClient;
@@ -107,11 +111,11 @@ RsrConnection comment: 'No class-specific documentation for RsrConnection, hiera
 
 RsrObject
 	subclass: #RsrConnectionSpecification
-	instanceVariableNames: 'host port'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrConnectionSpecification comment: 'This class is abstract and defines the interface for manufacturing RsrConnection instances which are connected to a peer.Specialized subclasses are reponsible for either listening for or initiating connections with a peer.'!
+RsrConnectionSpecification comment: 'Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:For the Class part:  State a one line summary. For example, "I represent a paragraph of text".For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.For the Collaborators Part: State my main collaborators and one line about how I interact with them. Public API and Key Messages- message one   - message two - (for bonus points) how to create instances.   One simple example is simply gorgeous. Internal Representation and Key Implementation Points.    Implementation Points'!
 !RsrConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
@@ -267,15 +271,6 @@ RsrService
 RsrAbstractReason comment: 'This Service services as an abstract superclass for various Promise break reasons generated via the framework.'!
 !RsrAbstractReason categoriesForClass!RemoteServiceReplication! !
 
-RsrConnectionSpecification
-	subclass: #RsrAcceptConnection
-	instanceVariableNames: 'listener'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrAcceptConnection comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.| acceptor |acceptor := RsrAcceptConnection port: 51820.^acceptor connect'!
-!RsrAcceptConnection categoriesForClass!RemoteServiceReplication! !
-
 RsrSocketChannelLoop
 	subclass: #RsrCommandSink
 	instanceVariableNames: 'queue'
@@ -337,13 +332,12 @@ RsrInMemoryChannel comment: 'Example usage:	| aQueue bQueue channelA channelB 
 !RsrInMemoryChannel categoriesForClass!RemoteServiceReplication! !
 
 RsrConnectionSpecification
-	subclass: #RsrInitiateConnection
-	instanceVariableNames: ''
+	subclass: #RsrInternalConnectionSpecification
+	instanceVariableNames: 'connectionA connectionB'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrInitiateConnection comment: 'This class is responsible for initating a new RsrConnection. Sending #connect will result in an attempt to connect to the specified host and port. #connect is responsible for initating the attempted connection. If successful, an instance of RsrConnection is returned as a result.Example: | initiator |initiator := RsrInitiateConnection	host: ''127.0.0.1''	port: 51820.^initiator connect'!
-!RsrInitiateConnection categoriesForClass!RemoteServiceReplication! !
+!RsrInternalConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
 RsrCommand
 	subclass: #RsrReleaseServices
@@ -380,6 +374,15 @@ RsrChannel
 RsrSocketChannel comment: 'No class-specific documentation for RsrSocketChannel, hierarchy is:Object  RsrObject    RsrChannel      RsrSocketChannel( reader writer socket stream)'!
 !RsrSocketChannel categoriesForClass!RemoteServiceReplication! !
 
+RsrConnectionSpecification
+	subclass: #RsrSocketConnectionSpecification
+	instanceVariableNames: 'host port'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrSocketConnectionSpecification comment: 'This class is abstract and defines the interface for manufacturing RsrConnection instances which are connected to a peer.Specialized subclasses are reponsible for either listening for or initiating connections with a peer.'!
+!RsrSocketConnectionSpecification categoriesForClass!RemoteServiceReplication! !
+
 RsrNumericSpigot
 	subclass: #RsrThreadSafeNumericSpigot
 	instanceVariableNames: 'mutex'
@@ -396,6 +399,15 @@ RsrLogSink
 	classInstanceVariableNames: ''!
 !RsrTranscriptSink categoriesForClass!RemoteServiceReplication! !
 
+RsrSocketConnectionSpecification
+	subclass: #RsrAcceptConnection
+	instanceVariableNames: 'listener'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrAcceptConnection comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.| acceptor |acceptor := RsrAcceptConnection port: 51820.^acceptor connect'!
+!RsrAcceptConnection categoriesForClass!RemoteServiceReplication! !
+
 RsrError
 	subclass: #RsrCycleDetected
 	instanceVariableNames: 'object'
@@ -403,6 +415,31 @@ RsrError
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrCycleDetected categoriesForClass!RemoteServiceReplication! !
+
+RsrInternalConnectionSpecification
+	subclass: #RsrInMemoryConnectionSpecification
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrInMemoryConnectionSpecification categoriesForClass!RemoteServiceReplication! !
+
+RsrSocketConnectionSpecification
+	subclass: #RsrInitiateConnection
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrInitiateConnection comment: 'This class is responsible for initating a new RsrConnection. Sending #connect will result in an attempt to connect to the specified host and port. #connect is responsible for initating the attempted connection. If successful, an instance of RsrConnection is returned as a result.Example: | initiator |initiator := RsrInitiateConnection	host: ''127.0.0.1''	port: 51820.^initiator connect'!
+!RsrInitiateConnection categoriesForClass!RemoteServiceReplication! !
+
+RsrInternalConnectionSpecification
+	subclass: #RsrInternalSocketConnectionSpecification
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrInternalSocketConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
 RsrError
 	subclass: #RsrRemoteError
@@ -584,6 +621,9 @@ templateClassName	^#RsrRemoteException! !
 !RsrRemoteException class methodsFor!
 from: anException	"Create an instance of the RemoteException reason.	The client is used here because once we send it, we are done with it.	The client will GC and the server will later GC. We don't care to have	a server hanging around if we don't need it."	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self clientClass new		exceptionClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
+!RsrSocketConnectionSpecification class methodsFor!
+host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
+
 !RsrConnection class methodsFor!
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
 
@@ -595,9 +635,6 @@ roots: anArrayconnection: aConnection	^self new		roots: anArray;		connectio
 
 !RsrDecoder class methodsFor!
 registry: aRegistry	^self new		registry: aRegistry;		yourself! !
-
-!RsrConnectionSpecification class methodsFor!
-host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
 
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
@@ -670,6 +707,9 @@ selector	^selector! !
 
 !RsrMessageSend methodsFor!
 perform	^self receiver		perform: self selector		withArguments: self arguments! !
+
+!RsrInMemoryConnectionSpecification methodsFor!
+connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen! !
 
 !RsrSocketStream methodsFor!
 isConnected	"Is the stream still connected to a partner?"	^socket isConnected! !
@@ -863,6 +903,12 @@ nextCommand	^self decoder decodeCommand: self stream! !
 !RsrCommandSource methodsFor!
 executeCycle	[| command |	command := self nextCommand.	self report: command.	self channel received: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel channelDisconnected]! !
 
+!RsrInternalSocketConnectionSpecification methodsFor!
+defaultPort	"Returns the default port number used to listen for connections."	^61982! !
+
+!RsrInternalSocketConnectionSpecification methodsFor!
+connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen! !
+
 !RsrLog methodsFor!
 levelError	^1! !
 
@@ -1018,21 +1064,6 @@ stream	^stream ifNil: [stream := RsrSocketStream on: socket]! !
 
 !RsrSocketChannel methodsFor!
 source	^source! !
-
-!RsrConnectionSpecification methodsFor!
-port: aPort	"The port number used for establishing a socket"	port := aPort! !
-
-!RsrConnectionSpecification methodsFor!
-port	"The port number used for establishing a socket"	^port! !
-
-!RsrConnectionSpecification methodsFor!
-socketClass	"Return the class that should be used for creating Socket instances."	^RsrSocket! !
-
-!RsrConnectionSpecification methodsFor!
-host: hostnameOrAddress	"The hostname or IP address used to establish a connection."	host := hostnameOrAddress! !
-
-!RsrConnectionSpecification methodsFor!
-host	"Return the configured hostname or IP address"	^host! !
 
 !RsrCustomSink methodsFor!
 action: aBlock	action := aBlock! !
@@ -1373,6 +1404,18 @@ responseReference: aReference	responseReference := aReference! !
 !RsrDeliverResponse methodsFor!
 transaction: aTransactionId	transaction := aTransactionId! !
 
+!RsrInternalConnectionSpecification methodsFor!
+connectionB	^connectionB! !
+
+!RsrInternalConnectionSpecification methodsFor!
+connectionA	^connectionA! !
+
+!RsrInternalConnectionSpecification methodsFor!
+connect	"Establish an internal Connection pair."	self subclassResponsibility! !
+
+!RsrInternalConnectionSpecification methodsFor!
+assertOpen	"Assert that connectionA and connectionB are open.	Signal RsrConnectionFailed if they are not."	(connectionA isOpen and: [connectionB isOpen])		ifFalse: [RsrConnectionFailed signal]! !
+
 !RsrRemoteException methodsFor!
 stack: aString	stack := aString! !
 
@@ -1546,6 +1589,21 @@ encodeReleaseServices: aReleaseServices	^ByteArray streamContents: [:stream | 
 
 !RsrEncoder methodsFor!
 integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes! !
+
+!RsrSocketConnectionSpecification methodsFor!
+port: aPort	"The port number used for establishing a socket"	port := aPort! !
+
+!RsrSocketConnectionSpecification methodsFor!
+port	"The port number used for establishing a socket"	^port! !
+
+!RsrSocketConnectionSpecification methodsFor!
+socketClass	"Return the class that should be used for creating Socket instances."	^RsrSocket! !
+
+!RsrSocketConnectionSpecification methodsFor!
+host: hostnameOrAddress	"The hostname or IP address used to establish a connection."	host := hostnameOrAddress! !
+
+!RsrSocketConnectionSpecification methodsFor!
+host	"Return the configured hostname or IP address"	^host! !
 
 !RsrService methodsFor!
 isClient	^self class isClientClass! !
