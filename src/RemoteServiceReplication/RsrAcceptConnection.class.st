@@ -59,6 +59,7 @@ RsrAcceptConnection >> waitForConnection [
 				listener := nil].
 	channel := RsrSocketChannel socket: socket.
 	connection := RsrConnection
+		specification: self
 		channel: channel
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
 		oidSpigot: RsrThreadSafeNumericSpigot naturals.

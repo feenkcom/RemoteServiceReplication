@@ -18,10 +18,12 @@ RsrInMemoryConnectionSpecification >> connect [
 		inQueue: bQueue
 		outQueue: aQueue.
 	connectionA := RsrConnection
+		specification: self
 		channel: channelA
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals
 		oidSpigot: RsrThreadSafeNumericSpigot naturals.
 	connectionB := RsrConnection
+		specification: self
 		channel: channelB
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.

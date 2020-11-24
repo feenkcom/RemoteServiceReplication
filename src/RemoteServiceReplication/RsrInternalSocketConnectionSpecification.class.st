@@ -12,7 +12,9 @@ RsrInternalSocketConnectionSpecification >> connect [
 	self minimalWait. "Allow other process to schedule."
 	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.
 	self minimalWait. "Allow other process to schedule."
-	self assertOpen
+	self assertOpen.
+	connectionA specification: self.
+	connectionB specification: self
 ]
 
 { #category : 'accessing' }

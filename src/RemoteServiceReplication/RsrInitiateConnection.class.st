@@ -25,6 +25,7 @@ RsrInitiateConnection >> connect [
 		port: self port.
 	channel := RsrSocketChannel socket: socket.
 	connection := RsrConnection
+		specification: self
 		channel: channel
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.

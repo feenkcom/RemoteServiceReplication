@@ -102,7 +102,7 @@ RsrCommand comment: 'No class-specific documentation for RsrCommand, hierarchy i
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages serviceFactory closeSemaphore'
+	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages serviceFactory closeSemaphore specification'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -628,7 +628,10 @@ host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
 
 !RsrConnection class methodsFor!
-channel: aChanneltransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	^super new		channel: aChannel;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
+specification: aConnectionSpecificationchannel: aChanneltransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	"Create a new Connection with an already Configured Channel.	Provide spigots as their behavior is specified by the Channel creation	protocols."	^super new		specification: aConnectionSpecification;		channel: aChannel;		transactionSpigot: aNumericSpigot;		oidSpigot: anOidSpigot;		yourself! !
+
+!RsrConnection class methodsFor!
+channel: aChanneltransactionSpigot: aNumericSpigotoidSpigot: anOidSpigot	"Create a new Connection with an already Configured Channel.	Provide spigots as their behavior is specified by the Channel creation	protocols."	^self		specification: nil		channel: aChannel		transactionSpigot: aNumericSpigot		oidSpigot: anOidSpigot! !
 
 !RsrSnapshotAnalysis class methodsFor!
 roots: anArrayconnection: aConnection	^self new		roots: anArray;		connection: aConnection;		yourself! !
@@ -709,7 +712,7 @@ selector	^selector! !
 perform	^self receiver		perform: self selector		withArguments: self arguments! !
 
 !RsrInMemoryConnectionSpecification methodsFor!
-connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen! !
+connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		specification: self		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		specification: self		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen! !
 
 !RsrSocketStream methodsFor!
 isConnected	"Is the stream still connected to a partner?"	^socket isConnected! !
@@ -907,7 +910,7 @@ executeCycle	[| command |	command := self nextCommand.	self report: command.
 defaultPort	"Returns the default port number used to listen for connections."	^61982! !
 
 !RsrInternalSocketConnectionSpecification methodsFor!
-connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen! !
+connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen.	connectionA specification: self.	connectionB specification: self! !
 
 !RsrLog methodsFor!
 levelError	^1! !
@@ -1198,7 +1201,7 @@ template	^template! !
 templateClass	^RsrClassResolver classNamed: self template! !
 
 !RsrAcceptConnection methodsFor!
-waitForConnection	| socket channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	channel := RsrSocketChannel socket: socket.	connection := RsrConnection		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+waitForConnection	| socket channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	channel := RsrSocketChannel socket: socket.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrAcceptConnection methodsFor!
 cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
@@ -1279,7 +1282,13 @@ pendingMessages	^pendingMessages! !
 _receivedCommand: aCommand	"Execute the command in the context of the receiving Connection."	RsrProcessModel fork: [aCommand executeFor: self]! !
 
 !RsrConnection methodsFor!
+specification: aConnectionSpecification	"Store the Specification used to the create this Connection."	specification := aConnectionSpecification! !
+
+!RsrConnection methodsFor!
 unknownError: anException	self close! !
+
+!RsrConnection methodsFor!
+specification	"Returns the Specification used to create this Connection.	If the Connection was not create using a Specification, returns nil."	^specification! !
 
 !RsrConnection methodsFor!
 initializeServiceFactory	| instance |	instance := RsrServiceFactory clientClass new.	self _ensureRegistered: instance.	serviceFactory := instance.	^serviceFactory! !
@@ -1513,7 +1522,7 @@ reportOn: aLog	self subclassResponsibility! !
 encode: aStreamusing: anEncoder	self subclassResponsibility! !
 
 !RsrInitiateConnection methodsFor!
-connect	| socket channel connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	channel := RsrSocketChannel socket: socket.	connection := RsrConnection		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
+connect	| socket channel connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	channel := RsrSocketChannel socket: socket.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
 
 !RsrThreadSafeNumericSpigot methodsFor!
 initialize	super initialize.	mutex := Semaphore forMutualExclusion! !

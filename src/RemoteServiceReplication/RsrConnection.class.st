@@ -17,7 +17,8 @@ Class {
 		'registry',
 		'pendingMessages',
 		'serviceFactory',
-		'closeSemaphore'
+		'closeSemaphore',
+		'specification'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -26,12 +27,15 @@ Class {
 RsrConnection class >> channel: aChannel
 transactionSpigot: aNumericSpigot
 oidSpigot: anOidSpigot [
+	"Create a new Connection with an already Configured Channel.
+	Provide spigots as their behavior is specified by the Channel creation
+	protocols."
 
-	^super new
-		channel: aChannel;
-		transactionSpigot: aNumericSpigot;
-		oidSpigot: anOidSpigot;
-		yourself
+	^self
+		specification: nil
+		channel: aChannel
+		transactionSpigot: aNumericSpigot
+		oidSpigot: anOidSpigot
 ]
 
 { #category : 'instance creation' }
@@ -41,6 +45,23 @@ RsrConnection class >> new [
 	See SystemTestCase>>#setUp for an example."
 
 	self shouldNotImplement: #new
+]
+
+{ #category : 'instance creation' }
+RsrConnection class >> specification: aConnectionSpecification
+channel: aChannel
+transactionSpigot: aNumericSpigot
+oidSpigot: anOidSpigot [
+	"Create a new Connection with an already Configured Channel.
+	Provide spigots as their behavior is specified by the Channel creation
+	protocols."
+
+	^super new
+		specification: aConnectionSpecification;
+		channel: aChannel;
+		transactionSpigot: aNumericSpigot;
+		oidSpigot: anOidSpigot;
+		yourself
 ]
 
 { #category : 'private-service management' }
@@ -303,6 +324,21 @@ RsrConnection >> serviceFactory [
 RsrConnection >> serviceFor: aResponsibility [
 
 	^self serviceFactory serviceFor: aResponsibility
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> specification [
+	"Returns the Specification used to create this Connection.
+	If the Connection was not create using a Specification, returns nil."
+
+	^specification
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> specification: aConnectionSpecification [
+	"Store the Specification used to the create this Connection."
+
+	specification := aConnectionSpecification
 ]
 
 { #category : 'private-accessing' }
