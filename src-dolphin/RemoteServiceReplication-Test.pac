@@ -1143,6 +1143,9 @@ testRemoteProcessTerminationDuringDebugHandler	| client server reason |	clien
 testRemoteProcessTerminationDuringPrePostUpdate	| client server reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server		preUpdateHandler: [self terminateCurrentProcess];		postUpdateHandler: [];		action: [].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
 
 !RsrMessageSendingTest methodsFor!
+testCloseConnectionDuringMessageSend	| client server promise reason |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [(Delay forSeconds: 10) wait].	promise := client asyncValue.	connectionA close.	reason := self expectCatch: promise.	self		assert: reason class		equals: RsrConnectionClosed! !
+
+!RsrMessageSendingTest methodsFor!
 testReturnInvalidObject	| client server reason |				client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [Object new].	self		should: [client value]		raise: RsrBrokenPromise.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self assert: reason isRemoteException.	self		assert: reason exceptionClassName		equals: #RsrUnsupportedObject.	self		assert: reason tag		equals: 'Instances of Object cannot be serialized'.	self		assert: reason messageText		equals: 'Instances of Object cannot be serialized'.	self		assert: reason stack isString;		assert: reason stack size > 0! !
 
 !RsrMessageSendingTest methodsFor!

@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrRemoteException',
-	#superclass : 'RsrAbstractReason',
+	#superclass : 'RsrReasonService',
 	#instVars : [
 		'exceptionClassName',
 		'tag',

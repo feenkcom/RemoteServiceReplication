@@ -110,6 +110,22 @@ RsrMessageSendingTest >> testChangeRemoteState [
 	self assert: marker
 ]
 
+{ #category : 'running-close during message' }
+RsrMessageSendingTest >> testCloseConnectionDuringMessageSend [
+
+	| client server promise reason |
+	client := connectionA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [(Delay forSeconds: 10) wait].
+	promise := client asyncValue.
+	connectionA close.
+	reason := self expectCatch: promise.
+	self
+		assert: reason class
+		equals: RsrConnectionClosed
+]
+
 { #category : 'running-errors' }
 RsrMessageSendingTest >> testDebugHandlerBreak [
 	"Ensure that if a debug handler resolves the message,

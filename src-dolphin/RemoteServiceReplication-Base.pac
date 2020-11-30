@@ -44,7 +44,6 @@ package classNames
 	add: #RsrConnectFailed;
 	add: #RsrConnectionFailed;
 	add: #RsrByteArrayReference;
-	add: #RsrConnectionClosed;
 	yourself.
 
 package methodNames
@@ -129,14 +128,6 @@ RsrImmediateReference
 	classInstanceVariableNames: ''!
 RsrBooleanReference comment: 'No class-specific documentation for RsrBooleanReference, hierarchy is:Object  RsrObject    RsrReference      RsrImmediateReference        RsrBooleanReference'!
 !RsrBooleanReference categoriesForClass!RemoteServiceReplication-Base! !
-
-RsrError
-	subclass: #RsrConnectionClosed
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrConnectionClosed categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrError
 	subclass: #RsrConnectionFailed
@@ -540,9 +531,6 @@ resolve: aConnection	| oc |	oc := OrderedCollection new: value size.	value d
 
 !RsrPositiveIntegerReference methodsFor!
 typeIdentifier	^3! !
-
-!RsrConnectionClosed methodsFor!
-messageText	^'The connection has closed'! !
 
 !RsrFalseReference methodsFor!
 resolve: aConnection	^false! !

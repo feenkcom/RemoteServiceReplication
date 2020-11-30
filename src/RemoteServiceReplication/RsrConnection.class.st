@@ -196,7 +196,7 @@ RsrConnection >> close [
 
 	channel close.
 	dispatchQueue stop.
-	pendingMessages do: [:each | each promise error: RsrConnectionClosed new].
+	pendingMessages do: [:each | each promise break: RsrConnectionClosed new].
 	pendingMessages := Dictionary new.
 	registry := RsrThreadSafeDictionary new.
 	serviceFactory := nil.
