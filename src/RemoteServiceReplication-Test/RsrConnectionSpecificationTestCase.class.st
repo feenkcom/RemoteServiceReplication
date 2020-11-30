@@ -1,29 +1,29 @@
 Class {
-	#name : 'RsrSocketConnectionSpecificationTestCase',
+	#name : 'RsrConnectionSpecificationTestCase',
 	#superclass : 'RsrTestCase',
 	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
-RsrSocketConnectionSpecificationTestCase >> alternativeLocalhost [
+RsrConnectionSpecificationTestCase >> alternativeLocalhost [
 
 	^'127.0.1.1'
 ]
 
 { #category : 'accessing' }
-RsrSocketConnectionSpecificationTestCase >> localhost [
+RsrConnectionSpecificationTestCase >> localhost [
 
 	^'127.0.0.1'
 ]
 
 { #category : 'accessing' }
-RsrSocketConnectionSpecificationTestCase >> port [
+RsrConnectionSpecificationTestCase >> port [
 
 	^47652
 ]
 
 { #category : 'running' }
-RsrSocketConnectionSpecificationTestCase >> testAcceptOnLocalhost [
+RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 
 	| acceptor initiator semaphore connectionA connectionB |
 	acceptor := RsrAcceptConnection
@@ -45,7 +45,7 @@ RsrSocketConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 ]
 
 { #category : 'running' }
-RsrSocketConnectionSpecificationTestCase >> testCancelWaitForConnection [
+RsrConnectionSpecificationTestCase >> testCancelWaitForConnection [
 
 	| acceptor |
 	acceptor := RsrAcceptConnection port: self port.
@@ -56,7 +56,7 @@ RsrSocketConnectionSpecificationTestCase >> testCancelWaitForConnection [
 ]
 
 { #category : 'running' }
-RsrSocketConnectionSpecificationTestCase >> testEstablishConnection [
+RsrConnectionSpecificationTestCase >> testEstablishConnection [
 
 	| acceptor initiator semaphore connectionA connectionB |
 	acceptor := RsrAcceptConnection port: self port.
@@ -76,7 +76,7 @@ RsrSocketConnectionSpecificationTestCase >> testEstablishConnection [
 ]
 
 { #category : 'running' }
-RsrSocketConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
+RsrConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
 
 	| acceptor initiator semaphore |
 	acceptor := RsrAcceptConnection
@@ -92,4 +92,24 @@ RsrSocketConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalho
 		should: [initiator connect]
 		raise: RsrSocketError]
 			ensure: [acceptor cancelWaitForConnection]
+]
+
+{ #category : 'running' }
+RsrConnectionSpecificationTestCase >> testInternalConnectionSpecification [
+]
+
+{ #category : 'running' }
+RsrConnectionSpecificationTestCase >> testInternalConnectionSpecificationConnectReturnsConnection [
+	"Ensure that sending #connect to an InternalConnectionSpecification
+	results in returning one of the created Connections."
+
+	| spec connection |
+	spec := RsrInMemoryConnectionSpecification new.
+	connection := spec connect.
+	self assert: connection isOpen.
+	connection close.
+	spec := RsrInternalSocketConnectionSpecification new.
+	connection := spec connect.
+	self assert: connection isOpen.
+	connection close
 ]

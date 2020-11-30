@@ -29,5 +29,6 @@ RsrInMemoryConnectionSpecification >> connect [
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	connectionA open.
 	connectionB open.
-	self assertOpen
+	self assertOpen.
+	^connectionA
 ]

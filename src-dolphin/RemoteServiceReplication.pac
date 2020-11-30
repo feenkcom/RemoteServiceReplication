@@ -712,7 +712,7 @@ selector	^selector! !
 perform	^self receiver		perform: self selector		withArguments: self arguments! !
 
 !RsrInMemoryConnectionSpecification methodsFor!
-connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		specification: self		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		specification: self		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen! !
+connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		specification: self		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		specification: self		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen.	^connectionA! !
 
 !RsrSocketStream methodsFor!
 isConnected	"Is the stream still connected to a partner?"	^socket isConnected! !
@@ -910,7 +910,7 @@ executeCycle	[| command |	command := self nextCommand.	self report: command.
 defaultPort	"Returns the default port number used to listen for connections."	^61982! !
 
 !RsrInternalSocketConnectionSpecification methodsFor!
-connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen.	connectionA specification: self.	connectionB specification: self! !
+connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen.	connectionA specification: self.	connectionB specification: self.	^connectionA! !
 
 !RsrLog methodsFor!
 levelError	^1! !

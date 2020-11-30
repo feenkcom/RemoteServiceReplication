@@ -14,7 +14,8 @@ RsrInternalSocketConnectionSpecification >> connect [
 	self minimalWait. "Allow other process to schedule."
 	self assertOpen.
 	connectionA specification: self.
-	connectionB specification: self
+	connectionB specification: self.
+	^connectionA
 ]
 
 { #category : 'accessing' }
