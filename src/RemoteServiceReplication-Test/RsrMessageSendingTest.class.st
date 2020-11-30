@@ -541,3 +541,20 @@ RsrMessageSendingTest >> testSendInvalidObject [
 		should: [client value: Object new]
 		raise: RsrUnsupportedObject
 ]
+
+{ #category : 'running-errors' }
+RsrMessageSendingTest >> testUnimplementedRemoteSend [
+	"Ensure a remote DNU is reported back to the sender."
+
+	| marker client server reason |
+	marker := #testMarker.
+	client := connectionA serviceFor: #RsrServiceNoInstVars.
+	client synchronize.
+	reason := self expectCatch: client unimplementedRemoteSend.
+	self
+		assert: reason class
+		equals: RsrRemoteExceptionServer.
+	self
+		assert: reason exceptionClassName
+		equals: #MessageNotUnderstood
+]

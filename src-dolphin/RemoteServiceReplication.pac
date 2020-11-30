@@ -4,14 +4,15 @@ package paxVersion: 1; basicComment: ''.
 
 package classNames
 	add: #RsrLog;
+	add: #RsrInternalConnectionSpecification;
 	add: #RsrReleaseServices;
 	add: #RsrRemoteExceptionClient;
 	add: #RsrRemotePromiseResolver;
 	add: #RsrStream;
 	add: #RsrInMemoryChannel;
 	add: #RsrLogWithPrefix;
+	add: #RsrSocketConnectionSpecification;
 	add: #RsrAcceptConnection;
-	add: #RsrInternalSocketConnectionSpecification;
 	add: #RsrEncoder;
 	add: #RsrPendingMessage;
 	add: #RsrCommandSink;
@@ -31,11 +32,10 @@ package classNames
 	add: #RsrPromise;
 	add: #RsrBufferedSocketStream;
 	add: #RsrCustomSink;
-	add: #RsrSocketConnectionSpecification;
+	add: #RsrInMemoryConnectionSpecification;
 	add: #RsrConnection;
 	add: #RsrCycleDetected;
 	add: #RsrSnapshotAnalysis;
-	add: #RsrInternalConnectionSpecification;
 	add: #RsrCodec;
 	add: #RsrNumericSpigot;
 	add: #RsrServiceFactory;
@@ -46,10 +46,10 @@ package classNames
 	add: #RsrRemoteException;
 	add: #RsrChannel;
 	add: #RsrTranscriptSink;
+	add: #RsrInternalSocketConnectionSpecification;
 	add: #RsrConnectionSpecification;
 	add: #RsrRemoteError;
 	add: #RsrSocketChannelLoop;
-	add: #RsrInMemoryConnectionSpecification;
 	add: #RsrDecoder;
 	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrServiceFactoryClient;
@@ -1627,7 +1627,7 @@ registerWith: aConnection	aConnection _ensureRegistered: self! !
 _id	^_id! !
 
 !RsrService methodsFor!
-debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	^nil! !
+debug: anExceptionraisedDuring: aMessageSendanswerUsing: aResolver	aResolver break: (RsrRemoteException from: anException)! !
 
 !RsrService methodsFor!
 postUpdate	"#postUpdate is called just after the Service's shared variables are updated by the framework.	This method can be overridden to ensure internal consistency."	^self! !

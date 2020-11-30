@@ -18,6 +18,7 @@ package classNames
 	add: #RsrDifferentServerService;
 	add: #RsrForwarderTest;
 	add: #RsrSocketServiceTest;
+	add: #RsrSocketConnectionSpecificationTestCase;
 	add: #RsrReflectedVariableTestServiceB;
 	add: #RsrValueHolderClient;
 	add: #RsrInMemoryLifetimeTest;
@@ -25,7 +26,6 @@ package classNames
 	add: #RsrServiceReferenceService;
 	add: #RsrSnapshotAnalysisTest;
 	add: #RsrStressTest;
-	add: #RsrSocketConnectionSpecificationTestCase;
 	add: #RsrRemoteActionClient;
 	add: #RsrDecoderTest;
 	add: #RsrSocketMessageSendingTest;
@@ -902,6 +902,9 @@ asString	^Error signal! !
 !RsrSocketMessageSendingTest methodsFor!
 setUp	super setUp.	self initializeSocketConnections! !
 
+!RsrClientNoInstVars methodsFor!
+unimplementedRemoteSend	"Send a selector which is not implemented remotely resuling in a DNU."	^remoteSelf doNotImplementThisSelectorOrYouWillBreakATest! !
+
 !RsrInMemoryConnectionTestCase methodsFor!
 setUp	super setUp.	self initializeInMemoryConnections! !
 
@@ -1108,6 +1111,9 @@ testDebugHandlerException	"Ensure that an exception that occurs in the debug ha
 
 !RsrMessageSendingTest methodsFor!
 testReturnAlsoUpdatesLocalService	"Ensure that when the remote peer service returns a value,	that it is also sent to update the local service."	| client server value response |	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.	client synchronize.	server := connectionB serviceAt: client _id.	value := 42.	self		deny: client varA		equals: value.	self		deny: client varB		equals: value.	response := client setVarsToAndReturn: value.	self		assert: response		equals: value.	self		assert: server varA		equals: value.	self		assert: server varB		equals: value.	self		assert: client varA		equals: value.	self		assert: client varB		equals: value! !
+
+!RsrMessageSendingTest methodsFor!
+testUnimplementedRemoteSend	"Ensure a remote DNU is reported back to the sender."	| marker client server reason |	marker := #testMarker.	client := connectionA serviceFor: #RsrServiceNoInstVars.	client synchronize.	reason := self expectCatch: client unimplementedRemoteSend.	self		assert: reason class		equals: RsrRemoteExceptionServer.	self		assert: reason exceptionClassName		equals: #MessageNotUnderstood! !
 
 !RsrMessageSendingTest methodsFor!
 expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !

@@ -108,7 +108,7 @@ RsrService >> debug: anException
 raisedDuring: aMessageSend
 answerUsing: aResolver [
 
-	^nil
+	aResolver break: (RsrRemoteException from: anException)
 ]
 
 { #category : 'public-testing' }

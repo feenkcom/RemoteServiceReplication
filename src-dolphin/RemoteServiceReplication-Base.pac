@@ -14,7 +14,6 @@ package classNames
 	add: #RsrInvalidBind;
 	add: #RsrCharacterArrayReference;
 	add: #RsrNonresumableError;
-	add: #RsrConnectionFailed;
 	add: #RsrImmediateReference;
 	add: #RsrNegativeIntegerReference;
 	add: #RsrUnsupportedObject;
@@ -43,6 +42,7 @@ package classNames
 	add: #RsrServiceReference;
 	add: #RsrDictionaryReference;
 	add: #RsrConnectFailed;
+	add: #RsrConnectionFailed;
 	add: #RsrByteArrayReference;
 	add: #RsrConnectionClosed;
 	yourself.
