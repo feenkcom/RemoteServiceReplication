@@ -12,6 +12,7 @@ package classNames
 	add: #RsrRemoteAction;
 	add: #RsrCodecTest;
 	add: #RsrInMemoryMessageSendingTest;
+	add: #RsrKnownClient;
 	add: #RsrInstrumentedService;
 	add: #RsrTestService;
 	add: #RsrConnectionTestCase;
@@ -62,6 +63,7 @@ package classNames
 	add: #RsrSocketStressTest;
 	add: #RsrNullChannel;
 	add: #RsrSameTemplateAndClientService;
+	add: #RsrSendUnknownService;
 	add: #RsrInMemoryServiceTest;
 	yourself.
 
@@ -136,6 +138,14 @@ RsrService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrSameTemplateAndClientService categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrService
+	subclass: #RsrSendUnknownService
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrSendUnknownService categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
 	subclass: #RsrServiceNoInstVars
@@ -261,6 +271,14 @@ RsrInstrumentedService
 	classInstanceVariableNames: ''!
 RsrInstrumentedServer comment: 'No class-specific documentation for RsrInstrumentedServer, hierarchy is:Object  RsrObject    RsrAbstractService      RsrService( _id _connection remoteSelf)        RsrInstrumentedService          RsrInstrumentedServer( preUpdateAction postUpdateAction)'!
 !RsrInstrumentedServer categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrSendUnknownService
+	subclass: #RsrKnownClient
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrKnownClient categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrReturnUnknownService
 	subclass: #RsrKnownServer
@@ -646,6 +664,15 @@ templateClassName	^#RsrServiceReferenceService! !
 
 !RsrServiceReferenceService class methodsFor!
 serverClassName	^#RsrServerReferenceService! !
+
+!RsrSendUnknownService class methodsFor!
+clientClassName	^#RsrKnownClient! !
+
+!RsrSendUnknownService class methodsFor!
+templateClassName	^#RsrSendUnknownService! !
+
+!RsrSendUnknownService class methodsFor!
+serverClassName	^#RsrDoNotCreateThisClass! !
 
 !RsrLifetimeTest class methodsFor!
 isAbstract	^self == RsrLifetimeTest! !
@@ -1315,6 +1342,9 @@ testMessagesDispactchedConcurrentlyForMultipleServices	"Ensure messages are dis
 
 !RsrServiceTest methodsFor!
 testAnalyzeServiceRegisteredWithDifferentConnection	| instance analysis |	instance := RsrRemoteAction clientClass new.	analysis := RsrSnapshotAnalysis		roots: (Array with: instance)		connection: connectionA.	analysis perform.	self assert: instance isMirrored.	analysis := RsrSnapshotAnalysis		roots: (Array with: instance)		connection: connectionB.	self		should: [analysis perform]		raise: RsrAlreadyRegistered! !
+
+!RsrServiceTest methodsFor!
+testSendClientWithoutAssociatedServer	| client server reason |	client := self serviceFactoryA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:x | x].	reason := self expectCatch: (client asyncValue: RsrKnownClient new).	self		assert: reason class		equals: RsrRemoteExceptionServer.	self		assert: reason exceptionClassName		equals: #RsrUnknownClass! !
 
 !RsrServiceTest methodsFor!
 testRegisterWith	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	instance registerWith: connectionA.	self assert: instance isMirrored.	self		should: [instance registerWith: connectionB]		raise: RsrAlreadyRegistered! !
