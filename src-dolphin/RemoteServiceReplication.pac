@@ -9,6 +9,7 @@ package classNames
 	add: #RsrRemoteExceptionClient;
 	add: #RsrRemotePromiseResolver;
 	add: #RsrStream;
+	add: #RsrConnectionClosed;
 	add: #RsrInMemoryChannel;
 	add: #RsrLogWithPrefix;
 	add: #RsrSocketConnectionSpecification;
@@ -26,10 +27,9 @@ package classNames
 	add: #RsrMessageSend;
 	add: #RsrService;
 	add: #RsrInitiateConnection;
-	add: #RsrAbstractReason;
+	add: #RsrCommand;
 	add: #RsrCommandSource;
 	add: #RsrReasonService;
-	add: #RsrCommand;
 	add: #RsrPromise;
 	add: #RsrBufferedSocketStream;
 	add: #RsrCustomSink;
@@ -45,6 +45,7 @@ package classNames
 	add: #RsrPromiseResolutionAction;
 	add: #RsrSocketStream;
 	add: #RsrRemoteException;
+	add: #RsrAbstractReason;
 	add: #RsrChannel;
 	add: #RsrTranscriptSink;
 	add: #RsrInternalSocketConnectionSpecification;
@@ -288,6 +289,14 @@ RsrSocketChannelLoop
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrCommandSource categoriesForClass!RemoteServiceReplication! !
+
+RsrAbstractReason
+	subclass: #RsrConnectionClosed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrConnectionClosed categoriesForClass!RemoteServiceReplication! !
 
 RsrLogSink
 	subclass: #RsrCustomSink
