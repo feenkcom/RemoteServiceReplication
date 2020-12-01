@@ -194,10 +194,13 @@ RsrConnection >> channelDisconnected [
 { #category : 'public-lifecycle' }
 RsrConnection >> close [
 
+	| pm temp |
 	channel close.
 	dispatchQueue stop.
-	pendingMessages do: [:each | each promise break: RsrConnectionClosed new].
-	pendingMessages := Dictionary new.
+	temp := Dictionary new.
+	pm := pendingMessages.
+	pendingMessages := temp.
+	pm do: [:each | each promise break: RsrConnectionClosed new].
 	registry := RsrThreadSafeDictionary new.
 	serviceFactory := nil.
 	closeSemaphore signal
