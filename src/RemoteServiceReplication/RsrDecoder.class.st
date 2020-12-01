@@ -165,9 +165,3 @@ RsrDecoder >> instanceOfImmediate: aReferenceType [
 		ifTrue: [^RsrDateAndTimeReference new].
 	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.
 ]
-
-{ #category : 'utility' }
-RsrDecoder >> lookupClass: aClassName [
-
-	^RsrClassResolver classNamed: aClassName
-]

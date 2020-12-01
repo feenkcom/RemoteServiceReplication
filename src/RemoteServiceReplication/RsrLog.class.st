@@ -15,6 +15,13 @@ RsrLog >> addSink: aLogSink [
 ]
 
 { #category : 'logging' }
+RsrLog >> critical: aString [
+
+	self verbosity >= self levelCritical
+		ifTrue: [self log: aString level: #critical]
+]
+
+{ #category : 'logging' }
 RsrLog >> debug: aString [
 
 	self verbosity >= self levelDebug
@@ -41,6 +48,12 @@ RsrLog >> initialize [
 	super initialize.
 	verbosity := self levelTrace.
 	sinks := OrderedCollection new
+]
+
+{ #category : 'accessing' }
+RsrLog >> levelCritical [
+
+	^0
 ]
 
 { #category : 'accessing' }
@@ -104,6 +117,6 @@ RsrLog >> verbosity: aLogLevel [
 { #category : 'logging' }
 RsrLog >> warning: aString [
 
-	self verbosity >= self levelDebug
+	self verbosity >= self levelWarn
 		ifTrue: [self log: aString level: #warning]
 ]

@@ -54,6 +54,7 @@ package classNames
 	add: #RsrSocketChannelLoop;
 	add: #RsrDecoder;
 	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrDecodingRaisedException;
 	add: #RsrServiceFactoryClient;
 	yourself.
 
@@ -223,7 +224,7 @@ RsrService comment: 'I represent a class of Objects that know offer Rsr Services
 
 RsrObject
 	subclass: #RsrServiceSnapshot
-	instanceVariableNames: 'sid template targetServiceType slots'
+	instanceVariableNames: 'sid targetClassName slots'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -314,6 +315,14 @@ RsrCodec
 	classInstanceVariableNames: ''!
 RsrDecoder comment: 'No class-specific documentation for RsrDecoder, hierarchy is:Object  RsrObject    RsrCodec      RsrDecoder( registry connection decodeCommandMap)'!
 !RsrDecoder categoriesForClass!RemoteServiceReplication! !
+
+RsrAbstractReason
+	subclass: #RsrDecodingRaisedException
+	instanceVariableNames: 'exception'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrDecodingRaisedException categoriesForClass!RemoteServiceReplication! !
 
 RsrCommand
 	subclass: #RsrDeliverResponse
@@ -528,6 +537,9 @@ naturals	^self		start: 1		step: 1! !
 
 !RsrNumericSpigot class methodsFor!
 start: aNumberstep: anIncrement	^super new		start: aNumber;		step: anIncrement;		yourself! !
+
+!RsrDecodingRaisedException class methodsFor!
+exception: anException	^self new		exception: anException;		yourself! !
 
 !RsrRemoteError class methodsFor!
 from: anException	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
@@ -766,6 +778,12 @@ create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver c
 !RsrServiceFactoryServer methodsFor!
 mirror: aService	^aService! !
 
+!RsrDecodingRaisedException methodsFor!
+exception	^exception! !
+
+!RsrDecodingRaisedException methodsFor!
+exception: anException	exception := anException! !
+
 !RsrCodec methodsFor!
 deliverResponseCommand	^2! !
 
@@ -938,6 +956,9 @@ levelError	^1! !
 levelInfo	^3! !
 
 !RsrLog methodsFor!
+critical: aString	self verbosity >= self levelCritical		ifTrue: [self log: aString level: #critical]! !
+
+!RsrLog methodsFor!
 debug: aString	self verbosity >= self levelDebug		ifTrue: [	self log: aString level: #debug]! !
 
 !RsrLog methodsFor!
@@ -953,10 +974,13 @@ levelDebug	^4! !
 verbosity	^verbosity! !
 
 !RsrLog methodsFor!
+levelCritical	^0! !
+
+!RsrLog methodsFor!
 initialize	super initialize.	verbosity := self levelTrace.	sinks := OrderedCollection new! !
 
 !RsrLog methodsFor!
-warning: aString	self verbosity >= self levelDebug		ifTrue: [self log: aString level: #warning]! !
+warning: aString	self verbosity >= self levelWarn		ifTrue: [self log: aString level: #warning]! !
 
 !RsrLog methodsFor!
 addSink: aLogSink	sinks add: aLogSink! !
@@ -1166,16 +1190,13 @@ removeKey: anRsrId	^mutex critical: [map removeKey: anRsrId ifAbsent: [nil]]! 
 at: aKeyput: aValue	mutex critical: [map at: aKey put: aValue].	^aValue! !
 
 !RsrServiceSnapshot methodsFor!
-snapshot: aService	sid := aService _id.	template := aService class templateClassName.	targetServiceType := aService isClient		ifTrue: [#server]		ifFalse: [#client].	slots := OrderedCollection new.	RsrServiceSnapshot		reflectedVariablesFor: aService		do: [:each | slots add: (RsrReference from: each)]! !
+snapshot: aService	sid := aService _id.	targetClassName := aService class isClientClass		ifTrue: [aService class serverClassName]		ifFalse: [aService class clientClassName].	slots := OrderedCollection new.	RsrServiceSnapshot		reflectedVariablesFor: aService		do: [:each | slots add: (RsrReference from: each)]! !
 
 !RsrServiceSnapshot methodsFor!
 slots: anArrayOfReferences	slots := anArrayOfReferences! !
 
 !RsrServiceSnapshot methodsFor!
-targetServiceType: aSymbol	targetServiceType := aSymbol! !
-
-!RsrServiceSnapshot methodsFor!
-template: aSymbol	template := aSymbol! !
+targetClass	^RsrClassResolver classNamed: self targetClassName! !
 
 !RsrServiceSnapshot methodsFor!
 instanceIn: aConnection	| instance |	instance := aConnection		serviceAt: self sid		ifAbsent: [self createInstanceRegisteredIn: aConnection].	self shouldCreateServer		ifTrue: [aConnection _stronglyRetain: instance].	^instance! !
@@ -1190,7 +1211,7 @@ createInstanceRegisteredIn: aConnection	| instance |	instance := self shouldC
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self snapshotIdentifier		onto: aStream.	anEncoder		encodeControlWord: self sid		onto: aStream.	anEncoder		encodeControlWord: self slots size		onto: aStream.	self targetClassNameReference		encode: aStream		using: anEncoder.	self slots do: [:each | each encode: aStream using: anEncoder]! !
 
 !RsrServiceSnapshot methodsFor!
-decode: aStreamusing: aDecoder	| species instVarCount serviceName templateClass |	species := aDecoder decodeControlWord: aStream.	sid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	serviceName := (aDecoder decodeReference: aStream) resolve: nil.	templateClass := (RsrClassResolver classNamed: serviceName) templateClass.	template := templateClass templateClassName.	targetServiceType := templateClass clientClassName = serviceName		ifTrue: [#client]		ifFalse: [#server].	slots := OrderedCollection new: instVarCount.	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]! !
+decode: aStreamusing: aDecoder	| species instVarCount templateClass |	species := aDecoder decodeControlWord: aStream.	sid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	targetClassName := (aDecoder decodeReference: aStream) resolve: nil.	slots := OrderedCollection new: instVarCount.	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]! !
 
 !RsrServiceSnapshot methodsFor!
 shouldCreateServer	^self targetServiceType == #server! !
@@ -1208,16 +1229,16 @@ snapshotIdentifier	^0! !
 sid: aServiceID	sid := aServiceID! !
 
 !RsrServiceSnapshot methodsFor!
-targetClassNameReference	| targetClassName |	targetClassName := self shouldCreateServer		ifTrue: [self templateClass serverClassName]		ifFalse: [self templateClass clientClassName].	^RsrSymbolReference symbol: targetClassName! !
+targetClassNameReference	^RsrSymbolReference symbol: self targetClassName! !
 
 !RsrServiceSnapshot methodsFor!
-targetServiceType	^targetServiceType! !
+targetServiceType	^self targetClass isClientClass		ifTrue: [#client]		ifFalse: [#server]! !
 
 !RsrServiceSnapshot methodsFor!
-template	^template! !
+templateClass	^self targetClass templateClass! !
 
 !RsrServiceSnapshot methodsFor!
-templateClass	^RsrClassResolver classNamed: self template! !
+targetClassName	^targetClassName! !
 
 !RsrAcceptConnection methodsFor!
 waitForConnection	| socket channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	channel := RsrSocketChannel socket: socket.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
@@ -1378,9 +1399,6 @@ decodeCommand: aStream	"Decode an object from the stream"	| command |	comman
 !RsrDecoder methodsFor!
 bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
 
-!RsrDecoder methodsFor!
-lookupClass: aClassName	^RsrClassResolver classNamed: aClassName! !
-
 !RsrRemoteError methodsFor!
 originalClassName	^originalClassName! !
 
@@ -1412,7 +1430,7 @@ response	^self responseReference! !
 responseReference	^responseReference! !
 
 !RsrDeliverResponse methodsFor!
-executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: self transaction		ifAbsent:			[^self error: 'Handle unknown transaction'].	[self snapshots do: [:each | each reifyIn: aConnection].	result := self responseReference resolve: aConnection.	result first == #fulfill		ifTrue: [pendingMessage promise fulfill: result last]		ifFalse: [pendingMessage promise break: result last]]		on: Error		do: [:ex | pendingMessage promise fulfill: ex copy]! !
+executeFor: aConnection	| pendingMessage result |	pendingMessage := aConnection pendingMessages		removeKey: self transaction		ifAbsent: [^self reportUnknownTransactionIn: aConnection].	[self snapshots do: [:each | each reifyIn: aConnection].	result := self responseReference resolve: aConnection.	result first == #fulfill		ifTrue: [pendingMessage promise fulfill: result last]		ifFalse: [pendingMessage promise break: result last]]		on: Error		do: [:ex | pendingMessage promise break: (RsrDecodingRaisedException exception: Exception)]! !
 
 !RsrDeliverResponse methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		onto: aStream! !
@@ -1431,6 +1449,9 @@ responseReference: aReference	responseReference := aReference! !
 
 !RsrDeliverResponse methodsFor!
 transaction: aTransactionId	transaction := aTransactionId! !
+
+!RsrDeliverResponse methodsFor!
+reportUnknownTransactionIn: aConnection	aConnection log error: 'Unknown transaction (', self transaction asString, ') while processing Response'! !
 
 !RsrInternalConnectionSpecification methodsFor!
 connectionB	^connectionB! !

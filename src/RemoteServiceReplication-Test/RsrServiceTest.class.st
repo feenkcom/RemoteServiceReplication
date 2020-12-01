@@ -273,6 +273,20 @@ RsrServiceTest >> testRegisterWith [
 ]
 
 { #category : 'running' }
+RsrServiceTest >> testReturnServerWithoutAssociatedClient [
+
+	| client server reason |
+	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
+	client synchronize.
+	server := connectionB serviceAt: client _id.
+	server action: [RsrKnownServer new].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason class
+		equals: RsrDecodingRaisedException
+]
+
+{ #category : 'running' }
 RsrServiceTest >> testVariableReflection [
 
 	| localService remoteService |

@@ -44,21 +44,26 @@ RsrDeliverResponse >> executeFor: aConnection [
 	| pendingMessage result |
 	pendingMessage := aConnection pendingMessages
 		removeKey: self transaction
-		ifAbsent:
-			[^self error: 'Handle unknown transaction'].
+		ifAbsent: [^self reportUnknownTransactionIn: aConnection].
 	[self snapshots do: [:each | each reifyIn: aConnection].
 	result := self responseReference resolve: aConnection.
 	result first == #fulfill
 		ifTrue: [pendingMessage promise fulfill: result last]
 		ifFalse: [pendingMessage promise break: result last]]
 		on: Error
-		do: [:ex | pendingMessage promise fulfill: ex copy]
+		do: [:ex | pendingMessage promise break: (RsrDecodingRaisedException exception: Exception)]
 ]
 
 { #category : 'reporting' }
 RsrDeliverResponse >> reportOn: aLog [
 
 	aLog debug: 'RsrDeliverResponse(', self response class name, ')'
+]
+
+{ #category : 'reporting' }
+RsrDeliverResponse >> reportUnknownTransactionIn: aConnection [
+
+	aConnection log error: 'Unknown transaction (', self transaction asString, ') while processing Response'
 ]
 
 { #category : 'accessing' }

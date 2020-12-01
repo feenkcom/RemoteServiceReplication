@@ -38,6 +38,7 @@ package classNames
 	add: #RsrReflectedVariableTestClient;
 	add: #RsrValueHolderServer;
 	add: #RsrSocketLifetimeTest;
+	add: #RsrReturnUnknownService;
 	add: #RsrConcurrentTestClient;
 	add: #RsrClientReferenceService;
 	add: #RsrSocketStreamTestCase;
@@ -54,6 +55,7 @@ package classNames
 	add: #RsrReflectedVariableTestServer;
 	add: #RsrSignalErrorInAsString;
 	add: #RsrMessageSendingTest;
+	add: #RsrKnownServer;
 	add: #RsrConcurrentTestServer;
 	add: #RsrServerReferenceService;
 	add: #RsrSystemTestCase;
@@ -118,6 +120,14 @@ RsrService
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrRemoteAction categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrService
+	subclass: #RsrReturnUnknownService
+	instanceVariableNames: 'sharedVariable'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrReturnUnknownService categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrService
 	subclass: #RsrSameTemplateAndClientService
@@ -251,6 +261,14 @@ RsrInstrumentedService
 	classInstanceVariableNames: ''!
 RsrInstrumentedServer comment: 'No class-specific documentation for RsrInstrumentedServer, hierarchy is:Object  RsrObject    RsrAbstractService      RsrService( _id _connection remoteSelf)        RsrInstrumentedService          RsrInstrumentedServer( preUpdateAction postUpdateAction)'!
 !RsrInstrumentedServer categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrReturnUnknownService
+	subclass: #RsrKnownServer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrKnownServer categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrTestCase
 	subclass: #RsrNumericSpigotTest
@@ -665,6 +683,15 @@ serverClassName	^#RsrInstrumentedServer! !
 !RsrConcurrentTestServer class methodsFor!
 initialCounter	^0! !
 
+!RsrReturnUnknownService class methodsFor!
+clientClassName	^#RsrDoNotCreateThisClass! !
+
+!RsrReturnUnknownService class methodsFor!
+templateClassName	^#RsrReturnUnknownService! !
+
+!RsrReturnUnknownService class methodsFor!
+serverClassName	^#RsrKnownServer! !
+
 !RsrServiceNoInstVars class methodsFor!
 clientClassName	^#RsrClientNoInstVars! !
 
@@ -847,6 +874,12 @@ serviceFactoryA	^connectionA serviceFactory! !
 
 !RsrSystemTestCase methodsFor!
 tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
+
+!RsrSystemTestCase methodsFor!
+expectCatch: aPromise	| semaphore wasFulfilled result whenValue |	semaphore := Semaphore new.	wasFulfilled := false.	aPromise		when: [:value | whenValue := value. wasFulfilled := true. semaphore signal]		catch: [:reason | result := reason. semaphore signal].	semaphore wait.	self deny: wasFulfilled.	^result! !
+
+!RsrSystemTestCase methodsFor!
+expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !
 
 !RsrSystemTestCase methodsFor!
 serviceFactoryB	^connectionB serviceFactory! !
@@ -1086,9 +1119,6 @@ terminateCurrentProcess	Processor activeProcess terminate! !
 testPrePostUpdate	| client server pre post |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	pre := post := false.	server		preUpdateHandler: [pre := true];		postUpdateHandler: [post := true];		action: [].	client value.	self		assert: pre;		assert: post! !
 
 !RsrMessageSendingTest methodsFor!
-expectCatch: aPromise	| semaphore wasFulfilled result whenValue |	semaphore := Semaphore new.	wasFulfilled := false.	aPromise		when: [:value | whenValue := value. wasFulfilled := true. semaphore signal]		catch: [:reason | result := reason. semaphore signal].	semaphore wait.	self deny: wasFulfilled.	^result! !
-
-!RsrMessageSendingTest methodsFor!
 testDebugHandlerNoResolutionWithResumableException	"Ensure that if the debug handler does not resolve the exception	and the exception is resumable, we resume with the evaluation	result of the debug handler."	| marker client server |	marker := #testMarker.	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal].	server debugHandler: [:exception :messageSend :resolver | marker].	self		assert: client value		equals: marker! !
 
 !RsrMessageSendingTest methodsFor!
@@ -1114,9 +1144,6 @@ testReturnAlsoUpdatesLocalService	"Ensure that when the remote peer service ret
 
 !RsrMessageSendingTest methodsFor!
 testUnimplementedRemoteSend	"Ensure a remote DNU is reported back to the sender."	| marker client server reason |	marker := #testMarker.	client := connectionA serviceFor: #RsrServiceNoInstVars.	client synchronize.	reason := self expectCatch: client unimplementedRemoteSend.	self		assert: reason class		equals: RsrRemoteExceptionServer.	self		assert: reason exceptionClassName		equals: #MessageNotUnderstood! !
-
-!RsrMessageSendingTest methodsFor!
-expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !
 
 !RsrMessageSendingTest methodsFor!
 testReturnArgument	| client server arguments dt response |	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTime now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server value: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server value: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
@@ -1312,6 +1339,9 @@ testMessageDispatchedConcurrentlyToSingleService	"Ensure all messages are sent 
 
 !RsrServiceTest methodsFor!
 testCreateServiceWithSameClientAbstractService	| client server |	client := self serviceFactoryA serviceFor: #RsrSameTemplateAndClientService.	self		assert: client class		equals: RsrSameTemplateAndClientService.	client synchronize.	server := connectionB serviceAt: client _id.	self		assert: server replicated1		equals: nil.	self		assert: server replicated2		equals: nil.	client		replicated1: 1;		replicated2: 2;		synchronize.	self		assert: server replicated1		equals: 1.	self		assert: server replicated2		equals: 2.	server		replicated1: 10;		replicated2: 20;		private1: 3;		synchronize.	self		assert: client replicated1		equals: 10.	self		assert: client replicated2		equals: 20! !
+
+!RsrServiceTest methodsFor!
+testReturnServerWithoutAssociatedClient	| client server reason |	client := self serviceFactoryA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrKnownServer new].	reason := self expectCatch: client asyncValue.	self		assert: reason class		equals: RsrDecodingRaisedException! !
 
 !RsrInMemoryServiceTest methodsFor!
 setUp	super setUp.	self initializeInMemoryConnections! !

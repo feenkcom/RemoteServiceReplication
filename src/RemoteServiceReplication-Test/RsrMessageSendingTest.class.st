@@ -10,34 +10,6 @@ RsrMessageSendingTest class >> isAbstract [
 	^self == RsrMessageSendingTest
 ]
 
-{ #category : 'expecting' }
-RsrMessageSendingTest >> expectCatch: aPromise [
-
-	| semaphore wasFulfilled result whenValue |
-	semaphore := Semaphore new.
-	wasFulfilled := false.
-	aPromise
-		when: [:value | whenValue := value. wasFulfilled := true. semaphore signal]
-		catch: [:reason | result := reason. semaphore signal].
-	semaphore wait.
-	self deny: wasFulfilled.
-	^result
-]
-
-{ #category : 'expecting' }
-RsrMessageSendingTest >> expectWhen: aPromise [
-
-	| semaphore wasBroken result |
-	semaphore := Semaphore new.
-	wasBroken := false.
-	aPromise
-		when: [:value | result := value. semaphore signal]
-		catch: [:r | wasBroken := true. semaphore signal].
-	semaphore wait.
-	self deny: wasBroken.
-	^result
-]
-
 { #category : 'utilities' }
 RsrMessageSendingTest >> terminateCurrentProcess [
 
