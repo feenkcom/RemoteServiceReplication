@@ -327,6 +327,69 @@ RsrCodecTest >> testDictionary [
 ]
 
 { #category : 'running-immediates' }
+RsrCodecTest >> testDouble [
+
+	| encoding |
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[128 0 0 0 0 0 0 0].
+	self
+		verifyImmediate: -0.0
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[0 0 0 0 0 0 0 0].
+	self
+		verifyImmediate: 0.0
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[191 240 0 0 0 0 0 0].
+	self
+		verifyImmediate: -1.0
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[63 240 0 0 0 0 0 0].
+	self
+		verifyImmediate: 1.0
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[63 185 153 153 153 153 153 154].
+	self
+		verifyImmediate: 0.1
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[191 185 153 153 153 153 153 154].
+	self
+		verifyImmediate: -0.1
+		encoding: encoding.
+	"Infinity"
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[127 240 0 0 0 0 0 0].
+	self
+		verifyImmediate: RsrDoubleReference positiveInfinity
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[255 240 0 0 0 0 0 0].
+	self
+		verifyImmediate: RsrDoubleReference negativeInfinity
+		encoding: encoding.
+]
+
+{ #category : 'running-immediates' }
 RsrCodecTest >> testInteger [
 
 	| encoding |

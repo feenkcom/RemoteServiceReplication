@@ -46,6 +46,27 @@ RsrEncoderTest >> testDeliverResponse [
 		equals: expectedEncoding
 ]
 
+{ #category : 'running' }
+RsrEncoderTest >> testNaN [
+
+	| encoding |
+	"Signaling NaN is not tested."
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[127 248 0 0 0 0 0 0].
+	self
+		verifyImmediate: RsrDoubleReference positiveNan
+		encoding: encoding.
+	encoding :=
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 15],
+		#[255 248 0 0 0 0 0 0].
+	self
+		verifyImmediate: RsrDoubleReference negativeNan
+		encoding: encoding.
+]
+
 { #category : 'running-immediates' }
 RsrEncoderTest >> testReleaseServices [
 

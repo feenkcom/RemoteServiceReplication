@@ -61,5 +61,11 @@ RsrReference class >> initializeReferenceMapping [
 	referenceMapping
 		at: SmallDateAndTime
 		put: RsrDateAndTimeReference.
+	referenceMapping
+		at: SmallDouble
+		put: RsrDoubleReference.
+	referenceMapping
+		at: Float
+		put: RsrDoubleReference.
 	^referenceMapping
 ]

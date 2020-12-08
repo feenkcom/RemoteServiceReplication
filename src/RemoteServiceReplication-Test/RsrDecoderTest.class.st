@@ -19,10 +19,16 @@ RsrDecoderTest >> assertReference: bytes
 decodesTo: expected [
 
 	| actual |
-	actual := (self decoder decodeReference: bytes readStream) resolve: self connection.
+	actual := self decodeReference: bytes.
 	self
 		assert: actual
 		equals: expected
+]
+
+{ #category : 'decoding' }
+RsrDecoderTest >> decodeReference: bytes [
+
+	^(self decoder decodeReference: bytes readStream) resolve: self connection
 ]
 
 { #category : 'decoding' }

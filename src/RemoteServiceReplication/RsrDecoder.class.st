@@ -163,5 +163,7 @@ RsrDecoder >> instanceOfImmediate: aReferenceType [
 		ifTrue: [^RsrDictionaryReference new].
 	aReferenceType = 14
 		ifTrue: [^RsrDateAndTimeReference new].
+	aReferenceType = 15
+		ifTrue: [^RsrDoubleReference new].
 	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.
 ]
