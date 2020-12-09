@@ -21,6 +21,7 @@ package classNames
 	add: #RsrResumableError;
 	add: #RsrNilReference;
 	add: #RsrError;
+	add: #RsrDoubleReference;
 	add: #RsrObject;
 	add: #RsrSetReference;
 	add: #RsrSocketClosed;
@@ -288,6 +289,14 @@ RsrValueReference
 RsrDateAndTimeReference comment: 'No class-specific documentation for RsrDateAndTimeReference, hierarchy is:Object  RsrObject    RsrReference      RsrImmediateReference        RsrValueReference( value)          RsrDateAndTimeReference'!
 !RsrDateAndTimeReference categoriesForClass!RemoteServiceReplication-Base! !
 
+RsrValueReference
+	subclass: #RsrDoubleReference
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrDoubleReference categoriesForClass!RemoteServiceReplication-Base! !
+
 RsrBooleanReference
 	subclass: #RsrFalseReference
 	instanceVariableNames: ''
@@ -408,6 +417,9 @@ signal: anObject	^self new		object: anObject;		signal! !
 
 !RsrOrderedCollectionReference class methodsFor!
 typeIdentifier	^12! !
+
+!RsrDoubleReference class methodsFor!
+typeIdentifier	^15! !
 
 !RsrFalseReference class methodsFor!
 typeIdentifier	^8! !
@@ -531,6 +543,12 @@ resolve: aConnection	| oc |	oc := OrderedCollection new: value size.	value d
 
 !RsrPositiveIntegerReference methodsFor!
 typeIdentifier	^3! !
+
+!RsrDoubleReference methodsFor!
+decode: aStreamusing: aDecoder	| bytes |	bytes := aStream next: 8.	value := self convertBytes: bytes! !
+
+!RsrDoubleReference methodsFor!
+encode: aStreamusing: anEncoder	| bytes |	bytes := self convertToBytes: value.	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	aStream nextPutAll: bytes! !
 
 !RsrFalseReference methodsFor!
 resolve: aConnection	^false! !
