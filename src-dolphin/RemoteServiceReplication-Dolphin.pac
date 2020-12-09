@@ -20,6 +20,8 @@ package methodNames
 	add: #Object -> #asString;
 	add: #RsrCharacterArrayReference -> #convertBytes:;
 	add: #RsrCharacterArrayReference -> #convertToBytes:;
+	add: #RsrDoubleReference -> #convertBytes:;
+	add: #RsrDoubleReference -> #convertToBytes:;
 	add: #RsrObject -> #initialize;
 	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
@@ -28,6 +30,8 @@ package methodNames
 	add: 'RsrDateAndTime class' -> #microsecondsSinceEpoch:;
 	add: 'RsrDateAndTime class' -> #now;
 	add: 'RsrDateAndTime class' -> #posixEpoch;
+	add: 'RsrDoubleReference class' -> #infinity;
+	add: 'RsrDoubleReference class' -> #nan;
 	add: 'RsrObject class' -> #new;
 	add: 'RsrReference class' -> #initializeReferenceMapping;
 	yourself.
@@ -138,6 +142,40 @@ posixEpoch
 !RsrDateAndTime class categoriesFor: #now!public! !
 !RsrDateAndTime class categoriesFor: #posixEpoch!public! !
 
+!RsrDoubleReference methodsFor!
+
+convertBytes: bytes
+	"I don't yet see an implementation for this method."
+
+	^0.0!
+
+convertToBytes: aFloat
+
+	| integerBits bytes position |
+	integerBits := aFloat bitRepresentation.
+	bytes := ByteArray new: 8.
+	position := 8.
+	[position > 0]
+		whileTrue:
+			[bytes at: position put: (integerBits bitAnd: 16rFF).
+			integerBits := integerBits bitShift: -8.
+			position := position - 1].
+	^bytes! !
+!RsrDoubleReference categoriesFor: #convertBytes:!public! !
+!RsrDoubleReference categoriesFor: #convertToBytes:!public! !
+
+!RsrDoubleReference class methodsFor!
+
+infinity
+
+	^Float infinity!
+
+nan
+
+	^Float nan! !
+!RsrDoubleReference class categoriesFor: #infinity!accessing!public! !
+!RsrDoubleReference class categoriesFor: #nan!accessing!public! !
+
 !RsrObject methodsFor!
 
 initialize
@@ -162,6 +200,7 @@ currentStackDump
 !RsrReference class methodsFor!
 
 initializeReferenceMapping
+	"RsrReference initializeReferenceMapping"
 
 	referenceMapping := Dictionary new.
 	referenceMapping
@@ -212,6 +251,9 @@ initializeReferenceMapping
 	referenceMapping
 		at: TimeStamp
 		put: RsrDateAndTimeReference.
+	referenceMapping
+		at: Float
+		put: RsrDoubleReference.
 	^referenceMapping! !
 !RsrReference class categoriesFor: #initializeReferenceMapping!public! !
 
