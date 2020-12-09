@@ -2,6 +2,7 @@ Extension { #name : 'RsrReference' }
 
 { #category : '*RemoteServiceReplication-Pharo' }
 RsrReference class >> initializeReferenceMapping [
+	"RsrReference initializeReferenceMapping"
 
 	referenceMapping := Dictionary new.
 	referenceMapping
@@ -55,5 +56,11 @@ RsrReference class >> initializeReferenceMapping [
 	referenceMapping
 		at: DateAndTime
 		put: RsrDateAndTimeReference.
+	referenceMapping
+		at: SmallFloat64
+		put: RsrDoubleReference.
+	referenceMapping
+		at: BoxedFloat64
+		put: RsrDoubleReference.
 	^referenceMapping
 ]
