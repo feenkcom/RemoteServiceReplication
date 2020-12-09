@@ -13,30 +13,41 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'instance creation' }
+RsrCharacterArrayReference class >> from: aCharacterArray [
+
+	| bytes |
+	bytes := self convertToBytes: aCharacterArray.
+	^self intermediate: bytes
+]
+
 { #category : 'encoding/decoding' }
 RsrCharacterArrayReference >> decode: aStream
 using: aDecoder [
 
-	| length bytes |
+	| length |
 	length := aDecoder decodeControlWord: aStream.
-	bytes := aStream next: length.
-	value := self convertBytes: bytes
+	intermediate := aStream next: length
 ]
 
 { #category : 'encoding/decoding' }
 RsrCharacterArrayReference >> encode: aStream
 using: anEncoder [
 
-	| bytes |
 	anEncoder
 		encodeControlWord: anEncoder immediateOID
 		onto: aStream.
 	anEncoder
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
-	bytes := self convertToBytes: value.
 	anEncoder
-		encodeControlWord: bytes size
+		encodeControlWord: intermediate size
 		onto: aStream.
-	aStream nextPutAll: bytes
+	aStream nextPutAll: intermediate
+]
+
+{ #category : 'resolving' }
+RsrCharacterArrayReference >> resolve: aConnection [
+
+	^self convertBytes: intermediate
 ]

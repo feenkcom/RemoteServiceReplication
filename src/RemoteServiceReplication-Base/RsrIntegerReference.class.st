@@ -13,24 +13,8 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : 'instance creation' }
-RsrIntegerReference class >> from: anInteger [
-
-	^anInteger positive
-		ifTrue: [RsrPositiveIntegerReference value: anInteger]
-		ifFalse: [RsrNegativeIntegerReference value: anInteger]
-]
-
 { #category : 'converting' }
-RsrIntegerReference >> convertBytes: aByteArray [
-
-	^aByteArray
-		inject: 0
-		into: [:integer :byte | (integer bitShift: 8) bitOr: byte]
-]
-
-{ #category : 'converting' }
-RsrIntegerReference >> convertToBytes: anInteger [
+RsrIntegerReference class >> convertToBytes: anInteger [
 
 	| stream int |
 	anInteger <= 0
@@ -44,22 +28,37 @@ RsrIntegerReference >> convertToBytes: anInteger [
 	^stream contents reverse
 ]
 
+{ #category : 'instance creation' }
+RsrIntegerReference class >> from: anInteger [
+
+	| intermediate |
+	intermediate := self convertToBytes: anInteger abs.
+	^anInteger positive
+		ifTrue: [RsrPositiveIntegerReference intermediate: intermediate]
+		ifFalse: [RsrNegativeIntegerReference intermediate: intermediate]
+]
+
+{ #category : 'converting' }
+RsrIntegerReference >> convertBytes: aByteArray [
+
+	^aByteArray
+		inject: 0
+		into: [:integer :byte | (integer bitShift: 8) bitOr: byte]
+]
+
 { #category : 'encoding/decoding' }
 RsrIntegerReference >> decode: aStream
 using: aDecoder [
 
-	| length bytes |
+	| length |
 	length := aDecoder decodeControlWord: aStream.
-	bytes := aStream next: length.
-	value := self convertBytes: bytes
+	intermediate := aStream next: length
 ]
 
 { #category : 'encoding/decoding' }
 RsrIntegerReference >> encode: aStream
 using: anEncoder [
 
-	| bytes |
-	bytes := self convertToBytes: value abs.
 	anEncoder
 		encodeControlWord: anEncoder immediateOID
 		onto: aStream.
@@ -67,7 +66,13 @@ using: anEncoder [
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
 	anEncoder
-		encodeControlWord: bytes size
+		encodeControlWord: intermediate size
 		onto: aStream.
-	aStream nextPutAll: bytes
+	aStream nextPutAll: intermediate
+]
+
+{ #category : 'resolving' }
+RsrIntegerReference >> resolve: aConnection [
+
+	^self convertBytes: intermediate
 ]

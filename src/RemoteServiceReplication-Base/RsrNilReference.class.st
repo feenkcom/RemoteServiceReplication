@@ -19,6 +19,12 @@ RsrNilReference class >> from: aNil [
 	^self new
 ]
 
+{ #category : 'accessing' }
+RsrNilReference class >> typeIdentifier [
+
+	^6
+]
+
 { #category : 'encoding/decoding' }
 RsrNilReference >> decode: aStream
 using: aDecoder [
@@ -42,10 +48,4 @@ using: anEncoder [
 RsrNilReference >> resolve: aConnection [
 
 	^nil
-]
-
-{ #category : 'accessing' }
-RsrNilReference >> typeIdentifier [
-
-	^6
 ]

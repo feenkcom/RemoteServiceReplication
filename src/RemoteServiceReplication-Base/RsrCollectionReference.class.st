@@ -26,7 +26,7 @@ RsrCollectionReference class >> from: aSequencedCollection [
 
 	| references |
 	references := (1 to: aSequencedCollection size) collect: [:i | RsrReference from: (aSequencedCollection at: i)].
-	^self value: references
+	^self intermediate: references
 ]
 
 { #category : 'encoding/decoding' }
@@ -35,7 +35,7 @@ using: aDecoder [
 
 	| size |
 	size := aDecoder decodeControlWord: aStream.
-	value := (1 to: size) collect: [:i | aDecoder decodeReference: aStream]
+	intermediate := (1 to: size) collect: [:i | aDecoder decodeReference: aStream]
 ]
 
 { #category : 'encoding/decoding' }
@@ -49,9 +49,9 @@ using: anEncoder [
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
 	anEncoder
-		encodeControlWord: value size
+		encodeControlWord: intermediate size
 		onto: aStream.
-	value
+	intermediate
 		do:
 			[:each |
 			each

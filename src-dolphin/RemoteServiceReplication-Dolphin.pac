@@ -19,17 +19,17 @@ package classNames
 package methodNames
 	add: #Object -> #asString;
 	add: #RsrCharacterArrayReference -> #convertBytes:;
-	add: #RsrCharacterArrayReference -> #convertToBytes:;
 	add: #RsrDoubleReference -> #convertBytes:;
-	add: #RsrDoubleReference -> #convertToBytes:;
 	add: #RsrObject -> #initialize;
 	add: #RsrProcessModel -> #currentStackDump;
 	add: #SequenceableCollection -> #doWithIndex:;
 	add: #Set -> #hash;
+	add: 'RsrCharacterArrayReference class' -> #convertToBytes:;
 	add: 'RsrDateAndTime class' -> #fromMicroseconds:;
 	add: 'RsrDateAndTime class' -> #microsecondsSinceEpoch:;
 	add: 'RsrDateAndTime class' -> #now;
 	add: 'RsrDateAndTime class' -> #posixEpoch;
+	add: 'RsrDoubleReference class' -> #convertToBytes:;
 	add: 'RsrDoubleReference class' -> #infinity;
 	add: 'RsrDoubleReference class' -> #nan;
 	add: 'RsrObject class' -> #new;
@@ -110,13 +110,15 @@ asString
 
 convertBytes: aByteArray
 
-	^Utf8String fromByteArray: aByteArray!
+	^Utf8String fromByteArray: aByteArray! !
+!RsrCharacterArrayReference categoriesFor: #convertBytes:!public! !
+
+!RsrCharacterArrayReference class methodsFor!
 
 convertToBytes: aCharacterArray
 
 	^aCharacterArray asUtf8String asByteArray! !
-!RsrCharacterArrayReference categoriesFor: #convertBytes:!public! !
-!RsrCharacterArrayReference categoriesFor: #convertToBytes:!public! !
+!RsrCharacterArrayReference class categoriesFor: #convertToBytes:!converting!public! !
 
 !RsrDateAndTime class methodsFor!
 
@@ -147,7 +149,10 @@ posixEpoch
 convertBytes: bytes
 	"I don't yet see an implementation for this method."
 
-	^0.0!
+	^0.0! !
+!RsrDoubleReference categoriesFor: #convertBytes:!public! !
+
+!RsrDoubleReference class methodsFor!
 
 convertToBytes: aFloat
 
@@ -160,11 +165,7 @@ convertToBytes: aFloat
 			[bytes at: position put: (integerBits bitAnd: 16rFF).
 			integerBits := integerBits bitShift: -8.
 			position := position - 1].
-	^bytes! !
-!RsrDoubleReference categoriesFor: #convertBytes:!public! !
-!RsrDoubleReference categoriesFor: #convertToBytes:!public! !
-
-!RsrDoubleReference class methodsFor!
+	^bytes!
 
 infinity
 
@@ -173,6 +174,7 @@ infinity
 nan
 
 	^Float nan! !
+!RsrDoubleReference class categoriesFor: #convertToBytes:!converting!public! !
 !RsrDoubleReference class categoriesFor: #infinity!accessing!public! !
 !RsrDoubleReference class categoriesFor: #nan!accessing!public! !
 

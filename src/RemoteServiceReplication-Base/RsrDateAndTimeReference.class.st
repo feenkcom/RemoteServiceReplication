@@ -14,6 +14,14 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'instance creation' }
+RsrDateAndTimeReference class >> from: aDateAndTime [
+
+	| intermediate |
+	intermediate := RsrDateAndTime microsecondsSinceEpoch: aDateAndTime.
+	^self intermediate: intermediate
+]
+
 { #category : 'accessing' }
 RsrDateAndTimeReference class >> typeIdentifier [
 
@@ -24,24 +32,26 @@ RsrDateAndTimeReference class >> typeIdentifier [
 RsrDateAndTimeReference >> decode: aStream
 using: aDecoder [
 
-	| microseconds |
-	microseconds := aDecoder decodeControlWord: aStream.
-	value := RsrDateAndTime fromMicroseconds: microseconds
+	intermediate := aDecoder decodeControlWord: aStream
 ]
 
 { #category : 'encoding/decoding' }
 RsrDateAndTimeReference >> encode: aStream
 using: anEncoder [
 
-	| microseconds |
 	anEncoder
 		encodeControlWord: anEncoder immediateOID
 		onto: aStream.
 	anEncoder
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
-	microseconds := RsrDateAndTime microsecondsSinceEpoch: value.
 	anEncoder
-		encodeControlWord: microseconds
+		encodeControlWord: intermediate
 		onto: aStream
+]
+
+{ #category : 'resolving' }
+RsrDateAndTimeReference >> resolve: aConnection [
+
+	^RsrDateAndTime fromMicroseconds: intermediate
 ]

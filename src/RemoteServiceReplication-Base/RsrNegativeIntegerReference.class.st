@@ -14,14 +14,14 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'accessing' }
+RsrNegativeIntegerReference class >> typeIdentifier [
+
+	^4
+]
+
 { #category : 'converting' }
 RsrNegativeIntegerReference >> convertBytes: aByteArray [
 
 	^(super convertBytes: aByteArray) negated
-]
-
-{ #category : 'accessing' }
-RsrNegativeIntegerReference >> typeIdentifier [
-
-	^4
 ]

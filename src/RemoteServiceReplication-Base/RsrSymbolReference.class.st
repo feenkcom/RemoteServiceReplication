@@ -14,14 +14,6 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : 'instance creation' }
-RsrSymbolReference class >> symbol: aSymbol [
-
-	^self new
-		value: aSymbol;
-		yourself
-]
-
 { #category : 'accessing' }
 RsrSymbolReference class >> typeIdentifier [
 

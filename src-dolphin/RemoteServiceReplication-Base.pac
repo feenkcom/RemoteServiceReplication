@@ -205,7 +205,7 @@ RsrError
 
 RsrImmediateReference
 	subclass: #RsrValueReference
-	instanceVariableNames: 'value'
+	instanceVariableNames: 'intermediate'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -418,8 +418,14 @@ signal: anObject	^self new		object: anObject;		signal! !
 !RsrOrderedCollectionReference class methodsFor!
 typeIdentifier	^12! !
 
+!RsrPositiveIntegerReference class methodsFor!
+typeIdentifier	^3! !
+
 !RsrDoubleReference class methodsFor!
 typeIdentifier	^15! !
+
+!RsrDoubleReference class methodsFor!
+from: aFloat	| intermediate |	intermediate := self convertToBytes: aFloat.	^self intermediate: intermediate! !
 
 !RsrFalseReference class methodsFor!
 typeIdentifier	^8! !
@@ -433,20 +439,26 @@ from: aBoolean	^aBoolean		ifTrue: [RsrTrueReference new]		ifFalse: [RsrFalse
 !RsrSymbolReference class methodsFor!
 typeIdentifier	^1! !
 
-!RsrSymbolReference class methodsFor!
-symbol: aSymbol	^self new		value: aSymbol;		yourself! !
+!RsrIntegerReference class methodsFor!
+convertToBytes: anInteger	| stream int |	anInteger <= 0		ifTrue: [^#[0]].	stream := WriteStream on: (ByteArray new: 8).	int := anInteger.	[int > 0]		whileTrue:			[stream nextPut: (int bitAnd: 16rFF).			int := int bitShift: -8].	^stream contents reverse! !
 
 !RsrIntegerReference class methodsFor!
-from: anInteger	^anInteger positive		ifTrue: [RsrPositiveIntegerReference value: anInteger]		ifFalse: [RsrNegativeIntegerReference value: anInteger]! !
+from: anInteger	| intermediate |	intermediate := self convertToBytes: anInteger abs.	^anInteger positive		ifTrue: [RsrPositiveIntegerReference intermediate: intermediate]		ifFalse: [RsrNegativeIntegerReference intermediate: intermediate]! !
 
 !RsrCollectionReference class methodsFor!
 analyze: aCollectionusing: anAnalyzer	^anAnalyzer analyzeCollection: aCollection! !
 
 !RsrCollectionReference class methodsFor!
-from: aSequencedCollection	| references |	references := (1 to: aSequencedCollection size) collect: [:i | RsrReference from: (aSequencedCollection at: i)].	^self value: references! !
+from: aSequencedCollection	| references |	references := (1 to: aSequencedCollection size) collect: [:i | RsrReference from: (aSequencedCollection at: i)].	^self intermediate: references! !
 
 !RsrBrokenPromise class methodsFor!
 signalReason: aReason	^self new		reason: aReason;		signal! !
+
+!RsrByteArrayReference class methodsFor!
+typeIdentifier	^10! !
+
+!RsrByteArrayReference class methodsFor!
+from: aByteArray	^self intermediate: aByteArray copy! !
 
 !RsrServiceReference class methodsFor!
 sid: aServiceID	^self new		sid: aServiceID;		yourself! !
@@ -470,6 +482,9 @@ analyze: anObjectusing: anAnalyzer	^self subclassResponsibility! !
 from: anObject	| referenceClass |	referenceClass := self referenceClassFor: anObject.	^referenceClass from: anObject! !
 
 !RsrNilReference class methodsFor!
+typeIdentifier	^6! !
+
+!RsrNilReference class methodsFor!
 from: aNil	^self new! !
 
 !RsrDictionaryReference class methodsFor!
@@ -479,10 +494,19 @@ typeIdentifier	^13! !
 analyze: aDictionaryusing: anAnalyzer	^anAnalyzer analyzeDictionary: aDictionary! !
 
 !RsrDictionaryReference class methodsFor!
-from: aDictionary	| referenceStream |	referenceStream := WriteStream on: (Array new: aDictionary size * 2).	aDictionary		keysAndValuesDo:			[:key :value |			referenceStream				nextPut: (RsrReference from: key);				nextPut: (RsrReference from: value)].	^self value: referenceStream contents! !
+from: aDictionary	| referenceStream |	referenceStream := WriteStream on: (Array new: aDictionary size * 2).	aDictionary		keysAndValuesDo:			[:key :value |			referenceStream				nextPut: (RsrReference from: key);				nextPut: (RsrReference from: value)].	^self intermediate: referenceStream contents! !
+
+!RsrCharacterArrayReference class methodsFor!
+from: aCharacterArray	| bytes |	bytes := self convertToBytes: aCharacterArray.	^self intermediate: bytes! !
+
+!RsrNegativeIntegerReference class methodsFor!
+typeIdentifier	^4! !
 
 !RsrDateAndTimeReference class methodsFor!
 typeIdentifier	^14! !
+
+!RsrDateAndTimeReference class methodsFor!
+from: aDateAndTime	| intermediate |	intermediate := RsrDateAndTime microsecondsSinceEpoch: aDateAndTime.	^self intermediate: intermediate! !
 
 !RsrArrayReference class methodsFor!
 typeIdentifier	^9! !
@@ -511,14 +535,17 @@ analyze: anObjectusing: anAnalyzer	^anAnalyzer analyzeImmediate: anObject! !
 !RsrImmediateReference class methodsFor!
 from: anObject	^self subclassResponsiblity! !
 
+!RsrCharacterReference class methodsFor!
+typeIdentifier	^5! !
+
+!RsrCharacterReference class methodsFor!
+from: aCharacter	^self intermediate: aCharacter codePoint! !
+
 !RsrAlreadyRegistered class methodsFor!
 signalService: aServiceintendedConnection: aConnection	^self new		service: aService;		intendedConnection: aConnection;		signal! !
 
 !RsrValueReference class methodsFor!
-value: anObject	^self new		value: anObject;		yourself! !
-
-!RsrValueReference class methodsFor!
-from: anObject	^self value: anObject! !
+intermediate: anObject	^self new		intermediate: anObject;		yourself! !
 
 !RsrObject class methodsFor!
 trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
@@ -530,7 +557,7 @@ typeIdentifier	^7! !
 typeIdentifier	^11! !
 
 !RsrSetReference class methodsFor!
-from: aSet	| referenceStream |	referenceStream := WriteStream on: (Array new: aSet size).	aSet do:  [:each | referenceStream nextPut: (RsrReference from: each)].	^self value: referenceStream contents! !
+from: aSet	| referenceStream |	referenceStream := WriteStream on: (Array new: aSet size).	aSet do:  [:each | referenceStream nextPut: (RsrReference from: each)].	^self intermediate: referenceStream contents! !
 
 !RsrUnsupportedObject methodsFor!
 object	^object! !
@@ -539,16 +566,16 @@ object	^object! !
 object: anObject	object := anObject.	self messageText: 'Instances of ', object class name, ' cannot be serialized'! !
 
 !RsrOrderedCollectionReference methodsFor!
-resolve: aConnection	| oc |	oc := OrderedCollection new: value size.	value do: [:each | oc add: (each resolve: aConnection)].	^oc! !
-
-!RsrPositiveIntegerReference methodsFor!
-typeIdentifier	^3! !
+resolve: aConnection	| oc |	oc := OrderedCollection new: intermediate size.	intermediate do: [:each | oc add: (each resolve: aConnection)].	^oc! !
 
 !RsrDoubleReference methodsFor!
-decode: aStreamusing: aDecoder	| bytes |	bytes := aStream next: 8.	value := self convertBytes: bytes! !
+decode: aStreamusing: aDecoder	intermediate := aStream next: 8! !
 
 !RsrDoubleReference methodsFor!
-encode: aStreamusing: anEncoder	| bytes |	bytes := self convertToBytes: value.	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	aStream nextPutAll: bytes! !
+resolve: aConnection	^self convertBytes: intermediate! !
+
+!RsrDoubleReference methodsFor!
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	aStream nextPutAll: intermediate! !
 
 !RsrFalseReference methodsFor!
 resolve: aConnection	^false! !
@@ -566,19 +593,19 @@ convertBytes: aByteArray	^(super convertBytes: aByteArray) asSymbol! !
 convertBytes: aByteArray	^aByteArray		inject: 0		into: [:integer :byte | (integer bitShift: 8) bitOr: byte]! !
 
 !RsrIntegerReference methodsFor!
-decode: aStreamusing: aDecoder	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	value := self convertBytes: bytes! !
+decode: aStreamusing: aDecoder	| length |	length := aDecoder decodeControlWord: aStream.	intermediate := aStream next: length! !
 
 !RsrIntegerReference methodsFor!
-convertToBytes: anInteger	| stream int |	anInteger <= 0		ifTrue: [^#[0]].	stream := WriteStream on: (ByteArray new: 8).	int := anInteger.	[int > 0]		whileTrue:			[stream nextPut: (int bitAnd: 16rFF).			int := int bitShift: -8].	^stream contents reverse! !
+resolve: aConnection	^self convertBytes: intermediate! !
 
 !RsrIntegerReference methodsFor!
-encode: aStreamusing: anEncoder	| bytes |	bytes := self convertToBytes: value abs.	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate size		onto: aStream.	aStream nextPutAll: intermediate! !
 
 !RsrCollectionReference methodsFor!
-decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value := (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
+decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	intermediate := (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
 
 !RsrCollectionReference methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate size		onto: aStream.	intermediate		do:			[:each |			each				encode: aStream				using: anEncoder]! !
 
 !RsrNonresumableError methodsFor!
 isResumable	^false! !
@@ -590,13 +617,10 @@ reason: aReason	reason := aReason! !
 reason	^reason! !
 
 !RsrByteArrayReference methodsFor!
-typeIdentifier	^10! !
+decode: aStreamusing: aDecoder	| length |	length := aDecoder decodeControlWord: aStream.	intermediate := aStream next: length! !
 
 !RsrByteArrayReference methodsFor!
-decode: aStreamusing: aDecoder	| length |	length := aDecoder decodeControlWord: aStream.	value := aStream next: length! !
-
-!RsrByteArrayReference methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	aStream nextPutAll: value! !
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate size		onto: aStream.	aStream nextPutAll: intermediate! !
 
 !RsrServiceReference methodsFor!
 sid	^sid! !
@@ -617,9 +641,6 @@ typeIdentifier	^self class typeIdentifier! !
 resolve: aConnection	"Resolve the reference in the context of the provided Connection."	^self subclassResponsibility! !
 
 !RsrNilReference methodsFor!
-typeIdentifier	^6! !
-
-!RsrNilReference methodsFor!
 decode: aStreamusing: aDecoder	"Nil has no additional value"! !
 
 !RsrNilReference methodsFor!
@@ -629,46 +650,49 @@ resolve: aConnection	^nil! !
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream! !
 
 !RsrCharacterArrayReference methodsFor!
-decode: aStreamusing: aDecoder	| length bytes |	length := aDecoder decodeControlWord: aStream.	bytes := aStream next: length.	value := self convertBytes: bytes! !
+decode: aStreamusing: aDecoder	| length |	length := aDecoder decodeControlWord: aStream.	intermediate := aStream next: length! !
 
 !RsrCharacterArrayReference methodsFor!
-encode: aStreamusing: anEncoder	| bytes |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	bytes := self convertToBytes: value.	anEncoder		encodeControlWord: bytes size		onto: aStream.	aStream nextPutAll: bytes! !
+resolve: aConnection	^self convertBytes: intermediate! !
+
+!RsrCharacterArrayReference methodsFor!
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate size		onto: aStream.	aStream nextPutAll: intermediate! !
 
 !RsrNegativeIntegerReference methodsFor!
 convertBytes: aByteArray	^(super convertBytes: aByteArray) negated! !
 
-!RsrNegativeIntegerReference methodsFor!
-typeIdentifier	^4! !
+!RsrDictionaryReference methodsFor!
+decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	intermediate := (1 to: size * 2) collect: [:each | aDecoder decodeReference: aStream]! !
 
 !RsrDictionaryReference methodsFor!
-decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value := (1 to: size * 2) collect: [:each | aDecoder decodeReference: aStream]! !
+resolve: aConnection	| stream numEntries dictionary |	stream := ReadStream on: intermediate.	numEntries := intermediate size / 2.	dictionary := Dictionary new: numEntries.	numEntries		timesRepeat:			[dictionary				at: (stream next resolve: aConnection)				put: (stream next resolve: aConnection)].	^dictionary! !
 
 !RsrDictionaryReference methodsFor!
-resolve: aConnection	| stream numEntries dictionary |	stream := ReadStream on: value.	numEntries := value size / 2.	dictionary := Dictionary new: numEntries.	numEntries		timesRepeat:			[dictionary				at: (stream next resolve: aConnection)				put: (stream next resolve: aConnection)].	^dictionary! !
-
-!RsrDictionaryReference methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size / 2		onto: aStream.	value do: [:each | each encode: aStream using: anEncoder]! !
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate size / 2		onto: aStream.	intermediate do: [:each | each encode: aStream using: anEncoder]! !
 
 !RsrDateAndTimeReference methodsFor!
-decode: aStreamusing: aDecoder	| microseconds |	microseconds := aDecoder decodeControlWord: aStream.	value := RsrDateAndTime fromMicroseconds: microseconds! !
+decode: aStreamusing: aDecoder	intermediate := aDecoder decodeControlWord: aStream! !
 
 !RsrDateAndTimeReference methodsFor!
-encode: aStreamusing: anEncoder	| microseconds |	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	microseconds := RsrDateAndTime microsecondsSinceEpoch: value.	anEncoder		encodeControlWord: microseconds		onto: aStream! !
+resolve: aConnection	^RsrDateAndTime fromMicroseconds: intermediate! !
+
+!RsrDateAndTimeReference methodsFor!
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate		onto: aStream! !
 
 !RsrArrayReference methodsFor!
-resolve: aConnection	^value collect: [:each | each resolve: aConnection]! !
+resolve: aConnection	^intermediate collect: [:each | each resolve: aConnection]! !
 
 !RsrImmediateReference methodsFor!
 immediateOID	^0! !
 
 !RsrCharacterReference methodsFor!
-typeIdentifier	^5! !
+decode: aStreamusing: aDecoder	intermediate := aDecoder decodeControlWord: aStream! !
 
 !RsrCharacterReference methodsFor!
-decode: aStreamusing: aDecoder	| codePoint |	codePoint := aDecoder decodeControlWord: aStream.	value := Character codePoint: codePoint! !
+resolve: aConnection	^Character codePoint: intermediate! !
 
 !RsrCharacterReference methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value codePoint		onto: aStream! !
+encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate		onto: aStream! !
 
 !RsrProcessModel methodsFor!
 fork: aBlockat: aPriority	^aBlock forkAt: aPriority! !
@@ -689,10 +713,10 @@ intendedConnection	^intendedConnection! !
 intendedConnection: aConnection	intendedConnection := aConnection! !
 
 !RsrValueReference methodsFor!
-resolve: aConnection	^value! !
+resolve: aConnection	^intermediate! !
 
 !RsrValueReference methodsFor!
-value: anObject	value := anObject! !
+intermediate: anObject	"Store the intermediate form of this object"	intermediate := anObject! !
 
 !RsrResumableError methodsFor!
 isResumable	^true! !
@@ -707,13 +731,7 @@ trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
 minimalWait	"Ensure the calling process is not schedulable for a short period of time."	(Delay forMilliseconds: 1) wait! !
 
 !RsrSetReference methodsFor!
-decode: aStreamusing: aDecoder	| size |	size := aDecoder decodeControlWord: aStream.	value :=  (1 to: size) collect: [:i | aDecoder decodeReference: aStream]! !
-
-!RsrSetReference methodsFor!
-resolve: aConnection	| set |	set := Set new.	value do: [:each | set add: (each resolve: aConnection)].	^set! !
-
-!RsrSetReference methodsFor!
-encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: value size		onto: aStream.	value		do:			[:each |			each				encode: aStream				using: anEncoder]! !
+resolve: aConnection	| set |	set := Set new: intermediate size * 2.	intermediate do: [:each | set add: (each resolve: aConnection)].	^set! !
 
 !RsrTrueReference methodsFor!
 resolve: aConnection	^true! !

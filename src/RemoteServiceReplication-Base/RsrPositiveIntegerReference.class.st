@@ -15,7 +15,7 @@ Class {
 }
 
 { #category : 'accessing' }
-RsrPositiveIntegerReference >> typeIdentifier [
+RsrPositiveIntegerReference class >> typeIdentifier [
 
 	^3
 ]

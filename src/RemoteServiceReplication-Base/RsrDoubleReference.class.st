@@ -4,6 +4,14 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'instance creation' }
+RsrDoubleReference class >> from: aFloat [
+
+	| intermediate |
+	intermediate := self convertToBytes: aFloat.
+	^self intermediate: intermediate
+]
+
 { #category : 'accessing' }
 RsrDoubleReference class >> typeIdentifier [
 
@@ -14,22 +22,24 @@ RsrDoubleReference class >> typeIdentifier [
 RsrDoubleReference >> decode: aStream
 using: aDecoder [
 
-	| bytes |
-	bytes := aStream next: 8.
-	value := self convertBytes: bytes
+	intermediate := aStream next: 8
 ]
 
 { #category : 'encoding/decoding' }
 RsrDoubleReference >> encode: aStream
 using: anEncoder [
 
-	| bytes |
-	bytes := self convertToBytes: value.
 	anEncoder
 		encodeControlWord: anEncoder immediateOID
 		onto: aStream.
 	anEncoder
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
-	aStream nextPutAll: bytes
+	aStream nextPutAll: intermediate
+]
+
+{ #category : 'resolving' }
+RsrDoubleReference >> resolve: aConnection [
+
+	^self convertBytes: intermediate
 ]

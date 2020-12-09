@@ -14,13 +14,25 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'instance creation' }
+RsrByteArrayReference class >> from: aByteArray [
+
+	^self intermediate: aByteArray copy
+]
+
+{ #category : 'accessing' }
+RsrByteArrayReference class >> typeIdentifier [
+
+	^10
+]
+
 { #category : 'encoding/decoding' }
 RsrByteArrayReference >> decode: aStream
 using: aDecoder [
 
 	| length |
 	length := aDecoder decodeControlWord: aStream.
-	value := aStream next: length
+	intermediate := aStream next: length
 ]
 
 { #category : 'encoding/decoding' }
@@ -34,13 +46,7 @@ using: anEncoder [
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
 	anEncoder
-		encodeControlWord: value size
+		encodeControlWord: intermediate size
 		onto: aStream.
-	aStream nextPutAll: value
-]
-
-{ #category : 'accessing' }
-RsrByteArrayReference >> typeIdentifier [
-
-	^10
+	aStream nextPutAll: intermediate
 ]

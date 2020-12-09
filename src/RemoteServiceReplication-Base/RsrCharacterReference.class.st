@@ -14,13 +14,23 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
+{ #category : 'instance creation' }
+RsrCharacterReference class >> from: aCharacter [
+
+	^self intermediate: aCharacter codePoint
+]
+
+{ #category : 'accessing' }
+RsrCharacterReference class >> typeIdentifier [
+
+	^5
+]
+
 { #category : 'encoding/decoding' }
 RsrCharacterReference >> decode: aStream
 using: aDecoder [
 
-	| codePoint |
-	codePoint := aDecoder decodeControlWord: aStream.
-	value := Character codePoint: codePoint
+	intermediate := aDecoder decodeControlWord: aStream
 ]
 
 { #category : 'encoding/decoding' }
@@ -34,12 +44,12 @@ using: anEncoder [
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
 	anEncoder
-		encodeControlWord: value codePoint
+		encodeControlWord: intermediate
 		onto: aStream
 ]
 
-{ #category : 'accessing' }
-RsrCharacterReference >> typeIdentifier [
+{ #category : 'resolving' }
+RsrCharacterReference >> resolve: aConnection [
 
-	^5
+	^Character codePoint: intermediate
 ]

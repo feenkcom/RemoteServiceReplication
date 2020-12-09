@@ -1,13 +1,13 @@
 Extension { #name : 'RsrCharacterArrayReference' }
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrCharacterArrayReference >> convertBytes: aByteArray [
+RsrCharacterArrayReference class >> convertToBytes: aCharacterArray [
 
-	^aByteArray decodeFromUTF8ToString
+	^aCharacterArray encodeAsUTF8
 ]
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrCharacterArrayReference >> convertToBytes: aCharacterArray [
+RsrCharacterArrayReference >> convertBytes: aByteArray [
 
-	^aCharacterArray encodeAsUTF8
+	^aByteArray decodeFromUTF8ToString
 ]

@@ -203,7 +203,7 @@ RsrServiceSnapshot >> targetClassName [
 { #category : 'other' }
 RsrServiceSnapshot >> targetClassNameReference [
 
-	^RsrSymbolReference symbol: self targetClassName
+	^RsrSymbolReference from: self targetClassName
 ]
 
 { #category : 'accessing' }

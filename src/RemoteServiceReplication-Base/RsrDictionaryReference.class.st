@@ -32,7 +32,7 @@ RsrDictionaryReference class >> from: aDictionary [
 			referenceStream
 				nextPut: (RsrReference from: key);
 				nextPut: (RsrReference from: value)].
-	^self value: referenceStream contents
+	^self intermediate: referenceStream contents
 ]
 
 { #category : 'accessing' }
@@ -47,7 +47,7 @@ using: aDecoder [
 
 	| size |
 	size := aDecoder decodeControlWord: aStream.
-	value := (1 to: size * 2) collect: [:each | aDecoder decodeReference: aStream]
+	intermediate := (1 to: size * 2) collect: [:each | aDecoder decodeReference: aStream]
 ]
 
 { #category : 'encoding/decoding' }
@@ -61,17 +61,17 @@ using: anEncoder [
 		encodeControlWord: self typeIdentifier
 		onto: aStream.
 	anEncoder
-		encodeControlWord: value size / 2
+		encodeControlWord: intermediate size / 2
 		onto: aStream.
-	value do: [:each | each encode: aStream using: anEncoder]
+	intermediate do: [:each | each encode: aStream using: anEncoder]
 ]
 
 { #category : 'resolving' }
 RsrDictionaryReference >> resolve: aConnection [
 
 	| stream numEntries dictionary |
-	stream := ReadStream on: value.
-	numEntries := value size / 2.
+	stream := ReadStream on: intermediate.
+	numEntries := intermediate size / 2.
 	dictionary := Dictionary new: numEntries.
 	numEntries
 		timesRepeat:

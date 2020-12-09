@@ -1,6 +1,12 @@
 Extension { #name : 'RsrDoubleReference' }
 
 { #category : '*remoteservicereplication-gemstone' }
+RsrDoubleReference class >> convertToBytes: aFloat [
+
+	^(aFloat _asFloat shallowCopy changeClassTo: ByteArray) reversed
+]
+
+{ #category : '*remoteservicereplication-gemstone' }
 RsrDoubleReference class >> infinity [
 
 	^Float fromString: 'Infinity'
@@ -16,10 +22,4 @@ RsrDoubleReference class >> nan [
 RsrDoubleReference >> convertBytes: aByteArray [
 
 	^(aByteArray reversed changeClassTo: Float) * 1.0.
-]
-
-{ #category : '*remoteservicereplication-gemstone' }
-RsrDoubleReference >> convertToBytes: aFloat [
-
-	^(aFloat _asFloat shallowCopy changeClassTo: ByteArray) reversed
 ]

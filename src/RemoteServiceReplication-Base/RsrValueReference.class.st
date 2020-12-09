@@ -11,33 +11,28 @@ Class {
 	#name : 'RsrValueReference',
 	#superclass : 'RsrImmediateReference',
 	#instVars : [
-		'value'
+		'intermediate'
 	],
 	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }
-RsrValueReference class >> from: anObject [
-
-	^self value: anObject
-]
-
-{ #category : 'instance creation' }
-RsrValueReference class >> value: anObject [
+RsrValueReference class >> intermediate: anObject [
 
 	^self new
-		value: anObject;
+		intermediate: anObject;
 		yourself
+]
+
+{ #category : 'private-accessing' }
+RsrValueReference >> intermediate: anObject [
+	"Store the intermediate form of this object"
+
+	intermediate := anObject
 ]
 
 { #category : 'resolving' }
 RsrValueReference >> resolve: aConnection [
 
-	^value
-]
-
-{ #category : 'private-accessing' }
-RsrValueReference >> value: anObject [
-
-	value := anObject
+	^intermediate
 ]

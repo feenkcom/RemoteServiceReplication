@@ -7,7 +7,7 @@ RsrCharacterArrayReference >> convertBytes: aByteArray [
 ]
 
 { #category : '*RemoteServiceReplication-Pharo' }
-RsrCharacterArrayReference >> convertToBytes: aCharacterArray [
+RsrCharacterArrayReference class >> convertToBytes: aCharacterArray [
 
 	^aCharacterArray utf8Encoded
 

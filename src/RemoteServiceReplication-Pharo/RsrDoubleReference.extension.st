@@ -9,7 +9,7 @@ RsrDoubleReference >> convertBytes: bytes [
 ]
 
 { #category : '*RemoteServiceReplication-Pharo' }
-RsrDoubleReference >> convertToBytes: aFloat [
+RsrDoubleReference class >> convertToBytes: aFloat [
 
 	| bytes |
 	bytes := ByteArray new: 8.

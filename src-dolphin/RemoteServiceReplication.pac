@@ -1229,7 +1229,7 @@ snapshotIdentifier	^0! !
 sid: aServiceID	sid := aServiceID! !
 
 !RsrServiceSnapshot methodsFor!
-targetClassNameReference	^RsrSymbolReference symbol: self targetClassName! !
+targetClassNameReference	^RsrSymbolReference from: self targetClassName! !
 
 !RsrServiceSnapshot methodsFor!
 targetServiceType	^self targetClass isClientClass		ifTrue: [#client]		ifFalse: [#server]! !
