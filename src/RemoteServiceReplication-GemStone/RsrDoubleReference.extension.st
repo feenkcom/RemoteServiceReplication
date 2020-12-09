@@ -1,27 +1,15 @@
 Extension { #name : 'RsrDoubleReference' }
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrDoubleReference class >> negativeInfinity [
-
-	^Float fromString: '-Infinity'
-]
-
-{ #category : '*remoteservicereplication-gemstone' }
-RsrDoubleReference class >> negativeNan [
-
-	^Float fromString: '-NaN'
-]
-
-{ #category : '*remoteservicereplication-gemstone' }
-RsrDoubleReference class >> positiveInfinity [
+RsrDoubleReference class >> infinity [
 
 	^Float fromString: 'Infinity'
 ]
 
 { #category : '*remoteservicereplication-gemstone' }
-RsrDoubleReference class >> positiveNan [
+RsrDoubleReference class >> nan [
 
-	^Float fromString: 'NaN'
+	^Float fromString: '-NaN'
 ]
 
 { #category : '*remoteservicereplication-gemstone' }

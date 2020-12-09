@@ -50,20 +50,14 @@ RsrEncoderTest >> testDeliverResponse [
 RsrEncoderTest >> testNaN [
 
 	| encoding |
-	"Signaling NaN is not tested."
-	encoding :=
-		#[0 0 0 0 0 0 0 0],
-		#[0 0 0 0 0 0 0 15],
-		#[127 248 0 0 0 0 0 0].
-	self
-		verifyImmediate: RsrDoubleReference positiveNan
-		encoding: encoding.
+	"Signaling NaN is not tested.
+	Negative NaN is not tested."
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 15],
 		#[255 248 0 0 0 0 0 0].
 	self
-		verifyImmediate: RsrDoubleReference negativeNan
+		verifyImmediate: RsrDoubleReference nan
 		encoding: encoding.
 ]
 

@@ -372,21 +372,13 @@ RsrCodecTest >> testDouble [
 	self
 		verifyImmediate: -0.1
 		encoding: encoding.
-	"Infinity"
 	encoding :=
 		#[0 0 0 0 0 0 0 0],
 		#[0 0 0 0 0 0 0 15],
 		#[127 240 0 0 0 0 0 0].
 	self
-		verifyImmediate: RsrDoubleReference positiveInfinity
-		encoding: encoding.
-	encoding :=
-		#[0 0 0 0 0 0 0 0],
-		#[0 0 0 0 0 0 0 15],
-		#[255 240 0 0 0 0 0 0].
-	self
-		verifyImmediate: RsrDoubleReference negativeInfinity
-		encoding: encoding.
+		verifyImmediate: RsrDoubleReference infinity
+		encoding: encoding
 ]
 
 { #category : 'running-immediates' }
