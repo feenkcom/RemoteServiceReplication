@@ -28,3 +28,9 @@ BaselineOfRemoteServiceReplication >> baseline: spec [
 		group: 'Core' with: #('RemoteServiceReplication');
 		group: 'Tests' with: #('RemoteServiceReplication-Test')
 ]
+
+{ #category : 'accessing' }
+BaselineOfRemoteServiceReplication >> projectClass [
+	Smalltalk at: #'MetacelloCypressBaselineProject' ifPresent: [ :cl | ^ cl ].
+	^ super projectClass
+]
