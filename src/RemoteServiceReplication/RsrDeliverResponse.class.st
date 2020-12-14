@@ -51,7 +51,7 @@ RsrDeliverResponse >> executeFor: aConnection [
 		ifTrue: [pendingMessage promise fulfill: result last]
 		ifFalse: [pendingMessage promise break: result last]]
 		on: Error
-		do: [:ex | pendingMessage promise break: (RsrDecodingRaisedException exception: Exception)]
+		do: [:ex | pendingMessage promise break: (RsrDecodingRaisedException exception: ex)]
 ]
 
 { #category : 'reporting' }

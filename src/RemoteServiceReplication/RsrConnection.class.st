@@ -67,10 +67,16 @@ oidSpigot: anOidSpigot [
 { #category : 'private-service management' }
 RsrConnection >> _ensureRegistered: aService [
 
-	aService _connection == nil
-		ifTrue: [^self _register: aService as: oidSpigot next].
-	aService _connection == self
-		ifFalse: [^RsrAlreadyRegistered signalService: aService intendedConnection: self]
+	aService _connection == nil ifTrue: [ 
+		| newOid |
+		newOid := oidSpigot next.
+		self log trace: 'Assigning OID: ' , newOid printString , ' to a '
+			, aService class name.
+		^ self _register: aService as: oidSpigot next ].
+	aService _connection == self ifFalse: [ 
+		^ RsrAlreadyRegistered
+			  signalService: aService
+			  intendedConnection: self ]
 ]
 
 { #category : 'private-accessing' }
