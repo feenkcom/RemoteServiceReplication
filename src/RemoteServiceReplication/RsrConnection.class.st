@@ -72,7 +72,7 @@ RsrConnection >> _ensureRegistered: aService [
 		newOid := oidSpigot next.
 		self log trace: 'Assigning OID: ' , newOid printString , ' to a '
 			, aService class name.
-		^ self _register: aService as: oidSpigot next ].
+		^ self _register: aService as: newOid ].
 	aService _connection == self ifFalse: [ 
 		^ RsrAlreadyRegistered
 			  signalService: aService
