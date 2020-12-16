@@ -41,11 +41,12 @@ using: anEncoder [
 { #category : 'executing' }
 RsrDeliverResponse >> executeFor: aConnection [
 
-	| pendingMessage result |
+	| pendingMessage result strongServices |
 	pendingMessage := aConnection pendingMessages
 		removeKey: self transaction
 		ifAbsent: [^self reportUnknownTransactionIn: aConnection].
-	[self snapshots do: [:each | each reifyIn: aConnection].
+	"Must keep a strong reference to each service until we're sure a parent service is reified"
+	[strongServices := self snapshots collect: [:each | each reifyIn: aConnection].
 	result := self responseReference resolve: aConnection.
 	result first == #fulfill
 		ifTrue: [pendingMessage promise fulfill: result last]

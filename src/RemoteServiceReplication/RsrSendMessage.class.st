@@ -57,11 +57,12 @@ using: anEncoder [
 { #category : 'executing' }
 RsrSendMessage >> executeFor: aConnection [
 
-	| resolver services receiver selector arguments messageSend |
+	| resolver strongServices receiver selector arguments messageSend |
 	resolver := RsrRemotePromiseResolver
 		for: self
 		over: aConnection.
-	[[services := self snapshots collect: [:each | each reifyIn: aConnection].
+	"Must keep a strong reference to each service until we're sure a parent service is reified"
+	[[strongServices := self snapshots collect: [:each | each reifyIn: aConnection].
 	receiver := self receiverReference resolve: aConnection.
 	selector := self selectorReference resolve: aConnection.
 	arguments := self argumentReferences collect: [:each | each resolve: aConnection].
