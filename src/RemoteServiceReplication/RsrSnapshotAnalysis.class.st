@@ -11,8 +11,8 @@ Class {
 	#instVars : [
 		'roots',
 		'snapshots',
-		'inFlight',
-		'connection'
+		'connection',
+		'snapshottedSids'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -68,13 +68,15 @@ RsrSnapshotAnalysis >> analyzeImmediate: anImmediateObject [
 { #category : 'analyzing' }
 RsrSnapshotAnalysis >> analyzeService: aService [
 
+	| sid |
 	self ensureRegistered: aService.
-	self
-		analyzing: aService
-		during:
-			[RsrServiceSnapshot
-				reflectedVariablesFor: aService
-				do: [:each | self analyze: each]].
+	sid := aService _id.
+	(snapshottedSids includes: sid) ifTrue: [ ^ self ].
+	snapshottedSids add: aService _id.
+	self analyzing: aService during: [ 
+		RsrServiceSnapshot
+			reflectedVariablesFor: aService
+			do: [ :each | self analyze: each ] ].
 	snapshots add: (RsrServiceSnapshot from: aService)
 ]
 
@@ -82,11 +84,11 @@ RsrSnapshotAnalysis >> analyzeService: aService [
 RsrSnapshotAnalysis >> analyzing: anObject
 during: aBlock [
 
-	(inFlight includes: anObject)
+	(snapshottedSids includes: anObject)
 		ifTrue: [^RsrCycleDetected signal: anObject].
-	inFlight add: anObject.
+	snapshottedSids add: anObject.
 	aBlock value.
-	inFlight remove: anObject
+	snapshottedSids remove: anObject
 ]
 
 { #category : 'accessing' }
@@ -114,7 +116,7 @@ RsrSnapshotAnalysis >> initialize [
 
 	super initialize.
 	snapshots := OrderedCollection new.
-	inFlight := IdentitySet new
+	snapshottedSids := Set new
 ]
 
 { #category : 'actions' }

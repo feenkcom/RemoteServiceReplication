@@ -86,6 +86,25 @@ RsrSnapshotAnalysisTest >> testDictionaryCycle [
 ]
 
 { #category : 'running' }
+RsrSnapshotAnalysisTest >> testMultiPathsToSameService [
+
+	"Tests issue 76, Unnecessary duplicate snapshots being sent."
+
+	| childService parentService orderedCollection analysis |
+	childService := RsrRemoteAction clientClass new.
+	parentService := RsrRemoteAction clientClass sharedVariable:
+		                 childService.
+	orderedCollection := OrderedCollection
+		                     with: childService
+		                     with: parentService.
+	analysis := self analyze: orderedCollection.
+	self assert: analysis snapshots size equals: 2.
+	self
+		assert: parentService isMirrored;
+		assert: childService isMirrored
+]
+
+{ #category : 'running' }
 RsrSnapshotAnalysisTest >> testNewServiceInArray [
 	"Ensure a new service in a collection is properly tagged"
 
