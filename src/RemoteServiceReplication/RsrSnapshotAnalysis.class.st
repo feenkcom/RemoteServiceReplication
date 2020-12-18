@@ -12,7 +12,7 @@ Class {
 		'roots',
 		'snapshots',
 		'connection',
-		'snapshottedSids'
+		'analyzedObjects'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -30,9 +30,9 @@ connection: aConnection [
 { #category : 'analyzing' }
 RsrSnapshotAnalysis >> analyze: anObject [
 
-	^(self referenceClassFor: anObject)
-		analyze: anObject
-		using: self
+	(analyzedObjects includes: anObject) ifTrue: [ ^ self ].
+	analyzedObjects add: anObject.
+	^ (self referenceClassFor: anObject) analyze: anObject using: self
 ]
 
 { #category : 'analyzing' }
@@ -61,27 +61,17 @@ RsrSnapshotAnalysis >> analyzeImmediate: anImmediateObject [
 { #category : 'analyzing' }
 RsrSnapshotAnalysis >> analyzeService: aService [
 
-	| sid |
 	self ensureRegistered: aService.
-	sid := aService _id.
-	(snapshottedSids includes: sid) ifTrue: [ ^ self ].
-
-	snapshottedSids add: aService _id.
 	RsrServiceSnapshot
 		reflectedVariablesFor: aService
 		do: [ :each | self analyze: each ].
 	snapshots add: (RsrServiceSnapshot from: aService)
 ]
 
-{ #category : 'analyzing' }
-RsrSnapshotAnalysis >> analyzing: anObject
-during: aBlock [
+{ #category : 'accessing' }
+RsrSnapshotAnalysis >> analyzedObjects [
 
-	(snapshottedSids includes: anObject)
-		ifTrue: [^RsrCycleDetected signal: anObject].
-	snapshottedSids add: anObject.
-	aBlock value.
-	snapshottedSids remove: anObject
+	^ analyzedObjects
 ]
 
 { #category : 'accessing' }
@@ -109,7 +99,7 @@ RsrSnapshotAnalysis >> initialize [
 
 	super initialize.
 	snapshots := OrderedCollection new.
-	snapshottedSids := Set new
+	analyzedObjects := IdentitySet new
 ]
 
 { #category : 'actions' }
