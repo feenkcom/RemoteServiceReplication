@@ -38,25 +38,18 @@ RsrSnapshotAnalysis >> analyze: anObject [
 { #category : 'analyzing' }
 RsrSnapshotAnalysis >> analyzeCollection: aCollection [
 
-	self
-		analyzing: aCollection
-		during: [aCollection do: [:each | self analyze: each]].
-	^aCollection
+	aCollection do: [ :each | self analyze: each ].
+	^ aCollection
 ]
 
 { #category : 'analyzing' }
 RsrSnapshotAnalysis >> analyzeDictionary: aDictionary [
 
-	self
-		analyzing: aDictionary
-		during:
-			[aDictionary
-				keysAndValuesDo:
-					[:key :value |
-					self
-						analyze: key;
-						analyze: value]].
-	^aDictionary
+	aDictionary keysAndValuesDo: [ :key :value | 
+		self
+			analyze: key;
+			analyze: value ].
+	^ aDictionary
 ]
 
 { #category : 'analyzing' }
@@ -72,11 +65,11 @@ RsrSnapshotAnalysis >> analyzeService: aService [
 	self ensureRegistered: aService.
 	sid := aService _id.
 	(snapshottedSids includes: sid) ifTrue: [ ^ self ].
+
 	snapshottedSids add: aService _id.
-	self analyzing: aService during: [ 
-		RsrServiceSnapshot
-			reflectedVariablesFor: aService
-			do: [ :each | self analyze: each ] ].
+	RsrServiceSnapshot
+		reflectedVariablesFor: aService
+		do: [ :each | self analyze: each ].
 	snapshots add: (RsrServiceSnapshot from: aService)
 ]
 
