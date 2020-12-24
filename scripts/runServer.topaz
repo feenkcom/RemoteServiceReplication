@@ -5,7 +5,7 @@ exec
 	GsFile gciLogClient: '==============================================================='.
 	spec := RsrAcceptConnection port: 29299.
 	connection := spec waitForConnection.
-	connection log addSink: (RsrCustomSink action: [:string | GsFile gciLogClient: string]).
+	"connection log addSink: (RsrCustomSink action: [:string | GsFile gciLogClient: string])."
 	connection waitUntilClose.
 	GsFile gciLogClient: '==============================================================='.
 	GsFile gciLogClient: 'Connection closed!'.
