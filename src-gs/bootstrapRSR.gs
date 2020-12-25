@@ -4422,6 +4422,20 @@ messageText: aString
 	messageText := aString
 %
 
+category: 'printing'
+method: RsrRemoteException
+printOn: aStream
+
+	aStream
+		nextPutAll: exceptionClassName;
+		cr;
+		nextPutAll: messageText;
+		cr;
+		nextPutAll: '===================';
+		cr;
+		nextPutAll: stack
+%
+
 category: 'accessing'
 method: RsrRemoteException
 stack
@@ -6066,7 +6080,9 @@ executeFor: aConnection
 		ifTrue: [ pendingMessage promise fulfill: result last ]
 		ifFalse: [ pendingMessage promise break: result last ] ]
 		on: Error
-		do: [:ex | pendingMessage promise break: (RsrDecodingRaisedException exception: ex)]
+		do: [ :ex | 
+			pendingMessage promise break:
+				(RsrDecodingRaisedException exception: ex) ]
 %
 
 category: 'reporting'
@@ -6606,16 +6622,10 @@ category: 'private-service management'
 method: RsrConnection
 _ensureRegistered: aService
 
-	aService _connection == nil ifTrue: [ 
-		| newOid |
-		newOid := oidSpigot next.
-		self log trace: 'Assigning OID: ' , newOid printString , ' to a '
-			, aService class name.
-		^ self _register: aService as: newOid ].
-	aService _connection == self ifFalse: [ 
-		^ RsrAlreadyRegistered
-			  signalService: aService
-			  intendedConnection: self ]
+	aService _connection == nil
+		ifTrue: [^self _register: aService as: oidSpigot next].
+	aService _connection == self
+		ifFalse: [^RsrAlreadyRegistered signalService: aService intendedConnection: self]
 %
 
 category: 'private-accessing'
