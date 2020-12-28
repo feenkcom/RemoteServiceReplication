@@ -13,7 +13,11 @@ RsrServiceTest class >> isAbstract [
 { #category : 'running-utilities' }
 RsrServiceTest >> mirror: aService [
 
-	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
+	| client |
+	client := RsrClientNoInstVars new
+		registerWith: connectionA;
+		yourself.
+	^client sendReturnArgument: aService
 ]
 
 { #category : 'running' }
@@ -38,8 +42,9 @@ RsrServiceTest >> testAnalyzeServiceRegisteredWithDifferentConnection [
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	service1 := connectionB serviceAt: client _id.
 	self mirror: client.
 	service2 := connectionB serviceAt: client _id.
@@ -88,8 +93,9 @@ RsrServiceTest >> testMessageDispatchedConcurrentlyToSingleService [
 	"Ensure all messages are sent concurrently (including those sent to a single service)"
 
 	| client server counter promise1 promise2 |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	counter := 0.
 	server action: [counter := counter + 1. self shortWait. counter].
@@ -108,10 +114,12 @@ RsrServiceTest >> testMessagesDispactchedConcurrentlyForMultipleServices [
 	"Ensure messages are dispatched concurrently"
 
 	| client1 server1 client2 server2 semaphore expected1 expected2 promise1 promise2 |
-	client1 := connectionA serviceFor: #RsrRemoteAction.
-	client2 := connectionA serviceFor: #RsrRemoteAction.
-	client1 synchronize.
-	client2 synchronize.
+	client1 := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
+	client2 := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server1 := connectionB serviceAt: client1 _id.
 	server2 := connectionB serviceAt: client2 _id.
 	semaphore := Semaphore new.
@@ -137,7 +145,9 @@ RsrServiceTest >> testMessagesDispactchedConcurrentlyForMultipleServices [
 RsrServiceTest >> testPrePostUpdate [
 
 	| client server | 
-	client := connectionA serviceFor: #RsrInstrumentedServer.
+	client := RsrInstrumentedClient new
+		registerWith: connectionA;
+		yourself.
 	self
 		assert: client preUpdateCount
 		equals: 0.
@@ -177,8 +187,9 @@ RsrServiceTest >> testPrePostUpdate [
 RsrServiceTest >> testReflectedVariableNames [
 
 	| client server clientNames serverNames |
-	client := connectionA serviceFor: #RsrTestService.
-	client synchronize.
+	client := RsrClientTestService new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	clientNames := RsrServiceSnapshot reflectedVariablesFor: client.
 	serverNames := RsrServiceSnapshot reflectedVariablesFor: server.
@@ -191,8 +202,9 @@ RsrServiceTest >> testReflectedVariableNames [
 	self
 		assert: (clientNames at: 1) asSymbol
 		equals: #sharedVariable.
-	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.
-	client synchronize.
+	client := RsrReflectedVariableTestClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	clientNames := RsrServiceSnapshot reflectedVariablesFor: client.
 	serverNames := RsrServiceSnapshot reflectedVariablesFor: server.

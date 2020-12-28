@@ -305,16 +305,6 @@ ifAbsent: aBlock [
 		ifNotNil: [:service | service]
 ]
 
-{ #category : 'public-service factory' }
-RsrConnection >> serviceFor: aResponsibility [
-
-	| abstractClass instance |
-	abstractClass := RsrClassResolver classNamed: aResponsibility.
-	instance := abstractClass clientClass new.
-	instance registerWith: self.
-	^instance
-]
-
 { #category : 'public-accessing' }
 RsrConnection >> specification [
 	"Returns the Specification used to create this Connection.
