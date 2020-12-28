@@ -18,7 +18,6 @@ package classNames
 	add: #RsrPendingMessage;
 	add: #RsrCommandSink;
 	add: #RsrMessagingCommand;
-	add: #RsrServiceFactoryServer;
 	add: #RsrLogSink;
 	add: #RsrSendMessage;
 	add: #RsrServiceSnapshot;
@@ -39,7 +38,6 @@ package classNames
 	add: #RsrSnapshotAnalysis;
 	add: #RsrCodec;
 	add: #RsrNumericSpigot;
-	add: #RsrServiceFactory;
 	add: #RsrDispatchQueue;
 	add: #RsrDeliverResponse;
 	add: #RsrPromiseResolutionAction;
@@ -50,12 +48,11 @@ package classNames
 	add: #RsrTranscriptSink;
 	add: #RsrInternalSocketConnectionSpecification;
 	add: #RsrConnectionSpecification;
-	add: #RsrSocketChannelLoop;
 	add: #RsrRemoteError;
+	add: #RsrSocketChannelLoop;
 	add: #RsrDecoder;
 	add: #RsrThreadSafeNumericSpigot;
 	add: #RsrDecodingRaisedException;
-	add: #RsrServiceFactoryClient;
 	yourself.
 
 package methodNames
@@ -114,7 +111,7 @@ RsrCommand comment: 'No class-specific documentation for RsrCommand, hierarchy i
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages serviceFactory closeSemaphore specification'
+	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages closeSemaphore specification'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -375,14 +372,6 @@ RsrCommand
 RsrReleaseServices comment: 'No class-specific documentation for RsrReleaseServices, hierarchy is:Object  RsrObject    RsrCommand( encoding)      RsrReleaseServices( oids)'!
 !RsrReleaseServices categoriesForClass!RemoteServiceReplication! !
 
-RsrService
-	subclass: #RsrServiceFactory
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrServiceFactory categoriesForClass!RemoteServiceReplication! !
-
 RsrChannel
 	subclass: #RsrSocketChannel
 	instanceVariableNames: 'sink source socket stream'
@@ -485,22 +474,6 @@ RsrMessagingCommand
 RsrSendMessage comment: 'No class-specific documentation for RsrSendMessage, hierarchy is:Object  RsrObject    RsrCommand( encoding)      RsrSendMessage( transaction receiver selector arguments retainList)'!
 !RsrSendMessage categoriesForClass!RemoteServiceReplication! !
 
-RsrServiceFactory
-	subclass: #RsrServiceFactoryClient
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrServiceFactoryClient categoriesForClass!RemoteServiceReplication! !
-
-RsrServiceFactory
-	subclass: #RsrServiceFactoryServer
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrServiceFactoryServer categoriesForClass!RemoteServiceReplication! !
-
 RsrRemoteException
 	subclass: #RsrRemoteExceptionClient
 	instanceVariableNames: ''
@@ -546,9 +519,6 @@ from: anException	| tag |	tag := anException tag		ifNotNil:			[[anException
 
 !RsrDeliverResponse class methodsFor!
 transaction: aTransactionIdresponseReference: aReferencesnapshots: anArrayOfSnapshots	^self new		transaction: aTransactionId;		responseReference: aReference;		snapshots: anArrayOfSnapshots;		yourself! !
-
-!RsrServiceFactory class methodsFor!
-templateClassName	^#RsrServiceFactory! !
 
 !RsrSocketChannelLoop class methodsFor!
 on: aChannel	^self new		channel: aChannel;		yourself! !
@@ -769,12 +739,6 @@ chunkSize	"The largest size that should be read from or written to a Socket in 
 !RsrSocketStream methodsFor!
 atEnd	"Return whether additional bytes could become available on the socket."	^socket isConnected not! !
 
-!RsrServiceFactoryServer methodsFor!
-create: aResponsibility	| abstractClass |	abstractClass := RsrClassResolver classNamed: aResponsibility.	^abstractClass serverClass new! !
-
-!RsrServiceFactoryServer methodsFor!
-mirror: aService	^aService! !
-
 !RsrDecodingRaisedException methodsFor!
 exception	^exception! !
 
@@ -840,12 +804,6 @@ binary	stream binary! !
 
 !RsrStream methodsFor!
 stream: aStream	stream := aStream! !
-
-!RsrServiceFactoryClient methodsFor!
-mirror: aService	^remoteSelf mirror: aService! !
-
-!RsrServiceFactoryClient methodsFor!
-serviceFor: aResponsibility	| abstractClass instance |	abstractClass := RsrClassResolver classNamed: aResponsibility.	instance := abstractClass clientClass new.	instance registerWith: _connection.	^instance! !
 
 !RsrLogWithPrefix methodsFor!
 prefix	^prefix! !
@@ -1271,10 +1229,7 @@ isRunning	^isRunning! !
 serviceAt: aSIDifAbsent: aBlock	"Return the service associated with the provided SID."	| entry |	entry := registry at: aSID ifAbsent: [nil].	"Ensure we do not hold the lock for long."	entry == nil		ifTrue: [^aBlock value].	"The Service may have been garbage collected but	the entry may not yet be removed. Ensure we	evaluate the block in that case as well."	^entry service		ifNil: aBlock		ifNotNil: [:service | service]! !
 
 !RsrConnection methodsFor!
-serviceFor: aResponsibility	^self serviceFactory serviceFor: aResponsibility! !
-
-!RsrConnection methodsFor!
-close	| pm temp |	channel close.	dispatchQueue stop.	temp := Dictionary new.	pm := pendingMessages.	pendingMessages := temp.	pm do: [:each | each promise break: RsrConnectionClosed new].	registry := RsrThreadSafeDictionary new.	serviceFactory := nil.	closeSemaphore signal! !
+close	| pm temp |	channel close.	dispatchQueue stop.	temp := Dictionary new.	pm := pendingMessages.	pendingMessages := temp.	pm do: [:each | each promise break: RsrConnectionClosed new].	registry := RsrThreadSafeDictionary new.	closeSemaphore signal! !
 
 !RsrConnection methodsFor!
 log	^log! !
@@ -1328,9 +1283,6 @@ unknownError: anException	self close! !
 specification	"Returns the Specification used to create this Connection.	If the Connection was not create using a Specification, returns nil."	^specification! !
 
 !RsrConnection methodsFor!
-initializeServiceFactory	| instance |	instance := RsrServiceFactory clientClass new.	self _ensureRegistered: instance.	serviceFactory := instance.	^serviceFactory! !
-
-!RsrConnection methodsFor!
 _sendCommand: aCommand	"Send the provided Command to our peer."	channel send: aCommand! !
 
 !RsrConnection methodsFor!
@@ -1347,9 +1299,6 @@ releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace
 
 !RsrConnection methodsFor!
 _forwarderClass	^RsrForwarder! !
-
-!RsrConnection methodsFor!
-serviceFactory	^serviceFactory ifNil: [self initializeServiceFactory]! !
 
 !RsrConnection methodsFor!
 open	dispatchQueue start.	channel open! !
