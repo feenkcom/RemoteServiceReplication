@@ -732,7 +732,7 @@ serverClassName	^#RsrServerNoInstVars! !
 isAbstract	^self == RsrStressTest! !
 
 !RsrStressTest class methodsFor!
-defaultTimeLimit	^20 seconds! !
+defaultTimeLimit	^30 seconds! !
 
 !RsrForwarderTest methodsFor!
 testForwarding	"This test needs to be improved. It is out of sync."	| service id connection forwarder sendMessage |	service := RsrTestService clientClass new.	id := 1.	connection := RsrConnection		channel: RsrNullChannel new		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connection open.	service registerWith: connection.	forwarder := service remoteSelf.	forwarder		arg1: 15		arg2: 42.	sendMessage := connection channel lastCommand.	self		assert: sendMessage transaction		equals: 1.	self		assert: (sendMessage receiverReference resolve: connection)		equals: service.	self		assert: (sendMessage selectorReference resolve: connection)		equals: #arg1:arg2:.	self		assert: (sendMessage argumentReferences collect: [:each | each resolve: connection])		equals: #(15 42).! !
@@ -786,7 +786,7 @@ client	^client! !
 testConcurrent1KBytes	self concurrentlyRun: [self client value: (ByteArray new: 1024)]! !
 
 !RsrStressTest methodsFor!
-repeatedlySend: anObject	self repeatedlyRun: [self client value: anObject]! !
+repeatedlySend: anObject	self repeatedlyRun: [self send: anObject]! !
 
 !RsrStressTest methodsFor!
 repeatedlyRun: aBlock	self repetitions timesRepeat: aBlock! !
@@ -804,7 +804,13 @@ testConcurrentBasicSends	self concurrentlyRun: [self client value: nil]! !
 initializeServices	client := connectionA serviceFor: #RsrRemoteAction.	client synchronize.	server := connectionB serviceAt: client _id.	server action: [:x | x]! !
 
 !RsrStressTest methodsFor!
+test10MBytes	| bytes |	bytes := ByteArray new: 1024 * 1024 * 10.	50 timesRepeat: [self send: bytes]! !
+
+!RsrStressTest methodsFor!
 test2KBytes	self repeatedlySend: (ByteArray new: 1024 *2)! !
+
+!RsrStressTest methodsFor!
+send: anObject	self client value: anObject! !
 
 !RsrStressTest methodsFor!
 test1KBytes	self repeatedlySend: (ByteArray new: 1024)! !

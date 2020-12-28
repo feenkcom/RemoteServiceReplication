@@ -11,7 +11,7 @@ Class {
 { #category : 'accessing' }
 RsrStressTest class >> defaultTimeLimit [
 
-	^20 seconds
+	^30 seconds
 ]
 
 { #category : 'testing' }
@@ -67,13 +67,19 @@ RsrStressTest >> repeatedlyRun: aBlock [
 { #category : 'running-utilities' }
 RsrStressTest >> repeatedlySend: anObject [
 
-	self repeatedlyRun: [self client value: anObject]
+	self repeatedlyRun: [self send: anObject]
 ]
 
 { #category : 'accessing' }
 RsrStressTest >> repetitions [
 
 	^1000
+]
+
+{ #category : 'running-utilities' }
+RsrStressTest >> send: anObject [
+
+	self client value: anObject
 ]
 
 { #category : 'accessing' }
@@ -96,6 +102,14 @@ RsrStressTest >> tearDown [
 
 	self cleanupServices.
 	super tearDown
+]
+
+{ #category : 'running' }
+RsrStressTest >> test10MBytes [
+
+	| bytes |
+	bytes := ByteArray new: 1024 * 1024 * 10.
+	50 timesRepeat: [self send: bytes]
 ]
 
 { #category : 'running' }

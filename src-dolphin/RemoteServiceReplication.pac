@@ -1415,7 +1415,7 @@ response	^self responseReference! !
 responseReference	^responseReference! !
 
 !RsrDeliverResponse methodsFor!
-executeFor: aConnection	| pendingMessage result servicesStrongly |	pendingMessage := aConnection pendingMessages		                  removeKey: self transaction		                  ifAbsent: [ 		                  ^ self reportUnknownTransactionIn: aConnection ].	"Must keep a strong reference to each service until the roots are referenced."	[ 	servicesStrongly := self reifyAllIn: aConnection.	result := self responseReference resolve: aConnection.	"result should now be the root of the services graph"	servicesStrongly := nil.	result first == #fulfill		ifTrue: [ pendingMessage promise fulfill: result last ]		ifFalse: [ pendingMessage promise break: result last ] ]		on: Error		do: [ :ex | 			pendingMessage promise break:				(RsrDecodingRaisedException exception: Exception) ]! !
+executeFor: aConnection	| pendingMessage result servicesStrongly |	pendingMessage := aConnection pendingMessages		                  removeKey: self transaction		                  ifAbsent: [ 		                  ^ self reportUnknownTransactionIn: aConnection ].	"Must keep a strong reference to each service until the roots are referenced."	[ 	servicesStrongly := self reifyAllIn: aConnection.	result := self responseReference resolve: aConnection.	"result should now be the root of the services graph"	servicesStrongly := nil.	result first == #fulfill		ifTrue: [ pendingMessage promise fulfill: result last ]		ifFalse: [ pendingMessage promise break: result last ] ]		on: Error		do: [ :ex | 			pendingMessage promise break:				(RsrDecodingRaisedException exception: ex) ]! !
 
 !RsrDeliverResponse methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeDeliverResponse: self		onto: aStream! !
@@ -1433,43 +1433,52 @@ responseReference: aReference	responseReference := aReference! !
 reportUnknownTransactionIn: aConnection	aConnection log error: 'Unknown transaction (', self transaction asString, ') while processing Response'! !
 
 !RsrInternalConnectionSpecification methodsFor!
-connectionB	^connectionB! !
+connect	"Establish an internal Connection pair."	self subclassResponsibility! !
 
 !RsrInternalConnectionSpecification methodsFor!
 connectionA	^connectionA! !
 
 !RsrInternalConnectionSpecification methodsFor!
-connect	"Establish an internal Connection pair."	self subclassResponsibility! !
+connectionA: anObject	^ connectionA := anObject! !
 
 !RsrInternalConnectionSpecification methodsFor!
 assertOpen	"Assert that connectionA and connectionB are open.	Signal RsrConnectionFailed if they are not."	(connectionA isOpen and: [connectionB isOpen])		ifFalse: [RsrConnectionFailed signal]! !
 
-!RsrRemoteException methodsFor!
-stack: aString	stack := aString! !
+!RsrInternalConnectionSpecification methodsFor!
+connectionB: anObject	connectionB := anObject! !
+
+!RsrInternalConnectionSpecification methodsFor!
+connectionB	^connectionB! !
 
 !RsrRemoteException methodsFor!
 tag	^tag! !
 
 !RsrRemoteException methodsFor!
-tag: aString	tag := aString! !
+isRemoteException	"This is a RemoteException reason"	^true! !
 
 !RsrRemoteException methodsFor!
 messageText: aString	messageText := aString! !
 
 !RsrRemoteException methodsFor!
+printOn: aStream	aStream		nextPutAll: exceptionClassName;		cr;		nextPutAll: messageText;		cr;		nextPutAll: '===================';		cr;		nextPutAll: stack! !
+
+!RsrRemoteException methodsFor!
+tag: aString	tag := aString! !
+
+!RsrRemoteException methodsFor!
 exceptionClassName	^exceptionClassName! !
-
-!RsrRemoteException methodsFor!
-exceptionClassName: aSymbol	exceptionClassName := aSymbol! !
-
-!RsrRemoteException methodsFor!
-isRemoteException	"This is a RemoteException reason"	^true! !
 
 !RsrRemoteException methodsFor!
 messageText	^messageText! !
 
 !RsrRemoteException methodsFor!
 stack	^stack! !
+
+!RsrRemoteException methodsFor!
+stack: aString	stack := aString! !
+
+!RsrRemoteException methodsFor!
+exceptionClassName: aSymbol	exceptionClassName := aSymbol! !
 
 !RsrChannel methodsFor!
 log	^self connection log! !
