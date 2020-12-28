@@ -35,55 +35,6 @@ RsrServiceTest >> testAnalyzeServiceRegisteredWithDifferentConnection [
 ]
 
 { #category : 'running' }
-RsrServiceTest >> testCreateServiceWithDistinctClientAbstractService [
-
-	| client |
-	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
-	self
-		assert: client class
-		equals: RsrRemoteAction clientClass
-]
-
-{ #category : 'running' }
-RsrServiceTest >> testCreateServiceWithSameClientAbstractService [
-
-	| client server |
-	client := self serviceFactoryA serviceFor: #RsrSameTemplateAndClientService.
-	self
-		assert: client class
-		equals: RsrSameTemplateAndClientService.
-	client synchronize.
-	server := connectionB serviceAt: client _id.
-	self
-		assert: server replicated1
-		equals: nil.
-	self
-		assert: server replicated2
-		equals: nil.
-	client
-		replicated1: 1;
-		replicated2: 2;
-		synchronize.
-	self
-		assert: server replicated1
-		equals: 1.
-	self
-		assert: server replicated2
-		equals: 2.
-	server
-		replicated1: 10;
-		replicated2: 20;
-		private1: 3;
-		synchronize.
-	self
-		assert: client replicated1
-		equals: 10.
-	self
-		assert: client replicated2
-		equals: 20
-]
-
-{ #category : 'running' }
 RsrServiceTest >> testEnsureServersAreCachedAndReused [
 
 	| client service1 service2 |
@@ -276,8 +227,9 @@ RsrServiceTest >> testRegisterWith [
 RsrServiceTest >> testReturnServerWithoutAssociatedClient [
 
 	| client server reason |
-	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrKnownServer new].
 	reason := self expectCatch: client asyncValue.
@@ -290,8 +242,9 @@ RsrServiceTest >> testReturnServerWithoutAssociatedClient [
 RsrServiceTest >> testSendClientWithoutAssociatedServer [
 
 	| client server reason |
-	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:x | x].
 	reason := self expectCatch: (client asyncValue: RsrKnownClient new).

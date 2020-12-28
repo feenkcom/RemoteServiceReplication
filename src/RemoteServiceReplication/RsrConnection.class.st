@@ -318,15 +318,9 @@ ifAbsent: aBlock [
 ]
 
 { #category : 'public-service factory' }
-RsrConnection >> serviceFactory [
-
-	^serviceFactory ifNil: [self initializeServiceFactory]
-]
-
-{ #category : 'public-service factory' }
 RsrConnection >> serviceFor: aResponsibility [
 
-	^self serviceFactory serviceFor: aResponsibility
+	^(serviceFactory ifNil: [self initializeServiceFactory]) serviceFor: aResponsibility
 ]
 
 { #category : 'public-accessing' }

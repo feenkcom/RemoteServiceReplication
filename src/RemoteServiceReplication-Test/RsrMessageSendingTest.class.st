@@ -369,8 +369,9 @@ RsrMessageSendingTest >> testReturnAlsoUpdatesLocalService [
 	that it is also sent to update the local service."
 
 	| client server value response |
-	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.
-	client synchronize.
+	client := RsrReflectedVariableTestClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	value := 42.
 	self
