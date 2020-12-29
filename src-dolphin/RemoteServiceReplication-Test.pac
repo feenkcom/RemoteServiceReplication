@@ -16,6 +16,7 @@ package classNames
 	add: #RsrInstrumentedService;
 	add: #RsrTestService;
 	add: #RsrConnectionTestCase;
+	add: #RsrHandshakeCodecTest;
 	add: #RsrConnectionSpecificationTestCase;
 	add: #RsrForwarderTest;
 	add: #RsrSocketServiceTest;
@@ -235,6 +236,15 @@ RsrTestCase
 	classInstanceVariableNames: ''!
 RsrForwarderTest comment: 'This class contains tests'!
 !RsrForwarderTest categoriesForClass!RemoteServiceReplication-Test! !
+
+RsrTestCase
+	subclass: #RsrHandshakeCodecTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrHandshakeCodecTest comment: 'This class contains tests'!
+!RsrHandshakeCodecTest categoriesForClass!RemoteServiceReplication-Test! !
 
 RsrInstrumentedService
 	subclass: #RsrInstrumentedClient
@@ -934,6 +944,21 @@ setUp	super setUp.	self initializeSocketConnections! !
 
 !RsrClientNoInstVars methodsFor!
 unimplementedRemoteSend	"Send a selector which is not implemented remotely resuling in a DNU."	^remoteSelf doNotImplementThisSelectorOrYouWillBreakATest! !
+
+!RsrHandshakeCodecTest methodsFor!
+testSupportedVersions	| supportedVersions encoding result |	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).	encoding :=		#[0 0 0 0 0 0 0 0], "Type"		#[0 0 0 0 0 0 0 4], "4 versions supported"		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 1],		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 7].	result := self stream: [:stream | self codec encodeSupportedVersions: supportedVersions onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: supportedVersions! !
+
+!RsrHandshakeCodecTest methodsFor!
+testChosenVersion	| chosenVersion encoding result |	chosenVersion := RsrChosenVersion version: 7.	encoding :=		#[0 0 0 0 0 0 0 1], "Type"		#[0 0 0 0 0 0 0 7]. "Version"	result := self stream: [:stream | self codec encodeChosenVersion: chosenVersion onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: chosenVersion! !
+
+!RsrHandshakeCodecTest methodsFor!
+stream: aBlock	^ByteArray streamContents: [:stream | aBlock value: stream]! !
+
+!RsrHandshakeCodecTest methodsFor!
+testNoVersionOverlap	| noVersionOverlap encoding result |	noVersionOverlap := RsrNoVersionOverlap new.	encoding := #[0 0 0 0 0 0 0 2]. "Type"	result := self stream: [:stream | self codec encodeNoVersionOverlap: noVersionOverlap onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: noVersionOverlap! !
+
+!RsrHandshakeCodecTest methodsFor!
+codec	^RsrHandshakeCodec new! !
 
 !RsrInMemoryConnectionTestCase methodsFor!
 setUp	super setUp.	self initializeInMemoryConnections! !
