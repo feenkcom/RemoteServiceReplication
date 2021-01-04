@@ -57,6 +57,12 @@ RsrCommandSink >> initialize [
 	queue := SharedQueue new
 ]
 
+{ #category : 'accessing' }
+RsrCommandSink >> runLoopName [
+
+	^'Connection Writing'
+]
+
 { #category : 'commands' }
 RsrCommandSink >> stop [
 

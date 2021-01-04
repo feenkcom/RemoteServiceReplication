@@ -107,6 +107,14 @@ RsrSocketChannelLoop >> runLoop [
 ]
 
 { #category : 'accessing' }
+RsrSocketChannelLoop >> runLoopName [
+	"Return the name of the associated run loop.
+	This name is assigned to the Process used to execute the run loop."
+
+	^self subclassResponsibility
+]
+
+{ #category : 'accessing' }
 RsrSocketChannelLoop >> runningState [
 
 	^#Running
@@ -120,6 +128,7 @@ RsrSocketChannelLoop >> start [
 		fork: [self runLoop.
 				process := nil]
 		at: self priority
+		named: self runLoopName
 ]
 
 { #category : 'commands' }

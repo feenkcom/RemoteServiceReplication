@@ -32,3 +32,9 @@ RsrCommandSource >> nextCommand [
 
 	^self decoder decodeCommand: self stream
 ]
+
+{ #category : 'accessing' }
+RsrCommandSource >> runLoopName [
+
+	^'Connection Reading'
+]

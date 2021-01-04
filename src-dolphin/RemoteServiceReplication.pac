@@ -1024,7 +1024,7 @@ inQueue: aSharedQueue	inQueue := aSharedQueue! !
 isOpen	^drainProcess isNil not! !
 
 !RsrInMemoryChannel methodsFor!
-open	drainProcess := RsrProcessModel fork: [self drainLoop. drainProcess := nil]! !
+open	drainProcess := RsrProcessModel		fork: [self drainLoop. drainProcess := nil]		named: 'InMemoryChannel Receiving'! !
 
 !RsrInMemoryChannel methodsFor!
 send: aCommand	outQueue nextPut: aCommand! !
@@ -1039,6 +1039,9 @@ outQueue	^outQueue! !
 write: aMessage	self subclassResponsibility! !
 
 !RsrCommandSource methodsFor!
+runLoopName	^'Connection Reading'! !
+
+!RsrCommandSource methodsFor!
 decoder	^RsrDecoder new! !
 
 !RsrCommandSource methodsFor!
@@ -1051,7 +1054,7 @@ executeCycle	[| command |	command := self nextCommand.	self report: command.
 defaultPort	"Returns the default port number used to listen for connections."	^61982! !
 
 !RsrInternalSocketConnectionSpecification methodsFor!
-connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen.	connectionA specification: self.	connectionB specification: self.	^connectionA! !
+connect	"Establish an internal Connection pair via socket."	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection] named: 'Pending AcceptConnection'.	self minimalWait. "Allow other process to schedule."	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.	self minimalWait. "Allow other process to schedule."	self assertOpen.	connectionA specification: self.	connectionB specification: self.	^connectionA! !
 
 !RsrLog methodsFor!
 levelError	^1! !
@@ -1120,28 +1123,34 @@ hasSharedVersion	"Answer whether there is a valid shared protocol version betwe
 write: aByteArray	self stream nextPutAll: aByteArray! !
 
 !RsrCommandSink methodsFor!
-encoder	^RsrEncoder new! !
-
-!RsrCommandSink methodsFor!
-writeCommand: aCommand	self report: aCommand.	aCommand		encode: self stream		using: self encoder! !
+stop	super stop.	queue nextPut: self stopToken! !
 
 !RsrCommandSink methodsFor!
 flush	self stream flush! !
-
-!RsrCommandSink methodsFor!
-initialize	super initialize.	queue := SharedQueue new! !
-
-!RsrCommandSink methodsFor!
-enqueue: aCommand	self isActive ifTrue: [queue nextPut: aCommand]! !
-
-!RsrCommandSink methodsFor!
-stop	super stop.	queue nextPut: self stopToken! !
 
 !RsrCommandSink methodsFor!
 stopToken	^self stoppedState! !
 
 !RsrCommandSink methodsFor!
 executeCycle	[| command |	command := queue next.	command == self stopToken		ifTrue: [^self].	self writeCommand: command.	(queue size = 0)		ifTrue: [self flush]]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel channelDisconnected]! !
+
+!RsrCommandSink methodsFor!
+writeCommand: aCommand	self report: aCommand.	aCommand		encode: self stream		using: self encoder! !
+
+!RsrCommandSink methodsFor!
+initialize	super initialize.	queue := SharedQueue new! !
+
+!RsrCommandSink methodsFor!
+encoder	^RsrEncoder new! !
+
+!RsrCommandSink methodsFor!
+enqueue: aCommand	self isActive ifTrue: [queue nextPut: aCommand]! !
+
+!RsrCommandSink methodsFor!
+runLoopName	^'Connection Writing'! !
+
+!RsrSocketChannelLoop methodsFor!
+runLoopName	"Return the name of the associated run loop.	This name is assigned to the Process used to execute the run loop."	^self subclassResponsibility! !
 
 !RsrSocketChannelLoop methodsFor!
 stop	self isActive ifFalse: [^self].	state := self stoppedState! !
@@ -1156,7 +1165,7 @@ executeCycle	self subclassResponsibility! !
 isProcessActive	^process ~~ nil! !
 
 !RsrSocketChannelLoop methodsFor!
-start	state := self runningState.	process := RsrProcessModel		fork: [self runLoop.				process := nil]		at: self priority! !
+start	state := self runningState.	process := RsrProcessModel		fork: [self runLoop.				process := nil]		at: self priority		named: self runLoopName! !
 
 !RsrSocketChannelLoop methodsFor!
 stoppedState	^#Stop! !
@@ -1243,7 +1252,7 @@ selectorReference: aSymbolReference	selectorReference := aSymbolReference! !
 logException: anExceptionto: aLog	| message |	message := String		streamContents:			[:stream |			stream				print: self receiverReference;				nextPutAll: '>>';				print: self selectorReference;				nextPutAll: ' due to: ';				nextPutAll: anException description].	aLog error: message! !
 
 !RsrSendMessage methodsFor!
-executeFor: aConnection	| resolver servicesStrongly receiver selector arguments messageSend |	resolver := RsrRemotePromiseResolver for: self over: aConnection.	"Must keep a strong reference to each service until the roots are referenced."	[ 	[ 	servicesStrongly := self reifyAllIn: aConnection.	receiver := self receiverReference resolve: aConnection.	selector := self selectorReference resolve: aConnection.	arguments := self argumentReferences collect: [ :each | 		             each resolve: aConnection ].	"receiver and arguments should now be the roots of the service graph, discard strong references."	servicesStrongly := nil.	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."	messageSend := RsrMessageSend		               receiver: receiver		               selector: selector		               arguments: arguments.	self perform: messageSend answerUsing: resolver ]		on: self unhandledExceptionClass		do: [ :ex | 			resolver break: (RsrRemoteException from: ex).			ex return ] ] ensure: [ 		resolver hasResolved ifFalse: [ 			resolver break: 'Message send terminated without a result' ] ]! !
+executeFor: aConnection	| resolver servicesStrongly receiver selector arguments messageSend |	resolver := RsrRemotePromiseResolver for: self over: aConnection.	"Must keep a strong reference to each service until the roots are referenced."	[ 	[ 	servicesStrongly := self reifyAllIn: aConnection.	receiver := self receiverReference resolve: aConnection.	selector := self selectorReference resolve: aConnection.	arguments := self argumentReferences collect: [ :each | 		             each resolve: aConnection ].	RsrProcessModel renameProcess: '', receiver class name, '>>', selector.	"receiver and arguments should now be the roots of the service graph, discard strong references."	servicesStrongly := nil.	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."	messageSend := RsrMessageSend		               receiver: receiver		               selector: selector		               arguments: arguments.	self perform: messageSend answerUsing: resolver ]		on: self unhandledExceptionClass		do: [ :ex | 			resolver break: (RsrRemoteException from: ex).			ex return ] ] ensure: [ 		resolver hasResolved ifFalse: [ 			resolver break: 'Message send terminated without a result' ] ]! !
 
 !RsrSendMessage methodsFor!
 encode: aStreamusing: anEncoder	anEncoder		encodeSendMessage: self		onto: aStream! !
@@ -1390,7 +1399,7 @@ dispatch: aBlock	^self async: aBlock! !
 stop	"Stop process events in the dispatch queue."	isRunning := false.	self dispatch: []. "Ensure another action is added to the queue to ensure shutdown if it hasn't yet happened."	process := nil! !
 
 !RsrDispatchQueue methodsFor!
-start	"Start processing queued events."	isRunning := true.	process := RsrProcessModel fork: [self runLoop]! !
+start	"Start processing queued events."	isRunning := true.	process := RsrProcessModel		fork: [self runLoop]		named: 'DispatchQueue run loop'! !
 
 !RsrDispatchQueue methodsFor!
 isRunning	^isRunning! !
@@ -1441,7 +1450,7 @@ _sendMessage: aMessageto: aService"Open coordination window"	"Send dirty tra
 pendingMessages	^pendingMessages! !
 
 !RsrConnection methodsFor!
-_receivedCommand: aCommand	"Execute the command in the context of the receiving Connection."	RsrProcessModel fork: [aCommand executeFor: self]! !
+_receivedCommand: aCommand	"Execute the command in the context of the receiving Connection."	RsrProcessModel		fork: [aCommand executeFor: self]		named: 'Processing ', aCommand class name! !
 
 !RsrConnection methodsFor!
 specification: aConnectionSpecification	"Store the Specification used to the create this Connection."	specification := aConnectionSpecification! !
@@ -1702,7 +1711,7 @@ wait	"Wait for a the receiver to be Resolved.	If fulfilled - return the fulfil
 fulfill: anObject	"Fulfill the receiver and notify any observers."	mutex		critical:			[self assertNotResolved.			value := anObject.			state := #Fulfilled].	self notifyActions.	resolvedMutex signal! !
 
 !RsrPromise methodsFor!
-notifyActions	"Activate any registered action's fulfillment blocks.	Ensure that they are activated only once and that	future actions are allowed."	| actions |	mutex		critical:			[actions := resolutionActions.			resolutionActions := OrderedCollection new].	actions		do:			[:each |			self isFulfilled				ifTrue: [RsrProcessModel fork: [each when value: value]]				ifFalse: [RsrProcessModel fork: [each catch value: value]]]! !
+notifyActions	"Activate any registered action's fulfillment blocks.	Ensure that they are activated only once and that	future actions are allowed."	| actions |	mutex		critical:			[actions := resolutionActions.			resolutionActions := OrderedCollection new].	actions		do:			[:each |			self isFulfilled				ifTrue: [RsrProcessModel fork: [each when value: value] named: 'Promise Fulfillment Notification']				ifFalse: [RsrProcessModel fork: [each catch value: value] named: 'Promise Break Notification']]! !
 
 !RsrPromise methodsFor!
 value	"Alias for #wait"	^self wait! !
