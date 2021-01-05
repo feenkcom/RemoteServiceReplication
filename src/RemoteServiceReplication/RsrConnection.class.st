@@ -221,7 +221,7 @@ RsrConnection >> initialize [
 { #category : 'public-testing' }
 RsrConnection >> isOpen [
 
-	^channel isOpen
+	^channel isConnected
 ]
 
 { #category : 'private-accessing' }

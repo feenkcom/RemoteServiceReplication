@@ -73,7 +73,7 @@ RsrInMemoryChannel >> inQueue: aSharedQueue [
 ]
 
 { #category : 'testing' }
-RsrInMemoryChannel >> isOpen [
+RsrInMemoryChannel >> isConnected [
 
 	^drainProcess isNil not
 ]

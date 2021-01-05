@@ -1363,10 +1363,10 @@ privateVariable	^privateVariable! !
 privateVariable: anObject	privateVariable := anObject! !
 
 !RsrNullChannel methodsFor!
-close	"NOP"! !
+isConnected	^true! !
 
 !RsrNullChannel methodsFor!
-isOpen	^true! !
+close	"NOP"! !
 
 !RsrNullChannel methodsFor!
 open	"NOP"! !
