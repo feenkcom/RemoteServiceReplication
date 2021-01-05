@@ -273,16 +273,8 @@ RsrSnapshotAnalysis comment: 'No class-specific documentation for RsrSnapshotAna
 !RsrSnapshotAnalysis categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
-	subclass: #RsrSocketStream
-	instanceVariableNames: 'socket'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrSocketStream categoriesForClass!RemoteServiceReplication! !
-
-RsrObject
 	subclass: #RsrStream
-	instanceVariableNames: 'stream'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -458,6 +450,14 @@ RsrConnectionSpecification
 	classInstanceVariableNames: ''!
 RsrSocketConnectionSpecification comment: 'This class is abstract and defines the interface for manufacturing RsrConnection instances which are connected to a peer.Specialized subclasses are reponsible for either listening for or initiating connections with a peer.'!
 !RsrSocketConnectionSpecification categoriesForClass!RemoteServiceReplication! !
+
+RsrStream
+	subclass: #RsrSocketStream
+	instanceVariableNames: 'socket'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrSocketStream categoriesForClass!RemoteServiceReplication! !
 
 RsrHandshakeMessage
 	subclass: #RsrSupportedVersions
@@ -678,8 +678,8 @@ sids: anArrayOfServiceIDs	^self new		sids: anArrayOfServiceIDs;		yourself! !
 !RsrPendingMessage class methodsFor!
 services: aListpromise: aPromise	^self new		services: aList;		promise: aPromise;		yourself! !
 
-!RsrStream class methodsFor!
-on: aStream	^self new		stream: aStream;		yourself! !
+!RsrSocketConnectionSpecification class methodsFor!
+host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
 
 !RsrRemoteException class methodsFor!
 clientClassName	^#RsrRemoteExceptionClient! !
@@ -692,9 +692,6 @@ templateClassName	^#RsrRemoteException! !
 
 !RsrRemoteException class methodsFor!
 from: anException	"Create an instance of the RemoteException reason.	The client is used here because once we send it, we are done with it.	The client will GC and the server will later GC. We don't care to have	a server hanging around if we don't need it."	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self clientClass new		exceptionClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
-
-!RsrSocketConnectionSpecification class methodsFor!
-host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
 
 !RsrHandshake class methodsFor!
 over: aStream	^self new		stream: aStream;		yourself! !
@@ -823,9 +820,6 @@ connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQ
 perform	"Perform the Client's porition of the handshake"	| supportedVersions answer |	supportedVersions := RsrSupportedVersions versions: #(1).	self codec		encodeSupportedVersions: supportedVersions		onto: self stream.	self stream flush.	answer := self codec decode: self stream.	answer hasSharedVersion		ifFalse: [^RsrHandshakeFailed signal: 'The Client and Server could not agree on an RSR protocol version.']! !
 
 !RsrSocketStream methodsFor!
-isConnected	"Is the stream still connected to a partner?"	^socket isConnected! !
-
-!RsrSocketStream methodsFor!
 socket: anRsrSocket	socket := anRsrSocket! !
 
 !RsrSocketStream methodsFor!
@@ -934,25 +928,22 @@ promise: aPromise	promise := aPromise! !
 perform	"Peform the Server's side of the handshake."	| supportedVersions |	supportedVersions := self codec decode: self stream.	(supportedVersions versions includes: 1)		ifTrue:			[self codec				encodeChosenVersion: (RsrChosenVersion version: 1)				onto: self stream.			self stream flush.]		ifFalse:			[self codec				encodeNoVersionOverlap: RsrNoVersionOverlap new				onto: self stream.			self stream flush; close.			^RsrHandshakeFailed signal: 'Client versions did not overlap w/ Server']! !
 
 !RsrStream methodsFor!
-nextPutAll: aByteArray	^stream nextPutAll: aByteArray! !
+nextPutAll: aByteArray	"Write <aByteArray>'s elements to the backing store."	^self subclassResponsibility! !
 
 !RsrStream methodsFor!
-close	stream close! !
+close	"Close the Stream. The semantics of this are defined by the subclass."	self subclassResponsibility! !
 
 !RsrStream methodsFor!
-next	^self next: 1! !
+next	"Read and return exactly 1 byte."	^self next: 1! !
 
 !RsrStream methodsFor!
-next: aLength	| bytes |	bytes := stream next: aLength.	bytes size ~~ aLength		ifTrue: [RsrSocketClosed signal].	^bytes! !
+next: count	"Read and return exactly <count> bytes"	^self subclassResponsibility! !
 
 !RsrStream methodsFor!
-flush	stream flush! !
+flush	"Ensure any data cached by the receiver is pushed to its destination."	"By default, do nothing."! !
 
 !RsrStream methodsFor!
-binary	stream binary! !
-
-!RsrStream methodsFor!
-stream: aStream	stream := aStream! !
+atEnd	"Answers when the Stream cannot take or provide any additional bytes."	^self subclassResponsibility! !
 
 !RsrLogWithPrefix methodsFor!
 prefix	^prefix! !
@@ -1222,7 +1213,7 @@ disconnected	"The socket has disconnected so the channel is no longer open."	
 open	"Ensure the Command sink and source are running"	source start.	sink start! !
 
 !RsrBinaryStreamChannel methodsFor!
-isConnected	^self inStream isConnected and: [self outStream isConnected]! !
+isConnected	^self inStream atEnd not and: [self outStream atEnd not]! !
 
 !RsrBinaryStreamChannel methodsFor!
 sink	^sink! !

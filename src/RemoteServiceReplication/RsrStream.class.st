@@ -1,62 +1,46 @@
 Class {
 	#name : 'RsrStream',
 	#superclass : 'RsrObject',
-	#instVars : [
-		'stream'
-	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
-RsrStream class >> on: aStream [
+{ #category : 'testing' }
+RsrStream >> atEnd [
+	"Answers when the Stream cannot take or provide any additional bytes."
 
-	^self new
-		stream: aStream;
-		yourself
+	^self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
-RsrStream >> binary [
-
-	stream binary
-]
-
-{ #category : 'accessing' }
+{ #category : 'closing' }
 RsrStream >> close [
+	"Close the Stream. The semantics of this are defined by the subclass."
 
-	stream close
+	self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : 'writing' }
 RsrStream >> flush [
-
-	stream flush
+	"Ensure any data cached by the receiver is pushed to its destination."
+	"By default, do nothing."
 ]
 
-{ #category : 'accessing' }
+{ #category : 'reading' }
 RsrStream >> next [
+	"Read and return exactly 1 byte."
 
 	^self next: 1
 ]
 
-{ #category : 'accessing' }
-RsrStream >> next: aLength [
+{ #category : 'reading' }
+RsrStream >> next: count [
+	"Read and return exactly <count> bytes"
 
-	| bytes |
-	bytes := stream next: aLength.
-	bytes size ~~ aLength
-		ifTrue: [RsrSocketClosed signal].
-	^bytes
+	^self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : 'writing' }
 RsrStream >> nextPutAll: aByteArray [
+	"Write <aByteArray>'s elements to the backing store."
 
-	^stream nextPutAll: aByteArray
-]
-
-{ #category : 'accessing' }
-RsrStream >> stream: aStream [
-
-	stream := aStream
+	^self subclassResponsibility
 ]

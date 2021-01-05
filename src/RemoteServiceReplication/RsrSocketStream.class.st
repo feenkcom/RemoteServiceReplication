@@ -1,6 +1,6 @@
 Class {
 	#name : 'RsrSocketStream',
-	#superclass : 'RsrObject',
+	#superclass : 'RsrStream',
 	#instVars : [
 		'socket'
 	],
@@ -39,13 +39,6 @@ RsrSocketStream >> close [
 RsrSocketStream >> flush [
 	"Flush any buffered bytes to the socket."
 	"NOP"
-]
-
-{ #category : 'testing' }
-RsrSocketStream >> isConnected [
-	"Is the stream still connected to a partner?"
-
-	^socket isConnected
 ]
 
 { #category : 'accessing' }

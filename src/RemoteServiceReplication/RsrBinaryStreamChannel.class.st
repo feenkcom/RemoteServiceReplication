@@ -72,7 +72,7 @@ RsrBinaryStreamChannel >> inStream: aBinaryReadStream [
 { #category : 'testing' }
 RsrBinaryStreamChannel >> isConnected [
 
-	^self inStream isConnected and: [self outStream isConnected]
+	^self inStream atEnd not and: [self outStream atEnd not]
 ]
 
 { #category : 'lifecycle' }
