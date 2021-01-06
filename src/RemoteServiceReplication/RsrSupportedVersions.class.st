@@ -3,7 +3,7 @@ When a Client connects to a Server. It is required to send this message w/ the l
 "
 Class {
 	#name : 'RsrSupportedVersions',
-	#superclass : 'RsrHandshakeMessage',
+	#superclass : 'RsrProtocolVersionNegotiationMessage',
 	#instVars : [
 		'versions'
 	],

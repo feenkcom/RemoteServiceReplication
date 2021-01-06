@@ -1,11 +1,11 @@
 Class {
-	#name : 'RsrClientHandshake',
-	#superclass : 'RsrHandshake',
+	#name : 'RsrProtocolVersionNegotiationClient',
+	#superclass : 'RsrProtocolVersionNegotiation',
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'handshaking' }
-RsrClientHandshake >> perform [
+RsrProtocolVersionNegotiationClient >> perform [
 	"Perform the Client's porition of the handshake"
 
 	| supportedVersions answer |
@@ -16,5 +16,5 @@ RsrClientHandshake >> perform [
 	self stream flush.
 	answer := self codec decode: self stream.
 	answer hasSharedVersion
-		ifFalse: [^RsrHandshakeFailed signal: 'The Client and Server could not agree on an RSR protocol version.']
+		ifFalse: [^RsrProtocolVersionNegotiationFailed signal: 'The Client and Server could not agree on an RSR protocol version.']
 ]

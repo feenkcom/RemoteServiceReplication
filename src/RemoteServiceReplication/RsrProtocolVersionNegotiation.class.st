@@ -12,43 +12,13 @@ Server -> Client:
 		- Server: Closes socket
 "
 Class {
-	#name : 'RsrHandshake',
-	#superclass : 'RsrObject',
-	#instVars : [
-		'stream'
-	],
+	#name : 'RsrProtocolVersionNegotiation',
+	#superclass : 'RsrHandshakeStep',
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
-RsrHandshake class >> over: aStream [
-
-	^self new
-		stream: aStream;
-		yourself
-]
-
 { #category : 'accessing' }
-RsrHandshake >> codec [
+RsrProtocolVersionNegotiation >> codec [
 
-	^RsrHandshakeCodec new
-]
-
-{ #category : 'handshaking' }
-RsrHandshake >> perform [
-
-	self subclassResponsibility
-]
-
-{ #category : 'accessing' }
-RsrHandshake >> stream [
-	"The stream over which the handshake should occurr"
-
-	^stream
-]
-
-{ #category : 'accessing' }
-RsrHandshake >> stream: aStream [
-
-	stream := aStream
+	^RsrProtocolVersionNegotiationCodec new
 ]

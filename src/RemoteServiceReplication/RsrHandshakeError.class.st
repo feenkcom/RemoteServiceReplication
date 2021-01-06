@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrHandshakeFailed',
+	#name : 'RsrHandshakeError',
 	#superclass : 'RsrError',
 	#category : 'RemoteServiceReplication'
 }

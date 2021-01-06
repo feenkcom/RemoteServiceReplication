@@ -18,7 +18,7 @@ Class {
 { #category : 'accessing' }
 RsrCommandSink >> encoder [
 
-	^RsrEncoder new
+	^RsrCommandEncoder new
 ]
 
 { #category : 'commands' }

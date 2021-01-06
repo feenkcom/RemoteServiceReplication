@@ -3,7 +3,7 @@ This message is sent when a Server has determined it cannot talk any version of 
 "
 Class {
 	#name : 'RsrNoVersionOverlap',
-	#superclass : 'RsrHandshakeMessage',
+	#superclass : 'RsrProtocolVersionNegotiationMessage',
 	#category : 'RemoteServiceReplication'
 }
 

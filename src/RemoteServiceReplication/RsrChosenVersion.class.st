@@ -3,7 +3,7 @@ This message is sent when a Server has chosen a version it is willing to talk w/
 "
 Class {
 	#name : 'RsrChosenVersion',
-	#superclass : 'RsrHandshakeMessage',
+	#superclass : 'RsrProtocolVersionNegotiationMessage',
 	#instVars : [
 		'version'
 	],

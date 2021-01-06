@@ -4,32 +4,37 @@ package paxVersion: 1; basicComment: ''.
 
 package classNames
 	add: #RsrLog;
-	add: #RsrHandshake;
+	add: #RsrProtocolVersionNegotiationServer;
 	add: #RsrInternalConnectionSpecification;
 	add: #RsrReleaseServices;
 	add: #RsrRemoteExceptionClient;
-	add: #RsrRemotePromiseResolver;
-	add: #RsrStream;
 	add: #RsrConnectionClosed;
+	add: #RsrStream;
+	add: #RsrCommandDecoder;
 	add: #RsrInMemoryChannel;
 	add: #RsrLogWithPrefix;
-	add: #RsrHandshakeMessage;
+	add: #RsrProtocolVersionNegotiationMessage;
+	add: #RsrRemotePromiseResolver;
 	add: #RsrSocketConnectionSpecification;
+	add: #RsrTokenExchangeMessage;
 	add: #RsrAcceptConnection;
-	add: #RsrEncoder;
+	add: #RsrHandshakeStep;
 	add: #RsrPendingMessage;
 	add: #RsrCommandSink;
-	add: #RsrHandshakeFailed;
 	add: #RsrMessagingCommand;
+	add: #RsrHandshakeError;
 	add: #RsrLogSink;
-	add: #RsrClientHandshake;
-	add: #RsrSendMessage;
+	add: #RsrTokenExchange;
+	add: #RsrRemoteExceptionServer;
+	add: #RsrCommandEncoder;
 	add: #RsrServiceSnapshot;
 	add: #RsrThreadSafeDictionary;
-	add: #RsrRemoteExceptionServer;
+	add: #RsrSendMessage;
 	add: #RsrMessageSend;
 	add: #RsrChosenVersion;
+	add: #RsrToken;
 	add: #RsrService;
+	add: #RsrProtocolVersionNegotiation;
 	add: #RsrInitiateConnection;
 	add: #RsrCommand;
 	add: #RsrBinaryStreamChannel;
@@ -38,30 +43,37 @@ package classNames
 	add: #RsrPromise;
 	add: #RsrBufferedSocketStream;
 	add: #RsrCustomSink;
-	add: #RsrServerHandshake;
+	add: #RsrTokenReceiver;
+	add: #RsrProtocolVersionNegotiationFailed;
 	add: #RsrInMemoryConnectionSpecification;
 	add: #RsrConnection;
+	add: #RsrProtocolVersionNegotiationCodec;
 	add: #RsrSnapshotAnalysis;
 	add: #RsrCodec;
-	add: #RsrNumericSpigot;
 	add: #RsrNoVersionOverlap;
+	add: #RsrNumericSpigot;
+	add: #RsrTokenAccepted;
 	add: #RsrDispatchQueue;
+	add: #RsrProtocolVersionNegotiationClient;
 	add: #RsrDeliverResponse;
-	add: #RsrPromiseResolutionAction;
 	add: #RsrSocketStream;
-	add: #RsrStreamChannelLoop;
-	add: #RsrRemoteException;
-	add: #RsrChannel;
-	add: #RsrTranscriptSink;
-	add: #RsrHandshakeCodec;
 	add: #RsrAbstractReason;
+	add: #RsrRemoteException;
+	add: #RsrPromiseResolutionAction;
+	add: #RsrTokenExchangeFailed;
+	add: #RsrTranscriptSink;
+	add: #RsrChannel;
+	add: #RsrTokenSender;
 	add: #RsrInternalSocketConnectionSpecification;
+	add: #RsrStreamChannelLoop;
 	add: #RsrConnectionSpecification;
+	add: #RsrCommandCodec;
+	add: #RsrTokenExchangeCodec;
 	add: #RsrRemoteError;
-	add: #RsrDecoder;
-	add: #RsrSupportedVersions;
 	add: #RsrThreadSafeNumericSpigot;
+	add: #RsrSupportedVersions;
 	add: #RsrDecodingRaisedException;
+	add: #RsrTokenRejected;
 	yourself.
 
 package methodNames
@@ -146,30 +158,12 @@ RsrDispatchQueue comment: 'DispatchQueueThis class serves one purpose -- evalu
 !RsrDispatchQueue categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
-	subclass: #RsrHandshake
+	subclass: #RsrHandshakeStep
 	instanceVariableNames: 'stream'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrHandshake comment: 'This class serves as the abstract superclass for the classes which implement the actual handshake protocol.When the Client opens a Socket to the Server, it is responsible for sending the first message.Client -> Server: SupportedVersionsServer -> Client:	alt: The Server and Client have overlap in their supported versions		- Server -> Client: ChosenVersion	alt: No overlap exists between the Client and Server.		- Server -> Client: NoVersionOverlap		- Server: Closes socket'!
-!RsrHandshake categoriesForClass!RemoteServiceReplication! !
-
-RsrObject
-	subclass: #RsrHandshakeCodec
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrHandshakeCodec categoriesForClass!RemoteServiceReplication! !
-
-RsrObject
-	subclass: #RsrHandshakeMessage
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrHandshakeMessage comment: 'HandshakeMessage serves as a superclass for all Messages used while processing a Connection Handshake.'!
-!RsrHandshakeMessage categoriesForClass!RemoteServiceReplication! !
+!RsrHandshakeStep categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrLog
@@ -237,6 +231,15 @@ RsrObject
 !RsrPromiseResolutionAction categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
+	subclass: #RsrProtocolVersionNegotiationMessage
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrProtocolVersionNegotiationMessage comment: 'HandshakeMessage serves as a superclass for all Messages used while processing a Connection Handshake.'!
+!RsrProtocolVersionNegotiationMessage categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
 	subclass: #RsrRemotePromiseResolver
 	instanceVariableNames: 'mutex sendMessage connection extraRoots hasResolved'
 	classVariableNames: ''
@@ -298,6 +301,14 @@ RsrObject
 RsrThreadSafeDictionary comment: 'I maintain the associations between locally stored objects and their remote counterparts.'!
 !RsrThreadSafeDictionary categoriesForClass!RemoteServiceReplication! !
 
+RsrObject
+	subclass: #RsrTokenExchangeMessage
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenExchangeMessage categoriesForClass!RemoteServiceReplication! !
+
 RsrChannel
 	subclass: #RsrBinaryStreamChannel
 	instanceVariableNames: 'sink source inStream outStream'
@@ -307,7 +318,7 @@ RsrChannel
 RsrBinaryStreamChannel comment: 'No class-specific documentation for RsrSocketChannel, hierarchy is:Object  RsrObject    RsrChannel      RsrSocketChannel( reader writer socket stream)'!
 !RsrBinaryStreamChannel categoriesForClass!RemoteServiceReplication! !
 
-RsrHandshakeMessage
+RsrProtocolVersionNegotiationMessage
 	subclass: #RsrChosenVersion
 	instanceVariableNames: 'version'
 	classVariableNames: ''
@@ -316,13 +327,13 @@ RsrHandshakeMessage
 RsrChosenVersion comment: 'This message is sent when a Server has chosen a version it is willing to talk w/ a client Connection. The Server expects the Client to speak this version.'!
 !RsrChosenVersion categoriesForClass!RemoteServiceReplication! !
 
-RsrHandshake
-	subclass: #RsrClientHandshake
+RsrCodec
+	subclass: #RsrCommandCodec
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrClientHandshake categoriesForClass!RemoteServiceReplication! !
+!RsrCommandCodec categoriesForClass!RemoteServiceReplication! !
 
 RsrStreamChannelLoop
 	subclass: #RsrCommandSink
@@ -357,15 +368,6 @@ RsrLogSink
 	classInstanceVariableNames: ''!
 !RsrCustomSink categoriesForClass!RemoteServiceReplication! !
 
-RsrCodec
-	subclass: #RsrDecoder
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrDecoder comment: 'No class-specific documentation for RsrDecoder, hierarchy is:Object  RsrObject    RsrCodec      RsrDecoder( registry connection decodeCommandMap)'!
-!RsrDecoder categoriesForClass!RemoteServiceReplication! !
-
 RsrAbstractReason
 	subclass: #RsrDecodingRaisedException
 	instanceVariableNames: 'exception'
@@ -373,14 +375,6 @@ RsrAbstractReason
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrDecodingRaisedException categoriesForClass!RemoteServiceReplication! !
-
-RsrCodec
-	subclass: #RsrEncoder
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrEncoder categoriesForClass!RemoteServiceReplication! !
 
 RsrChannel
 	subclass: #RsrInMemoryChannel
@@ -407,7 +401,7 @@ RsrCommand
 	classInstanceVariableNames: ''!
 !RsrMessagingCommand categoriesForClass!RemoteServiceReplication! !
 
-RsrHandshakeMessage
+RsrProtocolVersionNegotiationMessage
 	subclass: #RsrNoVersionOverlap
 	instanceVariableNames: ''
 	classVariableNames: ''
@@ -415,6 +409,23 @@ RsrHandshakeMessage
 	classInstanceVariableNames: ''!
 RsrNoVersionOverlap comment: 'This message is sent when a Server has determined it cannot talk any version of the protocol that the Client has requested to speak.'!
 !RsrNoVersionOverlap categoriesForClass!RemoteServiceReplication! !
+
+RsrHandshakeStep
+	subclass: #RsrProtocolVersionNegotiation
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrProtocolVersionNegotiation comment: 'This class serves as the abstract superclass for the classes which implement the actual handshake protocol.When the Client opens a Socket to the Server, it is responsible for sending the first message.Client -> Server: SupportedVersionsServer -> Client:	alt: The Server and Client have overlap in their supported versions		- Server -> Client: ChosenVersion	alt: No overlap exists between the Client and Server.		- Server -> Client: NoVersionOverlap		- Server: Closes socket'!
+!RsrProtocolVersionNegotiation categoriesForClass!RemoteServiceReplication! !
+
+RsrCodec
+	subclass: #RsrProtocolVersionNegotiationCodec
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrProtocolVersionNegotiationCodec categoriesForClass!RemoteServiceReplication! !
 
 RsrService
 	subclass: #RsrReasonService
@@ -434,14 +445,6 @@ RsrCommand
 RsrReleaseServices comment: 'No class-specific documentation for RsrReleaseServices, hierarchy is:Object  RsrObject    RsrCommand( encoding)      RsrReleaseServices( oids)'!
 !RsrReleaseServices categoriesForClass!RemoteServiceReplication! !
 
-RsrHandshake
-	subclass: #RsrServerHandshake
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-!RsrServerHandshake categoriesForClass!RemoteServiceReplication! !
-
 RsrConnectionSpecification
 	subclass: #RsrSocketConnectionSpecification
 	instanceVariableNames: 'host port'
@@ -459,7 +462,7 @@ RsrStream
 	classInstanceVariableNames: ''!
 !RsrSocketStream categoriesForClass!RemoteServiceReplication! !
 
-RsrHandshakeMessage
+RsrProtocolVersionNegotiationMessage
 	subclass: #RsrSupportedVersions
 	instanceVariableNames: 'versions'
 	classVariableNames: ''
@@ -475,6 +478,46 @@ RsrNumericSpigot
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrThreadSafeNumericSpigot categoriesForClass!RemoteServiceReplication! !
+
+RsrTokenExchangeMessage
+	subclass: #RsrToken
+	instanceVariableNames: 'bytes'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrToken categoriesForClass!RemoteServiceReplication! !
+
+RsrTokenExchangeMessage
+	subclass: #RsrTokenAccepted
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenAccepted categoriesForClass!RemoteServiceReplication! !
+
+RsrHandshakeStep
+	subclass: #RsrTokenExchange
+	instanceVariableNames: 'token'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenExchange categoriesForClass!RemoteServiceReplication! !
+
+RsrCodec
+	subclass: #RsrTokenExchangeCodec
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenExchangeCodec categoriesForClass!RemoteServiceReplication! !
+
+RsrTokenExchangeMessage
+	subclass: #RsrTokenRejected
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenRejected categoriesForClass!RemoteServiceReplication! !
 
 RsrLogSink
 	subclass: #RsrTranscriptSink
@@ -493,6 +536,23 @@ RsrSocketConnectionSpecification
 RsrAcceptConnection comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.| acceptor |acceptor := RsrAcceptConnection port: 51820.^acceptor connect'!
 !RsrAcceptConnection categoriesForClass!RemoteServiceReplication! !
 
+RsrCommandCodec
+	subclass: #RsrCommandDecoder
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrCommandDecoder comment: 'No class-specific documentation for RsrDecoder, hierarchy is:Object  RsrObject    RsrCodec      RsrDecoder( registry connection decodeCommandMap)'!
+!RsrCommandDecoder categoriesForClass!RemoteServiceReplication! !
+
+RsrCommandCodec
+	subclass: #RsrCommandEncoder
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrCommandEncoder categoriesForClass!RemoteServiceReplication! !
+
 RsrMessagingCommand
 	subclass: #RsrDeliverResponse
 	instanceVariableNames: 'responseReference'
@@ -503,12 +563,12 @@ RsrDeliverResponse comment: 'No class-specific documentation for RsrDeliverRespo
 !RsrDeliverResponse categoriesForClass!RemoteServiceReplication! !
 
 RsrError
-	subclass: #RsrHandshakeFailed
+	subclass: #RsrHandshakeError
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-!RsrHandshakeFailed categoriesForClass!RemoteServiceReplication! !
+!RsrHandshakeError categoriesForClass!RemoteServiceReplication! !
 
 RsrInternalConnectionSpecification
 	subclass: #RsrInMemoryConnectionSpecification
@@ -535,6 +595,22 @@ RsrInternalConnectionSpecification
 	classInstanceVariableNames: ''!
 !RsrInternalSocketConnectionSpecification categoriesForClass!RemoteServiceReplication! !
 
+RsrProtocolVersionNegotiation
+	subclass: #RsrProtocolVersionNegotiationClient
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrProtocolVersionNegotiationClient categoriesForClass!RemoteServiceReplication! !
+
+RsrProtocolVersionNegotiation
+	subclass: #RsrProtocolVersionNegotiationServer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrProtocolVersionNegotiationServer categoriesForClass!RemoteServiceReplication! !
+
 RsrError
 	subclass: #RsrRemoteError
 	instanceVariableNames: 'originalClassName stack'
@@ -560,6 +636,30 @@ RsrMessagingCommand
 RsrSendMessage comment: 'No class-specific documentation for RsrSendMessage, hierarchy is:Object  RsrObject    RsrCommand( encoding)      RsrSendMessage( transaction receiver selector arguments retainList)'!
 !RsrSendMessage categoriesForClass!RemoteServiceReplication! !
 
+RsrTokenExchange
+	subclass: #RsrTokenReceiver
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenReceiver categoriesForClass!RemoteServiceReplication! !
+
+RsrTokenExchange
+	subclass: #RsrTokenSender
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenSender categoriesForClass!RemoteServiceReplication! !
+
+RsrHandshakeError
+	subclass: #RsrProtocolVersionNegotiationFailed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrProtocolVersionNegotiationFailed categoriesForClass!RemoteServiceReplication! !
+
 RsrRemoteException
 	subclass: #RsrRemoteExceptionClient
 	instanceVariableNames: ''
@@ -575,6 +675,14 @@ RsrRemoteException
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 !RsrRemoteExceptionServer categoriesForClass!RemoteServiceReplication! !
+
+RsrHandshakeError
+	subclass: #RsrTokenExchangeFailed
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrTokenExchangeFailed categoriesForClass!RemoteServiceReplication! !
 
 !RsrReference class methodsFor!
 referenceClassFor: anObject	(anObject isKindOf: RsrService)		ifTrue: [^RsrServiceReference].	^self referenceMapping		at: anObject class		ifAbsent: [RsrUnsupportedObject signal: anObject]! !
@@ -693,11 +801,14 @@ templateClassName	^#RsrRemoteException! !
 !RsrRemoteException class methodsFor!
 from: anException	"Create an instance of the RemoteException reason.	The client is used here because once we send it, we are done with it.	The client will GC and the server will later GC. We don't care to have	a server hanging around if we don't need it."	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self clientClass new		exceptionClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
-!RsrHandshake class methodsFor!
-over: aStream	^self new		stream: aStream;		yourself! !
-
 !RsrChosenVersion class methodsFor!
 version: aVersionNumber	^self new		version: aVersionNumber;		yourself! !
+
+!RsrTokenExchange class methodsFor!
+token: aToken	^self new		token: aToken;		yourself! !
+
+!RsrTokenExchange class methodsFor!
+over: aStreamtoken: aToken	^self new		stream: aStream;		token: aToken;		yourself! !
 
 !RsrSupportedVersions class methodsFor!
 versions: anArray	^self new		versions: anArray;		yourself! !
@@ -717,14 +828,20 @@ roots: anArrayconnection: aConnection	^self new		roots: anArray;		connectio
 !RsrStreamChannelLoop class methodsFor!
 on: aChannel	^self new		channel: aChannel;		yourself! !
 
-!RsrDecoder class methodsFor!
+!RsrCommandDecoder class methodsFor!
 registry: aRegistry	^self new		registry: aRegistry;		yourself! !
+
+!RsrHandshakeStep class methodsFor!
+over: aStream	^self new		stream: aStream;		yourself! !
 
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
 
 !RsrBinaryStreamChannel class methodsFor!
 inStream: inStreamoutStream: outStream	^self new		inStream: inStream;		outStream: outStream;		yourself! !
+
+!RsrToken class methodsFor!
+bytes: aByteArray	^self new		bytes: aByteArray;		yourself! !
 
 !RsrNumericSpigot class methodsFor!
 new	^self		start: 0		step: 1! !
@@ -734,6 +851,30 @@ naturals	^self		start: 1		step: 1! !
 
 !RsrNumericSpigot class methodsFor!
 start: aNumberstep: anIncrement	^super new		start: aNumber;		step: anIncrement;		yourself! !
+
+!RsrTokenExchangeCodec methodsFor!
+decodeToken: aStream	| size |	size := self decodeControlWord: aStream.	^RsrToken bytes: (aStream next: size)! !
+
+!RsrTokenExchangeCodec methodsFor!
+tokenAcceptedIdentifier	^1! !
+
+!RsrTokenExchangeCodec methodsFor!
+tokenIdentifier	^0! !
+
+!RsrTokenExchangeCodec methodsFor!
+decode: aStream	| identifier |	identifier := self decodeControlWord: aStream.	identifier = self tokenIdentifier		ifTrue: [^self decodeToken: aStream].	identifier = self tokenAcceptedIdentifier		ifTrue: [^RsrTokenAccepted new].	identifier = self tokenRejectedIdentifier		ifTrue: [^RsrTokenRejected new].	^RsrTokenExchangeFailed signal: 'Unknown identifier: ', identifier printString! !
+
+!RsrTokenExchangeCodec methodsFor!
+encodeToken: aTokenonto: aStream	self		encodeControlWord: self tokenIdentifier		onto: aStream.	self		encodeControlWord: aToken bytes size		onto: aStream.	aStream nextPutAll: aToken bytes! !
+
+!RsrTokenExchangeCodec methodsFor!
+encodeTokenAccepted: aTokenAcceptedonto: aStream	self		encodeControlWord: self tokenAcceptedIdentifier		onto: aStream! !
+
+!RsrTokenExchangeCodec methodsFor!
+encodeTokenRejected: aTokenRejectedonto: aStream	self		encodeControlWord: self tokenRejectedIdentifier		onto: aStream! !
+
+!RsrTokenExchangeCodec methodsFor!
+tokenRejectedIdentifier	^2! !
 
 !RsrNumericSpigot methodsFor!
 step: anIncrement	step := anIncrement! !
@@ -777,6 +918,9 @@ versions: anArray	versions := anArray! !
 !RsrSupportedVersions methodsFor!
 = aSupportedVersions	self class = aSupportedVersions class		ifFalse: [^false].	^self versions = aSupportedVersions versions! !
 
+!RsrProtocolVersionNegotiationClient methodsFor!
+perform	"Perform the Client's porition of the handshake"	| supportedVersions answer |	supportedVersions := RsrSupportedVersions versions: #(1).	self codec		encodeSupportedVersions: supportedVersions		onto: self stream.	self stream flush.	answer := self codec decode: self stream.	answer hasSharedVersion		ifFalse: [^RsrProtocolVersionNegotiationFailed signal: 'The Client and Server could not agree on an RSR protocol version.']! !
+
 !RsrReleaseServices methodsFor!
 sids	^sids! !
 
@@ -813,11 +957,14 @@ selector	^selector! !
 !RsrMessageSend methodsFor!
 perform	^self receiver		perform: self selector		withArguments: self arguments! !
 
+!RsrTokenReceiver methodsFor!
+perform	"Send the token. Wait for confirmation."	| receivedToken |	receivedToken := self codec decode: self stream.	receivedToken = self token		ifTrue:			[self codec				encodeTokenAccepted: nil "RsrTokenAccepted new"				onto: self stream]		ifFalse:			[self codec				encodeTokenRejected: nil "RsrTokenRejected new"				onto: self steam.			RsrTokenExchangeFailed signal]! !
+
 !RsrInMemoryConnectionSpecification methodsFor!
 connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		specification: self		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		specification: self		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen.	^connectionA! !
 
-!RsrClientHandshake methodsFor!
-perform	"Perform the Client's porition of the handshake"	| supportedVersions answer |	supportedVersions := RsrSupportedVersions versions: #(1).	self codec		encodeSupportedVersions: supportedVersions		onto: self stream.	self stream flush.	answer := self codec decode: self stream.	answer hasSharedVersion		ifFalse: [^RsrHandshakeFailed signal: 'The Client and Server could not agree on an RSR protocol version.']! !
+!RsrTokenSender methodsFor!
+perform	"Send the token. Wait for confirmation."	| confirmation |	self codec		encodeToken: self token		onto: self stream.	confirmation := self codec decode: self stream.	confirmation wasAccepted		ifFalse: [RsrTokenExchangeFailed signal: 'Token was rejected']! !
 
 !RsrSocketStream methodsFor!
 socket: anRsrSocket	socket := anRsrSocket! !
@@ -843,6 +990,33 @@ chunkSize	"The largest size that should be read from or written to a Socket in 
 !RsrSocketStream methodsFor!
 atEnd	"Return whether additional bytes could become available on the socket."	^socket isConnected not! !
 
+!RsrCommandEncoder methodsFor!
+encodeDeliverResponse: aDeliverResponse	^ByteArray streamContents: [:stream | self encodeDeliverResponse: aDeliverResponse onto: stream]! !
+
+!RsrCommandEncoder methodsFor!
+encodeDeliverResponse: aDeliverResponseonto: aStream	self		encodeControlWord: self deliverResponseCommand		onto: aStream.	self		encodeControlWord: aDeliverResponse transaction		onto: aStream.	self		encodeControlWord: aDeliverResponse snapshots size		onto: aStream.	aDeliverResponse snapshots do: [:each | self encodeServiceSnapshot: each onto: aStream].	self		encodeReference: aDeliverResponse response		onto: aStream! !
+
+!RsrCommandEncoder methodsFor!
+encodeServiceSnapshot: aServiceSnapshot	^ByteArray		streamContents:			[:stream |			self				encodeServiceSnapshot: aServiceSnapshot				onto: stream]! !
+
+!RsrCommandEncoder methodsFor!
+encodeServiceSnapshot: aServiceSnapshotonto: aStream	aServiceSnapshot		encode: aStream		using: self! !
+
+!RsrCommandEncoder methodsFor!
+encodeSendMessage: aSendMessage	^ByteArray streamContents: [:stream | self encodeSendMessage: aSendMessage onto: stream]! !
+
+!RsrCommandEncoder methodsFor!
+encodeReleaseServices: aReleaseServicesonto: aStream	self		encodeControlWord: self releaseObjectsCommand		onto: aStream.	self		encodeControlWord: aReleaseServices sids size		onto: aStream.	aReleaseServices sids		do:			[:sid |			self				encodeControlWord: sid				onto: aStream]! !
+
+!RsrCommandEncoder methodsFor!
+encodeReference: aReferenceonto: aStream	aReference		encode: aStream		using: self! !
+
+!RsrCommandEncoder methodsFor!
+encodeReleaseServices: aReleaseServices	^ByteArray streamContents: [:stream | self encodeReleaseServices: aReleaseServices onto: stream]! !
+
+!RsrCommandEncoder methodsFor!
+encodeSendMessage: aSendMessageonto: aStream	self		encodeControlWord: self sendMessageCommand		onto: aStream.	self		encodeControlWord: aSendMessage transaction		onto: aStream.	self		encodeControlWord: aSendMessage snapshots size		onto: aStream.	aSendMessage snapshots		do:			[:each |			self				encodeServiceSnapshot: each				onto: aStream].	self		encodeReference:  aSendMessage receiverReference		onto: aStream.	self		encodeReference: aSendMessage selectorReference		onto: aStream.	self		encodeControlWord: aSendMessage argumentReferences size		onto: aStream.	aSendMessage argumentReferences		do:			[:each |			self				encodeReference: each				onto: aStream]! !
+
 !RsrDecodingRaisedException methodsFor!
 exception	^exception! !
 
@@ -850,7 +1024,10 @@ exception	^exception! !
 exception: anException	exception := anException! !
 
 !RsrCodec methodsFor!
-deliverResponseCommand	^2! !
+decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := self bytesAsInteger: bytes.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]! !
+
+!RsrCodec methodsFor!
+integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes! !
 
 !RsrCodec methodsFor!
 controlWordMin	^(2 raisedTo: 63) negated! !
@@ -859,58 +1036,37 @@ controlWordMin	^(2 raisedTo: 63) negated! !
 controlWordMax	^(2 raisedTo: 63) - 1! !
 
 !RsrCodec methodsFor!
-deliverErrorResponseCommand	^4! !
-
-!RsrCodec methodsFor!
-immediateOID	^0! !
-
-!RsrCodec methodsFor!
-releaseObjectsCommand	^3! !
-
-!RsrCodec methodsFor!
-sendMessageCommand	^1! !
+encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedInteger := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]).	encodedBytes := self		integerAsByteArray: encodedInteger		ofSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes! !
 
 !RsrCodec methodsFor!
 sizeOfInteger	"Return the number of bytes used to encode an integer"	^8! !
 
+!RsrCodec methodsFor!
+bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
+
+!RsrToken methodsFor!
+hash	^self bytes hash! !
+
+!RsrToken methodsFor!
+bytes	^bytes! !
+
+!RsrToken methodsFor!
+= aToken	^self class == aToken class and: [self bytes = aToken bytes]! !
+
+!RsrToken methodsFor!
+bytes: aByteArray	bytes := aByteArray! !
+
 !RsrTranscriptSink methodsFor!
 write: aMessageString	Transcript		show: aMessageString;		cr! !
 
-!RsrHandshakeCodec methodsFor!
-encodeWord: anIntegeronto: aStream	| bytes integer |	(anInteger between: 0 and: 16rFFFFFFFFFFFFFFFF)		ifFalse: [RsrOutOfRange signal: anInteger printString, ' is not in the valid range for a value in an RSR Handshake Message.'].	bytes := ByteArray new: 8.	integer := anInteger.	8		to: 1		by: -1		do:			[:i | | byte |			byte := integer bitAnd: 16rFF.			bytes at: i put: byte.			integer := integer bitShift: -8].	aStream nextPutAll: bytes! !
+!RsrTokenExchange methodsFor!
+codec	^RsrTokenExchangeCodec new! !
 
-!RsrHandshakeCodec methodsFor!
-decodeSupportedVersions: aStream	| numberOfVersions versions |	numberOfVersions := self decodeWord: aStream.	versions := (1 to: numberOfVersions) collect: [:each | self decodeWord: aStream].	^RsrSupportedVersions versions: versions! !
+!RsrTokenExchange methodsFor!
+token: aToken	token := aToken! !
 
-!RsrHandshakeCodec methodsFor!
-encodeSupportedVersions: aSupportedVersionsonto: aStream	| versions |	versions := aSupportedVersions versions.	self		encodeWord: self supportedVersionsIdentifier		onto: aStream.	self		encodeWord: versions size		onto: aStream.	versions do: [:each | self encodeWord: each onto: aStream]! !
-
-!RsrHandshakeCodec methodsFor!
-decodeWord: aStream	"Decode one word from <aStream> and return it as an integer."	^(aStream next: 8)		inject: 0		into: [:res :byte | (res bitShift: 8) bitOr: byte]! !
-
-!RsrHandshakeCodec methodsFor!
-chosenVersionIdentifier	^1! !
-
-!RsrHandshakeCodec methodsFor!
-supportedVersionsIdentifier	^0! !
-
-!RsrHandshakeCodec methodsFor!
-decodeChosenVersion: aStream	| version |	version := self decodeWord: aStream.	^RsrChosenVersion version: version! !
-
-!RsrHandshakeCodec methodsFor!
-encodeChosenVersion: aChosenVersiononto: aStream	self		encodeWord: self chosenVersionIdentifier		onto: aStream.	self		encodeWord: aChosenVersion version		onto: aStream! !
-
-!RsrHandshakeCodec methodsFor!
-decode: aStream	"Decode a message from <aStream>"	| identifier |	identifier := self decodeWord: aStream.	identifier = self supportedVersionsIdentifier		ifTrue: [^self decodeSupportedVersions: aStream].	identifier = self chosenVersionIdentifier		ifTrue: [^self decodeChosenVersion: aStream].	identifier = self noVersionOverlapIdentifier		ifTrue: [^self decodeNoVersionOverlap: aStream].	^RsrError signal: 'Unknown Handshake message'! !
-
-!RsrHandshakeCodec methodsFor!
-noVersionOverlapIdentifier	^2! !
-
-!RsrHandshakeCodec methodsFor!
-decodeNoVersionOverlap: aStream	^RsrNoVersionOverlap new! !
-
-!RsrHandshakeCodec methodsFor!
-encodeNoVersionOverlap: aNoVersionOverlaponto: aStream	self		encodeWord: self noVersionOverlapIdentifier		onto: aStream! !
+!RsrTokenExchange methodsFor!
+token	^token! !
 
 !RsrPendingMessage methodsFor!
 services	^services! !
@@ -923,9 +1079,6 @@ promise	^promise! !
 
 !RsrPendingMessage methodsFor!
 promise: aPromise	promise := aPromise! !
-
-!RsrServerHandshake methodsFor!
-perform	"Peform the Server's side of the handshake."	| supportedVersions |	supportedVersions := self codec decode: self stream.	(supportedVersions versions includes: 1)		ifTrue:			[self codec				encodeChosenVersion: (RsrChosenVersion version: 1)				onto: self stream.			self stream flush.]		ifFalse:			[self codec				encodeNoVersionOverlap: RsrNoVersionOverlap new				onto: self stream.			self stream flush; close.			^RsrHandshakeFailed signal: 'Client versions did not overlap w/ Server']! !
 
 !RsrStream methodsFor!
 nextPutAll: aByteArray	"Write <aByteArray>'s elements to the backing store."	^self subclassResponsibility! !
@@ -944,6 +1097,9 @@ flush	"Ensure any data cached by the receiver is pushed to its destination."	"
 
 !RsrStream methodsFor!
 atEnd	"Answers when the Stream cannot take or provide any additional bytes."	^self subclassResponsibility! !
+
+!RsrTokenRejected methodsFor!
+wasAccepted	^false! !
 
 !RsrLogWithPrefix methodsFor!
 prefix	^prefix! !
@@ -1042,7 +1198,7 @@ nextCommand	^self decoder decodeCommand: self inStream! !
 executeCycle	[| command |	command := self nextCommand.	self report: command.	self channel received: command]		on: RsrSocketClosed		do:			[:ex |			self reportException: ex.			self channel channelDisconnected]! !
 
 !RsrCommandSource methodsFor!
-decoder	^RsrDecoder new! !
+decoder	^RsrCommandDecoder new! !
 
 !RsrInternalSocketConnectionSpecification methodsFor!
 defaultPort	"Returns the default port number used to listen for connections."	^61982! !
@@ -1138,13 +1294,58 @@ writeCommand: aCommand	self report: aCommand.	aCommand		encode: self outStre
 initialize	super initialize.	queue := SharedQueue new! !
 
 !RsrCommandSink methodsFor!
-encoder	^RsrEncoder new! !
+encoder	^RsrCommandEncoder new! !
 
 !RsrCommandSink methodsFor!
 enqueue: aCommand	self isActive ifTrue: [queue nextPut: aCommand]! !
 
 !RsrCommandSink methodsFor!
 runLoopName	^'Connection Writing'! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+decodeSupportedVersions: aStream	| numberOfVersions versions |	numberOfVersions := self decodeControlWord: aStream.	versions := (1 to: numberOfVersions) collect: [:each | self decodeControlWord: aStream].	^RsrSupportedVersions versions: versions! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+encodeSupportedVersions: aSupportedVersionsonto: aStream	| versions |	versions := aSupportedVersions versions.	self		encodeControlWord: self supportedVersionsIdentifier		onto: aStream.	self		encodeControlWord: versions size		onto: aStream.	versions do: [:each | self encodeControlWord: each onto: aStream]! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+chosenVersionIdentifier	^1! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+supportedVersionsIdentifier	^0! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+noVersionOverlapIdentifier	^2! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+encodeChosenVersion: aChosenVersiononto: aStream	self		encodeControlWord: self chosenVersionIdentifier		onto: aStream.	self		encodeControlWord: aChosenVersion version		onto: aStream! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+decode: aStream	"Decode a message from <aStream>"	| identifier |	identifier := self decodeControlWord: aStream.	identifier = self supportedVersionsIdentifier		ifTrue: [^self decodeSupportedVersions: aStream].	identifier = self chosenVersionIdentifier		ifTrue: [^self decodeChosenVersion: aStream].	identifier = self noVersionOverlapIdentifier		ifTrue: [^self decodeNoVersionOverlap: aStream].	^RsrProtocolVersionNegotiationFailed signal: 'Unknown identifier: ', identifier printString! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+decodeChosenVersion: aStream	| version |	version := self decodeControlWord: aStream.	^RsrChosenVersion version: version! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+decodeNoVersionOverlap: aStream	^RsrNoVersionOverlap new! !
+
+!RsrProtocolVersionNegotiationCodec methodsFor!
+encodeNoVersionOverlap: aNoVersionOverlaponto: aStream	self		encodeControlWord: self noVersionOverlapIdentifier		onto: aStream! !
+
+!RsrProtocolVersionNegotiation methodsFor!
+codec	^RsrProtocolVersionNegotiationCodec new! !
+
+!RsrHandshakeStep methodsFor!
+stream	"The stream that should be used by the step for its action."	^stream! !
+
+!RsrHandshakeStep methodsFor!
+perform	"Perform the work for this step."	^self subclassResponsibility! !
+
+!RsrHandshakeStep methodsFor!
+stream: aStream	"The stream that should be used by the step for its action."	stream := aStream! !
+
+!RsrTokenAccepted methodsFor!
+wasAccepted	^true! !
 
 !RsrCustomSink methodsFor!
 action: aBlock	action := aBlock! !
@@ -1320,8 +1521,29 @@ hash	^self class hash! !
 !RsrNoVersionOverlap methodsFor!
 hasSharedVersion	"Answer whether there is a valid shared protocol version between the Client and Server."	^false! !
 
+!RsrTokenExchangeMessage methodsFor!
+hash	^self class hash! !
+
+!RsrTokenExchangeMessage methodsFor!
+= aTokenExchangeMessage	^self class == aTokenExchangeMessage class! !
+
+!RsrCommandCodec methodsFor!
+deliverResponseCommand	^2! !
+
+!RsrCommandCodec methodsFor!
+deliverErrorResponseCommand	^4! !
+
+!RsrCommandCodec methodsFor!
+immediateOID	^0! !
+
+!RsrCommandCodec methodsFor!
+releaseObjectsCommand	^3! !
+
+!RsrCommandCodec methodsFor!
+sendMessageCommand	^1! !
+
 !RsrAcceptConnection methodsFor!
-waitForConnection	| socket stream handshake channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	stream := RsrSocketStream on: socket.	handshake := RsrServerHandshake over: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+waitForConnection	| socket stream handshake tokenExchange channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	stream := RsrSocketStream on: socket.	handshake := RsrProtocolVersionNegotiationServer over: stream.	handshake perform.	tokenExchange := RsrTokenReceiver		over: stream		token: (RsrToken bytes: (ByteArray new: 16)).	tokenExchange perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrAcceptConnection methodsFor!
 cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
@@ -1440,36 +1662,6 @@ isOpen	^channel isConnected! !
 !RsrConnection methodsFor!
 channel	^channel! !
 
-!RsrDecoder methodsFor!
-decodeReleaseServices: aStream	| count oids |	count := self decodeControlWord: aStream.	oids := Array new: count.	1		to: count		do:			[:i | | oid |			oid := self decodeControlWord: aStream.			oids at: i put: oid].	^RsrReleaseServices sids: oids! !
-
-!RsrDecoder methodsFor!
-decodeControlWord: aStream	| bytes unsignedResult |	bytes := aStream next: self sizeOfInteger.	unsignedResult := self bytesAsInteger: bytes.	^unsignedResult > self controlWordMax		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]		ifFalse: [unsignedResult]! !
-
-!RsrDecoder methodsFor!
-instanceOfImmediate: aReferenceType	aReferenceType = 1		ifTrue: [^RsrSymbolReference new].	aReferenceType = 2		ifTrue: [^RsrStringReference new].	aReferenceType = 3		ifTrue: [^RsrPositiveIntegerReference new].	aReferenceType = 4		ifTrue: [^RsrNegativeIntegerReference new].	aReferenceType = 5		ifTrue: [^RsrCharacterReference new].	aReferenceType = 6		ifTrue: [^RsrNilReference new].	aReferenceType = 7		ifTrue: [^RsrTrueReference new].	aReferenceType = 8		ifTrue: [^RsrFalseReference new].	aReferenceType = 9		ifTrue: [^RsrArrayReference new].	aReferenceType = 10		ifTrue: [^RsrByteArrayReference new].	aReferenceType = 11		ifTrue: [^RsrSetReference new].	aReferenceType = 12		ifTrue: [^RsrOrderedCollectionReference new].	aReferenceType = 13		ifTrue: [^RsrDictionaryReference new].	aReferenceType = 14		ifTrue: [^RsrDateAndTimeReference new].	aReferenceType = 15		ifTrue: [^RsrDoubleReference new].	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.! !
-
-!RsrDecoder methodsFor!
-decodeReference: aStream	| oid |	oid := self decodeControlWord: aStream.	oid = self immediateOID ifTrue: [^self decodeImmediateReference: aStream].	^RsrServiceReference sid: oid! !
-
-!RsrDecoder methodsFor!
-decodeDeliverResponse: aStream    | transaction numServices serviceSnapshots response |    transaction := self decodeControlWord: aStream.    numServices := self decodeControlWord: aStream.    serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].    response := self decodeReference: aStream.    ^RsrDeliverResponse new        transaction: transaction;        snapshots: serviceSnapshots;        response: response;        yourself! !
-
-!RsrDecoder methodsFor!
-decodeServiceSnapshot: aStream	| snapshot |	snapshot := RsrServiceSnapshot new.	snapshot		decode: aStream		using: self.	^snapshot! !
-
-!RsrDecoder methodsFor!
-decodeSendMessage: aStream	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |	transaction := self decodeControlWord: aStream.	numServices := self decodeControlWord: aStream.	serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].	receiverReference := self decodeReference: aStream.	selector := self decodeReference: aStream.	argCount := self decodeControlWord: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].	instance := RsrSendMessage		transaction: transaction		receiverReference: receiverReference		selectorReference: selector		argumentReferences: arguments.	instance snapshots: serviceSnapshots.	^instance! !
-
-!RsrDecoder methodsFor!
-decodeImmediateReference: aStream	| referenceType |	referenceType := self decodeControlWord: aStream.	^(self instanceOfImmediate: referenceType)		decode: aStream		using: self! !
-
-!RsrDecoder methodsFor!
-decodeCommand: aStream	"Decode an object from the stream"	| command |	command := self decodeControlWord: aStream.	command == self sendMessageCommand ifTrue: [^self decodeSendMessage: aStream].	command == self deliverResponseCommand ifTrue: [^self decodeDeliverResponse: aStream].	command == self releaseObjectsCommand ifTrue: [^self decodeReleaseServices: aStream].	^RsrError signal: 'Unknown command identifier: ', command printString! !
-
-!RsrDecoder methodsFor!
-bytesAsInteger: bytes	| res |	res := 0.	bytes do: [:e | res := (res bitShift: 8) bitOr: e].	^res! !
-
 !RsrRemoteError methodsFor!
 originalClassName	^originalClassName! !
 
@@ -1532,6 +1724,9 @@ channel	^channel! !
 
 !RsrStreamChannelLoop methodsFor!
 runLoopName	"Return the name of the associated run loop.	This name is assigned to the Process used to execute the run loop."	^self subclassResponsibility! !
+
+!RsrProtocolVersionNegotiationServer methodsFor!
+perform	"Peform the Server's side of the handshake."	| supportedVersions |	supportedVersions := self codec decode: self stream.	(supportedVersions versions includes: 1)		ifTrue:			[self codec				encodeChosenVersion: (RsrChosenVersion version: 1)				onto: self stream.			self stream flush.]		ifFalse:			[self codec				encodeNoVersionOverlap: RsrNoVersionOverlap new				onto: self stream.			self stream flush; close.			^RsrProtocolVersionNegotiationFailed signal: 'Client versions did not overlap w/ Server']! !
 
 !RsrDeliverResponse methodsFor!
 response	^self responseReference! !
@@ -1632,18 +1827,6 @@ received: aCommand	"A command has come in over the channel. Propogate it to the
 !RsrChannel methodsFor!
 connection: aConnection	connection := aConnection! !
 
-!RsrHandshake methodsFor!
-stream	"The stream over which the handshake should occurr"	^stream! !
-
-!RsrHandshake methodsFor!
-codec	^RsrHandshakeCodec new! !
-
-!RsrHandshake methodsFor!
-perform	self subclassResponsibility! !
-
-!RsrHandshake methodsFor!
-stream: aStream	stream := aStream! !
-
 !RsrBufferedSocketStream methodsFor!
 next	^self next: 1! !
 
@@ -1687,7 +1870,7 @@ reportOn: aLog	self subclassResponsibility! !
 encode: aStreamusing: anEncoder	self subclassResponsibility! !
 
 !RsrInitiateConnection methodsFor!
-connect	| socket stream handshake channel connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	stream := RsrSocketStream on: socket.	handshake := RsrClientHandshake over: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
+connect	| socket stream handshake tokenExchange channel connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	stream := RsrSocketStream on: socket.	handshake := RsrProtocolVersionNegotiationClient over: stream.	handshake perform.	tokenExchange := RsrTokenSender		over: stream		token: (RsrToken bytes: (ByteArray new: 16)).	tokenExchange perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
 
 !RsrThreadSafeNumericSpigot methodsFor!
 initialize	super initialize.	mutex := Semaphore forMutualExclusion! !
@@ -1730,39 +1913,6 @@ assertNotResolved	self isResolved		ifTrue: [RsrAlreadyResolved signal].! !
 
 !RsrPromise methodsFor!
 waitForResolution	"There doesn't seem to be a great way to implement this method.	The ensure below is generally safe but does have a side-effect of signaling	the mutex when the process is terminated while waiting.	Removing the ensure allows the signal to be lost if the process is terminated	just after #wait but before #signal is processed.	In order to solve this, the loop verifies the promise is actually resolved before	continuing."	self isResolved		ifTrue: [^self].	[[self isResolved] whileFalse: [resolvedMutex wait]] ensure: [resolvedMutex signal]! !
-
-!RsrEncoder methodsFor!
-encodeControlWord: anIntegeronto: aStream	| encodedInteger encodedBytes |	(anInteger between: self controlWordMin and: self controlWordMax)		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].	encodedInteger := (anInteger positive		ifTrue: [anInteger]		ifFalse: [(2 raisedTo: 64) + anInteger]).	encodedBytes := self		integerAsByteArray: encodedInteger		ofSize: self sizeOfInteger.	aStream nextPutAll: encodedBytes! !
-
-!RsrEncoder methodsFor!
-encodeReference: aReferenceonto: aStream	aReference		encode: aStream		using: self! !
-
-!RsrEncoder methodsFor!
-encodeServiceSnapshot: aServiceSnapshot	^ByteArray		streamContents:			[:stream |			self				encodeServiceSnapshot: aServiceSnapshot				onto: stream]! !
-
-!RsrEncoder methodsFor!
-encodeServiceSnapshot: aServiceSnapshotonto: aStream	aServiceSnapshot		encode: aStream		using: self! !
-
-!RsrEncoder methodsFor!
-encodeDeliverResponse: aDeliverResponse	^ByteArray streamContents: [:stream | self encodeDeliverResponse: aDeliverResponse onto: stream]! !
-
-!RsrEncoder methodsFor!
-encodeDeliverResponse: aDeliverResponseonto: aStream	self		encodeControlWord: self deliverResponseCommand		onto: aStream.	self		encodeControlWord: aDeliverResponse transaction		onto: aStream.	self		encodeControlWord: aDeliverResponse snapshots size		onto: aStream.	aDeliverResponse snapshots do: [:each | self encodeServiceSnapshot: each onto: aStream].	self		encodeReference: aDeliverResponse response		onto: aStream! !
-
-!RsrEncoder methodsFor!
-encodeSendMessage: aSendMessageonto: aStream	self		encodeControlWord: self sendMessageCommand		onto: aStream.	self		encodeControlWord: aSendMessage transaction		onto: aStream.	self		encodeControlWord: aSendMessage snapshots size		onto: aStream.	aSendMessage snapshots		do:			[:each |			self				encodeServiceSnapshot: each				onto: aStream].	self		encodeReference:  aSendMessage receiverReference		onto: aStream.	self		encodeReference: aSendMessage selectorReference		onto: aStream.	self		encodeControlWord: aSendMessage argumentReferences size		onto: aStream.	aSendMessage argumentReferences		do:			[:each |			self				encodeReference: each				onto: aStream]! !
-
-!RsrEncoder methodsFor!
-encodeSendMessage: aSendMessage	^ByteArray streamContents: [:stream | self encodeSendMessage: aSendMessage onto: stream]! !
-
-!RsrEncoder methodsFor!
-encodeReleaseServices: aReleaseServicesonto: aStream	self		encodeControlWord: self releaseObjectsCommand		onto: aStream.	self		encodeControlWord: aReleaseServices sids size		onto: aStream.	aReleaseServices sids		do:			[:sid |			self				encodeControlWord: sid				onto: aStream]! !
-
-!RsrEncoder methodsFor!
-encodeReleaseServices: aReleaseServices	^ByteArray streamContents: [:stream | self encodeReleaseServices: aReleaseServices onto: stream]! !
-
-!RsrEncoder methodsFor!
-integerAsByteArray: anIntegerofSize: aNumberOfBytes	| bytes int |	bytes := ByteArray new: aNumberOfBytes.	int := anInteger.	aNumberOfBytes		to: 1		by: -1		do:			[:i | | byte |			byte := int bitAnd: 16rFF.			int := int bitShift: -8.			bytes at: i put: byte].	int ~= 0		ifTrue: [self error: 'Loss of precision detected'].	^bytes! !
 
 !RsrSocketConnectionSpecification methodsFor!
 port: aPort	"The port number used for establishing a socket"	port := aPort! !
@@ -1874,3 +2024,27 @@ connection	^connection! !
 
 !RsrSnapshotAnalysis methodsFor!
 perform	roots do: [:each | self analyze: each]! !
+
+!RsrCommandDecoder methodsFor!
+instanceOfImmediate: aReferenceType	aReferenceType = 1		ifTrue: [^RsrSymbolReference new].	aReferenceType = 2		ifTrue: [^RsrStringReference new].	aReferenceType = 3		ifTrue: [^RsrPositiveIntegerReference new].	aReferenceType = 4		ifTrue: [^RsrNegativeIntegerReference new].	aReferenceType = 5		ifTrue: [^RsrCharacterReference new].	aReferenceType = 6		ifTrue: [^RsrNilReference new].	aReferenceType = 7		ifTrue: [^RsrTrueReference new].	aReferenceType = 8		ifTrue: [^RsrFalseReference new].	aReferenceType = 9		ifTrue: [^RsrArrayReference new].	aReferenceType = 10		ifTrue: [^RsrByteArrayReference new].	aReferenceType = 11		ifTrue: [^RsrSetReference new].	aReferenceType = 12		ifTrue: [^RsrOrderedCollectionReference new].	aReferenceType = 13		ifTrue: [^RsrDictionaryReference new].	aReferenceType = 14		ifTrue: [^RsrDateAndTimeReference new].	aReferenceType = 15		ifTrue: [^RsrDoubleReference new].	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.! !
+
+!RsrCommandDecoder methodsFor!
+decodeReleaseServices: aStream	| count oids |	count := self decodeControlWord: aStream.	oids := Array new: count.	1		to: count		do:			[:i | | oid |			oid := self decodeControlWord: aStream.			oids at: i put: oid].	^RsrReleaseServices sids: oids! !
+
+!RsrCommandDecoder methodsFor!
+decodeReference: aStream	| oid |	oid := self decodeControlWord: aStream.	oid = self immediateOID ifTrue: [^self decodeImmediateReference: aStream].	^RsrServiceReference sid: oid! !
+
+!RsrCommandDecoder methodsFor!
+decodeServiceSnapshot: aStream	| snapshot |	snapshot := RsrServiceSnapshot new.	snapshot		decode: aStream		using: self.	^snapshot! !
+
+!RsrCommandDecoder methodsFor!
+decodeImmediateReference: aStream	| referenceType |	referenceType := self decodeControlWord: aStream.	^(self instanceOfImmediate: referenceType)		decode: aStream		using: self! !
+
+!RsrCommandDecoder methodsFor!
+decodeDeliverResponse: aStream    | transaction numServices serviceSnapshots response |    transaction := self decodeControlWord: aStream.    numServices := self decodeControlWord: aStream.    serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].    response := self decodeReference: aStream.    ^RsrDeliverResponse new        transaction: transaction;        snapshots: serviceSnapshots;        response: response;        yourself! !
+
+!RsrCommandDecoder methodsFor!
+decodeCommand: aStream	"Decode an object from the stream"	| command |	command := self decodeControlWord: aStream.	command == self sendMessageCommand ifTrue: [^self decodeSendMessage: aStream].	command == self deliverResponseCommand ifTrue: [^self decodeDeliverResponse: aStream].	command == self releaseObjectsCommand ifTrue: [^self decodeReleaseServices: aStream].	^RsrError signal: 'Unknown command identifier: ', command printString! !
+
+!RsrCommandDecoder methodsFor!
+decodeSendMessage: aStream	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |	transaction := self decodeControlWord: aStream.	numServices := self decodeControlWord: aStream.	serviceSnapshots := (1 to: numServices) collect: [:each | self decodeServiceSnapshot: aStream].	receiverReference := self decodeReference: aStream.	selector := self decodeReference: aStream.	argCount := self decodeControlWord: aStream.	arguments := (1 to: argCount) collect: [:each | self decodeReference: aStream].	instance := RsrSendMessage		transaction: transaction		receiverReference: receiverReference		selectorReference: selector		argumentReferences: arguments.	instance snapshots: serviceSnapshots.	^instance! !

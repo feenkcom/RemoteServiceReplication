@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrCodecTest',
+	#name : 'RsrCommandCodecTest',
 	#superclass : 'RsrTestCase',
 	#instVars : [
 		'connection'
@@ -8,45 +8,45 @@ Class {
 }
 
 { #category : 'testing' }
-RsrCodecTest class >> isAbstract [
+RsrCommandCodecTest class >> isAbstract [
 
-	^self == RsrCodecTest
+	^self == RsrCommandCodecTest
 ]
 
 { #category : 'accessing' }
-RsrCodecTest >> connection [
+RsrCommandCodecTest >> connection [
 
 	^connection
 ]
 
 { #category : 'other' }
-RsrCodecTest >> decoder [
+RsrCommandCodecTest >> decoder [
 
-	^RsrDecoder new
+	^RsrCommandDecoder new
+]
+
+{ #category : 'accessing' }
+RsrCommandCodecTest >> encoder [
+
+	^RsrCommandEncoder new
 ]
 
 { #category : 'encode/decode' }
-RsrCodecTest >> encodeReferenceOf: anObject [
+RsrCommandCodecTest >> encodeReferenceOf: anObject [
 
 	| reference |
 	reference := RsrReference from: anObject.
 	^ByteArray streamContents: [:stream | self encoder encodeReference: reference onto: stream]
 ]
 
-{ #category : 'accessing' }
-RsrCodecTest >> encoder [
-
-	^RsrEncoder new
-]
-
 { #category : 'running-symbol' }
-RsrCodecTest >> genericSymbol [
+RsrCommandCodecTest >> genericSymbol [
 
 	^#genericSymbol
 ]
 
 { #category : 'running-symbol' }
-RsrCodecTest >> genericSymbolEncoding [
+RsrCommandCodecTest >> genericSymbolEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "OID = 0"
 	#[0 0 0 0 0 0 0 1], "Immediate Type = 1"
@@ -55,7 +55,7 @@ RsrCodecTest >> genericSymbolEncoding [
 ]
 
 { #category : 'accessing-objects' }
-RsrCodecTest >> referencedServiceEncoding [
+RsrCommandCodecTest >> referencedServiceEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "type"
 	#[0 0 0 0 0 0 0 2], "referencedService's OID = 2"
@@ -67,7 +67,7 @@ RsrCodecTest >> referencedServiceEncoding [
 ]
 
 { #category : 'accessing-objects' }
-RsrCodecTest >> rootServiceEncoding [
+RsrCommandCodecTest >> rootServiceEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "type"
 	#[0 0 0 0 0 0 0 1], "rootService's OID = 1"
@@ -80,7 +80,7 @@ RsrCodecTest >> rootServiceEncoding [
 ]
 
 { #category : 'running' }
-RsrCodecTest >> serviceNoInstVarsEncoding [
+RsrCommandCodecTest >> serviceNoInstVarsEncoding [
 
 	^#[0 0 0 0 0 0 0 0], "type"
 	#[0 0 0 0 0 0 0 1], "rootService's OID = 1"
@@ -92,7 +92,7 @@ RsrCodecTest >> serviceNoInstVarsEncoding [
 ]
 
 { #category : 'other' }
-RsrCodecTest >> setUp [
+RsrCommandCodecTest >> setUp [
 
 	super setUp.
 	connection := RsrConnection
@@ -103,7 +103,7 @@ RsrCodecTest >> setUp [
 ]
 
 { #category : 'other' }
-RsrCodecTest >> tearDown [
+RsrCommandCodecTest >> tearDown [
 
 	connection close.
 	connection := nil.
@@ -111,7 +111,7 @@ RsrCodecTest >> tearDown [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testArray [
+RsrCommandCodecTest >> testArray [
 
 	| array encoding |
 	array := Array
@@ -143,7 +143,7 @@ RsrCodecTest >> testArray [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testBoolean [
+RsrCommandCodecTest >> testBoolean [
 
 	| encoding |
 	encoding :=
@@ -161,7 +161,7 @@ RsrCodecTest >> testBoolean [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testByteArray [
+RsrCommandCodecTest >> testByteArray [
 
 	| bytes encoding |
 	bytes := #[].
@@ -185,7 +185,7 @@ RsrCodecTest >> testByteArray [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testCharacter [
+RsrCommandCodecTest >> testCharacter [
 
 	| encoding |
 	encoding :=
@@ -226,7 +226,7 @@ RsrCodecTest >> testCharacter [
 ]
 
 { #category : 'running-control words' }
-RsrCodecTest >> testControlWord [
+RsrCommandCodecTest >> testControlWord [
 	
 	self
 		verifyControlWord: 0
@@ -246,7 +246,7 @@ RsrCodecTest >> testControlWord [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testDateTime [
+RsrCommandCodecTest >> testDateTime [
 
 	| dt encoding |
 	dt := RsrDateAndTime posixEpoch.
@@ -284,7 +284,7 @@ RsrCodecTest >> testDateTime [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testDictionary [
+RsrCommandCodecTest >> testDictionary [
 
 	| dictionary encoding result |
 	dictionary := Dictionary new.
@@ -327,7 +327,7 @@ RsrCodecTest >> testDictionary [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testDouble [
+RsrCommandCodecTest >> testDouble [
 
 	| encoding |
 	encoding :=
@@ -382,7 +382,7 @@ RsrCodecTest >> testDouble [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testInteger [
+RsrCommandCodecTest >> testInteger [
 
 	| encoding |
 	encoding :=
@@ -436,7 +436,7 @@ RsrCodecTest >> testInteger [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testNil [
+RsrCommandCodecTest >> testNil [
 
 	| encoding |
 	encoding :=
@@ -448,7 +448,7 @@ RsrCodecTest >> testNil [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testOrderedCollection [
+RsrCommandCodecTest >> testOrderedCollection [
 
 	| oc encoding |
 	oc := OrderedCollection new.
@@ -480,7 +480,7 @@ RsrCodecTest >> testOrderedCollection [
 ]
 
 { #category : 'running-immediates' }
-RsrCodecTest >> testSet [
+RsrCommandCodecTest >> testSet [
 
 	| set encoding result |
 	set := Set new.
@@ -517,7 +517,7 @@ RsrCodecTest >> testSet [
 ]
 
 { #category : 'running-symbol' }
-RsrCodecTest >> testString [
+RsrCommandCodecTest >> testString [
 
 	| encoding |
 	encoding :=
@@ -539,7 +539,7 @@ RsrCodecTest >> testString [
 ]
 
 { #category : 'running-symbol' }
-RsrCodecTest >> testSymbol [
+RsrCommandCodecTest >> testSymbol [
 
 	self
 		verifyImmediate: self genericSymbol
@@ -547,14 +547,14 @@ RsrCodecTest >> testSymbol [
 ]
 
 { #category : 'asserting' }
-RsrCodecTest >> verifyControlWord: anInteger
+RsrCommandCodecTest >> verifyControlWord: anInteger
 encoding: bytes [
 
 	self subclassResponsibility
 ]
 
 { #category : 'asserting' }
-RsrCodecTest >> verifyImmediate: anImmediateObject
+RsrCommandCodecTest >> verifyImmediate: anImmediateObject
 encoding: encoding [
 
 	self subclassResponsibility

@@ -1,11 +1,11 @@
 Class {
-	#name : 'RsrServerHandshake',
-	#superclass : 'RsrHandshake',
+	#name : 'RsrProtocolVersionNegotiationServer',
+	#superclass : 'RsrProtocolVersionNegotiation',
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'handshaking' }
-RsrServerHandshake >> perform [
+RsrProtocolVersionNegotiationServer >> perform [
 	"Peform the Server's side of the handshake."
 
 	| supportedVersions |
@@ -21,5 +21,5 @@ RsrServerHandshake >> perform [
 				encodeNoVersionOverlap: RsrNoVersionOverlap new
 				onto: self stream.
 			self stream flush; close.
-			^RsrHandshakeFailed signal: 'Client versions did not overlap w/ Server']
+			^RsrProtocolVersionNegotiationFailed signal: 'Client versions did not overlap w/ Server']
 ]

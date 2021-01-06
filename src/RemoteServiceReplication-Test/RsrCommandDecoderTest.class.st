@@ -9,13 +9,13 @@ Object
 
 "
 Class {
-	#name : 'RsrDecoderTest',
-	#superclass : 'RsrCodecTest',
+	#name : 'RsrCommandDecoderTest',
+	#superclass : 'RsrCommandCodecTest',
 	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'asserting' }
-RsrDecoderTest >> assertReference: bytes
+RsrCommandDecoderTest >> assertReference: bytes
 decodesTo: expected [
 
 	| actual |
@@ -26,19 +26,19 @@ decodesTo: expected [
 ]
 
 { #category : 'decoding' }
-RsrDecoderTest >> decodeReference: bytes [
+RsrCommandDecoderTest >> decodeReference: bytes [
 
 	^(self decoder decodeReference: bytes readStream) resolve: self connection
 ]
 
 { #category : 'decoding' }
-RsrDecoderTest >> decodeService: anObjectBytes [
+RsrCommandDecoderTest >> decodeService: anObjectBytes [
 
 	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self connection
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testDeliverResponse [
+RsrCommandDecoderTest >> testDeliverResponse [
 
 	| service response encoding command decodedService |
 	service := RsrServerNoInstVars new.
@@ -73,7 +73,7 @@ RsrDecoderTest >> testDeliverResponse [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testReleaseServices [
+RsrCommandDecoderTest >> testReleaseServices [
 
 	| command encoding |
 	encoding :=
@@ -91,7 +91,7 @@ RsrDecoderTest >> testReleaseServices [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testSendMessage [
+RsrCommandDecoderTest >> testSendMessage [
 
 	| service encoding command |
 	service := RsrServerNoInstVars new.
@@ -129,7 +129,7 @@ RsrDecoderTest >> testSendMessage [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testServiceDecodeIdentity [
+RsrCommandDecoderTest >> testServiceDecodeIdentity [
 	"Ensure that decoding an object multiple times results in
 	a single object getting created."
 
@@ -142,7 +142,7 @@ RsrDecoderTest >> testServiceDecodeIdentity [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testServiceNoInstVars [
+RsrCommandDecoderTest >> testServiceNoInstVars [
 
 	| decodedService |
 	decodedService := self decodeService: self serviceNoInstVarsEncoding.
@@ -155,7 +155,7 @@ RsrDecoderTest >> testServiceNoInstVars [
 ]
 
 { #category : 'running' }
-RsrDecoderTest >> testServiceReferenceService [
+RsrCommandDecoderTest >> testServiceReferenceService [
 
 	| rootService referencedService |
 	referencedService := self decodeService: self referencedServiceEncoding.
@@ -175,7 +175,7 @@ RsrDecoderTest >> testServiceReferenceService [
 ]
 
 { #category : 'asserting' }
-RsrDecoderTest >> verifyControlWord: expected
+RsrCommandDecoderTest >> verifyControlWord: expected
 encoding: bytes [
 
 	| actual |
@@ -186,7 +186,7 @@ encoding: bytes [
 ]
 
 { #category : 'asserting' }
-RsrDecoderTest >> verifyImmediate: expected
+RsrCommandDecoderTest >> verifyImmediate: expected
 encoding: encoding [
 
 	| actual |

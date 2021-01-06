@@ -10,7 +10,7 @@ Class {
 { #category : 'accessing' }
 RsrCommandSource >> decoder [
 
-	^RsrDecoder new
+	^RsrCommandDecoder new
 ]
 
 { #category : 'commands' }

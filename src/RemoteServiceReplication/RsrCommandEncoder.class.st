@@ -1,33 +1,17 @@
 Class {
-	#name : 'RsrEncoder',
-	#superclass : 'RsrCodec',
+	#name : 'RsrCommandEncoder',
+	#superclass : 'RsrCommandCodec',
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeControlWord: anInteger
-onto: aStream [
-
-	| encodedInteger encodedBytes |
-	(anInteger between: self controlWordMin and: self controlWordMax)
-		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].
-	encodedInteger := (anInteger positive
-		ifTrue: [anInteger]
-		ifFalse: [(2 raisedTo: 64) + anInteger]).
-	encodedBytes := self
-		integerAsByteArray: encodedInteger
-		ofSize: self sizeOfInteger.
-	aStream nextPutAll: encodedBytes
-]
-
-{ #category : 'private-encoding' }
-RsrEncoder >> encodeDeliverResponse: aDeliverResponse [
+RsrCommandEncoder >> encodeDeliverResponse: aDeliverResponse [
 
 	^ByteArray streamContents: [:stream | self encodeDeliverResponse: aDeliverResponse onto: stream]
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeDeliverResponse: aDeliverResponse
+RsrCommandEncoder >> encodeDeliverResponse: aDeliverResponse
 onto: aStream [
 
 	self
@@ -46,7 +30,7 @@ onto: aStream [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeReference: aReference
+RsrCommandEncoder >> encodeReference: aReference
 onto: aStream [
 
 	aReference
@@ -55,13 +39,13 @@ onto: aStream [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeReleaseServices: aReleaseServices [
+RsrCommandEncoder >> encodeReleaseServices: aReleaseServices [
 
 	^ByteArray streamContents: [:stream | self encodeReleaseServices: aReleaseServices onto: stream]
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeReleaseServices: aReleaseServices
+RsrCommandEncoder >> encodeReleaseServices: aReleaseServices
 onto: aStream [
 
 	self
@@ -79,13 +63,13 @@ onto: aStream [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeSendMessage: aSendMessage [
+RsrCommandEncoder >> encodeSendMessage: aSendMessage [
 
 	^ByteArray streamContents: [:stream | self encodeSendMessage: aSendMessage onto: stream]
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeSendMessage: aSendMessage
+RsrCommandEncoder >> encodeSendMessage: aSendMessage
 onto: aStream [
 
 	self
@@ -121,7 +105,7 @@ onto: aStream [
 ]
 
 { #category : 'encoding' }
-RsrEncoder >> encodeServiceSnapshot: aServiceSnapshot [
+RsrCommandEncoder >> encodeServiceSnapshot: aServiceSnapshot [
 
 	^ByteArray
 		streamContents:
@@ -132,30 +116,10 @@ RsrEncoder >> encodeServiceSnapshot: aServiceSnapshot [
 ]
 
 { #category : 'private-encoding' }
-RsrEncoder >> encodeServiceSnapshot: aServiceSnapshot
+RsrCommandEncoder >> encodeServiceSnapshot: aServiceSnapshot
 onto: aStream [
 
 	aServiceSnapshot
 		encode: aStream
 		using: self
-]
-
-{ #category : 'converting' }
-RsrEncoder >> integerAsByteArray: anInteger
-ofSize: aNumberOfBytes [
-
-	| bytes int |
-	bytes := ByteArray new: aNumberOfBytes.
-	int := anInteger.
-	aNumberOfBytes
-		to: 1
-		by: -1
-		do:
-			[:i | | byte |
-			byte := int bitAnd: 16rFF.
-			int := int bitShift: -8.
-			bytes at: i put: byte].
-	int ~= 0
-		ifTrue: [self error: 'Loss of precision detected'].
-	^bytes
 ]

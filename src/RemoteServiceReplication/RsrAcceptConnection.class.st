@@ -45,7 +45,7 @@ RsrAcceptConnection >> isWaitingForConnection [
 { #category : 'connecting' }
 RsrAcceptConnection >> waitForConnection [
 
-	| socket stream handshake channel connection |
+	| socket stream handshake tokenExchange channel connection |
 	listener := self socketClass new.
 	[listener
 		bindAddress: self host
@@ -58,8 +58,12 @@ RsrAcceptConnection >> waitForConnection [
 				[listener close.
 				listener := nil].
 	stream := RsrSocketStream on: socket.
-	handshake := RsrServerHandshake over: stream.
+	handshake := RsrProtocolVersionNegotiationServer over: stream.
 	handshake perform.
+	tokenExchange := RsrTokenReceiver
+		over: stream
+		token: (RsrToken bytes: (ByteArray new: 16)).
+	tokenExchange perform.
 	channel := RsrBinaryStreamChannel
 		inStream: stream
 		outStream: stream.

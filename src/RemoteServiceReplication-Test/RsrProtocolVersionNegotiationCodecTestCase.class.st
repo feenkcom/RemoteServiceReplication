@@ -1,23 +1,23 @@
 Class {
-	#name : 'RsrHandshakeCodecTest',
+	#name : 'RsrProtocolVersionNegotiationCodecTestCase',
 	#superclass : 'RsrTestCase',
 	#category : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
-RsrHandshakeCodecTest >> codec [
+RsrProtocolVersionNegotiationCodecTestCase >> codec [
 
-	^RsrHandshakeCodec new
+	^RsrProtocolVersionNegotiationCodec new
 ]
 
 { #category : 'utilities' }
-RsrHandshakeCodecTest >> stream: aBlock [
+RsrProtocolVersionNegotiationCodecTestCase >> stream: aBlock [
 
 	^ByteArray streamContents: [:stream | aBlock value: stream]
 ]
 
 { #category : 'running' }
-RsrHandshakeCodecTest >> testChosenVersion [
+RsrProtocolVersionNegotiationCodecTestCase >> testChosenVersion [
 
 	| chosenVersion encoding result |
 	chosenVersion := RsrChosenVersion version: 7.
@@ -35,7 +35,7 @@ RsrHandshakeCodecTest >> testChosenVersion [
 ]
 
 { #category : 'running' }
-RsrHandshakeCodecTest >> testNoVersionOverlap [
+RsrProtocolVersionNegotiationCodecTestCase >> testNoVersionOverlap [
 
 	| noVersionOverlap encoding result |
 	noVersionOverlap := RsrNoVersionOverlap new.
@@ -51,7 +51,7 @@ RsrHandshakeCodecTest >> testNoVersionOverlap [
 ]
 
 { #category : 'running' }
-RsrHandshakeCodecTest >> testSupportedVersions [
+RsrProtocolVersionNegotiationCodecTestCase >> testSupportedVersions [
 
 	| supportedVersions encoding result |
 	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).

@@ -2,7 +2,7 @@
 HandshakeMessage serves as a superclass for all Messages used while processing a Connection Handshake.
 "
 Class {
-	#name : 'RsrHandshakeMessage',
+	#name : 'RsrProtocolVersionNegotiationMessage',
 	#superclass : 'RsrObject',
 	#category : 'RemoteServiceReplication'
 }

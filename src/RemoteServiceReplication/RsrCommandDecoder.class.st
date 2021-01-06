@@ -7,30 +7,21 @@ Object
 
 "
 Class {
-	#name : 'RsrDecoder',
-	#superclass : 'RsrCodec',
+	#name : 'RsrCommandDecoder',
+	#superclass : 'RsrCommandCodec',
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'instance creation' }
-RsrDecoder class >> registry: aRegistry [
+RsrCommandDecoder class >> registry: aRegistry [
 
 	^self new
 		registry: aRegistry;
 		yourself
 ]
 
-{ #category : 'private-converting' }
-RsrDecoder >> bytesAsInteger: bytes [
-
-	| res |
-	res := 0.
-	bytes do: [:e | res := (res bitShift: 8) bitOr: e].
-	^res
-]
-
 { #category : 'decoding-commands' }
-RsrDecoder >> decodeCommand: aStream [
+RsrCommandDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
 
 	| command |
@@ -41,19 +32,8 @@ RsrDecoder >> decodeCommand: aStream [
 	^RsrError signal: 'Unknown command identifier: ', command printString
 ]
 
-{ #category : 'decoding' }
-RsrDecoder >> decodeControlWord: aStream [
-
-	| bytes unsignedResult |
-	bytes := aStream next: self sizeOfInteger.
-	unsignedResult := self bytesAsInteger: bytes.
-	^unsignedResult > self controlWordMax
-		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]
-		ifFalse: [unsignedResult]
-]
-
 { #category : 'decoding-commands' }
-RsrDecoder >> decodeDeliverResponse: aStream [
+RsrCommandDecoder >> decodeDeliverResponse: aStream [
 
     | transaction numServices serviceSnapshots response |
     transaction := self decodeControlWord: aStream.
@@ -68,7 +48,7 @@ RsrDecoder >> decodeDeliverResponse: aStream [
 ]
 
 { #category : 'decoding-services' }
-RsrDecoder >> decodeImmediateReference: aStream [
+RsrCommandDecoder >> decodeImmediateReference: aStream [
 
 	| referenceType |
 	referenceType := self decodeControlWord: aStream.
@@ -78,7 +58,7 @@ RsrDecoder >> decodeImmediateReference: aStream [
 ]
 
 { #category : 'decoding' }
-RsrDecoder >> decodeReference: aStream [
+RsrCommandDecoder >> decodeReference: aStream [
 
 	| oid |
 	oid := self decodeControlWord: aStream.
@@ -87,7 +67,7 @@ RsrDecoder >> decodeReference: aStream [
 ]
 
 { #category : 'decoding-commands' }
-RsrDecoder >> decodeReleaseServices: aStream [
+RsrCommandDecoder >> decodeReleaseServices: aStream [
 
 	| count oids |
 	count := self decodeControlWord: aStream.
@@ -102,7 +82,7 @@ RsrDecoder >> decodeReleaseServices: aStream [
 ]
 
 { #category : 'decoding-commands' }
-RsrDecoder >> decodeSendMessage: aStream [
+RsrCommandDecoder >> decodeSendMessage: aStream [
 
 	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |
 	transaction := self decodeControlWord: aStream.
@@ -122,7 +102,7 @@ RsrDecoder >> decodeSendMessage: aStream [
 ]
 
 { #category : 'decoding-services' }
-RsrDecoder >> decodeServiceSnapshot: aStream [
+RsrCommandDecoder >> decodeServiceSnapshot: aStream [
 
 	| snapshot |
 	snapshot := RsrServiceSnapshot new.
@@ -133,7 +113,7 @@ RsrDecoder >> decodeServiceSnapshot: aStream [
 ]
 
 { #category : 'decoding-services' }
-RsrDecoder >> instanceOfImmediate: aReferenceType [
+RsrCommandDecoder >> instanceOfImmediate: aReferenceType [
 
 	aReferenceType = 1
 		ifTrue: [^RsrSymbolReference new].
