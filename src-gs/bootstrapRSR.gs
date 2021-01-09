@@ -58,6 +58,24 @@ removeallclassmethods RsrConnectionFailed
 
 doit
 (RsrError
+	subclass: 'RsrHandshakeFailed'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshakeFailed
+removeallclassmethods RsrHandshakeFailed
+
+doit
+(RsrError
 	subclass: 'RsrNonresumableError'
 	instVarNames: #(  )
 	classVars: #(  )
@@ -73,6 +91,24 @@ true.
 
 removeallmethods RsrNonresumableError
 removeallclassmethods RsrNonresumableError
+
+doit
+(RsrError
+	subclass: 'RsrOutOfRange'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication-Base';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrOutOfRange
+removeallclassmethods RsrOutOfRange
 
 doit
 (RsrError
@@ -878,42 +914,6 @@ removeallclassmethods RsrKnownServer
 
 doit
 (RsrService
-	subclass: 'RsrSameTemplateAndClientService'
-	instVarNames: #( replicated1 replicated2 )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication-Test';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrSameTemplateAndClientService
-removeallclassmethods RsrSameTemplateAndClientService
-
-doit
-(RsrSameTemplateAndClientService
-	subclass: 'RsrDifferentServerService'
-	instVarNames: #( private1 )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication-Test';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrDifferentServerService
-removeallclassmethods RsrDifferentServerService
-
-doit
-(RsrService
 	subclass: 'RsrSendUnknownService'
 	instVarNames: #(  )
 	classVars: #(  )
@@ -947,60 +947,6 @@ true.
 
 removeallmethods RsrKnownClient
 removeallclassmethods RsrKnownClient
-
-doit
-(RsrService
-	subclass: 'RsrServiceFactory'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrServiceFactory
-removeallclassmethods RsrServiceFactory
-
-doit
-(RsrServiceFactory
-	subclass: 'RsrServiceFactoryClient'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrServiceFactoryClient
-removeallclassmethods RsrServiceFactoryClient
-
-doit
-(RsrServiceFactory
-	subclass: 'RsrServiceFactoryServer'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrServiceFactoryServer
-removeallclassmethods RsrServiceFactoryServer
 
 doit
 (RsrService
@@ -1261,6 +1207,30 @@ removeallclassmethods RsrChannel
 
 doit
 (RsrChannel
+	subclass: 'RsrBinaryStreamChannel'
+	instVarNames: #( sink source inStream outStream )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'No class-specific documentation for RsrSocketChannel, hierarchy is:
+Object
+  RsrObject
+    RsrChannel
+      RsrSocketChannel( reader writer socket stream)
+';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrBinaryStreamChannel
+removeallclassmethods RsrBinaryStreamChannel
+
+doit
+(RsrChannel
 	subclass: 'RsrInMemoryChannel'
 	instVarNames: #( inQueue outQueue drainProcess )
 	classVars: #(  )
@@ -1315,30 +1285,6 @@ true.
 
 removeallmethods RsrNullChannel
 removeallclassmethods RsrNullChannel
-
-doit
-(RsrChannel
-	subclass: 'RsrSocketChannel'
-	instVarNames: #( sink source socket stream )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		comment: 'No class-specific documentation for RsrSocketChannel, hierarchy is:
-Object
-  RsrObject
-    RsrChannel
-      RsrSocketChannel( reader writer socket stream)
-';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrSocketChannel
-removeallclassmethods RsrSocketChannel
 
 doit
 (RsrObject
@@ -1534,7 +1480,7 @@ removeallclassmethods RsrReleaseServices
 doit
 (RsrObject
 	subclass: 'RsrConnection'
-	instVarNames: #( channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages serviceFactory closeSemaphore specification )
+	instVarNames: #( channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages closeSemaphore specification )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1796,6 +1742,165 @@ true.
 
 removeallmethods RsrGarbageCollector
 removeallclassmethods RsrGarbageCollector
+
+doit
+(RsrObject
+	subclass: 'RsrHandshake'
+	instVarNames: #( stream )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'This class serves as the abstract superclass for the classes which implement the actual handshake protocol.
+
+When the Client opens a Socket to the Server, it is responsible for sending the first message.
+
+Client -> Server: SupportedVersions
+Server -> Client:
+	alt: The Server and Client have overlap in their supported versions
+		- Server -> Client: ChosenVersion
+	alt: No overlap exists between the Client and Server.
+		- Server -> Client: NoVersionOverlap
+		- Server: Closes socket';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshake
+removeallclassmethods RsrHandshake
+
+doit
+(RsrHandshake
+	subclass: 'RsrClientHandshake'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrClientHandshake
+removeallclassmethods RsrClientHandshake
+
+doit
+(RsrHandshake
+	subclass: 'RsrServerHandshake'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrServerHandshake
+removeallclassmethods RsrServerHandshake
+
+doit
+(RsrObject
+	subclass: 'RsrHandshakeCodec'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshakeCodec
+removeallclassmethods RsrHandshakeCodec
+
+doit
+(RsrObject
+	subclass: 'RsrHandshakeMessage'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'HandshakeMessage serves as a superclass for all Messages used while processing a Connection Handshake.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshakeMessage
+removeallclassmethods RsrHandshakeMessage
+
+doit
+(RsrHandshakeMessage
+	subclass: 'RsrChosenVersion'
+	instVarNames: #( version )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'This message is sent when a Server has chosen a version it is willing to talk w/ a client Connection. The Server expects the Client to speak this version.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrChosenVersion
+removeallclassmethods RsrChosenVersion
+
+doit
+(RsrHandshakeMessage
+	subclass: 'RsrNoVersionOverlap'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'This message is sent when a Server has determined it cannot talk any version of the protocol that the Client has requested to speak.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrNoVersionOverlap
+removeallclassmethods RsrNoVersionOverlap
+
+doit
+(RsrHandshakeMessage
+	subclass: 'RsrSupportedVersions'
+	instVarNames: #( versions )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'When a Client connects to a Server. It is required to send this message w/ the list of supported protocol versions it is willing to speak. The preference of the client is signified by the order of the version numbers in <versions>.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrSupportedVersions
+removeallclassmethods RsrSupportedVersions
 
 doit
 (RsrObject
@@ -2777,7 +2882,61 @@ removeallclassmethods RsrSocket
 
 doit
 (RsrObject
-	subclass: 'RsrSocketChannelLoop'
+	subclass: 'RsrSocketPair'
+	instVarNames: #( firstSocket secondSocket )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication-Platform-Test';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrSocketPair
+removeallclassmethods RsrSocketPair
+
+doit
+(RsrObject
+	subclass: 'RsrStream'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrStream
+removeallclassmethods RsrStream
+
+doit
+(RsrStream
+	subclass: 'RsrSocketStream'
+	instVarNames: #( socket )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrSocketStream
+removeallclassmethods RsrSocketStream
+
+doit
+(RsrObject
+	subclass: 'RsrStreamChannelLoop'
 	instVarNames: #( process channel state )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -2795,11 +2954,11 @@ Object
 true.
 %
 
-removeallmethods RsrSocketChannelLoop
-removeallclassmethods RsrSocketChannelLoop
+removeallmethods RsrStreamChannelLoop
+removeallclassmethods RsrStreamChannelLoop
 
 doit
-(RsrSocketChannelLoop
+(RsrStreamChannelLoop
 	subclass: 'RsrCommandSink'
 	instVarNames: #( queue )
 	classVars: #(  )
@@ -2823,7 +2982,7 @@ removeallmethods RsrCommandSink
 removeallclassmethods RsrCommandSink
 
 doit
-(RsrSocketChannelLoop
+(RsrStreamChannelLoop
 	subclass: 'RsrCommandSource'
 	instVarNames: #( decoder )
 	classVars: #(  )
@@ -2839,60 +2998,6 @@ true.
 
 removeallmethods RsrCommandSource
 removeallclassmethods RsrCommandSource
-
-doit
-(RsrObject
-	subclass: 'RsrSocketPair'
-	instVarNames: #( firstSocket secondSocket )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication-Platform-Test';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrSocketPair
-removeallclassmethods RsrSocketPair
-
-doit
-(RsrObject
-	subclass: 'RsrSocketStream'
-	instVarNames: #( socket )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrSocketStream
-removeallclassmethods RsrSocketStream
-
-doit
-(RsrObject
-	subclass: 'RsrStream'
-	instVarNames: #( stream )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrStream
-removeallclassmethods RsrStream
 
 doit
 (RsrObject
@@ -3109,6 +3214,24 @@ true.
 
 removeallmethods RsrGarbageCollectorTestCase
 removeallclassmethods RsrGarbageCollectorTestCase
+
+doit
+(RsrTestCase
+	subclass: 'RsrHandshakeCodecTest'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication-Test';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshakeCodecTest
+removeallclassmethods RsrHandshakeCodecTest
 
 doit
 (RsrTestCase
@@ -4731,79 +4854,6 @@ templateClassName
 	^#RsrReturnUnknownService
 %
 
-! Class implementation for 'RsrSameTemplateAndClientService'
-
-!		Class methods for 'RsrSameTemplateAndClientService'
-
-category: 'accessing'
-classmethod: RsrSameTemplateAndClientService
-clientClassName
-
-	^self templateClassName
-%
-
-category: 'accessing'
-classmethod: RsrSameTemplateAndClientService
-serverClassName
-
-	^#RsrDifferentServerService
-%
-
-category: 'accessing'
-classmethod: RsrSameTemplateAndClientService
-templateClassName
-
-	^#RsrSameTemplateAndClientService
-%
-
-!		Instance methods for 'RsrSameTemplateAndClientService'
-
-category: 'accessing'
-method: RsrSameTemplateAndClientService
-replicated1
-
-	^replicated1
-%
-
-category: 'accessing'
-method: RsrSameTemplateAndClientService
-replicated1: anObject
-
-	replicated1 := anObject
-%
-
-category: 'accessing'
-method: RsrSameTemplateAndClientService
-replicated2
-
-	^replicated2
-%
-
-category: 'accessing'
-method: RsrSameTemplateAndClientService
-replicated2: anObject
-
-	replicated2 := anObject
-%
-
-! Class implementation for 'RsrDifferentServerService'
-
-!		Instance methods for 'RsrDifferentServerService'
-
-category: 'accessing'
-method: RsrDifferentServerService
-private1
-
-	^private1
-%
-
-category: 'accessing'
-method: RsrDifferentServerService
-private1: anObject
-
-	private1 := anObject
-%
-
 ! Class implementation for 'RsrSendUnknownService'
 
 !		Class methods for 'RsrSendUnknownService'
@@ -4827,59 +4877,6 @@ classmethod: RsrSendUnknownService
 templateClassName
 
 	^#RsrSendUnknownService
-%
-
-! Class implementation for 'RsrServiceFactory'
-
-!		Class methods for 'RsrServiceFactory'
-
-category: 'accessing'
-classmethod: RsrServiceFactory
-templateClassName
-
-	^#RsrServiceFactory
-%
-
-! Class implementation for 'RsrServiceFactoryClient'
-
-!		Instance methods for 'RsrServiceFactoryClient'
-
-category: 'mirroring'
-method: RsrServiceFactoryClient
-mirror: aService
-
-	^remoteSelf mirror: aService
-%
-
-category: 'manufactoring'
-method: RsrServiceFactoryClient
-serviceFor: aResponsibility
-
-	| abstractClass instance |
-	abstractClass := RsrClassResolver classNamed: aResponsibility.
-	instance := abstractClass clientClass new.
-	instance registerWith: _connection.
-	^instance
-%
-
-! Class implementation for 'RsrServiceFactoryServer'
-
-!		Instance methods for 'RsrServiceFactoryServer'
-
-category: 'manufactoring'
-method: RsrServiceFactoryServer
-create: aResponsibility
-
-	| abstractClass |
-	abstractClass := RsrClassResolver classNamed: aResponsibility.
-	^abstractClass serverClass new
-%
-
-category: 'mirroring'
-method: RsrServiceFactoryServer
-mirror: aService
-
-	^aService
 %
 
 ! Class implementation for 'RsrServiceNoInstVars'
@@ -5263,7 +5260,7 @@ genericError: anError
 
 category: 'testing'
 method: RsrChannel
-isOpen
+isConnected
 	"Report whether the Channel is open between Connections."
 
 	^self subclassResponsibility
@@ -5298,6 +5295,123 @@ send: aCommand
 	"Send the provided command over the channel."
 
 	^self subclassResponsibility
+%
+
+! Class implementation for 'RsrBinaryStreamChannel'
+
+!		Class methods for 'RsrBinaryStreamChannel'
+
+category: 'instance creation'
+classmethod: RsrBinaryStreamChannel
+inStream: inStream
+outStream: outStream
+
+	^self new
+		inStream: inStream;
+		outStream: outStream;
+		yourself
+%
+
+!		Instance methods for 'RsrBinaryStreamChannel'
+
+category: 'lifecycle'
+method: RsrBinaryStreamChannel
+close
+	"Shutdown the Command sink and source."
+
+	source stop.
+	sink stop.
+	outStream
+		flush;
+		close.
+	inStream close
+%
+
+category: 'lifecycle'
+method: RsrBinaryStreamChannel
+disconnected
+	"The socket has disconnected so the channel is no longer open."
+
+	self connection channelDisconnected
+%
+
+category: 'initializing'
+method: RsrBinaryStreamChannel
+initialize
+
+	super initialize.
+	source := RsrCommandSource on: self.
+	sink := RsrCommandSink on: self
+%
+
+category: 'accessing'
+method: RsrBinaryStreamChannel
+inStream
+	"Returns the stream associated w/ reading"
+
+	^inStream
+%
+
+category: 'accessing'
+method: RsrBinaryStreamChannel
+inStream: aBinaryReadStream
+	"Sets the stream associated w/ reading"
+
+	inStream := aBinaryReadStream
+%
+
+category: 'testing'
+method: RsrBinaryStreamChannel
+isConnected
+
+	^self inStream atEnd not and: [self outStream atEnd not]
+%
+
+category: 'lifecycle'
+method: RsrBinaryStreamChannel
+open
+	"Ensure the Command sink and source are running"
+
+	source start.
+	sink start
+%
+
+category: 'accessing'
+method: RsrBinaryStreamChannel
+outStream
+	"Returns the stream associated w/ writing"
+
+	^outStream
+%
+
+category: 'accessing'
+method: RsrBinaryStreamChannel
+outStream: aBinaryWriteStream
+	"Sets the stream associated w/ writing"
+
+	outStream := aBinaryWriteStream
+%
+
+category: 'command processing'
+method: RsrBinaryStreamChannel
+send: aCommand
+	"Send the provided command over the channel"
+
+	sink enqueue: aCommand
+%
+
+category: 'accessing'
+method: RsrBinaryStreamChannel
+sink
+
+	^sink
+%
+
+category: 'accessing'
+method: RsrBinaryStreamChannel
+source
+
+	^source
 %
 
 ! Class implementation for 'RsrInMemoryChannel'
@@ -5353,7 +5467,7 @@ inQueue: aSharedQueue
 
 category: 'testing'
 method: RsrInMemoryChannel
-isOpen
+isConnected
 
 	^drainProcess isNil not
 %
@@ -5362,7 +5476,9 @@ category: 'lifecycle'
 method: RsrInMemoryChannel
 open
 
-	drainProcess := RsrProcessModel fork: [self drainLoop. drainProcess := nil]
+	drainProcess := RsrProcessModel
+		fork: [self drainLoop. drainProcess := nil]
+		named: 'InMemoryChannel Receiving'
 %
 
 category: 'accessing'
@@ -5399,7 +5515,7 @@ close
 
 category: 'testing'
 method: RsrNullChannel
-isOpen
+isConnected
 
 	^true
 %
@@ -5430,107 +5546,6 @@ method: RsrNullChannel
 send: aCommand
 
 	lastCommand := aCommand
-%
-
-! Class implementation for 'RsrSocketChannel'
-
-!		Class methods for 'RsrSocketChannel'
-
-category: 'instance creation'
-classmethod: RsrSocketChannel
-socket: aSocket
-
-	^self new
-		socket: aSocket;
-		yourself
-%
-
-!		Instance methods for 'RsrSocketChannel'
-
-category: 'lifecycle'
-method: RsrSocketChannel
-close
-	"Shutdown the Command sink and source."
-
-	stream close.
-	source stop.
-	sink stop
-%
-
-category: 'lifecycle'
-method: RsrSocketChannel
-disconnected
-	"The socket has disconnected so the channel is no longer open."
-
-	self connection channelDisconnected
-%
-
-category: 'initializing'
-method: RsrSocketChannel
-initialize
-
-	super initialize.
-	source := RsrCommandSource on: self.
-	sink := RsrCommandSink on: self
-%
-
-category: 'testing'
-method: RsrSocketChannel
-isOpen
-
-	^self socket isConnected
-%
-
-category: 'lifecycle'
-method: RsrSocketChannel
-open
-	"Ensure the Command sink and source are running"
-
-	source start.
-	sink start
-%
-
-category: 'command processing'
-method: RsrSocketChannel
-send: aCommand
-	"Send the provided command over the channel"
-
-	sink enqueue: aCommand
-%
-
-category: 'accessing'
-method: RsrSocketChannel
-sink
-
-	^sink
-%
-
-category: 'accessing'
-method: RsrSocketChannel
-socket
-
-	^socket
-%
-
-category: 'accessing'
-method: RsrSocketChannel
-socket: aSocket
-
-	socket := aSocket
-%
-
-category: 'accessing'
-method: RsrSocketChannel
-source
-
-	^source
-%
-
-category: 'accessing'
-method: RsrSocketChannel
-stream
-
-	^stream ifNil: [stream := RsrSocketStream on: socket]
 %
 
 ! Class implementation for 'RsrClassResolver'
@@ -6186,6 +6201,7 @@ executeFor: aConnection
 	selector := self selectorReference resolve: aConnection.
 	arguments := self argumentReferences collect: [ :each | 
 		             each resolve: aConnection ].
+	RsrProcessModel renameProcess: '', receiver class name, '>>', selector.
 	"receiver and arguments should now be the roots of the service graph, discard strong references."
 	servicesStrongly := nil.
 	resolver addRoot: receiver. "Ensure we always send back the receiver -- this ensures sending a message results in by-directional syncing."
@@ -6429,7 +6445,6 @@ close
 	pendingMessages := temp.
 	pm do: [:each | each promise break: RsrConnectionClosed new].
 	registry := RsrThreadSafeDictionary new.
-	serviceFactory := nil.
 	closeSemaphore signal
 %
 
@@ -6446,22 +6461,11 @@ initialize
 	closeSemaphore := Semaphore new.
 %
 
-category: 'private-initialization'
-method: RsrConnection
-initializeServiceFactory
-
-	| instance |
-	instance := RsrServiceFactory clientClass new.
-	self _ensureRegistered: instance.
-	serviceFactory := instance.
-	^serviceFactory
-%
-
 category: 'public-testing'
 method: RsrConnection
 isOpen
 
-	^channel isOpen
+	^channel isConnected
 %
 
 category: 'private-accessing'
@@ -6557,20 +6561,6 @@ ifAbsent: aBlock
 		ifNotNil: [:service | service]
 %
 
-category: 'public-service factory'
-method: RsrConnection
-serviceFactory
-
-	^serviceFactory ifNil: [self initializeServiceFactory]
-%
-
-category: 'public-service factory'
-method: RsrConnection
-serviceFor: aResponsibility
-
-	^self serviceFactory serviceFor: aResponsibility
-%
-
 category: 'public-accessing'
 method: RsrConnection
 specification
@@ -6640,7 +6630,9 @@ method: RsrConnection
 _receivedCommand: aCommand
 	"Execute the command in the context of the receiving Connection."
 
-	RsrProcessModel fork: [aCommand executeFor: self]
+	RsrProcessModel
+		fork: [aCommand executeFor: self]
+		named: 'Processing ', aCommand class name
 %
 
 category: 'private-service management'
@@ -6826,7 +6818,7 @@ method: RsrInternalSocketConnectionSpecification
 connect
 	"Establish an internal Connection pair via socket."
 
-	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection].
+	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection] named: 'Pending AcceptConnection'.
 	self minimalWait. "Allow other process to schedule."
 	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.
 	self minimalWait. "Allow other process to schedule."
@@ -6941,7 +6933,7 @@ category: 'connecting'
 method: RsrAcceptConnection
 waitForConnection
 
-	| socket channel connection |
+	| socket stream handshake channel connection |
 	listener := self socketClass new.
 	[listener
 		bindAddress: self host
@@ -6953,7 +6945,12 @@ waitForConnection
 			ensure:
 				[listener close.
 				listener := nil].
-	channel := RsrSocketChannel socket: socket.
+	stream := RsrSocketStream on: socket.
+	handshake := RsrServerHandshake over: stream.
+	handshake perform.
+	channel := RsrBinaryStreamChannel
+		inStream: stream
+		outStream: stream.
 	connection := RsrConnection
 		specification: self
 		channel: channel
@@ -6970,12 +6967,17 @@ category: 'connecting'
 method: RsrInitiateConnection
 connect
 
-	| socket channel connection |
+	| socket stream handshake channel connection |
 	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.
-	channel := RsrSocketChannel socket: socket.
+	stream := RsrSocketStream on: socket.
+	handshake := RsrClientHandshake over: stream.
+	handshake perform.
+	channel := RsrBinaryStreamChannel
+		inStream: stream
+		outStream: stream.
 	connection := RsrConnection
 		specification: self
 		channel: channel
@@ -7036,7 +7038,9 @@ start
 	"Start processing queued events."
 
 	isRunning := true.
-	process := RsrProcessModel fork: [self runLoop]
+	process := RsrProcessModel
+		fork: [self runLoop]
+		named: 'DispatchQueue run loop'
 %
 
 category: 'lifecycle'
@@ -7128,6 +7132,347 @@ maximumReclamation
 		_generationScavenge_vmMarkSweep;
 		_generationScavenge_vmMarkSweep.
 	^sema waitForMilliseconds: 10
+%
+
+! Class implementation for 'RsrHandshake'
+
+!		Class methods for 'RsrHandshake'
+
+category: 'instance creation'
+classmethod: RsrHandshake
+over: aStream
+
+	^self new
+		stream: aStream;
+		yourself
+%
+
+!		Instance methods for 'RsrHandshake'
+
+category: 'accessing'
+method: RsrHandshake
+codec
+
+	^RsrHandshakeCodec new
+%
+
+category: 'handshaking'
+method: RsrHandshake
+perform
+
+	self subclassResponsibility
+%
+
+category: 'accessing'
+method: RsrHandshake
+stream
+	"The stream over which the handshake should occurr"
+
+	^stream
+%
+
+category: 'accessing'
+method: RsrHandshake
+stream: aStream
+
+	stream := aStream
+%
+
+! Class implementation for 'RsrClientHandshake'
+
+!		Instance methods for 'RsrClientHandshake'
+
+category: 'handshaking'
+method: RsrClientHandshake
+perform
+	"Perform the Client's porition of the handshake"
+
+	| supportedVersions answer |
+	supportedVersions := RsrSupportedVersions versions: #(1).
+	self codec
+		encodeSupportedVersions: supportedVersions
+		onto: self stream.
+	self stream flush.
+	answer := self codec decode: self stream.
+	answer hasSharedVersion
+		ifFalse: [^RsrHandshakeFailed signal: 'The Client and Server could not agree on an RSR protocol version.']
+%
+
+! Class implementation for 'RsrServerHandshake'
+
+!		Instance methods for 'RsrServerHandshake'
+
+category: 'handshaking'
+method: RsrServerHandshake
+perform
+	"Peform the Server's side of the handshake."
+
+	| supportedVersions |
+	supportedVersions := self codec decode: self stream.
+	(supportedVersions versions includes: 1)
+		ifTrue:
+			[self codec
+				encodeChosenVersion: (RsrChosenVersion version: 1)
+				onto: self stream.
+			self stream flush.]
+		ifFalse:
+			[self codec
+				encodeNoVersionOverlap: RsrNoVersionOverlap new
+				onto: self stream.
+			self stream flush; close.
+			^RsrHandshakeFailed signal: 'Client versions did not overlap w/ Server']
+%
+
+! Class implementation for 'RsrHandshakeCodec'
+
+!		Instance methods for 'RsrHandshakeCodec'
+
+category: 'accessing'
+method: RsrHandshakeCodec
+chosenVersionIdentifier
+
+	^1
+%
+
+category: 'decoding'
+method: RsrHandshakeCodec
+decode: aStream
+	"Decode a message from <aStream>"
+
+	| identifier |
+	identifier := self decodeWord: aStream.
+	identifier = self supportedVersionsIdentifier
+		ifTrue: [^self decodeSupportedVersions: aStream].
+	identifier = self chosenVersionIdentifier
+		ifTrue: [^self decodeChosenVersion: aStream].
+	identifier = self noVersionOverlapIdentifier
+		ifTrue: [^self decodeNoVersionOverlap: aStream].
+	^RsrError signal: 'Unknown Handshake message'
+%
+
+category: 'decoding'
+method: RsrHandshakeCodec
+decodeChosenVersion: aStream
+
+	| version |
+	version := self decodeWord: aStream.
+	^RsrChosenVersion version: version
+%
+
+category: 'decoding'
+method: RsrHandshakeCodec
+decodeNoVersionOverlap: aStream
+
+	^RsrNoVersionOverlap new
+%
+
+category: 'decoding'
+method: RsrHandshakeCodec
+decodeSupportedVersions: aStream
+
+	| numberOfVersions versions |
+	numberOfVersions := self decodeWord: aStream.
+	versions := (1 to: numberOfVersions) collect: [:each | self decodeWord: aStream].
+	^RsrSupportedVersions versions: versions
+%
+
+category: 'decoding'
+method: RsrHandshakeCodec
+decodeWord: aStream
+	"Decode one word from <aStream> and return it as an integer."
+
+	^(aStream next: 8)
+		inject: 0
+		into: [:res :byte | (res bitShift: 8) bitOr: byte]
+%
+
+category: 'encoding'
+method: RsrHandshakeCodec
+encodeChosenVersion: aChosenVersion
+onto: aStream
+
+	self
+		encodeWord: self chosenVersionIdentifier
+		onto: aStream.
+	self
+		encodeWord: aChosenVersion version
+		onto: aStream
+%
+
+category: 'encoding'
+method: RsrHandshakeCodec
+encodeNoVersionOverlap: aNoVersionOverlap
+onto: aStream
+
+	self
+		encodeWord: self noVersionOverlapIdentifier
+		onto: aStream
+%
+
+category: 'encoding'
+method: RsrHandshakeCodec
+encodeSupportedVersions: aSupportedVersions
+onto: aStream
+
+	| versions |
+	versions := aSupportedVersions versions.
+	self
+		encodeWord: self supportedVersionsIdentifier
+		onto: aStream.
+	self
+		encodeWord: versions size
+		onto: aStream.
+	versions do: [:each | self encodeWord: each onto: aStream]
+%
+
+category: 'encoding'
+method: RsrHandshakeCodec
+encodeWord: anInteger
+onto: aStream
+
+	| bytes integer |
+	(anInteger between: 0 and: 16rFFFFFFFFFFFFFFFF)
+		ifFalse: [RsrOutOfRange signal: anInteger printString, ' is not in the valid range for a value in an RSR Handshake Message.'].
+	bytes := ByteArray new: 8.
+	integer := anInteger.
+	8
+		to: 1
+		by: -1
+		do:
+			[:i | | byte |
+			byte := integer bitAnd: 16rFF.
+			bytes at: i put: byte.
+			integer := integer bitShift: -8].
+	aStream nextPutAll: bytes
+%
+
+category: 'accessing'
+method: RsrHandshakeCodec
+noVersionOverlapIdentifier
+
+	^2
+%
+
+category: 'accessing'
+method: RsrHandshakeCodec
+supportedVersionsIdentifier
+
+	^0
+%
+
+! Class implementation for 'RsrChosenVersion'
+
+!		Class methods for 'RsrChosenVersion'
+
+category: 'instance creation'
+classmethod: RsrChosenVersion
+version: aVersionNumber
+
+	^self new
+		version: aVersionNumber;
+		yourself
+%
+
+!		Instance methods for 'RsrChosenVersion'
+
+category: 'comparing'
+method: RsrChosenVersion
+= aChosenVersion
+
+	^self class = aChosenVersion class and: [self version = aChosenVersion version]
+%
+
+category: 'testing'
+method: RsrChosenVersion
+hasSharedVersion
+	"Answer whether there is a valid shared protocol version between the Client and Server."
+
+	^true
+%
+
+category: 'accessing'
+method: RsrChosenVersion
+version
+
+	^version
+%
+
+category: 'accessing'
+method: RsrChosenVersion
+version: aVersionNumber
+
+	version := aVersionNumber
+%
+
+! Class implementation for 'RsrNoVersionOverlap'
+
+!		Instance methods for 'RsrNoVersionOverlap'
+
+category: 'comparing'
+method: RsrNoVersionOverlap
+= aNoVersionOverlap
+
+	^self class = aNoVersionOverlap class
+%
+
+category: 'comparing'
+method: RsrNoVersionOverlap
+hash
+
+	^self class hash
+%
+
+category: 'testing'
+method: RsrNoVersionOverlap
+hasSharedVersion
+	"Answer whether there is a valid shared protocol version between the Client and Server."
+
+	^false
+%
+
+! Class implementation for 'RsrSupportedVersions'
+
+!		Class methods for 'RsrSupportedVersions'
+
+category: 'instance creation'
+classmethod: RsrSupportedVersions
+versions: anArray
+
+	^self new
+		versions: anArray;
+		yourself
+%
+
+!		Instance methods for 'RsrSupportedVersions'
+
+category: 'comparing'
+method: RsrSupportedVersions
+= aSupportedVersions
+
+	self class = aSupportedVersions class
+		ifFalse: [^false].
+	^self versions = aSupportedVersions versions
+%
+
+category: 'comparing'
+method: RsrSupportedVersions
+hash
+
+	^self versions hash
+%
+
+category: 'accessing'
+method: RsrSupportedVersions
+versions
+
+	^versions
+%
+
+category: 'accessing'
+method: RsrSupportedVersions
+versions: anArray
+
+	versions := anArray
 %
 
 ! Class implementation for 'RsrLog'
@@ -7695,8 +8040,8 @@ notifyActions
 		do:
 			[:each |
 			self isFulfilled
-				ifTrue: [RsrProcessModel fork: [each when value: value]]
-				ifFalse: [RsrProcessModel fork: [each catch value: value]]]
+				ifTrue: [RsrProcessModel fork: [each when value: value] named: 'Promise Fulfillment Notification']
+				ifFalse: [RsrProcessModel fork: [each catch value: value] named: 'Promise Break Notification']]
 %
 
 category: 'observing'
@@ -9504,271 +9849,6 @@ _nativeSocket: aGsSignalingSocket
 	nativeSocket := aGsSignalingSocket
 %
 
-! Class implementation for 'RsrSocketChannelLoop'
-
-!		Class methods for 'RsrSocketChannelLoop'
-
-category: 'instance creation'
-classmethod: RsrSocketChannelLoop
-on: aChannel
-
-	^self new
-		channel: aChannel;
-		yourself
-%
-
-!		Instance methods for 'RsrSocketChannelLoop'
-
-category: 'accessing'
-method: RsrSocketChannelLoop
-channel
-
-	^channel
-%
-
-category: 'accessing'
-method: RsrSocketChannelLoop
-channel: aChannel
-
-	channel := aChannel
-%
-
-category: 'running'
-method: RsrSocketChannelLoop
-executeCycle
-
-	self subclassResponsibility
-%
-
-category: 'initialization'
-method: RsrSocketChannelLoop
-initialize
-
-	super initialize.
-	state := self stoppedState
-%
-
-category: 'testing'
-method: RsrSocketChannelLoop
-isActive
-
-	^state == self runningState
-%
-
-category: 'testing'
-method: RsrSocketChannelLoop
-isProcessActive
-
-	^process ~~ nil
-%
-
-category: 'running'
-method: RsrSocketChannelLoop
-log
-
-	^RsrLogWithPrefix
-		prefix: self class name asString
-		log: self channel log
-%
-
-category: 'running'
-method: RsrSocketChannelLoop
-log: aString
-
-	self log debug: aString
-%
-
-category: 'accessing'
-method: RsrSocketChannelLoop
-priority
-
-	^Processor lowIOPriority
-%
-
-category: 'running'
-method: RsrSocketChannelLoop
-report: aCommand
-
-	aCommand reportOn: self log
-%
-
-category: 'running'
-method: RsrSocketChannelLoop
-reportException: anException
-
-	self log: anException description
-%
-
-category: 'running'
-method: RsrSocketChannelLoop
-runLoop
-
-	[self isActive]
-		whileTrue:
-			[[self executeCycle]
-				on: Error
-				do:
-					[:ex |
-					self reportException: ex.
-					self channel genericError: ex]]
-%
-
-category: 'accessing'
-method: RsrSocketChannelLoop
-runningState
-
-	^#Running
-%
-
-category: 'commands'
-method: RsrSocketChannelLoop
-start
-
-	state := self runningState.
-	process := RsrProcessModel
-		fork: [self runLoop.
-				process := nil]
-		at: self priority
-%
-
-category: 'commands'
-method: RsrSocketChannelLoop
-stop
-
-	self isActive ifFalse: [^self].
-	state := self stoppedState
-%
-
-category: 'accessing'
-method: RsrSocketChannelLoop
-stoppedState
-
-	^#Stop
-%
-
-category: 'accessing'
-method: RsrSocketChannelLoop
-stream
-
-	^self channel stream
-%
-
-! Class implementation for 'RsrCommandSink'
-
-!		Instance methods for 'RsrCommandSink'
-
-category: 'accessing'
-method: RsrCommandSink
-encoder
-
-	^RsrEncoder new
-%
-
-category: 'commands'
-method: RsrCommandSink
-enqueue: aCommand
-
-	self isActive ifTrue: [queue nextPut: aCommand]
-%
-
-category: 'commands'
-method: RsrCommandSink
-executeCycle
-
-	[| command |
-	command := queue next.
-	command == self stopToken
-		ifTrue: [^self].
-	self writeCommand: command.
-	(queue size = 0)
-		ifTrue: [self flush]]
-		on: RsrSocketClosed
-		do:
-			[:ex |
-			self reportException: ex.
-			self channel channelDisconnected]
-%
-
-category: 'commands'
-method: RsrCommandSink
-flush
-
-	self stream flush
-%
-
-category: 'initialization'
-method: RsrCommandSink
-initialize
-
-	super initialize.
-	queue := SharedQueue new
-%
-
-category: 'commands'
-method: RsrCommandSink
-stop
-
-	super stop.
-	queue nextPut: self stopToken
-%
-
-category: 'accessing'
-method: RsrCommandSink
-stopToken
-
-	^self stoppedState
-%
-
-category: 'writing'
-method: RsrCommandSink
-write: aByteArray
-
-	self stream nextPutAll: aByteArray
-%
-
-category: 'writing'
-method: RsrCommandSink
-writeCommand: aCommand
-
-	self report: aCommand.
-	aCommand
-		encode: self stream
-		using: self encoder
-%
-
-! Class implementation for 'RsrCommandSource'
-
-!		Instance methods for 'RsrCommandSource'
-
-category: 'accessing'
-method: RsrCommandSource
-decoder
-
-	^RsrDecoder new
-%
-
-category: 'commands'
-method: RsrCommandSource
-executeCycle
-
-	[| command |
-	command := self nextCommand.
-	self report: command.
-	self channel received: command]
-		on: RsrSocketClosed
-		do:
-			[:ex |
-			self reportException: ex.
-			self channel channelDisconnected]
-%
-
-category: 'commands'
-method: RsrCommandSource
-nextCommand
-
-	^self decoder decodeCommand: self stream
-%
-
 ! Class implementation for 'RsrSocketPair'
 
 !		Class methods for 'RsrSocketPair'
@@ -9882,6 +9962,57 @@ socketStreamClass
 	^(RsrClassResolver classNamed: #RsrSocketStream)
 %
 
+! Class implementation for 'RsrStream'
+
+!		Instance methods for 'RsrStream'
+
+category: 'testing'
+method: RsrStream
+atEnd
+	"Answers when the Stream cannot take or provide any additional bytes."
+
+	^self subclassResponsibility
+%
+
+category: 'closing'
+method: RsrStream
+close
+	"Close the Stream. The semantics of this are defined by the subclass."
+
+	self subclassResponsibility
+%
+
+category: 'writing'
+method: RsrStream
+flush
+	"Ensure any data cached by the receiver is pushed to its destination."
+	"By default, do nothing."
+%
+
+category: 'reading'
+method: RsrStream
+next
+	"Read and return exactly 1 byte."
+
+	^self next: 1
+%
+
+category: 'reading'
+method: RsrStream
+next: count
+	"Read and return exactly <count> bytes"
+
+	^self subclassResponsibility
+%
+
+category: 'writing'
+method: RsrStream
+nextPutAll: aByteArray
+	"Write <aByteArray>'s elements to the backing store."
+
+	^self subclassResponsibility
+%
+
 ! Class implementation for 'RsrSocketStream'
 
 !		Class methods for 'RsrSocketStream'
@@ -9925,14 +10056,6 @@ method: RsrSocketStream
 flush
 	"Flush any buffered bytes to the socket."
 	"NOP"
-%
-
-category: 'testing'
-method: RsrSocketStream
-isConnected
-	"Is the stream still connected to a partner?"
-
-	^socket isConnected
 %
 
 category: 'accessing'
@@ -9988,72 +10111,301 @@ socket: anRsrSocket
 	socket := anRsrSocket
 %
 
-! Class implementation for 'RsrStream'
+! Class implementation for 'RsrStreamChannelLoop'
 
-!		Class methods for 'RsrStream'
+!		Class methods for 'RsrStreamChannelLoop'
 
 category: 'instance creation'
-classmethod: RsrStream
-on: aStream
+classmethod: RsrStreamChannelLoop
+on: aChannel
 
 	^self new
-		stream: aStream;
+		channel: aChannel;
 		yourself
 %
 
-!		Instance methods for 'RsrStream'
+!		Instance methods for 'RsrStreamChannelLoop'
 
 category: 'accessing'
-method: RsrStream
-binary
+method: RsrStreamChannelLoop
+channel
 
-	stream binary
+	^channel
 %
 
 category: 'accessing'
-method: RsrStream
-close
+method: RsrStreamChannelLoop
+channel: aChannel
 
-	stream close
+	channel := aChannel
+%
+
+category: 'running'
+method: RsrStreamChannelLoop
+executeCycle
+
+	self subclassResponsibility
+%
+
+category: 'initialization'
+method: RsrStreamChannelLoop
+initialize
+
+	super initialize.
+	state := self stoppedState
+%
+
+category: 'testing'
+method: RsrStreamChannelLoop
+isActive
+
+	^state == self runningState
+%
+
+category: 'testing'
+method: RsrStreamChannelLoop
+isProcessActive
+
+	^process ~~ nil
+%
+
+category: 'running'
+method: RsrStreamChannelLoop
+log
+
+	^RsrLogWithPrefix
+		prefix: self class name asString
+		log: self channel log
+%
+
+category: 'running'
+method: RsrStreamChannelLoop
+log: aString
+
+	self log debug: aString
 %
 
 category: 'accessing'
-method: RsrStream
+method: RsrStreamChannelLoop
+priority
+
+	^Processor lowIOPriority
+%
+
+category: 'running'
+method: RsrStreamChannelLoop
+report: aCommand
+
+	aCommand reportOn: self log
+%
+
+category: 'running'
+method: RsrStreamChannelLoop
+reportException: anException
+
+	self log: anException description
+%
+
+category: 'running'
+method: RsrStreamChannelLoop
+runLoop
+
+	[self isActive]
+		whileTrue:
+			[[self executeCycle]
+				on: Error
+				do:
+					[:ex |
+					self reportException: ex.
+					self channel genericError: ex]]
+%
+
+category: 'accessing'
+method: RsrStreamChannelLoop
+runLoopName
+	"Return the name of the associated run loop.
+	This name is assigned to the Process used to execute the run loop."
+
+	^self subclassResponsibility
+%
+
+category: 'accessing'
+method: RsrStreamChannelLoop
+runningState
+
+	^#Running
+%
+
+category: 'commands'
+method: RsrStreamChannelLoop
+start
+
+	state := self runningState.
+	process := RsrProcessModel
+		fork: [self runLoop.
+				process := nil]
+		at: self priority
+		named: self runLoopName
+%
+
+category: 'commands'
+method: RsrStreamChannelLoop
+stop
+
+	self isActive ifFalse: [^self].
+	state := self stoppedState
+%
+
+category: 'accessing'
+method: RsrStreamChannelLoop
+stoppedState
+
+	^#Stop
+%
+
+! Class implementation for 'RsrCommandSink'
+
+!		Instance methods for 'RsrCommandSink'
+
+category: 'accessing'
+method: RsrCommandSink
+encoder
+
+	^RsrEncoder new
+%
+
+category: 'commands'
+method: RsrCommandSink
+enqueue: aCommand
+
+	self isActive ifTrue: [queue nextPut: aCommand]
+%
+
+category: 'commands'
+method: RsrCommandSink
+executeCycle
+
+	[| command |
+	command := queue next.
+	command == self stopToken
+		ifTrue: [^self].
+	self writeCommand: command.
+	(queue size = 0) "Dolphin does not support #isEmpty"
+		ifTrue: [self flush]]
+		on: RsrSocketClosed
+		do:
+			[:ex |
+			self reportException: ex.
+			self channel channelDisconnected]
+%
+
+category: 'commands'
+method: RsrCommandSink
 flush
 
-	stream flush
+	self outStream flush
+%
+
+category: 'initialization'
+method: RsrCommandSink
+initialize
+
+	super initialize.
+	queue := SharedQueue new
 %
 
 category: 'accessing'
-method: RsrStream
-next
+method: RsrCommandSink
+outStream
 
-	^self next: 1
+	^self channel outStream
 %
 
 category: 'accessing'
-method: RsrStream
-next: aLength
+method: RsrCommandSink
+runLoopName
 
-	| bytes |
-	bytes := stream next: aLength.
-	bytes size ~~ aLength
-		ifTrue: [RsrSocketClosed signal].
-	^bytes
+	^'Connection Writing'
+%
+
+category: 'commands'
+method: RsrCommandSink
+stop
+
+	super stop.
+	queue nextPut: self stopToken
 %
 
 category: 'accessing'
-method: RsrStream
-nextPutAll: aByteArray
+method: RsrCommandSink
+stopToken
 
-	^stream nextPutAll: aByteArray
+	^self stoppedState
+%
+
+category: 'writing'
+method: RsrCommandSink
+write: aByteArray
+
+	self outStream nextPutAll: aByteArray
+%
+
+category: 'writing'
+method: RsrCommandSink
+writeCommand: aCommand
+
+	self report: aCommand.
+	aCommand
+		encode: self outStream
+		using: self encoder
+%
+
+! Class implementation for 'RsrCommandSource'
+
+!		Instance methods for 'RsrCommandSource'
+
+category: 'accessing'
+method: RsrCommandSource
+decoder
+
+	^RsrDecoder new
+%
+
+category: 'commands'
+method: RsrCommandSource
+executeCycle
+
+	[| command |
+	command := self nextCommand.
+	self report: command.
+	self channel received: command]
+		on: RsrSocketClosed
+		do:
+			[:ex |
+			self reportException: ex.
+			self channel channelDisconnected]
 %
 
 category: 'accessing'
-method: RsrStream
-stream: aStream
+method: RsrCommandSource
+inStream
+	"Return the read stream associated w/ this channel."
 
-	stream := aStream
+	^self channel inStream
+%
+
+category: 'commands'
+method: RsrCommandSource
+nextCommand
+
+	^self decoder decodeCommand: self inStream
+%
+
+category: 'accessing'
+method: RsrCommandSource
+runLoopName
+
+	^'Connection Reading'
 %
 
 ! Class implementation for 'RsrThreadSafeDictionary'
@@ -10148,18 +10500,29 @@ currentStackDump
 category: 'managing-concurrency'
 classmethod: RsrProcessModel
 fork: aBlock
+at: aPriority
+named: aString
 
-	^self current fork: aBlock
+	^self current
+		fork: aBlock
+		at: aPriority
+		named: aString
 %
 
 category: 'managing-concurrency'
 classmethod: RsrProcessModel
 fork: aBlock
-at: aPriority
+named: aString
 
-	^self current
-		fork: aBlock
-		at: aPriority
+	^self current fork: aBlock named: aString
+%
+
+category: 'managing-concurrency'
+classmethod: RsrProcessModel
+renameProcess: aString
+	"Rename the current process to the provided string"
+
+	^self current renameProcess: aString
 %
 
 category: 'accessing'
@@ -10174,16 +10537,27 @@ resetCurrent
 category: 'managing-concurrency'
 method: RsrProcessModel
 fork: aBlock
+at: aPriority
+named: aString
 
-	^aBlock fork
+	[self renameProcess: aString.
+	aBlock value] forkAt: aPriority
 %
 
 category: 'managing-concurrency'
 method: RsrProcessModel
 fork: aBlock
-at: aPriority
+named: aString
 
-	^aBlock forkAt: aPriority
+	[self renameProcess: aString.
+	aBlock value] fork
+%
+
+category: 'renaming'
+method: RsrProcessModel
+renameProcess: aString
+
+	Processor activeProcess name: aString
 %
 
 ! Class implementation for 'RsrTestingProcessModel'
@@ -10193,18 +10567,23 @@ at: aPriority
 category: 'managing-concurrency'
 method: RsrTestingProcessModel
 fork: aBlock
+at: aPriority
+named: aString
 
-	^super fork: (self protect: aBlock)
+	^super
+		fork: (self protect: aBlock)
+		at: aPriority
+		named: aString
 %
 
 category: 'managing-concurrency'
 method: RsrTestingProcessModel
 fork: aBlock
-at: aPriority
+named: aString
 
 	^super
 		fork: (self protect: aBlock)
-		at: aPriority
+		named: aString
 %
 
 category: 'accessing'
@@ -10263,13 +10642,6 @@ deny: anObject
 identicalTo: bObject
 
 	self assert: anObject ~~ bObject
-%
-
-category: 'utilities'
-method: RsrTestCase
-fork: aBlock
-
-	^RsrProcessModel fork: aBlock
 %
 
 category: 'utilities'
@@ -11368,9 +11740,9 @@ testAcceptOnLocalhost
 		host: self localhost
 		port: self port.
 	semaphore := Semaphore new.
-	self
-		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];
-		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].
+	RsrProcessModel
+		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
+		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;
@@ -11385,7 +11757,9 @@ testCancelWaitForConnection
 
 	| acceptor |
 	acceptor := RsrAcceptConnection port: self port.
-	self fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection].
+	RsrProcessModel
+		fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection]
+		named: 'Canceling AcceptConnection'.
 	self
 		should: [acceptor waitForConnection]
 		raise: RsrWaitForConnectionCancelled
@@ -11401,9 +11775,9 @@ testEstablishConnection
 		host: self localhost
 		port: self port.
 	semaphore := Semaphore new.
-	self
-		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]];
-		fork: [[connectionB := initiator connect] ensure: [semaphore signal]].
+	RsrProcessModel
+		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
+		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.
 	semaphore wait; wait.
 	self
 		assert: connectionA isOpen;
@@ -11424,7 +11798,9 @@ testFailedAcceptOnAlternativeLocalhost
 		host: self localhost
 		port: self port.
 	semaphore := Semaphore new.
-	self fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]].
+	RsrProcessModel
+		fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]]
+		named: 'Pending WaitForConnectionCancelled'.
 	[semaphore wait.
 	self
 		should: [initiator connect]
@@ -11500,6 +11876,83 @@ method: RsrGarbageCollectorTestCase
 testMaximumReclamation
 
 	self assert: RsrGarbageCollector maximumReclamation
+%
+
+! Class implementation for 'RsrHandshakeCodecTest'
+
+!		Instance methods for 'RsrHandshakeCodecTest'
+
+category: 'accessing'
+method: RsrHandshakeCodecTest
+codec
+
+	^RsrHandshakeCodec new
+%
+
+category: 'utilities'
+method: RsrHandshakeCodecTest
+stream: aBlock
+
+	^ByteArray streamContents: [:stream | aBlock value: stream]
+%
+
+category: 'running'
+method: RsrHandshakeCodecTest
+testChosenVersion
+
+	| chosenVersion encoding result |
+	chosenVersion := RsrChosenVersion version: 7.
+	encoding :=
+		#[0 0 0 0 0 0 0 1], "Type"
+		#[0 0 0 0 0 0 0 7]. "Version"
+	result := self stream: [:stream | self codec encodeChosenVersion: chosenVersion onto: stream].
+	self
+		assert: result
+		equals: encoding.
+	result := self codec decode: encoding readStream.
+	self
+		assert: result
+		equals: chosenVersion
+%
+
+category: 'running'
+method: RsrHandshakeCodecTest
+testNoVersionOverlap
+
+	| noVersionOverlap encoding result |
+	noVersionOverlap := RsrNoVersionOverlap new.
+	encoding := #[0 0 0 0 0 0 0 2]. "Type"
+	result := self stream: [:stream | self codec encodeNoVersionOverlap: noVersionOverlap onto: stream].
+	self
+		assert: result
+		equals: encoding.
+	result := self codec decode: encoding readStream.
+	self
+		assert: result
+		equals: noVersionOverlap
+%
+
+category: 'running'
+method: RsrHandshakeCodecTest
+testSupportedVersions
+
+	| supportedVersions encoding result |
+	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Type"
+		#[0 0 0 0 0 0 0 4], "4 versions supported"
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 1],
+		#[0 0 0 0 0 0 0 2],
+		#[0 0 0 0 0 0 0 7].
+	result := self stream: [:stream | self codec encodeSupportedVersions: supportedVersions onto: stream].
+	self
+		assert: result
+		equals: encoding.
+	result := self codec decode: encoding readStream.
+	self
+		assert: result
+		equals: supportedVersions
 %
 
 ! Class implementation for 'RsrNumericSpigotTest'
@@ -11701,8 +12154,12 @@ testSyncBreak
 	promise := RsrPromise new.
 	expected := Object new.
 	exceptionRaised := false.
-	self fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. first := ex reason. ex return]].
-	self fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. second := ex reason. ex return]].
+	RsrProcessModel
+		fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. first := ex reason. ex return]]
+		named: 'Pending BrokenPromise'.
+	RsrProcessModel
+		fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. second := ex reason. ex return]]
+		named: 'Pending BrokenPromise'.
 	promise break: expected.
 	self shortWait. "Allow results to process."
 	self assert: exceptionRaised.
@@ -11731,8 +12188,12 @@ testSyncFulfill
 	promise := RsrPromise new.
 	expected := Object new.
 	exceptionRaised := false.
-	self fork: [[first := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]].
-	self fork: [[second := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]].
+	RsrProcessModel
+		fork: [[first := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]]
+		named: 'Pending BrokenPromise'.
+	RsrProcessModel
+		fork: [[second := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]]
+		named: 'Pending BrokenPromise'.
 	promise fulfill: expected.
 	self shortWait. "Allow results to process."
 	self deny: exceptionRaised.
@@ -12084,11 +12545,12 @@ createPair: aBlock
 	listener listen: 1.
 	peerB := self newSocket.
 	semaphore := Semaphore new.
-	self
-		fork: 
-			[[peerA := self deferClose: listener accept] ensure: [semaphore signal]];
-		fork:
-			[[peerB connectToHost: address port: port] ensure: [semaphore signal]].
+	RsrProcessModel
+		fork: [[peerA := self deferClose: listener accept] ensure: [semaphore signal]]
+		named: 'Pending Socket Accept'.
+	RsrProcessModel
+		fork: [[peerB connectToHost: address port: port] ensure: [semaphore signal]]
+		named: 'Pending Socket Connect'.
 	semaphore wait; wait.
 	listener close.
 	((peerA notNil and: [peerA isConnected]) and: [peerB isConnected])
@@ -12182,7 +12644,9 @@ testCloseDuringAccept
 		bindAddress: '127.0.0.1'
 		port: 45300.
 	listener listen: 1.
-	self fork: [(Delay forSeconds: 1) wait. listener close].
+	RsrProcessModel
+		fork: [(Delay forSeconds: 1) wait. listener close]
+		named: 'Pending Socket Close'.
 	self
 		should: [listener accept]
 		raise: RsrSocketError
@@ -12470,20 +12934,6 @@ initializeSocketConnections
 		assert: connectionB isOpen
 %
 
-category: 'accessing'
-method: RsrSystemTestCase
-serviceFactoryA
-
-	^connectionA serviceFactory
-%
-
-category: 'accessing'
-method: RsrSystemTestCase
-serviceFactoryB
-
-	^connectionB serviceFactory
-%
-
 category: 'initialization'
 method: RsrSystemTestCase
 setUp
@@ -12524,12 +12974,13 @@ testWaitUntilClose
 	| semaphore marker |
 	semaphore := Semaphore new.
 	marker := false.
-	self
+	RsrProcessModel
 		fork:
 			[semaphore signal.
 			[connectionB waitUntilClose.
 			marker := true]
-				ensure: [semaphore signal]].
+				ensure: [semaphore signal]]
+		named: 'Pending Connection Closure'.
 	semaphore wait.
 	self deny: marker.
 	connectionA close.
@@ -12580,8 +13031,9 @@ evaluateAsRemoteAction: aBlock
 	"Evaluate the block and return the result through RSR."
 
 	| client server |
-	client := connectionA serviceFor: #RsrRemoteActionClient.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: aBlock.
 	^client value
@@ -12594,8 +13046,9 @@ testEnsurePushedClientServerLifetime
 	exhibit the correct lifetime properties."
 
 	| client sid server actual |
-	client := connectionA serviceFor: #RsrClientNoInstVars.
-	client synchronize.
+	client := RsrClientNoInstVars new
+		registerWith: connectionA;
+		synchronize.
 	sid := client _id.
 	self maximumReclamation. "Ensure the Server is strongly referenced in connectionB."
 	server := connectionB
@@ -12763,8 +13216,9 @@ method: RsrMessageSendingTest
 testAsyncRemoteError
 
 	| client server reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
 	reason := self expectCatch: client asyncValue.
@@ -12788,8 +13242,9 @@ method: RsrMessageSendingTest
 testAsyncReturnArgument
 
 	| client server promise result |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:arg | arg].
 	promise := client asyncValue: client.
@@ -12804,8 +13259,9 @@ method: RsrMessageSendingTest
 testAsyncReturnService
 
 	| client server service |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrValueHolderServer new].
 	service := self expectWhen: client asyncValue.
@@ -12820,8 +13276,9 @@ testChangeRemoteState
 
 	| marker client server |
 	marker := false.
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [marker := true].
 	client value.
@@ -12833,8 +13290,9 @@ method: RsrMessageSendingTest
 testCloseConnectionDuringMessageSend
 
 	| client server promise reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [(Delay forSeconds: 10) wait].
 	promise := client asyncValue.
@@ -12853,8 +13311,9 @@ testDebugHandlerBreak
 
 	| marker client server reason |
 	marker := #testMarker.
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].
 	server debugHandler: [:exception :messageSend :resolver | resolver break: marker. nil "ensure we do not return the marker"].
@@ -12877,8 +13336,9 @@ testDebugHandlerException
 
 	| marker client server reason |
 	marker := #testMarker.
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrResumableError signal].
 	server debugHandler: [:exception :messageSend :resolver | Error signal].
@@ -12901,8 +13361,9 @@ testDebugHandlerFulfill
 
 	| marker client server |
 	marker := #testMarker.
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].
 	server debugHandler: [:exception :messageSend :resolver | resolver fulfill: marker. nil "ensure we do not return the marker"].
@@ -12924,8 +13385,9 @@ testDebugHandlerNoResolutionWithNonresumableException
 
 	| marker client server reason |
 	marker := #testMarker.
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrNonresumableError signal].
 	server debugHandler: [:exception :messageSend :resolver | marker].
@@ -12944,8 +13406,9 @@ testDebugHandlerNoResolutionWithResumableException
 
 	| marker client server |
 	marker := #testMarker.
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrResumableError signal].
 	server debugHandler: [:exception :messageSend :resolver | marker].
@@ -12959,8 +13422,9 @@ method: RsrMessageSendingTest
 testPrePostUpdate
 
 	| client server pre post |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	pre := post := false.
 	server
@@ -12978,8 +13442,9 @@ method: RsrMessageSendingTest
 testPrePostUpdateError
 
 	| client server reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [true].
 	self assert: client value.
@@ -13010,8 +13475,9 @@ method: RsrMessageSendingTest
 testRemoteError
 
 	| client server reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [Error new tag: 'tag'; messageText: 'messageText'; signal].
 	[client value]
@@ -13037,8 +13503,9 @@ method: RsrMessageSendingTest
 testRemoteErrorWithTag
 
 	| client server tag messageText reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	tag := nil.
 	messageText := 'messageText'.
@@ -13077,8 +13544,9 @@ method: RsrMessageSendingTest
 testRemoteProcessTerminationDuringDebugHandler
 
 	| client server reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server
 		action: [Error signal];
@@ -13094,8 +13562,9 @@ method: RsrMessageSendingTest
 testRemoteProcessTerminationDuringMessageSend
 
 	| client server reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [self terminateCurrentProcess].
 	reason := self expectCatch: client asyncValue.
@@ -13109,8 +13578,9 @@ method: RsrMessageSendingTest
 testRemoteProcessTerminationDuringPrePostUpdate
 
 	| client server reason |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server
 		preUpdateHandler: [self terminateCurrentProcess];
@@ -13129,8 +13599,9 @@ testReturnAlsoUpdatesLocalService
 	that it is also sent to update the local service."
 
 	| client server value response |
-	client := self serviceFactoryA serviceFor: #RsrReflectedVariableTestServiceB.
-	client synchronize.
+	client := RsrReflectedVariableTestClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	value := 42.
 	self
@@ -13162,8 +13633,9 @@ method: RsrMessageSendingTest
 testReturnArgument
 
 	| client server arguments dt response |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:object | object].
 	arguments := OrderedCollection new
@@ -13209,9 +13681,10 @@ category: 'running-errors'
 method: RsrMessageSendingTest
 testReturnInvalidObject
 
-	| client server reason |			
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	| client server reason |
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [Object new].
 	self
@@ -13240,8 +13713,9 @@ method: RsrMessageSendingTest
 testReturnNewService
 
 	| client server returnedService |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrValueHolderServer new].
 	returnedService := client value.
@@ -13255,8 +13729,9 @@ method: RsrMessageSendingTest
 testReturnNewServiceInArray
 
 	| client server array returnedService |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [Array with: RsrValueHolderServer new].
 	array := client value.
@@ -13271,8 +13746,9 @@ method: RsrMessageSendingTest
 testReturnSymbol
 
 	| client server symbol result |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	symbol := #testSymbol.
 	server action: [symbol].
@@ -13286,9 +13762,10 @@ category: 'running-errors'
 method: RsrMessageSendingTest
 testSendInvalidObject
 
-	| client server |			
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	| client server |
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:arg | arg].
 	self
@@ -13301,10 +13778,11 @@ method: RsrMessageSendingTest
 testUnimplementedRemoteSend
 	"Ensure a remote DNU is reported back to the sender."
 
-	| marker client server reason |
+	| marker client reason |
 	marker := #testMarker.
-	client := connectionA serviceFor: #RsrServiceNoInstVars.
-	client synchronize.
+	client := RsrClientNoInstVars new
+		registerWith: connectionA;
+		synchronize.
 	reason := self expectCatch: client unimplementedRemoteSend.
 	self
 		assert: reason class
@@ -13355,7 +13833,11 @@ category: 'running-utilities'
 method: RsrServiceTest
 mirror: aService
 
-	^(connectionA serviceFor: #RsrClientNoInstVars) sendReturnArgument: aService
+	| client |
+	client := RsrClientNoInstVars new
+		registerWith: connectionA;
+		yourself.
+	^client sendReturnArgument: aService
 %
 
 category: 'running'
@@ -13379,62 +13861,12 @@ testAnalyzeServiceRegisteredWithDifferentConnection
 
 category: 'running'
 method: RsrServiceTest
-testCreateServiceWithDistinctClientAbstractService
-
-	| client |
-	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
-	self
-		assert: client class
-		equals: RsrRemoteAction clientClass
-%
-
-category: 'running'
-method: RsrServiceTest
-testCreateServiceWithSameClientAbstractService
-
-	| client server |
-	client := self serviceFactoryA serviceFor: #RsrSameTemplateAndClientService.
-	self
-		assert: client class
-		equals: RsrSameTemplateAndClientService.
-	client synchronize.
-	server := connectionB serviceAt: client _id.
-	self
-		assert: server replicated1
-		equals: nil.
-	self
-		assert: server replicated2
-		equals: nil.
-	client
-		replicated1: 1;
-		replicated2: 2;
-		synchronize.
-	self
-		assert: server replicated1
-		equals: 1.
-	self
-		assert: server replicated2
-		equals: 2.
-	server
-		replicated1: 10;
-		replicated2: 20;
-		private1: 3;
-		synchronize.
-	self
-		assert: client replicated1
-		equals: 10.
-	self
-		assert: client replicated2
-		equals: 20
-%
-
-category: 'running'
-method: RsrServiceTest
 testEnsureServersAreCachedAndReused
 
 	| client service1 service2 |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	service1 := connectionB serviceAt: client _id.
 	self mirror: client.
 	service2 := connectionB serviceAt: client _id.
@@ -13487,8 +13919,9 @@ testMessageDispatchedConcurrentlyToSingleService
 	"Ensure all messages are sent concurrently (including those sent to a single service)"
 
 	| client server counter promise1 promise2 |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	counter := 0.
 	server action: [counter := counter + 1. self shortWait. counter].
@@ -13508,10 +13941,12 @@ testMessagesDispactchedConcurrentlyForMultipleServices
 	"Ensure messages are dispatched concurrently"
 
 	| client1 server1 client2 server2 semaphore expected1 expected2 promise1 promise2 |
-	client1 := connectionA serviceFor: #RsrRemoteAction.
-	client2 := connectionA serviceFor: #RsrRemoteAction.
-	client1 synchronize.
-	client2 synchronize.
+	client1 := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
+	client2 := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server1 := connectionB serviceAt: client1 _id.
 	server2 := connectionB serviceAt: client2 _id.
 	semaphore := Semaphore new.
@@ -13538,7 +13973,9 @@ method: RsrServiceTest
 testPrePostUpdate
 
 	| client server | 
-	client := connectionA serviceFor: #RsrInstrumentedServer.
+	client := RsrInstrumentedClient new
+		registerWith: connectionA;
+		yourself.
 	self
 		assert: client preUpdateCount
 		equals: 0.
@@ -13579,8 +14016,9 @@ method: RsrServiceTest
 testReflectedVariableNames
 
 	| client server clientNames serverNames |
-	client := connectionA serviceFor: #RsrTestService.
-	client synchronize.
+	client := RsrClientTestService new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	clientNames := RsrServiceSnapshot reflectedVariablesFor: client.
 	serverNames := RsrServiceSnapshot reflectedVariablesFor: server.
@@ -13593,8 +14031,9 @@ testReflectedVariableNames
 	self
 		assert: (clientNames at: 1) asSymbol
 		equals: #sharedVariable.
-	client := connectionA serviceFor: #RsrReflectedVariableTestServiceB.
-	client synchronize.
+	client := RsrReflectedVariableTestClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	clientNames := RsrServiceSnapshot reflectedVariablesFor: client.
 	serverNames := RsrServiceSnapshot reflectedVariablesFor: server.
@@ -13631,8 +14070,9 @@ method: RsrServiceTest
 testReturnServerWithoutAssociatedClient
 
 	| client server reason |
-	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [RsrKnownServer new].
 	reason := self expectCatch: client asyncValue.
@@ -13646,8 +14086,9 @@ method: RsrServiceTest
 testSendClientWithoutAssociatedServer
 
 	| client server reason |
-	client := self serviceFactoryA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:x | x].
 	reason := self expectCatch: (client asyncValue: RsrKnownClient new).
@@ -13853,7 +14294,9 @@ method: RsrSpeciesEquality
 testServiceWithUnsupportedObject
 
 	| service |
-	service := connectionA serviceFor: #RsrClientNoInstVars.
+	service := RsrClientNoInstVars new
+		registerWith: connectionA;
+		yourself.
 	self
 		should: [service sendReturnArgument: (RsrValueHolderClient value: Object new)]
 		raise: RsrUnsupportedObject
@@ -13923,8 +14366,9 @@ verify: anObject
 	"Send <anObject> through RSR and have it returned. Assert it is equivalent."
 
 	| client server |
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:object | server sharedVariable: object. object].
 	self
@@ -13967,7 +14411,7 @@ category: 'accessing'
 classmethod: RsrStressTest
 defaultTimeLimit
 
-	^20 seconds
+	^30 seconds
 %
 
 category: 'testing'
@@ -14000,7 +14444,7 @@ concurrentlyRun: aBlock
 	| anyCurtailed semaphores |
 	anyCurtailed := false.
 	semaphores := (1 to: self numThreads) collect: [:each | Semaphore new].
-	semaphores do: [:semaphore | RsrProcessModel fork: [[self repeatedlyRun: aBlock. semaphore signal] ifCurtailed: [anyCurtailed := true. semaphore signal]]].
+	semaphores do: [:semaphore | RsrProcessModel fork: [[self repeatedlyRun: aBlock. semaphore signal] ifCurtailed: [anyCurtailed := true. semaphore signal]] named: 'Concurrent Test Thread'].
 	semaphores do: [:semaphore | semaphore wait].
 	self deny: anyCurtailed
 %
@@ -14009,8 +14453,9 @@ category: 'initialize/release'
 method: RsrStressTest
 initializeServices
 
-	client := connectionA serviceFor: #RsrRemoteAction.
-	client synchronize.
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
 	server := connectionB serviceAt: client _id.
 	server action: [:x | x]
 %
@@ -14033,7 +14478,7 @@ category: 'running-utilities'
 method: RsrStressTest
 repeatedlySend: anObject
 
-	self repeatedlyRun: [self client value: anObject]
+	self repeatedlyRun: [self send: anObject]
 %
 
 category: 'accessing'
@@ -14041,6 +14486,13 @@ method: RsrStressTest
 repetitions
 
 	^1000
+%
+
+category: 'running-utilities'
+method: RsrStressTest
+send: anObject
+
+	self client value: anObject
 %
 
 category: 'accessing'
@@ -14066,6 +14518,15 @@ tearDown
 
 	self cleanupServices.
 	super tearDown
+%
+
+category: 'running'
+method: RsrStressTest
+test10MBytes
+
+	| bytes |
+	bytes := ByteArray new: 1024 * 1024 * 10.
+	50 timesRepeat: [self send: bytes]
 %
 
 category: 'running'
@@ -14149,7 +14610,7 @@ exceptionCase
 
 	| sema |
 	sema := Semaphore new.
-	RsrProcessModel fork: [[Error signal] ensure: [sema signal]].
+	RsrProcessModel fork: [[Error signal] ensure: [sema signal]] ensure: 'Ensure w/ signal'.
 	sema wait
 %
 
@@ -14159,7 +14620,7 @@ noExceptionCase
 
 	| sema |
 	sema := Semaphore new.
-	RsrProcessModel fork: [sema signal].
+	RsrProcessModel fork: [sema signal] named: 'Signal Semaphore'.
 	sema wait
 %
 
