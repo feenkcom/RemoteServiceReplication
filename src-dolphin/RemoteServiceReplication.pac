@@ -17,8 +17,9 @@ package classNames
 	add: #RsrRemotePromiseResolver;
 	add: #RsrSocketConnectionSpecification;
 	add: #RsrTokenExchangeMessage;
-	add: #RsrAcceptConnection;
+	add: #RsrHandshake;
 	add: #RsrHandshakeStep;
+	add: #RsrAcceptConnection;
 	add: #RsrPendingMessage;
 	add: #RsrCommandSink;
 	add: #RsrMessagingCommand;
@@ -158,8 +159,16 @@ RsrDispatchQueue comment: 'DispatchQueueThis class serves one purpose -- evalu
 !RsrDispatchQueue categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
+	subclass: #RsrHandshake
+	instanceVariableNames: 'steps stream'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrHandshake categoriesForClass!RemoteServiceReplication! !
+
+RsrObject
 	subclass: #RsrHandshakeStep
-	instanceVariableNames: 'stream'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -807,11 +816,11 @@ version: aVersionNumber	^self new		version: aVersionNumber;		yourself! !
 !RsrTokenExchange class methodsFor!
 token: aToken	^self new		token: aToken;		yourself! !
 
-!RsrTokenExchange class methodsFor!
-over: aStreamtoken: aToken	^self new		stream: aStream;		token: aToken;		yourself! !
-
 !RsrSupportedVersions class methodsFor!
 versions: anArray	^self new		versions: anArray;		yourself! !
+
+!RsrHandshake class methodsFor!
+steps: anArrayOfStepsstream: aStream	^self new		steps: anArrayOfSteps;		stream: aStream;		yourself! !
 
 !RsrConnection class methodsFor!
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
@@ -830,9 +839,6 @@ on: aChannel	^self new		channel: aChannel;		yourself! !
 
 !RsrCommandDecoder class methodsFor!
 registry: aRegistry	^self new		registry: aRegistry;		yourself! !
-
-!RsrHandshakeStep class methodsFor!
-over: aStream	^self new		stream: aStream;		yourself! !
 
 !RsrSocketStream class methodsFor!
 on: anRsrSocket	^self new		socket: anRsrSocket;		yourself! !
@@ -919,7 +925,7 @@ versions: anArray	versions := anArray! !
 = aSupportedVersions	self class = aSupportedVersions class		ifFalse: [^false].	^self versions = aSupportedVersions versions! !
 
 !RsrProtocolVersionNegotiationClient methodsFor!
-perform	"Perform the Client's porition of the handshake"	| supportedVersions answer |	supportedVersions := RsrSupportedVersions versions: #(1).	self codec		encodeSupportedVersions: supportedVersions		onto: self stream.	self stream flush.	answer := self codec decode: self stream.	answer hasSharedVersion		ifFalse: [^RsrProtocolVersionNegotiationFailed signal: 'The Client and Server could not agree on an RSR protocol version.']! !
+performOver: aStream	"Perform the Client's porition of the handshake"	| supportedVersions answer |	supportedVersions := RsrSupportedVersions versions: #(1).	self codec		encodeSupportedVersions: supportedVersions		onto: aStream.	aStream flush.	answer := self codec decode: aStream.	answer hasSharedVersion		ifFalse: [^RsrProtocolVersionNegotiationFailed signal: 'The Client and Server could not agree on an RSR protocol version.']! !
 
 !RsrReleaseServices methodsFor!
 sids	^sids! !
@@ -958,13 +964,13 @@ selector	^selector! !
 perform	^self receiver		perform: self selector		withArguments: self arguments! !
 
 !RsrTokenReceiver methodsFor!
-perform	"Send the token. Wait for confirmation."	| receivedToken |	receivedToken := self codec decode: self stream.	receivedToken = self token		ifTrue:			[self codec				encodeTokenAccepted: nil "RsrTokenAccepted new"				onto: self stream]		ifFalse:			[self codec				encodeTokenRejected: nil "RsrTokenRejected new"				onto: self steam.			RsrTokenExchangeFailed signal]! !
+performOver: aStream	"Send the token. Wait for confirmation."	| receivedToken |	receivedToken := self codec decode: aStream.	receivedToken = self token		ifTrue:			[self codec				encodeTokenAccepted: nil "RsrTokenAccepted new"				onto: aStream.			aStream flush]		ifFalse:			[self codec				encodeTokenRejected: nil "RsrTokenRejected new"				onto: aStream.			aStream flush.			RsrTokenExchangeFailed signal]! !
 
 !RsrInMemoryConnectionSpecification methodsFor!
 connect	"Establish an internal Connection pair via SharedQueues."	| aQueue bQueue channelA channelB |	aQueue := SharedQueue new.	bQueue := SharedQueue new.	channelA := RsrInMemoryChannel		inQueue: aQueue		outQueue: bQueue.	channelB := RsrInMemoryChannel		inQueue: bQueue		outQueue: aQueue.	connectionA := RsrConnection		specification: self		channel: channelA		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connectionB := RsrConnection		specification: self		channel: channelB		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	connectionA open.	connectionB open.	self assertOpen.	^connectionA! !
 
 !RsrTokenSender methodsFor!
-perform	"Send the token. Wait for confirmation."	| confirmation |	self codec		encodeToken: self token		onto: self stream.	confirmation := self codec decode: self stream.	confirmation wasAccepted		ifFalse: [RsrTokenExchangeFailed signal: 'Token was rejected']! !
+performOver: aStream	"Send the token. Wait for confirmation."	| confirmation |	self codec		encodeToken: self token		onto: aStream.	aStream flush.	confirmation := self codec decode: aStream.	confirmation wasAccepted		ifFalse: [RsrTokenExchangeFailed signal: 'Token was rejected']! !
 
 !RsrSocketStream methodsFor!
 socket: anRsrSocket	socket := anRsrSocket! !
@@ -1336,13 +1342,7 @@ encodeNoVersionOverlap: aNoVersionOverlaponto: aStream	self		encodeControlWo
 codec	^RsrProtocolVersionNegotiationCodec new! !
 
 !RsrHandshakeStep methodsFor!
-stream	"The stream that should be used by the step for its action."	^stream! !
-
-!RsrHandshakeStep methodsFor!
-perform	"Perform the work for this step."	^self subclassResponsibility! !
-
-!RsrHandshakeStep methodsFor!
-stream: aStream	"The stream that should be used by the step for its action."	stream := aStream! !
+performOver: aStream	"Perform the work for this step."	^self subclassResponsibility! !
 
 !RsrTokenAccepted methodsFor!
 wasAccepted	^true! !
@@ -1543,7 +1543,7 @@ releaseObjectsCommand	^3! !
 sendMessageCommand	^1! !
 
 !RsrAcceptConnection methodsFor!
-waitForConnection	| socket stream handshake tokenExchange channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	stream := RsrSocketStream on: socket.	handshake := RsrProtocolVersionNegotiationServer over: stream.	handshake perform.	tokenExchange := RsrTokenReceiver		over: stream		token: (RsrToken bytes: (ByteArray new: 16)).	tokenExchange perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
+waitForConnection	| socket stream steps handshake channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	stream := RsrSocketStream on: socket.	steps := Array		with: RsrProtocolVersionNegotiationServer new		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).	handshake := RsrHandshake		steps: steps		stream: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrAcceptConnection methodsFor!
 cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
@@ -1726,7 +1726,7 @@ channel	^channel! !
 runLoopName	"Return the name of the associated run loop.	This name is assigned to the Process used to execute the run loop."	^self subclassResponsibility! !
 
 !RsrProtocolVersionNegotiationServer methodsFor!
-perform	"Peform the Server's side of the handshake."	| supportedVersions |	supportedVersions := self codec decode: self stream.	(supportedVersions versions includes: 1)		ifTrue:			[self codec				encodeChosenVersion: (RsrChosenVersion version: 1)				onto: self stream.			self stream flush.]		ifFalse:			[self codec				encodeNoVersionOverlap: RsrNoVersionOverlap new				onto: self stream.			self stream flush; close.			^RsrProtocolVersionNegotiationFailed signal: 'Client versions did not overlap w/ Server']! !
+performOver: aStream	"Peform the Server's side of the handshake."	| supportedVersions |	supportedVersions := self codec decode: aStream.	(supportedVersions versions includes: 1)		ifTrue:			[self codec				encodeChosenVersion: (RsrChosenVersion version: 1)				onto: aStream.			aStream flush]		ifFalse:			[self codec				encodeNoVersionOverlap: RsrNoVersionOverlap new				onto: aStream.			aStream flush; close.			^RsrProtocolVersionNegotiationFailed signal: 'Client versions did not overlap w/ Server']! !
 
 !RsrDeliverResponse methodsFor!
 response	^self responseReference! !
@@ -1827,6 +1827,21 @@ received: aCommand	"A command has come in over the channel. Propogate it to the
 !RsrChannel methodsFor!
 connection: aConnection	connection := aConnection! !
 
+!RsrHandshake methodsFor!
+steps	"The sequence of handshake steps to perform."	^steps! !
+
+!RsrHandshake methodsFor!
+stream	"The stream used by each step."	^stream! !
+
+!RsrHandshake methodsFor!
+steps: anArrayOfSteps	"The sequence of handshake steps to perform."	steps := anArrayOfSteps! !
+
+!RsrHandshake methodsFor!
+stream: aStream	"The stream used by each step."	stream := aStream! !
+
+!RsrHandshake methodsFor!
+perform	"Perform the sequence of configured steps."	self steps do: [:each | each performOver: self stream]! !
+
 !RsrBufferedSocketStream methodsFor!
 next	^self next: 1! !
 
@@ -1870,7 +1885,7 @@ reportOn: aLog	self subclassResponsibility! !
 encode: aStreamusing: anEncoder	self subclassResponsibility! !
 
 !RsrInitiateConnection methodsFor!
-connect	| socket stream handshake tokenExchange channel connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	stream := RsrSocketStream on: socket.	handshake := RsrProtocolVersionNegotiationClient over: stream.	handshake perform.	tokenExchange := RsrTokenSender		over: stream		token: (RsrToken bytes: (ByteArray new: 16)).	tokenExchange perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
+connect	| socket stream steps handshake channel connection |	socket := self socketClass new.	socket		connectToHost: self host		port: self port.	stream := RsrSocketStream on: socket.	steps := Array		with: RsrProtocolVersionNegotiationClient new		with: (RsrTokenSender token: (RsrToken bytes: (ByteArray new: 16))).	handshake := RsrHandshake		steps: steps		stream: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.	^connection open! !
 
 !RsrThreadSafeNumericSpigot methodsFor!
 initialize	super initialize.	mutex := Semaphore forMutualExclusion! !

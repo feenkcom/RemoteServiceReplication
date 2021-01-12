@@ -18,18 +18,19 @@ Class {
 { #category : 'connecting' }
 RsrInitiateConnection >> connect [
 
-	| socket stream handshake tokenExchange channel connection |
+	| socket stream steps handshake channel connection |
 	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.
 	stream := RsrSocketStream on: socket.
-	handshake := RsrProtocolVersionNegotiationClient over: stream.
+	steps := Array
+		with: RsrProtocolVersionNegotiationClient new
+		with: (RsrTokenSender token: (RsrToken bytes: (ByteArray new: 16))).
+	handshake := RsrHandshake
+		steps: steps
+		stream: stream.
 	handshake perform.
-	tokenExchange := RsrTokenSender
-		over: stream
-		token: (RsrToken bytes: (ByteArray new: 16)).
-	tokenExchange perform.
 	channel := RsrBinaryStreamChannel
 		inStream: stream
 		outStream: stream.

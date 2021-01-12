@@ -5,19 +5,21 @@ Class {
 }
 
 { #category : 'performing' }
-RsrTokenReceiver >> perform [
+RsrTokenReceiver >> performOver: aStream [
 	"Send the token. Wait for confirmation."
 
 	| receivedToken |
-	receivedToken := self codec decode: self stream.
+	receivedToken := self codec decode: aStream.
 	receivedToken = self token
 		ifTrue:
 			[self codec
 				encodeTokenAccepted: nil "RsrTokenAccepted new"
-				onto: self stream]
+				onto: aStream.
+			aStream flush]
 		ifFalse:
 			[self codec
 				encodeTokenRejected: nil "RsrTokenRejected new"
-				onto: self steam.
+				onto: aStream.
+			aStream flush.
 			RsrTokenExchangeFailed signal]
 ]

@@ -8,16 +8,6 @@ Class {
 }
 
 { #category : 'accessing' }
-RsrTokenExchange class >> over: aStream
-token: aToken [
-
-	^self new
-		stream: aStream;
-		token: aToken;
-		yourself
-]
-
-{ #category : 'accessing' }
 RsrTokenExchange class >> token: aToken [
 
 	^self new

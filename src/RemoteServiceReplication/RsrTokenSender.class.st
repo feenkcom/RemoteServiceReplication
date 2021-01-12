@@ -5,14 +5,15 @@ Class {
 }
 
 { #category : 'performing' }
-RsrTokenSender >> perform [
+RsrTokenSender >> performOver: aStream [
 	"Send the token. Wait for confirmation."
 
 	| confirmation |
 	self codec
 		encodeToken: self token
-		onto: self stream.
-	confirmation := self codec decode: self stream.
+		onto: aStream.
+	aStream flush.
+	confirmation := self codec decode: aStream.
 	confirmation wasAccepted
 		ifFalse: [RsrTokenExchangeFailed signal: 'Token was rejected']
 ]
