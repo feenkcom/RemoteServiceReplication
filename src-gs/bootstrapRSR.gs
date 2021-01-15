@@ -58,7 +58,7 @@ removeallclassmethods RsrConnectionFailed
 
 doit
 (RsrError
-	subclass: 'RsrHandshakeFailed'
+	subclass: 'RsrHandshakeError'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -71,8 +71,44 @@ doit
 true.
 %
 
-removeallmethods RsrHandshakeFailed
-removeallclassmethods RsrHandshakeFailed
+removeallmethods RsrHandshakeError
+removeallclassmethods RsrHandshakeError
+
+doit
+(RsrHandshakeError
+	subclass: 'RsrProtocolVersionNegotiationFailed'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrProtocolVersionNegotiationFailed
+removeallclassmethods RsrProtocolVersionNegotiationFailed
+
+doit
+(RsrHandshakeError
+	subclass: 'RsrTokenExchangeFailed'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenExchangeFailed
+removeallclassmethods RsrTokenExchangeFailed
 
 doit
 (RsrError
@@ -1324,7 +1360,25 @@ removeallclassmethods RsrCodec
 
 doit
 (RsrCodec
-	subclass: 'RsrDecoder'
+	subclass: 'RsrCommandCodec'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrCommandCodec
+removeallclassmethods RsrCommandCodec
+
+doit
+(RsrCommandCodec
+	subclass: 'RsrCommandDecoder'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -1343,12 +1397,12 @@ Object
 true.
 %
 
-removeallmethods RsrDecoder
-removeallclassmethods RsrDecoder
+removeallmethods RsrCommandDecoder
+removeallclassmethods RsrCommandDecoder
 
 doit
-(RsrCodec
-	subclass: 'RsrEncoder'
+(RsrCommandCodec
+	subclass: 'RsrCommandEncoder'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -1361,8 +1415,44 @@ doit
 true.
 %
 
-removeallmethods RsrEncoder
-removeallclassmethods RsrEncoder
+removeallmethods RsrCommandEncoder
+removeallclassmethods RsrCommandEncoder
+
+doit
+(RsrCodec
+	subclass: 'RsrProtocolVersionNegotiationCodec'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrProtocolVersionNegotiationCodec
+removeallclassmethods RsrProtocolVersionNegotiationCodec
+
+doit
+(RsrCodec
+	subclass: 'RsrTokenExchangeCodec'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenExchangeCodec
+removeallclassmethods RsrTokenExchangeCodec
 
 doit
 (RsrObject
@@ -1746,7 +1836,43 @@ removeallclassmethods RsrGarbageCollector
 doit
 (RsrObject
 	subclass: 'RsrHandshake'
-	instVarNames: #( stream )
+	instVarNames: #( steps stream )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshake
+removeallclassmethods RsrHandshake
+
+doit
+(RsrObject
+	subclass: 'RsrHandshakeStep'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrHandshakeStep
+removeallclassmethods RsrHandshakeStep
+
+doit
+(RsrHandshakeStep
+	subclass: 'RsrProtocolVersionNegotiation'
+	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1769,12 +1895,12 @@ Server -> Client:
 true.
 %
 
-removeallmethods RsrHandshake
-removeallclassmethods RsrHandshake
+removeallmethods RsrProtocolVersionNegotiation
+removeallclassmethods RsrProtocolVersionNegotiation
 
 doit
-(RsrHandshake
-	subclass: 'RsrClientHandshake'
+(RsrProtocolVersionNegotiation
+	subclass: 'RsrProtocolVersionNegotiationClient'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -1787,12 +1913,12 @@ doit
 true.
 %
 
-removeallmethods RsrClientHandshake
-removeallclassmethods RsrClientHandshake
+removeallmethods RsrProtocolVersionNegotiationClient
+removeallclassmethods RsrProtocolVersionNegotiationClient
 
 doit
-(RsrHandshake
-	subclass: 'RsrServerHandshake'
+(RsrProtocolVersionNegotiation
+	subclass: 'RsrProtocolVersionNegotiationServer'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -1805,12 +1931,30 @@ doit
 true.
 %
 
-removeallmethods RsrServerHandshake
-removeallclassmethods RsrServerHandshake
+removeallmethods RsrProtocolVersionNegotiationServer
+removeallclassmethods RsrProtocolVersionNegotiationServer
 
 doit
-(RsrObject
-	subclass: 'RsrHandshakeCodec'
+(RsrHandshakeStep
+	subclass: 'RsrTokenExchange'
+	instVarNames: #( token )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenExchange
+removeallclassmethods RsrTokenExchange
+
+doit
+(RsrTokenExchange
+	subclass: 'RsrTokenReceiver'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -1823,12 +1967,12 @@ doit
 true.
 %
 
-removeallmethods RsrHandshakeCodec
-removeallclassmethods RsrHandshakeCodec
+removeallmethods RsrTokenReceiver
+removeallclassmethods RsrTokenReceiver
 
 doit
-(RsrObject
-	subclass: 'RsrHandshakeMessage'
+(RsrTokenExchange
+	subclass: 'RsrTokenSender'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -1837,70 +1981,12 @@ doit
 	options: #()
 )
 		category: 'RemoteServiceReplication';
-		comment: 'HandshakeMessage serves as a superclass for all Messages used while processing a Connection Handshake.';
 		immediateInvariant.
 true.
 %
 
-removeallmethods RsrHandshakeMessage
-removeallclassmethods RsrHandshakeMessage
-
-doit
-(RsrHandshakeMessage
-	subclass: 'RsrChosenVersion'
-	instVarNames: #( version )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		comment: 'This message is sent when a Server has chosen a version it is willing to talk w/ a client Connection. The Server expects the Client to speak this version.';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrChosenVersion
-removeallclassmethods RsrChosenVersion
-
-doit
-(RsrHandshakeMessage
-	subclass: 'RsrNoVersionOverlap'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		comment: 'This message is sent when a Server has determined it cannot talk any version of the protocol that the Client has requested to speak.';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrNoVersionOverlap
-removeallclassmethods RsrNoVersionOverlap
-
-doit
-(RsrHandshakeMessage
-	subclass: 'RsrSupportedVersions'
-	instVarNames: #( versions )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		comment: 'When a Client connects to a Server. It is required to send this message w/ the list of supported protocol versions it is willing to speak. The preference of the client is signified by the order of the version numbers in <versions>.';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrSupportedVersions
-removeallclassmethods RsrSupportedVersions
+removeallmethods RsrTokenSender
+removeallclassmethods RsrTokenSender
 
 doit
 (RsrObject
@@ -2130,6 +2216,82 @@ true.
 
 removeallmethods RsrPromiseResolutionAction
 removeallclassmethods RsrPromiseResolutionAction
+
+doit
+(RsrObject
+	subclass: 'RsrProtocolVersionNegotiationMessage'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'HandshakeMessage serves as a superclass for all Messages used while processing a Connection Handshake.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrProtocolVersionNegotiationMessage
+removeallclassmethods RsrProtocolVersionNegotiationMessage
+
+doit
+(RsrProtocolVersionNegotiationMessage
+	subclass: 'RsrChosenVersion'
+	instVarNames: #( version )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'This message is sent when a Server has chosen a version it is willing to talk w/ a client Connection. The Server expects the Client to speak this version.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrChosenVersion
+removeallclassmethods RsrChosenVersion
+
+doit
+(RsrProtocolVersionNegotiationMessage
+	subclass: 'RsrNoVersionOverlap'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'This message is sent when a Server has determined it cannot talk any version of the protocol that the Client has requested to speak.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrNoVersionOverlap
+removeallclassmethods RsrNoVersionOverlap
+
+doit
+(RsrProtocolVersionNegotiationMessage
+	subclass: 'RsrSupportedVersions'
+	instVarNames: #( versions )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'When a Client connects to a Server. It is required to send this message w/ the list of supported protocol versions it is willing to speak. The preference of the client is signified by the order of the version numbers in <versions>.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrSupportedVersions
+removeallclassmethods RsrSupportedVersions
 
 doit
 (RsrObject
@@ -3019,6 +3181,78 @@ removeallmethods RsrThreadSafeDictionary
 removeallclassmethods RsrThreadSafeDictionary
 
 doit
+(RsrObject
+	subclass: 'RsrTokenExchangeMessage'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenExchangeMessage
+removeallclassmethods RsrTokenExchangeMessage
+
+doit
+(RsrTokenExchangeMessage
+	subclass: 'RsrToken'
+	instVarNames: #( bytes )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrToken
+removeallclassmethods RsrToken
+
+doit
+(RsrTokenExchangeMessage
+	subclass: 'RsrTokenAccepted'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenAccepted
+removeallclassmethods RsrTokenAccepted
+
+doit
+(RsrTokenExchangeMessage
+	subclass: 'RsrTokenRejected'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenRejected
+removeallclassmethods RsrTokenRejected
+
+doit
 (Object
 	subclass: 'RsrProcessModel'
 	instVarNames: #(  )
@@ -3093,7 +3327,7 @@ removeallclassmethods RsrClassResolverTestCase
 
 doit
 (RsrTestCase
-	subclass: 'RsrCodecTest'
+	subclass: 'RsrCommandCodecTest'
 	instVarNames: #( connection )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -3106,12 +3340,12 @@ doit
 true.
 %
 
-removeallmethods RsrCodecTest
-removeallclassmethods RsrCodecTest
+removeallmethods RsrCommandCodecTest
+removeallclassmethods RsrCommandCodecTest
 
 doit
-(RsrCodecTest
-	subclass: 'RsrDecoderTest'
+(RsrCommandCodecTest
+	subclass: 'RsrCommandDecoderTest'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -3132,12 +3366,12 @@ Object
 true.
 %
 
-removeallmethods RsrDecoderTest
-removeallclassmethods RsrDecoderTest
+removeallmethods RsrCommandDecoderTest
+removeallclassmethods RsrCommandDecoderTest
 
 doit
-(RsrCodecTest
-	subclass: 'RsrEncoderTest'
+(RsrCommandCodecTest
+	subclass: 'RsrCommandEncoderTest'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -3158,8 +3392,8 @@ Object
 true.
 %
 
-removeallmethods RsrEncoderTest
-removeallclassmethods RsrEncoderTest
+removeallmethods RsrCommandEncoderTest
+removeallclassmethods RsrCommandEncoderTest
 
 doit
 (RsrTestCase
@@ -3217,24 +3451,6 @@ removeallclassmethods RsrGarbageCollectorTestCase
 
 doit
 (RsrTestCase
-	subclass: 'RsrHandshakeCodecTest'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication-Test';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrHandshakeCodecTest
-removeallclassmethods RsrHandshakeCodecTest
-
-doit
-(RsrTestCase
 	subclass: 'RsrNumericSpigotTest'
 	instVarNames: #(  )
 	classVars: #(  )
@@ -3286,6 +3502,24 @@ true.
 
 removeallmethods RsrPromiseTest
 removeallclassmethods RsrPromiseTest
+
+doit
+(RsrTestCase
+	subclass: 'RsrProtocolVersionNegotiationCodecTestCase'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication-Test';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrProtocolVersionNegotiationCodecTestCase
+removeallclassmethods RsrProtocolVersionNegotiationCodecTestCase
 
 doit
 (RsrTestCase
@@ -3707,6 +3941,24 @@ true.
 
 removeallmethods RsrTestingProcessModelTestCase
 removeallclassmethods RsrTestingProcessModelTestCase
+
+doit
+(RsrTestCase
+	subclass: 'RsrTokenExchangeCodecTestCase'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication-Test';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrTokenExchangeCodecTestCase
+removeallclassmethods RsrTokenExchangeCodecTestCase
 
 ! Class implementation for 'RsrAlreadyRegistered'
 
@@ -5577,80 +5829,8 @@ ifAbsent: aBlock
 
 !		Instance methods for 'RsrCodec'
 
-category: 'private-accessing'
+category: 'converting'
 method: RsrCodec
-controlWordMax
-
-	^(2 raisedTo: 63) - 1
-%
-
-category: 'private-accessing'
-method: RsrCodec
-controlWordMin
-
-	^(2 raisedTo: 63) negated
-%
-
-category: 'private-accessing-commands'
-method: RsrCodec
-deliverErrorResponseCommand
-
-	^4
-%
-
-category: 'private-accessing-commands'
-method: RsrCodec
-deliverResponseCommand
-
-	^2
-%
-
-category: 'private-accessing'
-method: RsrCodec
-immediateOID
-
-	^0
-%
-
-category: 'private-accessing-commands'
-method: RsrCodec
-releaseObjectsCommand
-
-	^3
-%
-
-category: 'private-accessing-commands'
-method: RsrCodec
-sendMessageCommand
-
-	^1
-%
-
-category: 'private-accessing'
-method: RsrCodec
-sizeOfInteger
-	"Return the number of bytes used to encode an integer"
-
-	^8
-%
-
-! Class implementation for 'RsrDecoder'
-
-!		Class methods for 'RsrDecoder'
-
-category: 'instance creation'
-classmethod: RsrDecoder
-registry: aRegistry
-
-	^self new
-		registry: aRegistry;
-		yourself
-%
-
-!		Instance methods for 'RsrDecoder'
-
-category: 'private-converting'
-method: RsrDecoder
 bytesAsInteger: bytes
 
 	| res |
@@ -5659,8 +5839,134 @@ bytesAsInteger: bytes
 	^res
 %
 
+category: 'accessing'
+method: RsrCodec
+controlWordMax
+
+	^(2 raisedTo: 63) - 1
+%
+
+category: 'accessing'
+method: RsrCodec
+controlWordMin
+
+	^(2 raisedTo: 63) negated
+%
+
+category: 'decoding'
+method: RsrCodec
+decodeControlWord: aStream
+
+	| bytes unsignedResult |
+	bytes := aStream next: self sizeOfInteger.
+	unsignedResult := self bytesAsInteger: bytes.
+	^unsignedResult > self controlWordMax
+		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]
+		ifFalse: [unsignedResult]
+%
+
+category: 'encoding'
+method: RsrCodec
+encodeControlWord: anInteger
+onto: aStream
+
+	| encodedInteger encodedBytes |
+	(anInteger between: self controlWordMin and: self controlWordMax)
+		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].
+	encodedInteger := (anInteger positive
+		ifTrue: [anInteger]
+		ifFalse: [(2 raisedTo: 64) + anInteger]).
+	encodedBytes := self
+		integerAsByteArray: encodedInteger
+		ofSize: self sizeOfInteger.
+	aStream nextPutAll: encodedBytes
+%
+
+category: 'converting'
+method: RsrCodec
+integerAsByteArray: anInteger
+ofSize: aNumberOfBytes
+
+	| bytes int |
+	bytes := ByteArray new: aNumberOfBytes.
+	int := anInteger.
+	aNumberOfBytes
+		to: 1
+		by: -1
+		do:
+			[:i | | byte |
+			byte := int bitAnd: 16rFF.
+			int := int bitShift: -8.
+			bytes at: i put: byte].
+	int ~= 0
+		ifTrue: [self error: 'Loss of precision detected'].
+	^bytes
+%
+
+category: 'accessing'
+method: RsrCodec
+sizeOfInteger
+	"Return the number of bytes used to encode an integer"
+
+	^8
+%
+
+! Class implementation for 'RsrCommandCodec'
+
+!		Instance methods for 'RsrCommandCodec'
+
+category: 'private-accessing-commands'
+method: RsrCommandCodec
+deliverErrorResponseCommand
+
+	^4
+%
+
+category: 'private-accessing-commands'
+method: RsrCommandCodec
+deliverResponseCommand
+
+	^2
+%
+
+category: 'private-accessing'
+method: RsrCommandCodec
+immediateOID
+
+	^0
+%
+
+category: 'private-accessing-commands'
+method: RsrCommandCodec
+releaseObjectsCommand
+
+	^3
+%
+
+category: 'private-accessing-commands'
+method: RsrCommandCodec
+sendMessageCommand
+
+	^1
+%
+
+! Class implementation for 'RsrCommandDecoder'
+
+!		Class methods for 'RsrCommandDecoder'
+
+category: 'instance creation'
+classmethod: RsrCommandDecoder
+registry: aRegistry
+
+	^self new
+		registry: aRegistry;
+		yourself
+%
+
+!		Instance methods for 'RsrCommandDecoder'
+
 category: 'decoding-commands'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeCommand: aStream
 	"Decode an object from the stream"
 
@@ -5672,20 +5978,8 @@ decodeCommand: aStream
 	^RsrError signal: 'Unknown command identifier: ', command printString
 %
 
-category: 'decoding'
-method: RsrDecoder
-decodeControlWord: aStream
-
-	| bytes unsignedResult |
-	bytes := aStream next: self sizeOfInteger.
-	unsignedResult := self bytesAsInteger: bytes.
-	^unsignedResult > self controlWordMax
-		ifTrue: [(2 raisedTo: 64) negated + unsignedResult]
-		ifFalse: [unsignedResult]
-%
-
 category: 'decoding-commands'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeDeliverResponse: aStream
 
     | transaction numServices serviceSnapshots response |
@@ -5701,7 +5995,7 @@ decodeDeliverResponse: aStream
 %
 
 category: 'decoding-services'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeImmediateReference: aStream
 
 	| referenceType |
@@ -5712,7 +6006,7 @@ decodeImmediateReference: aStream
 %
 
 category: 'decoding'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeReference: aStream
 
 	| oid |
@@ -5722,7 +6016,7 @@ decodeReference: aStream
 %
 
 category: 'decoding-commands'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeReleaseServices: aStream
 
 	| count oids |
@@ -5738,7 +6032,7 @@ decodeReleaseServices: aStream
 %
 
 category: 'decoding-commands'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeSendMessage: aStream
 
 	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |
@@ -5759,7 +6053,7 @@ decodeSendMessage: aStream
 %
 
 category: 'decoding-services'
-method: RsrDecoder
+method: RsrCommandDecoder
 decodeServiceSnapshot: aStream
 
 	| snapshot |
@@ -5771,7 +6065,7 @@ decodeServiceSnapshot: aStream
 %
 
 category: 'decoding-services'
-method: RsrDecoder
+method: RsrCommandDecoder
 instanceOfImmediate: aReferenceType
 
 	aReferenceType = 1
@@ -5807,36 +6101,19 @@ instanceOfImmediate: aReferenceType
 	self error: 'ReferenceType(', aReferenceType printString, ') not yet implemented'.
 %
 
-! Class implementation for 'RsrEncoder'
+! Class implementation for 'RsrCommandEncoder'
 
-!		Instance methods for 'RsrEncoder'
-
-category: 'private-encoding'
-method: RsrEncoder
-encodeControlWord: anInteger
-onto: aStream
-
-	| encodedInteger encodedBytes |
-	(anInteger between: self controlWordMin and: self controlWordMax)
-		ifFalse: [self error: anInteger printString, ' is outside the supported size of a control word.'].
-	encodedInteger := (anInteger positive
-		ifTrue: [anInteger]
-		ifFalse: [(2 raisedTo: 64) + anInteger]).
-	encodedBytes := self
-		integerAsByteArray: encodedInteger
-		ofSize: self sizeOfInteger.
-	aStream nextPutAll: encodedBytes
-%
+!		Instance methods for 'RsrCommandEncoder'
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeDeliverResponse: aDeliverResponse
 
 	^ByteArray streamContents: [:stream | self encodeDeliverResponse: aDeliverResponse onto: stream]
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeDeliverResponse: aDeliverResponse
 onto: aStream
 
@@ -5856,7 +6133,7 @@ onto: aStream
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeReference: aReference
 onto: aStream
 
@@ -5866,14 +6143,14 @@ onto: aStream
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeReleaseServices: aReleaseServices
 
 	^ByteArray streamContents: [:stream | self encodeReleaseServices: aReleaseServices onto: stream]
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeReleaseServices: aReleaseServices
 onto: aStream
 
@@ -5892,14 +6169,14 @@ onto: aStream
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeSendMessage: aSendMessage
 
 	^ByteArray streamContents: [:stream | self encodeSendMessage: aSendMessage onto: stream]
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeSendMessage: aSendMessage
 onto: aStream
 
@@ -5936,7 +6213,7 @@ onto: aStream
 %
 
 category: 'encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeServiceSnapshot: aServiceSnapshot
 
 	^ByteArray
@@ -5948,7 +6225,7 @@ encodeServiceSnapshot: aServiceSnapshot
 %
 
 category: 'private-encoding'
-method: RsrEncoder
+method: RsrCommandEncoder
 encodeServiceSnapshot: aServiceSnapshot
 onto: aStream
 
@@ -5957,25 +6234,193 @@ onto: aStream
 		using: self
 %
 
-category: 'converting'
-method: RsrEncoder
-integerAsByteArray: anInteger
-ofSize: aNumberOfBytes
+! Class implementation for 'RsrProtocolVersionNegotiationCodec'
 
-	| bytes int |
-	bytes := ByteArray new: aNumberOfBytes.
-	int := anInteger.
-	aNumberOfBytes
-		to: 1
-		by: -1
-		do:
-			[:i | | byte |
-			byte := int bitAnd: 16rFF.
-			int := int bitShift: -8.
-			bytes at: i put: byte].
-	int ~= 0
-		ifTrue: [self error: 'Loss of precision detected'].
-	^bytes
+!		Instance methods for 'RsrProtocolVersionNegotiationCodec'
+
+category: 'accessing'
+method: RsrProtocolVersionNegotiationCodec
+chosenVersionIdentifier
+
+	^1
+%
+
+category: 'decoding'
+method: RsrProtocolVersionNegotiationCodec
+decode: aStream
+	"Decode a message from <aStream>"
+
+	| identifier |
+	identifier := self decodeControlWord: aStream.
+	identifier = self supportedVersionsIdentifier
+		ifTrue: [^self decodeSupportedVersions: aStream].
+	identifier = self chosenVersionIdentifier
+		ifTrue: [^self decodeChosenVersion: aStream].
+	identifier = self noVersionOverlapIdentifier
+		ifTrue: [^self decodeNoVersionOverlap: aStream].
+	^RsrProtocolVersionNegotiationFailed signal: 'Unknown identifier: ', identifier printString
+%
+
+category: 'decoding'
+method: RsrProtocolVersionNegotiationCodec
+decodeChosenVersion: aStream
+
+	| version |
+	version := self decodeControlWord: aStream.
+	^RsrChosenVersion version: version
+%
+
+category: 'decoding'
+method: RsrProtocolVersionNegotiationCodec
+decodeNoVersionOverlap: aStream
+
+	^RsrNoVersionOverlap new
+%
+
+category: 'decoding'
+method: RsrProtocolVersionNegotiationCodec
+decodeSupportedVersions: aStream
+
+	| numberOfVersions versions |
+	numberOfVersions := self decodeControlWord: aStream.
+	versions := (1 to: numberOfVersions) collect: [:each | self decodeControlWord: aStream].
+	^RsrSupportedVersions versions: versions
+%
+
+category: 'encoding'
+method: RsrProtocolVersionNegotiationCodec
+encodeChosenVersion: aChosenVersion
+onto: aStream
+
+	self
+		encodeControlWord: self chosenVersionIdentifier
+		onto: aStream.
+	self
+		encodeControlWord: aChosenVersion version
+		onto: aStream
+%
+
+category: 'encoding'
+method: RsrProtocolVersionNegotiationCodec
+encodeNoVersionOverlap: aNoVersionOverlap
+onto: aStream
+
+	self
+		encodeControlWord: self noVersionOverlapIdentifier
+		onto: aStream
+%
+
+category: 'encoding'
+method: RsrProtocolVersionNegotiationCodec
+encodeSupportedVersions: aSupportedVersions
+onto: aStream
+
+	| versions |
+	versions := aSupportedVersions versions.
+	self
+		encodeControlWord: self supportedVersionsIdentifier
+		onto: aStream.
+	self
+		encodeControlWord: versions size
+		onto: aStream.
+	versions do: [:each | self encodeControlWord: each onto: aStream]
+%
+
+category: 'accessing'
+method: RsrProtocolVersionNegotiationCodec
+noVersionOverlapIdentifier
+
+	^2
+%
+
+category: 'accessing'
+method: RsrProtocolVersionNegotiationCodec
+supportedVersionsIdentifier
+
+	^0
+%
+
+! Class implementation for 'RsrTokenExchangeCodec'
+
+!		Instance methods for 'RsrTokenExchangeCodec'
+
+category: 'decoding'
+method: RsrTokenExchangeCodec
+decode: aStream
+
+	| identifier |
+	identifier := self decodeControlWord: aStream.
+	identifier = self tokenIdentifier
+		ifTrue: [^self decodeToken: aStream].
+	identifier = self tokenAcceptedIdentifier
+		ifTrue: [^RsrTokenAccepted new].
+	identifier = self tokenRejectedIdentifier
+		ifTrue: [^RsrTokenRejected new].
+	^RsrTokenExchangeFailed signal: 'Unknown identifier: ', identifier printString
+%
+
+category: 'decoding'
+method: RsrTokenExchangeCodec
+decodeToken: aStream
+
+	| size |
+	size := self decodeControlWord: aStream.
+	^RsrToken bytes: (aStream next: size)
+%
+
+category: 'encoding'
+method: RsrTokenExchangeCodec
+encodeToken: aToken
+onto: aStream
+
+	self
+		encodeControlWord: self tokenIdentifier
+		onto: aStream.
+	self
+		encodeControlWord: aToken bytes size
+		onto: aStream.
+	aStream nextPutAll: aToken bytes
+%
+
+category: 'encoding'
+method: RsrTokenExchangeCodec
+encodeTokenAccepted: aTokenAccepted
+onto: aStream
+
+	self
+		encodeControlWord: self tokenAcceptedIdentifier
+		onto: aStream
+%
+
+category: 'encoding'
+method: RsrTokenExchangeCodec
+encodeTokenRejected: aTokenRejected
+onto: aStream
+
+	self
+		encodeControlWord: self tokenRejectedIdentifier
+		onto: aStream
+%
+
+category: 'accessing'
+method: RsrTokenExchangeCodec
+tokenAcceptedIdentifier
+
+	^1
+%
+
+category: 'accessing'
+method: RsrTokenExchangeCodec
+tokenIdentifier
+
+	^0
+%
+
+category: 'accessing'
+method: RsrTokenExchangeCodec
+tokenRejectedIdentifier
+
+	^2
 %
 
 ! Class implementation for 'RsrCommand'
@@ -6933,7 +7378,7 @@ category: 'connecting'
 method: RsrAcceptConnection
 waitForConnection
 
-	| socket stream handshake channel connection |
+	| socket stream steps handshake channel connection |
 	listener := self socketClass new.
 	[listener
 		bindAddress: self host
@@ -6946,7 +7391,12 @@ waitForConnection
 				[listener close.
 				listener := nil].
 	stream := RsrSocketStream on: socket.
-	handshake := RsrServerHandshake over: stream.
+	steps := Array
+		with: RsrProtocolVersionNegotiationServer new
+		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).
+	handshake := RsrHandshake
+		steps: steps
+		stream: stream.
 	handshake perform.
 	channel := RsrBinaryStreamChannel
 		inStream: stream
@@ -6967,13 +7417,18 @@ category: 'connecting'
 method: RsrInitiateConnection
 connect
 
-	| socket stream handshake channel connection |
+	| socket stream steps handshake channel connection |
 	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.
 	stream := RsrSocketStream on: socket.
-	handshake := RsrClientHandshake over: stream.
+	steps := Array
+		with: RsrProtocolVersionNegotiationClient new
+		with: (RsrTokenSender token: (RsrToken bytes: (ByteArray new: 16))).
+	handshake := RsrHandshake
+		steps: steps
+		stream: stream.
 	handshake perform.
 	channel := RsrBinaryStreamChannel
 		inStream: stream
@@ -7140,33 +7595,45 @@ maximumReclamation
 
 category: 'instance creation'
 classmethod: RsrHandshake
-over: aStream
+steps: anArrayOfSteps
+stream: aStream
 
 	^self new
+		steps: anArrayOfSteps;
 		stream: aStream;
 		yourself
 %
 
 !		Instance methods for 'RsrHandshake'
 
-category: 'accessing'
-method: RsrHandshake
-codec
-
-	^RsrHandshakeCodec new
-%
-
-category: 'handshaking'
+category: 'performing'
 method: RsrHandshake
 perform
+	"Perform the sequence of configured steps."
 
-	self subclassResponsibility
+	self steps do: [:each | each performOver: self stream]
+%
+
+category: 'accessing'
+method: RsrHandshake
+steps
+	"The sequence of handshake steps to perform."
+
+	^steps
+%
+
+category: 'accessing'
+method: RsrHandshake
+steps: anArrayOfSteps
+	"The sequence of handshake steps to perform."
+
+	steps := anArrayOfSteps
 %
 
 category: 'accessing'
 method: RsrHandshake
 stream
-	"The stream over which the handshake should occurr"
+	"The stream used by each step."
 
 	^stream
 %
@@ -7174,305 +7641,157 @@ stream
 category: 'accessing'
 method: RsrHandshake
 stream: aStream
+	"The stream used by each step."
 
 	stream := aStream
 %
 
-! Class implementation for 'RsrClientHandshake'
+! Class implementation for 'RsrHandshakeStep'
 
-!		Instance methods for 'RsrClientHandshake'
+!		Instance methods for 'RsrHandshakeStep'
+
+category: 'performing'
+method: RsrHandshakeStep
+performOver: aStream
+	"Perform the work for this step."
+
+	^self subclassResponsibility
+%
+
+! Class implementation for 'RsrProtocolVersionNegotiation'
+
+!		Instance methods for 'RsrProtocolVersionNegotiation'
+
+category: 'accessing'
+method: RsrProtocolVersionNegotiation
+codec
+
+	^RsrProtocolVersionNegotiationCodec new
+%
+
+! Class implementation for 'RsrProtocolVersionNegotiationClient'
+
+!		Instance methods for 'RsrProtocolVersionNegotiationClient'
 
 category: 'handshaking'
-method: RsrClientHandshake
-perform
+method: RsrProtocolVersionNegotiationClient
+performOver: aStream
 	"Perform the Client's porition of the handshake"
 
 	| supportedVersions answer |
 	supportedVersions := RsrSupportedVersions versions: #(1).
 	self codec
 		encodeSupportedVersions: supportedVersions
-		onto: self stream.
-	self stream flush.
-	answer := self codec decode: self stream.
+		onto: aStream.
+	aStream flush.
+	answer := self codec decode: aStream.
 	answer hasSharedVersion
-		ifFalse: [^RsrHandshakeFailed signal: 'The Client and Server could not agree on an RSR protocol version.']
+		ifFalse: [^RsrProtocolVersionNegotiationFailed signal: 'The Client and Server could not agree on an RSR protocol version.']
 %
 
-! Class implementation for 'RsrServerHandshake'
+! Class implementation for 'RsrProtocolVersionNegotiationServer'
 
-!		Instance methods for 'RsrServerHandshake'
+!		Instance methods for 'RsrProtocolVersionNegotiationServer'
 
 category: 'handshaking'
-method: RsrServerHandshake
-perform
+method: RsrProtocolVersionNegotiationServer
+performOver: aStream
 	"Peform the Server's side of the handshake."
 
 	| supportedVersions |
-	supportedVersions := self codec decode: self stream.
+	supportedVersions := self codec decode: aStream.
 	(supportedVersions versions includes: 1)
 		ifTrue:
 			[self codec
 				encodeChosenVersion: (RsrChosenVersion version: 1)
-				onto: self stream.
-			self stream flush.]
+				onto: aStream.
+			aStream flush]
 		ifFalse:
 			[self codec
 				encodeNoVersionOverlap: RsrNoVersionOverlap new
-				onto: self stream.
-			self stream flush; close.
-			^RsrHandshakeFailed signal: 'Client versions did not overlap w/ Server']
+				onto: aStream.
+			aStream flush; close.
+			^RsrProtocolVersionNegotiationFailed signal: 'Client versions did not overlap w/ Server']
 %
 
-! Class implementation for 'RsrHandshakeCodec'
+! Class implementation for 'RsrTokenExchange'
 
-!		Instance methods for 'RsrHandshakeCodec'
+!		Class methods for 'RsrTokenExchange'
 
 category: 'accessing'
-method: RsrHandshakeCodec
-chosenVersionIdentifier
-
-	^1
-%
-
-category: 'decoding'
-method: RsrHandshakeCodec
-decode: aStream
-	"Decode a message from <aStream>"
-
-	| identifier |
-	identifier := self decodeWord: aStream.
-	identifier = self supportedVersionsIdentifier
-		ifTrue: [^self decodeSupportedVersions: aStream].
-	identifier = self chosenVersionIdentifier
-		ifTrue: [^self decodeChosenVersion: aStream].
-	identifier = self noVersionOverlapIdentifier
-		ifTrue: [^self decodeNoVersionOverlap: aStream].
-	^RsrError signal: 'Unknown Handshake message'
-%
-
-category: 'decoding'
-method: RsrHandshakeCodec
-decodeChosenVersion: aStream
-
-	| version |
-	version := self decodeWord: aStream.
-	^RsrChosenVersion version: version
-%
-
-category: 'decoding'
-method: RsrHandshakeCodec
-decodeNoVersionOverlap: aStream
-
-	^RsrNoVersionOverlap new
-%
-
-category: 'decoding'
-method: RsrHandshakeCodec
-decodeSupportedVersions: aStream
-
-	| numberOfVersions versions |
-	numberOfVersions := self decodeWord: aStream.
-	versions := (1 to: numberOfVersions) collect: [:each | self decodeWord: aStream].
-	^RsrSupportedVersions versions: versions
-%
-
-category: 'decoding'
-method: RsrHandshakeCodec
-decodeWord: aStream
-	"Decode one word from <aStream> and return it as an integer."
-
-	^(aStream next: 8)
-		inject: 0
-		into: [:res :byte | (res bitShift: 8) bitOr: byte]
-%
-
-category: 'encoding'
-method: RsrHandshakeCodec
-encodeChosenVersion: aChosenVersion
-onto: aStream
-
-	self
-		encodeWord: self chosenVersionIdentifier
-		onto: aStream.
-	self
-		encodeWord: aChosenVersion version
-		onto: aStream
-%
-
-category: 'encoding'
-method: RsrHandshakeCodec
-encodeNoVersionOverlap: aNoVersionOverlap
-onto: aStream
-
-	self
-		encodeWord: self noVersionOverlapIdentifier
-		onto: aStream
-%
-
-category: 'encoding'
-method: RsrHandshakeCodec
-encodeSupportedVersions: aSupportedVersions
-onto: aStream
-
-	| versions |
-	versions := aSupportedVersions versions.
-	self
-		encodeWord: self supportedVersionsIdentifier
-		onto: aStream.
-	self
-		encodeWord: versions size
-		onto: aStream.
-	versions do: [:each | self encodeWord: each onto: aStream]
-%
-
-category: 'encoding'
-method: RsrHandshakeCodec
-encodeWord: anInteger
-onto: aStream
-
-	| bytes integer |
-	(anInteger between: 0 and: 16rFFFFFFFFFFFFFFFF)
-		ifFalse: [RsrOutOfRange signal: anInteger printString, ' is not in the valid range for a value in an RSR Handshake Message.'].
-	bytes := ByteArray new: 8.
-	integer := anInteger.
-	8
-		to: 1
-		by: -1
-		do:
-			[:i | | byte |
-			byte := integer bitAnd: 16rFF.
-			bytes at: i put: byte.
-			integer := integer bitShift: -8].
-	aStream nextPutAll: bytes
-%
-
-category: 'accessing'
-method: RsrHandshakeCodec
-noVersionOverlapIdentifier
-
-	^2
-%
-
-category: 'accessing'
-method: RsrHandshakeCodec
-supportedVersionsIdentifier
-
-	^0
-%
-
-! Class implementation for 'RsrChosenVersion'
-
-!		Class methods for 'RsrChosenVersion'
-
-category: 'instance creation'
-classmethod: RsrChosenVersion
-version: aVersionNumber
+classmethod: RsrTokenExchange
+token: aToken
 
 	^self new
-		version: aVersionNumber;
+		token: aToken;
 		yourself
 %
 
-!		Instance methods for 'RsrChosenVersion'
+!		Instance methods for 'RsrTokenExchange'
 
-category: 'comparing'
-method: RsrChosenVersion
-= aChosenVersion
+category: 'accessing'
+method: RsrTokenExchange
+codec
 
-	^self class = aChosenVersion class and: [self version = aChosenVersion version]
-%
-
-category: 'testing'
-method: RsrChosenVersion
-hasSharedVersion
-	"Answer whether there is a valid shared protocol version between the Client and Server."
-
-	^true
+	^RsrTokenExchangeCodec new
 %
 
 category: 'accessing'
-method: RsrChosenVersion
-version
+method: RsrTokenExchange
+token
 
-	^version
+	^token
 %
 
 category: 'accessing'
-method: RsrChosenVersion
-version: aVersionNumber
+method: RsrTokenExchange
+token: aToken
 
-	version := aVersionNumber
+	token := aToken
 %
 
-! Class implementation for 'RsrNoVersionOverlap'
+! Class implementation for 'RsrTokenReceiver'
 
-!		Instance methods for 'RsrNoVersionOverlap'
+!		Instance methods for 'RsrTokenReceiver'
 
-category: 'comparing'
-method: RsrNoVersionOverlap
-= aNoVersionOverlap
+category: 'performing'
+method: RsrTokenReceiver
+performOver: aStream
+	"Send the token. Wait for confirmation."
 
-	^self class = aNoVersionOverlap class
+	| receivedToken |
+	receivedToken := self codec decode: aStream.
+	receivedToken = self token
+		ifTrue:
+			[self codec
+				encodeTokenAccepted: nil "RsrTokenAccepted new"
+				onto: aStream.
+			aStream flush]
+		ifFalse:
+			[self codec
+				encodeTokenRejected: nil "RsrTokenRejected new"
+				onto: aStream.
+			aStream flush.
+			RsrTokenExchangeFailed signal]
 %
 
-category: 'comparing'
-method: RsrNoVersionOverlap
-hash
+! Class implementation for 'RsrTokenSender'
 
-	^self class hash
-%
+!		Instance methods for 'RsrTokenSender'
 
-category: 'testing'
-method: RsrNoVersionOverlap
-hasSharedVersion
-	"Answer whether there is a valid shared protocol version between the Client and Server."
+category: 'performing'
+method: RsrTokenSender
+performOver: aStream
+	"Send the token. Wait for confirmation."
 
-	^false
-%
-
-! Class implementation for 'RsrSupportedVersions'
-
-!		Class methods for 'RsrSupportedVersions'
-
-category: 'instance creation'
-classmethod: RsrSupportedVersions
-versions: anArray
-
-	^self new
-		versions: anArray;
-		yourself
-%
-
-!		Instance methods for 'RsrSupportedVersions'
-
-category: 'comparing'
-method: RsrSupportedVersions
-= aSupportedVersions
-
-	self class = aSupportedVersions class
-		ifFalse: [^false].
-	^self versions = aSupportedVersions versions
-%
-
-category: 'comparing'
-method: RsrSupportedVersions
-hash
-
-	^self versions hash
-%
-
-category: 'accessing'
-method: RsrSupportedVersions
-versions
-
-	^versions
-%
-
-category: 'accessing'
-method: RsrSupportedVersions
-versions: anArray
-
-	versions := anArray
+	| confirmation |
+	self codec
+		encodeToken: self token
+		onto: aStream.
+	aStream flush.
+	confirmation := self codec decode: aStream.
+	confirmation wasAccepted
+		ifFalse: [RsrTokenExchangeFailed signal: 'Token was rejected']
 %
 
 ! Class implementation for 'RsrLog'
@@ -8146,6 +8465,121 @@ method: RsrPromiseResolutionAction
 when: aBlock
 
 	when := aBlock
+%
+
+! Class implementation for 'RsrChosenVersion'
+
+!		Class methods for 'RsrChosenVersion'
+
+category: 'instance creation'
+classmethod: RsrChosenVersion
+version: aVersionNumber
+
+	^self new
+		version: aVersionNumber;
+		yourself
+%
+
+!		Instance methods for 'RsrChosenVersion'
+
+category: 'comparing'
+method: RsrChosenVersion
+= aChosenVersion
+
+	^self class = aChosenVersion class and: [self version = aChosenVersion version]
+%
+
+category: 'testing'
+method: RsrChosenVersion
+hasSharedVersion
+	"Answer whether there is a valid shared protocol version between the Client and Server."
+
+	^true
+%
+
+category: 'accessing'
+method: RsrChosenVersion
+version
+
+	^version
+%
+
+category: 'accessing'
+method: RsrChosenVersion
+version: aVersionNumber
+
+	version := aVersionNumber
+%
+
+! Class implementation for 'RsrNoVersionOverlap'
+
+!		Instance methods for 'RsrNoVersionOverlap'
+
+category: 'comparing'
+method: RsrNoVersionOverlap
+= aNoVersionOverlap
+
+	^self class = aNoVersionOverlap class
+%
+
+category: 'comparing'
+method: RsrNoVersionOverlap
+hash
+
+	^self class hash
+%
+
+category: 'testing'
+method: RsrNoVersionOverlap
+hasSharedVersion
+	"Answer whether there is a valid shared protocol version between the Client and Server."
+
+	^false
+%
+
+! Class implementation for 'RsrSupportedVersions'
+
+!		Class methods for 'RsrSupportedVersions'
+
+category: 'instance creation'
+classmethod: RsrSupportedVersions
+versions: anArray
+
+	^self new
+		versions: anArray;
+		yourself
+%
+
+!		Instance methods for 'RsrSupportedVersions'
+
+category: 'comparing'
+method: RsrSupportedVersions
+= aSupportedVersions
+
+	self class = aSupportedVersions class
+		ifFalse: [^false].
+	^self versions = aSupportedVersions versions
+%
+
+category: 'comparing'
+method: RsrSupportedVersions
+hash
+
+	^self versions hash
+%
+
+category: 'accessing'
+method: RsrSupportedVersions
+versions
+
+	^versions
+%
+
+category: 'accessing'
+method: RsrSupportedVersions
+versions: anArray
+
+	versions := anArray
 %
 
 ! Class implementation for 'RsrReference'
@@ -10271,7 +10705,7 @@ category: 'accessing'
 method: RsrCommandSink
 encoder
 
-	^RsrEncoder new
+	^RsrCommandEncoder new
 %
 
 category: 'commands'
@@ -10368,7 +10802,7 @@ category: 'accessing'
 method: RsrCommandSource
 decoder
 
-	^RsrDecoder new
+	^RsrCommandDecoder new
 %
 
 category: 'commands'
@@ -10470,6 +10904,89 @@ ifAbsent: aBlock
 	^wasRemoved
 		ifTrue: [element]
 		ifFalse: [aBlock value]
+%
+
+! Class implementation for 'RsrTokenExchangeMessage'
+
+!		Instance methods for 'RsrTokenExchangeMessage'
+
+category: 'comparing'
+method: RsrTokenExchangeMessage
+= aTokenExchangeMessage
+
+	^self class == aTokenExchangeMessage class
+%
+
+category: 'hashing'
+method: RsrTokenExchangeMessage
+hash
+
+	^self class hash
+%
+
+! Class implementation for 'RsrToken'
+
+!		Class methods for 'RsrToken'
+
+category: 'instance creation'
+classmethod: RsrToken
+bytes: aByteArray
+
+	^self new
+		bytes: aByteArray;
+		yourself
+%
+
+!		Instance methods for 'RsrToken'
+
+category: 'comparing'
+method: RsrToken
+= aToken
+
+	^self class == aToken class and: [self bytes = aToken bytes]
+%
+
+category: 'accessing'
+method: RsrToken
+bytes
+
+	^bytes
+%
+
+category: 'accessing'
+method: RsrToken
+bytes: aByteArray
+
+	bytes := aByteArray
+%
+
+category: 'hashing'
+method: RsrToken
+hash
+
+	^self bytes hash
+%
+
+! Class implementation for 'RsrTokenAccepted'
+
+!		Instance methods for 'RsrTokenAccepted'
+
+category: 'testing'
+method: RsrTokenAccepted
+wasAccepted
+
+	^true
+%
+
+! Class implementation for 'RsrTokenRejected'
+
+!		Instance methods for 'RsrTokenRejected'
+
+category: 'testing'
+method: RsrTokenRejected
+wasAccepted
+
+	^false
 %
 
 ! Class implementation for 'RsrProcessModel'
@@ -10727,42 +11244,42 @@ testSuccessfulResolution
 		identicalTo: Object
 %
 
-! Class implementation for 'RsrCodecTest'
+! Class implementation for 'RsrCommandCodecTest'
 
-!		Class methods for 'RsrCodecTest'
+!		Class methods for 'RsrCommandCodecTest'
 
 category: 'testing'
-classmethod: RsrCodecTest
+classmethod: RsrCommandCodecTest
 isAbstract
 
-	^self == RsrCodecTest
+	^self == RsrCommandCodecTest
 %
 
-!		Instance methods for 'RsrCodecTest'
+!		Instance methods for 'RsrCommandCodecTest'
 
 category: 'accessing'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 connection
 
 	^connection
 %
 
 category: 'other'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 decoder
 
-	^RsrDecoder new
+	^RsrCommandDecoder new
 %
 
 category: 'accessing'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 encoder
 
-	^RsrEncoder new
+	^RsrCommandEncoder new
 %
 
 category: 'encode/decode'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 encodeReferenceOf: anObject
 
 	| reference |
@@ -10771,14 +11288,14 @@ encodeReferenceOf: anObject
 %
 
 category: 'running-symbol'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 genericSymbol
 
 	^#genericSymbol
 %
 
 category: 'running-symbol'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 genericSymbolEncoding
 
 	^#[0 0 0 0 0 0 0 0], "OID = 0"
@@ -10788,7 +11305,7 @@ genericSymbolEncoding
 %
 
 category: 'accessing-objects'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 referencedServiceEncoding
 
 	^#[0 0 0 0 0 0 0 0], "type"
@@ -10801,7 +11318,7 @@ referencedServiceEncoding
 %
 
 category: 'accessing-objects'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 rootServiceEncoding
 
 	^#[0 0 0 0 0 0 0 0], "type"
@@ -10815,7 +11332,7 @@ rootServiceEncoding
 %
 
 category: 'running'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 serviceNoInstVarsEncoding
 
 	^#[0 0 0 0 0 0 0 0], "type"
@@ -10828,7 +11345,7 @@ serviceNoInstVarsEncoding
 %
 
 category: 'other'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 setUp
 
 	super setUp.
@@ -10840,7 +11357,7 @@ setUp
 %
 
 category: 'other'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 tearDown
 
 	connection close.
@@ -10849,7 +11366,7 @@ tearDown
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testArray
 
 	| array encoding |
@@ -10882,7 +11399,7 @@ testArray
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testBoolean
 
 	| encoding |
@@ -10901,7 +11418,7 @@ testBoolean
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testByteArray
 
 	| bytes encoding |
@@ -10926,7 +11443,7 @@ testByteArray
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testCharacter
 
 	| encoding |
@@ -10968,7 +11485,7 @@ testCharacter
 %
 
 category: 'running-control words'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testControlWord
 	
 	self
@@ -10989,7 +11506,7 @@ testControlWord
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testDateTime
 
 	| dt encoding |
@@ -11028,7 +11545,7 @@ testDateTime
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testDictionary
 
 	| dictionary encoding result |
@@ -11072,7 +11589,7 @@ testDictionary
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testDouble
 
 	| encoding |
@@ -11128,7 +11645,7 @@ testDouble
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testInteger
 
 	| encoding |
@@ -11183,7 +11700,7 @@ testInteger
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testNil
 
 	| encoding |
@@ -11196,7 +11713,7 @@ testNil
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testOrderedCollection
 
 	| oc encoding |
@@ -11229,7 +11746,7 @@ testOrderedCollection
 %
 
 category: 'running-immediates'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testSet
 
 	| set encoding result |
@@ -11267,7 +11784,7 @@ testSet
 %
 
 category: 'running-symbol'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testString
 
 	| encoding |
@@ -11290,7 +11807,7 @@ testString
 %
 
 category: 'running-symbol'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 testSymbol
 
 	self
@@ -11299,7 +11816,7 @@ testSymbol
 %
 
 category: 'asserting'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 verifyControlWord: anInteger
 encoding: bytes
 
@@ -11307,19 +11824,19 @@ encoding: bytes
 %
 
 category: 'asserting'
-method: RsrCodecTest
+method: RsrCommandCodecTest
 verifyImmediate: anImmediateObject
 encoding: encoding
 
 	self subclassResponsibility
 %
 
-! Class implementation for 'RsrDecoderTest'
+! Class implementation for 'RsrCommandDecoderTest'
 
-!		Instance methods for 'RsrDecoderTest'
+!		Instance methods for 'RsrCommandDecoderTest'
 
 category: 'asserting'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 assertReference: bytes
 decodesTo: expected
 
@@ -11331,21 +11848,21 @@ decodesTo: expected
 %
 
 category: 'decoding'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 decodeReference: bytes
 
 	^(self decoder decodeReference: bytes readStream) resolve: self connection
 %
 
 category: 'decoding'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 decodeService: anObjectBytes
 
 	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self connection
 %
 
 category: 'running'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 testDeliverResponse
 
 	| service response encoding command decodedService |
@@ -11381,7 +11898,7 @@ testDeliverResponse
 %
 
 category: 'running'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 testReleaseServices
 
 	| command encoding |
@@ -11400,7 +11917,7 @@ testReleaseServices
 %
 
 category: 'running'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 testSendMessage
 
 	| service encoding command |
@@ -11439,7 +11956,7 @@ testSendMessage
 %
 
 category: 'running'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 testServiceDecodeIdentity
 	"Ensure that decoding an object multiple times results in
 	a single object getting created."
@@ -11453,7 +11970,7 @@ testServiceDecodeIdentity
 %
 
 category: 'running'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 testServiceNoInstVars
 
 	| decodedService |
@@ -11467,7 +11984,7 @@ testServiceNoInstVars
 %
 
 category: 'running'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 testServiceReferenceService
 
 	| rootService referencedService |
@@ -11488,7 +12005,7 @@ testServiceReferenceService
 %
 
 category: 'asserting'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 verifyControlWord: expected
 encoding: bytes
 
@@ -11500,7 +12017,7 @@ encoding: bytes
 %
 
 category: 'asserting'
-method: RsrDecoderTest
+method: RsrCommandDecoderTest
 verifyImmediate: expected
 encoding: encoding
 
@@ -11511,19 +12028,19 @@ encoding: encoding
 		equals: expected
 %
 
-! Class implementation for 'RsrEncoderTest'
+! Class implementation for 'RsrCommandEncoderTest'
 
-!		Instance methods for 'RsrEncoderTest'
+!		Instance methods for 'RsrCommandEncoderTest'
 
 category: 'other'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 register: aService
 
 	self connection _ensureRegistered: aService
 %
 
 category: 'running-immediates'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testDeliverResponse
 
 	| service response command result expectedEncoding |
@@ -11550,7 +12067,7 @@ testDeliverResponse
 %
 
 category: 'running'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testNaN
 
 	| encoding |
@@ -11566,7 +12083,7 @@ testNaN
 %
 
 category: 'running-immediates'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testReleaseServices
 
 	| command result expectedEncoding |
@@ -11586,7 +12103,7 @@ testReleaseServices
 %
 
 category: 'running-immediates'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testSendMessage
 
 	| service analysis command result expectedEncoding |
@@ -11620,7 +12137,7 @@ testSendMessage
 %
 
 category: 'running'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testServiceNoInstVars
 
 	| rootService encodedBytes expectedEncoding |
@@ -11634,7 +12151,7 @@ testServiceNoInstVars
 %
 
 category: 'running'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testServiceReferenceService
 
 	| rootService referencedService encodedObject expectedEncoding |
@@ -11671,7 +12188,7 @@ testServiceReferenceService
 %
 
 category: 'running'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 testUnsupportedObject
 
 	self
@@ -11680,7 +12197,7 @@ testUnsupportedObject
 %
 
 category: 'running-immediates'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 verifyControlWord: anInteger
 encoding: expected
 
@@ -11692,7 +12209,7 @@ encoding: expected
 %
 
 category: 'running-immediates'
-method: RsrEncoderTest
+method: RsrCommandEncoderTest
 verifyImmediate: anObject
 encoding: expected
 
@@ -11876,83 +12393,6 @@ method: RsrGarbageCollectorTestCase
 testMaximumReclamation
 
 	self assert: RsrGarbageCollector maximumReclamation
-%
-
-! Class implementation for 'RsrHandshakeCodecTest'
-
-!		Instance methods for 'RsrHandshakeCodecTest'
-
-category: 'accessing'
-method: RsrHandshakeCodecTest
-codec
-
-	^RsrHandshakeCodec new
-%
-
-category: 'utilities'
-method: RsrHandshakeCodecTest
-stream: aBlock
-
-	^ByteArray streamContents: [:stream | aBlock value: stream]
-%
-
-category: 'running'
-method: RsrHandshakeCodecTest
-testChosenVersion
-
-	| chosenVersion encoding result |
-	chosenVersion := RsrChosenVersion version: 7.
-	encoding :=
-		#[0 0 0 0 0 0 0 1], "Type"
-		#[0 0 0 0 0 0 0 7]. "Version"
-	result := self stream: [:stream | self codec encodeChosenVersion: chosenVersion onto: stream].
-	self
-		assert: result
-		equals: encoding.
-	result := self codec decode: encoding readStream.
-	self
-		assert: result
-		equals: chosenVersion
-%
-
-category: 'running'
-method: RsrHandshakeCodecTest
-testNoVersionOverlap
-
-	| noVersionOverlap encoding result |
-	noVersionOverlap := RsrNoVersionOverlap new.
-	encoding := #[0 0 0 0 0 0 0 2]. "Type"
-	result := self stream: [:stream | self codec encodeNoVersionOverlap: noVersionOverlap onto: stream].
-	self
-		assert: result
-		equals: encoding.
-	result := self codec decode: encoding readStream.
-	self
-		assert: result
-		equals: noVersionOverlap
-%
-
-category: 'running'
-method: RsrHandshakeCodecTest
-testSupportedVersions
-
-	| supportedVersions encoding result |
-	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).
-	encoding :=
-		#[0 0 0 0 0 0 0 0], "Type"
-		#[0 0 0 0 0 0 0 4], "4 versions supported"
-		#[0 0 0 0 0 0 0 0],
-		#[0 0 0 0 0 0 0 1],
-		#[0 0 0 0 0 0 0 2],
-		#[0 0 0 0 0 0 0 7].
-	result := self stream: [:stream | self codec encodeSupportedVersions: supportedVersions onto: stream].
-	self
-		assert: result
-		equals: encoding.
-	result := self codec decode: encoding readStream.
-	self
-		assert: result
-		equals: supportedVersions
 %
 
 ! Class implementation for 'RsrNumericSpigotTest'
@@ -12206,6 +12646,83 @@ testSyncFulfill
 	self
 		assert: promise wait
 		identicalTo: expected
+%
+
+! Class implementation for 'RsrProtocolVersionNegotiationCodecTestCase'
+
+!		Instance methods for 'RsrProtocolVersionNegotiationCodecTestCase'
+
+category: 'accessing'
+method: RsrProtocolVersionNegotiationCodecTestCase
+codec
+
+	^RsrProtocolVersionNegotiationCodec new
+%
+
+category: 'utilities'
+method: RsrProtocolVersionNegotiationCodecTestCase
+stream: aBlock
+
+	^ByteArray streamContents: [:stream | aBlock value: stream]
+%
+
+category: 'running'
+method: RsrProtocolVersionNegotiationCodecTestCase
+testChosenVersion
+
+	| chosenVersion encoding result |
+	chosenVersion := RsrChosenVersion version: 7.
+	encoding :=
+		#[0 0 0 0 0 0 0 1], "Type"
+		#[0 0 0 0 0 0 0 7]. "Version"
+	result := self stream: [:stream | self codec encodeChosenVersion: chosenVersion onto: stream].
+	self
+		assert: result
+		equals: encoding.
+	result := self codec decode: encoding readStream.
+	self
+		assert: result
+		equals: chosenVersion
+%
+
+category: 'running'
+method: RsrProtocolVersionNegotiationCodecTestCase
+testNoVersionOverlap
+
+	| noVersionOverlap encoding result |
+	noVersionOverlap := RsrNoVersionOverlap new.
+	encoding := #[0 0 0 0 0 0 0 2]. "Type"
+	result := self stream: [:stream | self codec encodeNoVersionOverlap: noVersionOverlap onto: stream].
+	self
+		assert: result
+		equals: encoding.
+	result := self codec decode: encoding readStream.
+	self
+		assert: result
+		equals: noVersionOverlap
+%
+
+category: 'running'
+method: RsrProtocolVersionNegotiationCodecTestCase
+testSupportedVersions
+
+	| supportedVersions encoding result |
+	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).
+	encoding :=
+		#[0 0 0 0 0 0 0 0], "Type"
+		#[0 0 0 0 0 0 0 4], "4 versions supported"
+		#[0 0 0 0 0 0 0 0],
+		#[0 0 0 0 0 0 0 1],
+		#[0 0 0 0 0 0 0 2],
+		#[0 0 0 0 0 0 0 7].
+	result := self stream: [:stream | self codec encodeSupportedVersions: supportedVersions onto: stream].
+	self
+		assert: result
+		equals: encoding.
+	result := self codec decode: encoding readStream.
+	self
+		assert: result
+		equals: supportedVersions
 %
 
 ! Class implementation for 'RsrSnapshotAnalysisTest'
@@ -14655,6 +15172,79 @@ testNoException
 	self
 		shouldnt: [testCase runCase]
 		raise: Exception
+%
+
+! Class implementation for 'RsrTokenExchangeCodecTestCase'
+
+!		Instance methods for 'RsrTokenExchangeCodecTestCase'
+
+category: 'accessing'
+method: RsrTokenExchangeCodecTestCase
+codec
+
+	^RsrTokenExchangeCodec new
+%
+
+category: 'utilities'
+method: RsrTokenExchangeCodecTestCase
+stream: aBlock
+
+	^ByteArray streamContents: aBlock
+%
+
+category: 'running'
+method: RsrTokenExchangeCodecTestCase
+testToken
+
+	| tokenBytes expected token result |
+	tokenBytes := #[16r58 16r18 16rE8 16rA2 16rB6 16rA6 16r91 16r39 16rD2 16rA6 16rC1 16r13 16r15 16r65 16r0F 16r6A].
+	expected := 
+		#[0 0 0 0 0 0 0 0], "Type"
+		#[0 0 0 0 0 0 0 16], "token byte length"
+		tokenBytes.
+	token := RsrToken bytes: tokenBytes.
+	result := self stream: [:stream | self codec encodeToken: token onto: stream].
+	self
+		assert: result
+		equals: expected.
+	result := self codec decode: expected readStream.
+	self
+		assert: result
+		equals: token
+%
+
+category: 'running'
+method: RsrTokenExchangeCodecTestCase
+testTokenAccepted
+
+	| expected tokenAccepted result |
+	expected := #[0 0 0 0 0 0 0 1]. "Type"
+	tokenAccepted := RsrTokenAccepted new.
+	result := self stream: [:stream | self codec encodeTokenAccepted: tokenAccepted onto: stream].
+	self
+		assert: result
+		equals: expected.
+	result := self codec decode: expected readStream.
+	self
+		assert: result
+		equals: tokenAccepted
+%
+
+category: 'running'
+method: RsrTokenExchangeCodecTestCase
+testTokenRejected
+
+	| expected tokenRejected result |
+	expected := #[0 0 0 0 0 0 0 2]. "Type"
+	tokenRejected := RsrTokenRejected new.
+	result := self stream: [:stream | self codec encodeTokenRejected: tokenRejected onto: stream].
+	self
+		assert: result
+		equals: expected.
+	result := self codec decode: expected readStream.
+	self
+		assert: result
+		equals: tokenRejected
 %
 
 ! Class extensions for 'RsrCharacterArrayReference'
