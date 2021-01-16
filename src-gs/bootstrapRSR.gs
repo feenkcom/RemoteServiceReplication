@@ -3254,6 +3254,25 @@ removeallclassmethods RsrTokenRejected
 
 doit
 (Object
+	subclass: 'RsrPlatformInitializer'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'Does load-time initialization of any class instance variables of classes defined in Base but that have platform-specific contents and thus can''t be initialized by their own package, and can''t be lazily initialized because that fails on GemStone for non-privileged users.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrPlatformInitializer
+removeallclassmethods RsrPlatformInitializer
+
+doit
+(Object
 	subclass: 'RsrProcessModel'
 	instVarNames: #(  )
 	classVars: #(  )
@@ -8603,13 +8622,6 @@ from: anObject
 	^referenceClass from: anObject
 %
 
-category: 'class initialization'
-classmethod: RsrReference
-initialize
-
-	self initializeReferenceMapping
-%
-
 category: 'accessing'
 classmethod: RsrReference
 referenceMapping
@@ -10994,6 +11006,17 @@ method: RsrTokenRejected
 wasAccepted
 
 	^false
+%
+
+! Class implementation for 'RsrPlatformInitializer'
+
+!		Class methods for 'RsrPlatformInitializer'
+
+category: 'class initialization'
+classmethod: RsrPlatformInitializer
+initialize
+
+	RsrReference initializeReferenceMapping
 %
 
 ! Class implementation for 'RsrProcessModel'
@@ -15509,6 +15532,6 @@ referenceClassFor: anObject
 ! Class Initialization
 
 run
-RsrReference initialize.
+RsrPlatformInitializer initialize.
 true
 %
