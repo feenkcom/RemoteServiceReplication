@@ -38,10 +38,16 @@ RsrReference class >> from: anObject [
 	^referenceClass from: anObject
 ]
 
+{ #category : 'class initialization' }
+RsrReference class >> initialize [
+
+	self initializeReferenceMapping
+]
+
 { #category : 'accessing' }
 RsrReference class >> referenceMapping [
 
-	^referenceMapping ifNil: [self initializeReferenceMapping]
+	^referenceMapping
 ]
 
 { #category : 'accessing' }
