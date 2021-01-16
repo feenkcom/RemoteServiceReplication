@@ -10993,20 +10993,6 @@ wasAccepted
 
 !		Class methods for 'RsrProcessModel'
 
-category: 'accessing'
-classmethod: RsrProcessModel
-current
-
-	^current ifNil: [self resetCurrent]
-%
-
-category: 'accessing'
-classmethod: RsrProcessModel
-current: concurrency
-
-	current := concurrency
-%
-
 category: 'managing-concurrency'
 classmethod: RsrProcessModel
 currentStackDump
@@ -11040,13 +11026,6 @@ renameProcess: aString
 	"Rename the current process to the provided string"
 
 	^self current renameProcess: aString
-%
-
-category: 'accessing'
-classmethod: RsrProcessModel
-resetCurrent
-
-	^current := self new
 %
 
 !		Instance methods for 'RsrProcessModel'
@@ -15395,6 +15374,34 @@ initialize
 %
 
 ! Class extensions for 'RsrProcessModel'
+
+!		Class methods for 'RsrProcessModel'
+
+category: '*remoteservicereplication-gemstone'
+classmethod: RsrProcessModel
+current
+	^ SessionTemps current
+		at: self keyForCurrent
+		ifAbsent: [ self resetCurrent ]
+%
+
+category: '*remoteservicereplication-gemstone'
+classmethod: RsrProcessModel
+current: concurrency
+	^ SessionTemps current at: self keyForCurrent put: concurrency
+%
+
+category: '*remoteservicereplication-gemstone'
+classmethod: RsrProcessModel
+keyForCurrent
+	^ #'RsrCurrentProcessModel'
+%
+
+category: '*remoteservicereplication-gemstone'
+classmethod: RsrProcessModel
+resetCurrent
+	^ self current: self new
+%
 
 !		Instance methods for 'RsrProcessModel'
 
