@@ -7,18 +7,6 @@ Class {
 	#category : 'RemoteServiceReplication-Base'
 }
 
-{ #category : 'accessing' }
-RsrProcessModel class >> current [
-
-	^current ifNil: [self resetCurrent]
-]
-
-{ #category : 'accessing' }
-RsrProcessModel class >> current: concurrency [
-
-	current := concurrency
-]
-
 { #category : 'managing-concurrency' }
 RsrProcessModel class >> currentStackDump [
 
@@ -43,17 +31,29 @@ named: aString [
 	^self current fork: aBlock named: aString
 ]
 
+{ #category : 'accessing' }
+RsrProcessModel class >> OLDcurrent [
+
+	^current ifNil: [self resetCurrent]
+]
+
+{ #category : 'accessing' }
+RsrProcessModel class >> OLDcurrent: concurrency [
+
+	current := concurrency
+]
+
+{ #category : 'accessing' }
+RsrProcessModel class >> OLDresetCurrent [
+
+	^current := self new
+]
+
 { #category : 'managing-concurrency' }
 RsrProcessModel class >> renameProcess: aString [
 	"Rename the current process to the provided string"
 
 	^self current renameProcess: aString
-]
-
-{ #category : 'accessing' }
-RsrProcessModel class >> resetCurrent [
-
-	^current := self new
 ]
 
 { #category : 'managing-concurrency' }
