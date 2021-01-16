@@ -8603,11 +8603,18 @@ from: anObject
 	^referenceClass from: anObject
 %
 
+category: 'class initialization'
+classmethod: RsrReference
+initialize
+
+	self initializeReferenceMapping
+%
+
 category: 'accessing'
 classmethod: RsrReference
 referenceMapping
 
-	^referenceMapping ifNil: [self initializeReferenceMapping]
+	^referenceMapping
 %
 
 category: 'accessing'
@@ -15499,3 +15506,9 @@ referenceClassFor: anObject
 		ifAbsent: [RsrUnsupportedObject signal: anObject]
 %
 
+! Class Initialization
+
+run
+RsrReference initialize.
+true
+%
