@@ -83,7 +83,7 @@ RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 RsrServiceSnapshot >> decode: aStream
 using: aDecoder [
 
-	| species instVarCount templateClass |
+	| species instVarCount |
 	species := aDecoder decodeControlWord: aStream.
 	sid := aDecoder decodeControlWord: aStream.
 	instVarCount := aDecoder decodeControlWord: aStream.

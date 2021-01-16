@@ -120,7 +120,7 @@ RsrSnapshotAnalysisTest >> testNewServiceInArray [
 RsrSnapshotAnalysisTest >> testNewServicesInDictionary [
 	"Ensure a new service in a collection is properly tagged"
 
-	| key value dictionary analysis expected |
+	| key value dictionary analysis |
 	key := RsrServerNoInstVars new.
 	value := RsrServerNoInstVars new.
 	dictionary := Dictionary new
@@ -194,7 +194,7 @@ RsrSnapshotAnalysisTest >> testServiceReferencingAnotherService [
 	"While this code is structurally similar to #testClientNoInstVars, it ensures
 	that Data Objects are actually encoded in-line."
 
-	| referencedService client analysis expected |
+	| referencedService client analysis |
 	referencedService := RsrRemoteAction clientClass new.
 	client := RsrRemoteAction clientClass sharedVariable: referencedService.
 	analysis := self analyze: client.
