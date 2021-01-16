@@ -38,11 +38,6 @@ RsrReference class >> from: anObject [
 	^referenceClass from: anObject
 ]
 
-{ #category : 'class initialization' }
-RsrReference class >> initialize [
-
-]
-
 { #category : 'accessing' }
 RsrReference class >> referenceMapping [
 

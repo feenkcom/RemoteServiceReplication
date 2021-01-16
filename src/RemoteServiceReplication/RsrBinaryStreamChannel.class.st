@@ -47,14 +47,6 @@ RsrBinaryStreamChannel >> disconnected [
 	self connection channelDisconnected
 ]
 
-{ #category : 'initializing' }
-RsrBinaryStreamChannel >> initialize [
-
-	super initialize.
-	source := RsrCommandSource on: self.
-	sink := RsrCommandSink on: self
-]
-
 { #category : 'accessing' }
 RsrBinaryStreamChannel >> inStream [
 	"Returns the stream associated w/ reading"
@@ -67,6 +59,14 @@ RsrBinaryStreamChannel >> inStream: aBinaryReadStream [
 	"Sets the stream associated w/ reading"
 
 	inStream := aBinaryReadStream
+]
+
+{ #category : 'initializing' }
+RsrBinaryStreamChannel >> initialize [
+
+	super initialize.
+	source := RsrCommandSource on: self.
+	sink := RsrCommandSink on: self
 ]
 
 { #category : 'testing' }
