@@ -1686,7 +1686,7 @@ removeallclassmethods RsrSocketConnectionSpecification
 doit
 (RsrSocketConnectionSpecification
 	subclass: 'RsrAcceptConnection'
-	instVarNames: #( listener )
+	instVarNames: #( listener isListening isWaitingForConnection )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1694,13 +1694,6 @@ doit
 	options: #()
 )
 		category: 'RemoteServiceReplication';
-		comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.
-
-The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.
-
-| acceptor |
-acceptor := RsrAcceptConnection port: 51820.
-^acceptor connect';
 		immediateInvariant.
 true.
 %
@@ -7365,7 +7358,7 @@ category: 'instance creation'
 classmethod: RsrAcceptConnection
 port: aPortInteger
 
-	^self
+	^super
 		host: self wildcardAddress
 		port: aPortInteger
 %
@@ -7379,36 +7372,56 @@ wildcardAddress
 
 !		Instance methods for 'RsrAcceptConnection'
 
-category: 'cancelling'
+category: 'actions'
 method: RsrAcceptConnection
 cancelWaitForConnection
 
 	listener ifNotNil: [:socket | socket close]
 %
 
+category: 'actions'
+method: RsrAcceptConnection
+ensureListening
+
+	isListening ifTrue: [^self].
+	listener
+		bindAddress: self host
+		port: self port.
+	listener listen: 1.
+	isListening := true
+%
+
+category: 'initializing'
+method: RsrAcceptConnection
+initialize
+
+	super initialize.
+	listener := self socketClass new.
+	isWaitingForConnection := false.
+	isListening := false
+%
+
 category: 'testing'
 method: RsrAcceptConnection
 isWaitingForConnection
 
-	^listener ~~ nil
+	^isWaitingForConnection
 %
 
-category: 'connecting'
+category: 'actions'
 method: RsrAcceptConnection
 waitForConnection
 
 	| socket stream steps handshake channel connection |
-	listener := self socketClass new.
-	[listener
-		bindAddress: self host
-		port: self port.
-	listener listen: 1.
+	self ensureListening.
+	[isWaitingForConnection := true.
 	socket := [listener accept]
 		on: RsrSocketError
 		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]
 			ensure:
 				[listener close.
-				listener := nil].
+				listener := nil.
+				isWaitingForConnection := false].
 	stream := RsrSocketStream on: socket.
 	steps := Array
 		with: RsrProtocolVersionNegotiationServer new
@@ -10504,13 +10517,6 @@ close
 	socket close
 %
 
-category: 'flushing'
-method: RsrSocketStream
-flush
-	"Flush any buffered bytes to the socket."
-	"NOP"
-%
-
 category: 'accessing'
 method: RsrSocketStream
 next
@@ -12260,7 +12266,7 @@ testAcceptOnLocalhost
 
 	| acceptor initiator semaphore connectionA connectionB |
 	acceptor := RsrAcceptConnection
-		host: self localhost
+		host: self localhost 
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
@@ -12336,11 +12342,6 @@ testFailedAcceptOnAlternativeLocalhost
 
 category: 'running'
 method: RsrConnectionSpecificationTestCase
-testInternalConnectionSpecification
-%
-
-category: 'running'
-method: RsrConnectionSpecificationTestCase
 testInternalConnectionSpecificationConnectReturnsConnection
 	"Ensure that sending #connect to an InternalConnectionSpecification
 	results in returning one of the created Connections."
@@ -12354,6 +12355,32 @@ testInternalConnectionSpecificationConnectReturnsConnection
 	connection := spec connect.
 	self assert: connection isOpen.
 	connection close
+%
+
+category: 'running'
+method: RsrConnectionSpecificationTestCase
+testListenThenLaterAccept
+
+	| acceptor initiator semaphore connectionA connectionB |
+	acceptor := RsrAcceptConnection
+		host: self localhost 
+		port: self port.
+	initiator := RsrInitiateConnection
+		host: self localhost
+		port: self port.
+	semaphore := Semaphore new.
+	acceptor ensureListening.
+	RsrProcessModel
+		fork: [semaphore signal. [connectionB := initiator connect] ensure: [semaphore signal]]
+		named: 'Pending InitiateConnection'.
+	semaphore wait.
+	connectionA := acceptor waitForConnection.
+	semaphore wait.
+	self
+		assert: connectionA isOpen;
+		assert: connectionB isOpen.
+	connectionA close.
+	connectionB close
 %
 
 ! Class implementation for 'RsrForwarderTest'
