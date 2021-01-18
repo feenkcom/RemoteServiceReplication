@@ -103,7 +103,11 @@ to: aLog [
 RsrSendMessage >> perform: aMessageSend
 answerUsing: aResolver [
 
-	[aResolver fulfill: aMessageSend perform]
+	[| result |
+	aMessageSend receiver configureProcess.
+	result := aMessageSend perform.
+	RsrProcessModel configureFrameworkProcess.
+	aResolver fulfill: result]
 		on: self unhandledExceptionClass
 		do:
 			[:ex | | debugResult |
@@ -113,14 +117,16 @@ answerUsing: aResolver [
 									answerUsing: aResolver]
 									on: self unhandledExceptionClass
 									do:
-										[:debugEx | 
+										[:debugEx |
+										RsrProcessModel configureFrameworkProcess.
 										aResolver break: (RsrRemoteException from: debugEx).
 										ex return].
+			RsrProcessModel configureFrameworkProcess.
 			aResolver hasResolved
 				ifTrue: [ex return]
 				ifFalse:
 					[ex isResumable
-						ifTrue: [ex resume: debugResult]
+						ifTrue: [[ex resume: debugResult] ensure: [aMessageSend receiver configureProcess]] "This needs to be a protected call."
 						ifFalse:
 							[aResolver break: (RsrRemoteException from: ex).
 							ex return]]]

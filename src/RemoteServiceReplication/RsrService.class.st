@@ -106,6 +106,16 @@ RsrService >> _synchronize [
 	^self
 ]
 
+{ #category : 'public-events' }
+RsrService >> configureProcess [
+	"#configureProcess is called each time the framework calls into the framework to evaluate generic user code.
+	#preUpdate and #postUpdate run in a configuration manner prescribed by the framework."
+
+	Processor activeProcess
+		"breakpointLevel: 1;"
+		priority: self serviceSchedulingPriority
+]
+
 { #category : 'public-accessing' }
 RsrService >> connection [
 	"Returns the Connection associated w/ the receiver."
@@ -173,6 +183,12 @@ RsrService >> preUpdate [
 RsrService >> registerWith: aConnection [
 
 	aConnection _ensureRegistered: self
+]
+
+{ #category : 'public-events' }
+RsrService >> serviceSchedulingPriority [
+
+	^Processor userSchedulingPriority
 ]
 
 { #category : 'public-synchronization' }

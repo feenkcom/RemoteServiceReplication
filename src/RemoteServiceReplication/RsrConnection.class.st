@@ -83,7 +83,9 @@ RsrConnection >> _receivedCommand: aCommand [
 	"Execute the command in the context of the receiving Connection."
 
 	RsrProcessModel
-		fork: [aCommand executeFor: self]
+		fork:
+			[RsrProcessModel configureFrameworkProcess.
+			aCommand executeFor: self]
 		named: 'Processing ', aCommand class name
 ]
 

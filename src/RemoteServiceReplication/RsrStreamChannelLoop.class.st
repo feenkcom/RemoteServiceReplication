@@ -75,12 +75,6 @@ RsrStreamChannelLoop >> log: aString [
 	self log debug: aString
 ]
 
-{ #category : 'accessing' }
-RsrStreamChannelLoop >> priority [
-
-	^Processor lowIOPriority
-]
-
 { #category : 'running' }
 RsrStreamChannelLoop >> report: aCommand [
 
@@ -125,9 +119,10 @@ RsrStreamChannelLoop >> start [
 
 	state := self runningState.
 	process := RsrProcessModel
-		fork: [self runLoop.
-				process := nil]
-		at: self priority
+		fork:
+			[RsrProcessModel configureCommunicationsProcess.
+			self runLoop.
+			process := nil]
 		named: self runLoopName
 ]
 
