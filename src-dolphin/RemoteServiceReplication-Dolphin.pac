@@ -33,6 +33,9 @@ package methodNames
 	add: 'RsrDoubleReference class' -> #infinity;
 	add: 'RsrDoubleReference class' -> #nan;
 	add: 'RsrObject class' -> #new;
+	add: 'RsrProcessModel class' -> #current;
+	add: 'RsrProcessModel class' -> #current:;
+	add: 'RsrProcessModel class' -> #resetCurrent;
 	add: 'RsrReference class' -> #initializeReferenceMapping;
 	yourself.
 
@@ -198,6 +201,23 @@ currentStackDump
 
 	^Processor activeProcess stackTrace: 1000! !
 !RsrProcessModel categoriesFor: #currentStackDump!public! !
+
+!RsrProcessModel class methodsFor!
+
+current
+
+	^current ifNil: [self resetCurrent]!
+
+current: concurrency
+
+	current := concurrency!
+
+resetCurrent
+
+	^current := self new! !
+!RsrProcessModel class categoriesFor: #current!public! !
+!RsrProcessModel class categoriesFor: #current:!public! !
+!RsrProcessModel class categoriesFor: #resetCurrent!public! !
 
 !RsrReference class methodsFor!
 
