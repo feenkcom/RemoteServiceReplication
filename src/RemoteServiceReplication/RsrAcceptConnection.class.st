@@ -1,62 +1,59 @@
-"
-This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.
-
-The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.
-
-| acceptor |
-acceptor := RsrAcceptConnection port: 51820.
-^acceptor connect
-"
 Class {
 	#name : 'RsrAcceptConnection',
 	#superclass : 'RsrSocketConnectionSpecification',
 	#instVars : [
-		'listener'
+		'listener',
+		'isListening',
+		'isWaitingForConnection'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
-RsrAcceptConnection class >> port: aPortInteger [
-
-	^self
-		host: self wildcardAddress
-		port: aPortInteger
-]
-
-{ #category : 'accessing' }
-RsrAcceptConnection class >> wildcardAddress [
-
-	^'0.0.0.0'
-]
-
-{ #category : 'cancelling' }
+{ #category : 'actions' }
 RsrAcceptConnection >> cancelWaitForConnection [
 
 	listener ifNotNil: [:socket | socket close]
 ]
 
-{ #category : 'testing' }
-RsrAcceptConnection >> isWaitingForConnection [
+{ #category : 'actions' }
+RsrAcceptConnection >> ensureListening [
 
-	^listener ~~ nil
-]
-
-{ #category : 'connecting' }
-RsrAcceptConnection >> waitForConnection [
-
-	| socket stream steps handshake channel connection |
-	listener := self socketClass new.
-	[listener
+	isListening ifTrue: [^self].
+	listener
 		bindAddress: self host
 		port: self port.
 	listener listen: 1.
+	isListening := true
+]
+
+{ #category : 'initializing' }
+RsrAcceptConnection >> initialize [
+
+	super initialize.
+	listener := self socketClass new.
+	isWaitingForConnection := false.
+	isListening := false
+]
+
+{ #category : 'testing' }
+RsrAcceptConnection >> isWaitingForConnection [
+
+	^isWaitingForConnection
+]
+
+{ #category : 'actions' }
+RsrAcceptConnection >> waitForConnection [
+
+	| socket stream steps handshake channel connection |
+	self ensureListening.
+	[isWaitingForConnection := true.
 	socket := [listener accept]
 		on: RsrSocketError
 		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]
 			ensure:
 				[listener close.
-				listener := nil].
+				listener := nil.
+				isWaitingForConnection := false].
 	stream := RsrSocketStream on: socket.
 	steps := Array
 		with: RsrProtocolVersionNegotiationServer new

@@ -27,7 +27,7 @@ RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 
 	| acceptor initiator semaphore connectionA connectionB |
 	acceptor := RsrAcceptConnection
-		host: self localhost
+		host: self localhost 
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
@@ -99,10 +99,6 @@ RsrConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
 ]
 
 { #category : 'running' }
-RsrConnectionSpecificationTestCase >> testInternalConnectionSpecification [
-]
-
-{ #category : 'running' }
 RsrConnectionSpecificationTestCase >> testInternalConnectionSpecificationConnectReturnsConnection [
 	"Ensure that sending #connect to an InternalConnectionSpecification
 	results in returning one of the created Connections."
@@ -116,4 +112,29 @@ RsrConnectionSpecificationTestCase >> testInternalConnectionSpecificationConnect
 	connection := spec connect.
 	self assert: connection isOpen.
 	connection close
+]
+
+{ #category : 'running' }
+RsrConnectionSpecificationTestCase >> testListenThenLaterAccept [
+
+	| acceptor initiator semaphore connectionA connectionB |
+	acceptor := RsrAcceptConnection
+		host: self localhost 
+		port: self port.
+	initiator := RsrInitiateConnection
+		host: self localhost
+		port: self port.
+	semaphore := Semaphore new.
+	acceptor ensureListening.
+	RsrProcessModel
+		fork: [semaphore signal. [connectionB := initiator connect] ensure: [semaphore signal]]
+		named: 'Pending InitiateConnection'.
+	semaphore wait.
+	connectionA := acceptor waitForConnection.
+	semaphore wait.
+	self
+		assert: connectionA isOpen;
+		assert: connectionB isOpen.
+	connectionA close.
+	connectionB close
 ]

@@ -35,12 +35,6 @@ RsrSocketStream >> close [
 	socket close
 ]
 
-{ #category : 'flushing' }
-RsrSocketStream >> flush [
-	"Flush any buffered bytes to the socket."
-	"NOP"
-]
-
 { #category : 'accessing' }
 RsrSocketStream >> next [
 	"Return the next byte"
