@@ -9,6 +9,20 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'instance creation' }
+RsrAcceptConnection class >> port: aPortInteger [
+
+	^super
+		host: self wildcardAddress
+		port: aPortInteger
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection class >> wildcardAddress [
+
+	^'0.0.0.0'
+]
+
 { #category : 'actions' }
 RsrAcceptConnection >> cancelWaitForConnection [
 
