@@ -53,6 +53,7 @@ package classNames
 	add: #RsrCodec;
 	add: #RsrNoVersionOverlap;
 	add: #RsrNumericSpigot;
+	add: #RsrPlatformInitializer;
 	add: #RsrTokenAccepted;
 	add: #RsrDispatchQueue;
 	add: #RsrProtocolVersionNegotiationClient;
@@ -87,6 +88,15 @@ package methodNames
 package setPrerequisites: #('RemoteServiceReplication-Dolphin').
 
 package!
+
+Object
+	subclass: #RsrPlatformInitializer
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+RsrPlatformInitializer comment: 'Does load-time initialization of any class instance variables of classes defined in Base but that have platform-specific contents and thus can''t be initialized by their own package, and can''t be lazily initialized because that fails on GemStone for non-privileged users.'!
+!RsrPlatformInitializer categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrAbstractReason
@@ -538,11 +548,11 @@ RsrLogSink
 
 RsrSocketConnectionSpecification
 	subclass: #RsrAcceptConnection
-	instanceVariableNames: 'listener'
+	instanceVariableNames: 'listener isListening isWaitingForConnection'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
-RsrAcceptConnection comment: 'This class is responsible to listen for an incoming RsrConnection connection. Once a Socket has established, an RsrConnection is created and returned via the #connect message.The following will wait for a connection on port 51820. Once a socket connection is accepted, it will stop listening on the provided port. The established socket is then used in the creation of an RsrConnection. The new RsrConnection is returned as a result of #connect.| acceptor |acceptor := RsrAcceptConnection port: 51820.^acceptor connect'!
+RsrAcceptConnection comment: 'Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:For the Class part:  State a one line summary. For example, "I represent a paragraph of text".For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.For the Collaborators Part: State my main collaborators and one line about how I interact with them. Public API and Key Messages- message one   - message two - (for bonus points) how to create instances.   One simple example is simply gorgeous. Internal Representation and Key Implementation Points.    Instance Variables	isListening:		<Object>	isWaitingForConnection:		<Object>	listener:		<Object>    Implementation Points'!
 !RsrAcceptConnection categoriesForClass!RemoteServiceReplication! !
 
 RsrCommandCodec
@@ -708,6 +718,9 @@ _service: aService	_service := aService! !
 !RsrDecodingRaisedException class methodsFor!
 exception: anException	^self new		exception: anException;		yourself! !
 
+!RsrPlatformInitializer class methodsFor!
+initialize	RsrReference initializeReferenceMapping! !
+
 !RsrRemoteError class methodsFor!
 from: anException	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self new		originalClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
@@ -771,23 +784,17 @@ on: aSocketStream	^self new		stream: aSocketStream;		yourself! !
 !RsrInMemoryChannel class methodsFor!
 inQueue: inQueueoutQueue: outQueue	^self new		inQueue: inQueue;		outQueue: outQueue;		yourself! !
 
-!RsrAcceptConnection class methodsFor!
-wildcardAddress	^'0.0.0.0'! !
-
-!RsrAcceptConnection class methodsFor!
-port: aPortInteger	^self		host: self wildcardAddress		port: aPortInteger! !
-
 !RsrCustomSink class methodsFor!
 action: aBlock	^self new		action: aBlock;		yourself! !
-
-!RsrMessageSend class methodsFor!
-receiver: anObjectselector: aSelectorarguments: anArray	^self new		receiver: anObject;		selector: aSelector;		arguments: anArray;		yourself! !
 
 !RsrLogWithPrefix class methodsFor!
 prefix: aStringlog: aLog	^self new		prefix: aString;		log: aLog;		yourself! !
 
 !RsrLogWithPrefix class methodsFor!
 log: aLog	^self new		log: aLog;		yourself! !
+
+!RsrMessageSend class methodsFor!
+receiver: anObjectselector: aSelectorarguments: anArray	^self new		receiver: anObject;		selector: aSelector;		arguments: anArray;		yourself! !
 
 !RsrReleaseServices class methodsFor!
 sids: anArrayOfServiceIDs	^self new		sids: anArrayOfServiceIDs;		yourself! !
@@ -797,6 +804,9 @@ services: aListpromise: aPromise	^self new		services: aList;		promise: aPro
 
 !RsrSocketConnectionSpecification class methodsFor!
 host: hostnameOrAddressport: port	^self new		host: hostnameOrAddress;		port: port;		yourself! !
+
+!RsrChosenVersion class methodsFor!
+version: aVersionNumber	^self new		version: aVersionNumber;		yourself! !
 
 !RsrRemoteException class methodsFor!
 clientClassName	^#RsrRemoteExceptionClient! !
@@ -810,17 +820,20 @@ templateClassName	^#RsrRemoteException! !
 !RsrRemoteException class methodsFor!
 from: anException	"Create an instance of the RemoteException reason.	The client is used here because once we send it, we are done with it.	The client will GC and the server will later GC. We don't care to have	a server hanging around if we don't need it."	| tag |	tag := anException tag		ifNotNil:			[[anException tag asString]				on: Error				do: [:ex | ex return: 'Unable to pack #tag containing an instance of ', anException tag class name]].	^self clientClass new		exceptionClassName: anException class name;		tag: tag;		messageText: anException messageText;		stack: RsrProcessModel currentStackDump;		yourself! !
 
-!RsrChosenVersion class methodsFor!
-version: aVersionNumber	^self new		version: aVersionNumber;		yourself! !
-
 !RsrTokenExchange class methodsFor!
 token: aToken	^self new		token: aToken;		yourself! !
+
+!RsrHandshake class methodsFor!
+steps: anArrayOfStepsstream: aStream	^self new		steps: anArrayOfSteps;		stream: aStream;		yourself! !
 
 !RsrSupportedVersions class methodsFor!
 versions: anArray	^self new		versions: anArray;		yourself! !
 
-!RsrHandshake class methodsFor!
-steps: anArrayOfStepsstream: aStream	^self new		steps: anArrayOfSteps;		stream: aStream;		yourself! !
+!RsrAcceptConnection class methodsFor!
+wildcardAddress	^'0.0.0.0'! !
+
+!RsrAcceptConnection class methodsFor!
+port: aPortInteger	^super		host: self wildcardAddress		port: aPortInteger! !
 
 !RsrConnection class methodsFor!
 new	"Instances of Connection should not be created via #new.	Instead use ConnectionSpecification.	See SystemTestCase>>#setUp for an example."	self shouldNotImplement: #new! !
@@ -980,9 +993,6 @@ nextPutAll: bytes	"Write <bytes> to the socket."	| chunkSize position numByte
 
 !RsrSocketStream methodsFor!
 close	socket close! !
-
-!RsrSocketStream methodsFor!
-flush	"Flush any buffered bytes to the socket."	"NOP"! !
 
 !RsrSocketStream methodsFor!
 next	"Return the next byte"	^self next: 1! !
@@ -1483,7 +1493,7 @@ createInstanceRegisteredIn: aConnection	| instance |	instance := self shouldC
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: self snapshotIdentifier		onto: aStream.	anEncoder		encodeControlWord: self sid		onto: aStream.	anEncoder		encodeControlWord: self slots size		onto: aStream.	self targetClassNameReference		encode: aStream		using: anEncoder.	self slots do: [:each | each encode: aStream using: anEncoder]! !
 
 !RsrServiceSnapshot methodsFor!
-decode: aStreamusing: aDecoder	| species instVarCount templateClass |	species := aDecoder decodeControlWord: aStream.	sid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	targetClassName := (aDecoder decodeReference: aStream) resolve: nil.	slots := OrderedCollection new: instVarCount.	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]! !
+decode: aStreamusing: aDecoder	| species instVarCount |	species := aDecoder decodeControlWord: aStream.	sid := aDecoder decodeControlWord: aStream.	instVarCount := aDecoder decodeControlWord: aStream.	targetClassName := (aDecoder decodeReference: aStream) resolve: nil.	slots := OrderedCollection new: instVarCount.	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]! !
 
 !RsrServiceSnapshot methodsFor!
 shouldCreateServer	^self targetServiceType == #server! !
@@ -1543,13 +1553,19 @@ releaseObjectsCommand	^3! !
 sendMessageCommand	^1! !
 
 !RsrAcceptConnection methodsFor!
-waitForConnection	| socket stream steps handshake channel connection |	listener := self socketClass new.	[listener		bindAddress: self host		port: self port.	listener listen: 1.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil].	stream := RsrSocketStream on: socket.	steps := Array		with: RsrProtocolVersionNegotiationServer new		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).	handshake := RsrHandshake		steps: steps		stream: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
-
-!RsrAcceptConnection methodsFor!
 cancelWaitForConnection	listener ifNotNil: [:socket | socket close]! !
 
 !RsrAcceptConnection methodsFor!
-isWaitingForConnection	^listener ~~ nil! !
+isWaitingForConnection	^isWaitingForConnection! !
+
+!RsrAcceptConnection methodsFor!
+ensureListening	isListening ifTrue: [^self].	listener		bindAddress: self host		port: self port.	listener listen: 1.	isListening := true! !
+
+!RsrAcceptConnection methodsFor!
+initialize	super initialize.	listener := self socketClass new.	isWaitingForConnection := false.	isListening := false! !
+
+!RsrAcceptConnection methodsFor!
+waitForConnection	| socket stream steps handshake channel connection |	self ensureListening.	[isWaitingForConnection := true.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil.				isWaitingForConnection := false].	stream := RsrSocketStream on: socket.	steps := Array		with: RsrProtocolVersionNegotiationServer new		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).	handshake := RsrHandshake		steps: steps		stream: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
 !RsrDispatchQueue methodsFor!
 async: aBlock	"Evaluate the block asynchronously and do not return a result"	queue nextPut: aBlock.	^nil! !

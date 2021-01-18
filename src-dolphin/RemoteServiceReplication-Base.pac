@@ -479,7 +479,7 @@ analyze: aServiceusing: anAnalyzer	^anAnalyzer analyzeService: aService! !
 from: aService	^self sid: aService _id! !
 
 !RsrReference class methodsFor!
-referenceMapping	^referenceMapping ifNil: [self initializeReferenceMapping]! !
+referenceMapping	^referenceMapping! !
 
 !RsrReference class methodsFor!
 typeIdentifier	^self subclassResponsibility! !
@@ -530,16 +530,7 @@ fork: aBlockat: aPrioritynamed: aString	^self current		fork: aBlock		at: a
 renameProcess: aString	"Rename the current process to the provided string"	^self current renameProcess: aString! !
 
 !RsrProcessModel class methodsFor!
-current	^current ifNil: [self resetCurrent]! !
-
-!RsrProcessModel class methodsFor!
-resetCurrent	^current := self new! !
-
-!RsrProcessModel class methodsFor!
 fork: aBlocknamed: aString	^self current fork: aBlock named: aString! !
-
-!RsrProcessModel class methodsFor!
-current: concurrency	current := concurrency! !
 
 !RsrImmediateReference class methodsFor!
 analyze: anObjectusing: anAnalyzer	^anAnalyzer analyzeImmediate: anObject! !

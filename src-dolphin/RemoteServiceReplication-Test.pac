@@ -1154,10 +1154,10 @@ testServiceWithCycle	| rootClient referencedClient analysis |	rootClient := R
 testDictionaryCycle	| dictionary analysis |	dictionary := Dictionary new.	dictionary at: 1 put: dictionary.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2.	dictionary removeKey: 1.	dictionary at: dictionary put: 1.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2! !
 
 !RsrSnapshotAnalysisTest methodsFor!
-testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis expected |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size		equals: 2.	self		assert: key isMirrored;		assert: value isMirrored! !
+testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size		equals: 2.	self		assert: key isMirrored;		assert: value isMirrored! !
 
 !RsrSnapshotAnalysisTest methodsFor!
-testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis expected |	referencedService := RsrRemoteAction clientClass new.	client := RsrRemoteAction clientClass sharedVariable: referencedService.	analysis := self analyze: client.	self		assert: analysis snapshots size		equals: 2.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
+testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis |	referencedService := RsrRemoteAction clientClass new.	client := RsrRemoteAction clientClass sharedVariable: referencedService.	analysis := self analyze: client.	self		assert: analysis snapshots size		equals: 2.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
 
 !RsrSnapshotAnalysisTest methodsFor!
 setUp	super setUp.	connection := RsrConnection		channel: RsrNullChannel new		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connection open! !
@@ -1370,7 +1370,7 @@ remoteSelf	^remoteSelf! !
 sharedVariable	^sharedVariable! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-testInternalConnectionSpecification! !
+testListenThenLaterAccept	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost 		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	acceptor ensureListening.	RsrProcessModel		fork: [semaphore signal. [connectionB := initiator connect] ensure: [semaphore signal]]		named: 'Pending InitiateConnection'.	semaphore wait.	connectionA := acceptor waitForConnection.	semaphore wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
 port	^47652! !
@@ -1394,7 +1394,7 @@ testFailedAcceptOnAlternativeLocalhost	| acceptor initiator semaphore |	accep
 localhost	^'127.0.0.1'! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-testAcceptOnLocalhost	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	RsrProcessModel		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+testAcceptOnLocalhost	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost 		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	RsrProcessModel		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrReflectedVariableTestServiceB methodsFor!
 varB	^varB! !
