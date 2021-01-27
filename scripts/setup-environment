@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+#
+# Run this script to ensure the necessary environmental variables are configured
+#
+export RSR_ROOT=`pwd`
+export TEST_ROOT="${RSR_ROOT}/test-runs/"
+export PATH="${RSR_ROOT}/scripts":$PATH
+
+mkdir -p "${TEST_ROOT}"

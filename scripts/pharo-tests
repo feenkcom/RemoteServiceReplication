@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+TEST_DIR=$(mktemp -d -p "${TEST_ROOT}")
+
+
+pushd "${TEST_DIR}" > /dev/null
+echo "===== Starting RemoteServiceReplication tests in Pharo =====
+Working Directory: ${TEST_DIR}
+"
+
+
+echo "===== Configuring Pharo ====="
+curl "https://get.pharo.org/64/90+vm" | bash > /dev/null 2> /dev/null
+./pharo Pharo.image metacello install tonel:///home/kkilpela/projects/rsr/rowan/RemoteServiceReplication/src BaselineOfRemoteServiceReplication
+
+
+echo "===== Running Tests ====="
+./pharo Pharo.image test RemoteServiceReplication-Platform-Test RemoteServiceReplication-Test
+
+
+popd > /dev/null
