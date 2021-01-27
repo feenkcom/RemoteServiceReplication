@@ -13,7 +13,7 @@ Working Directory: ${TEST_DIR}
 
 echo "===== Configuring Pharo ====="
 curl "https://get.pharo.org/64/90+vm" | bash > /dev/null 2> /dev/null
-./pharo Pharo.image metacello install tonel:///home/kkilpela/projects/rsr/rowan/RemoteServiceReplication/src BaselineOfRemoteServiceReplication
+./pharo Pharo.image metacello install "tonel://${RSR_ROOT}/src" BaselineOfRemoteServiceReplication
 
 
 echo "===== Running Tests ====="
