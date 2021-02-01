@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+TEST_DIR=$(mktemp -d -p "${TEST_ROOT}")
+
+
+pushd "${TEST_DIR}" > /dev/null
+echo "===== Starting RemoteServiceReplication tests in GemStone =====
+Working Directory: ${TEST_DIR}
+"
+
+
+echo "===== Installing Remote Service Replication in GemStone ====="
+topaz -I $SYSTEM_USER_LOGIN -S "${RSR_ROOT}/src-gs/installRSR.topaz"
+
+
+echo "===== Running Tests ====="
+topaz -I $DATA_CURATOR_LOGIN -S "${RSR_ROOT}/src-gs/runTests.topaz"
+
+
+popd > /dev/null
