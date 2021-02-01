@@ -4298,6 +4298,17 @@ connection: aConnection
 
 !		Instance methods for 'RsrService'
 
+category: 'public-events'
+method: RsrService
+configureProcess
+	"#configureProcess is called each time the framework calls into the framework to evaluate generic user code.
+	#preUpdate and #postUpdate run in a configuration manner prescribed by the framework."
+
+	Processor activeProcess
+		"breakpointLevel: 1;"
+		priority: self serviceSchedulingPriority
+%
+
 category: 'public-accessing'
 method: RsrService
 connection
@@ -4375,6 +4386,13 @@ method: RsrService
 registerWith: aConnection
 
 	aConnection _ensureRegistered: self
+%
+
+category: 'public-events'
+method: RsrService
+serviceSchedulingPriority
+
+	^Processor userSchedulingPriority
 %
 
 category: 'public-synchronization'
@@ -5741,7 +5759,10 @@ method: RsrInMemoryChannel
 open
 
 	drainProcess := RsrProcessModel
-		fork: [self drainLoop. drainProcess := nil]
+		fork:
+			[RsrProcessModel configureCommunicationsProcess.
+			self drainLoop.
+			drainProcess := nil]
 		named: 'InMemoryChannel Receiving'
 %
 
@@ -6698,7 +6719,11 @@ method: RsrSendMessage
 perform: aMessageSend
 answerUsing: aResolver
 
-	[aResolver fulfill: aMessageSend perform]
+	[| result |
+	aMessageSend receiver configureProcess.
+	result := aMessageSend perform.
+	RsrProcessModel configureFrameworkProcess.
+	aResolver fulfill: result]
 		on: self unhandledExceptionClass
 		do:
 			[:ex | | debugResult |
@@ -6708,14 +6733,16 @@ answerUsing: aResolver
 									answerUsing: aResolver]
 									on: self unhandledExceptionClass
 									do:
-										[:debugEx | 
+										[:debugEx |
+										RsrProcessModel configureFrameworkProcess.
 										aResolver break: (RsrRemoteException from: debugEx).
 										ex return].
+			RsrProcessModel configureFrameworkProcess.
 			aResolver hasResolved
 				ifTrue: [ex return]
 				ifFalse:
 					[ex isResumable
-						ifTrue: [ex resume: debugResult]
+						ifTrue: [[ex resume: debugResult] ensure: [aMessageSend receiver configureProcess]] "This needs to be a protected call."
 						ifFalse:
 							[aResolver break: (RsrRemoteException from: ex).
 							ex return]]]
@@ -7088,7 +7115,9 @@ _receivedCommand: aCommand
 	"Execute the command in the context of the receiving Connection."
 
 	RsrProcessModel
-		fork: [aCommand executeFor: self]
+		fork:
+			[RsrProcessModel configureFrameworkProcess.
+			aCommand executeFor: self]
 		named: 'Processing ', aCommand class name
 %
 
@@ -10644,13 +10673,6 @@ log: aString
 	self log debug: aString
 %
 
-category: 'accessing'
-method: RsrStreamChannelLoop
-priority
-
-	^Processor lowIOPriority
-%
-
 category: 'running'
 method: RsrStreamChannelLoop
 report: aCommand
@@ -10701,9 +10723,10 @@ start
 
 	state := self runningState.
 	process := RsrProcessModel
-		fork: [self runLoop.
-				process := nil]
-		at: self priority
+		fork:
+			[RsrProcessModel configureCommunicationsProcess.
+			self runLoop.
+			process := nil]
 		named: self runLoopName
 %
 
@@ -11029,6 +11052,22 @@ initialize
 
 !		Class methods for 'RsrProcessModel'
 
+category: 'configuring'
+classmethod: RsrProcessModel
+configureCommunicationsProcess
+	"Apply framework configuration to the currently running communications process."
+
+	^self current configureCommunicationsProcess
+%
+
+category: 'configuring'
+classmethod: RsrProcessModel
+configureFrameworkProcess
+	"Apply framework configuration to the currently running process."
+
+	^self current configureFrameworkProcess
+%
+
 category: 'managing-concurrency'
 classmethod: RsrProcessModel
 currentStackDump
@@ -11066,6 +11105,34 @@ renameProcess: aString
 
 !		Instance methods for 'RsrProcessModel'
 
+category: 'configuring'
+method: RsrProcessModel
+communicationsSchedulePriority
+	"Returns the priority level used by communications processes."
+
+	^Processor highIOPriority
+%
+
+category: 'configuring'
+method: RsrProcessModel
+configureCommunicationsProcess
+	"Apply framework configuration to the currently running communications process."
+
+	Processor activeProcess
+		"breakpointLevel: 0;"
+		priority: self communicationsSchedulePriority
+%
+
+category: 'configuring'
+method: RsrProcessModel
+configureFrameworkProcess
+	"Apply framework configuration to the currently running process."
+
+	Processor activeProcess
+		"breakpointLevel: 0;"
+		priority: self frameworkSchedulingPriority
+%
+
 category: 'managing-concurrency'
 method: RsrProcessModel
 fork: aBlock
@@ -11083,6 +11150,14 @@ named: aString
 
 	[self renameProcess: aString.
 	aBlock value] fork
+%
+
+category: 'configuring'
+method: RsrProcessModel
+frameworkSchedulingPriority
+	"Returns the priority level used by normal framework processes."
+
+	^Processor userInterruptPriority
 %
 
 category: 'renaming'
