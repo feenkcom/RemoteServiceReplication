@@ -100,7 +100,7 @@ RsrMessageSendingTest >> testCloseConnectionDuringMessageSend [
 	reason := self expectCatch: promise.
 	self
 		assert: reason class
-		equals: RsrConnectionClosed
+		equals: RsrConnectionClosedBeforeReceivingResponse
 ]
 
 { #category : 'running-errors' }

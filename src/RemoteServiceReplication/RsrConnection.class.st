@@ -16,8 +16,8 @@ Class {
 		'log',
 		'registry',
 		'pendingMessages',
-		'closeSemaphore',
-		'specification'
+		'specification',
+		'announcer'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -174,6 +174,13 @@ RsrConnection >> _stronglyRetain: aServer [
 	entry becomeStrong
 ]
 
+{ #category : 'public-accessing' }
+RsrConnection >> announcer [
+	"Returns the announcer used by RSR to announce events."
+
+	^announcer
+]
+
 { #category : 'private-accessing' }
 RsrConnection >> channel [
 
@@ -203,9 +210,9 @@ RsrConnection >> close [
 	temp := Dictionary new.
 	pm := pendingMessages.
 	pendingMessages := temp.
-	pm do: [:each | each promise break: RsrConnectionClosed new].
+	pm do: [:each | each promise break: RsrConnectionClosedBeforeReceivingResponse new].
 	registry := RsrThreadSafeDictionary new.
-	closeSemaphore signal
+	announcer announce: (RsrConnectionClosed connection: self)
 ]
 
 { #category : 'private-initialization' }
@@ -217,7 +224,7 @@ RsrConnection >> initialize [
 	registry := RsrThreadSafeDictionary new.
 	dispatchQueue := RsrDispatchQueue new.
 	log := RsrLog new.
-	closeSemaphore := Semaphore new.
+	announcer := Announcer new
 ]
 
 { #category : 'public-testing' }
@@ -345,7 +352,11 @@ RsrConnection >> unknownError: anException [
 { #category : 'public-waiting' }
 RsrConnection >> waitUntilClose [
 
-	closeSemaphore
-		wait;
-		signal
+	| semaphore |
+	semaphore := Semaphore new.
+	announcer
+		when: RsrConnectionClosed
+		send: #signal
+		to: semaphore.
+	semaphore wait
 ]
