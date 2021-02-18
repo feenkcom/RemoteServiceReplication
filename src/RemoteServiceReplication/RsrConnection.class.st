@@ -1,9 +1,11 @@
 "
-No class-specific documentation for RsrConnection, hierarchy is:
-Object
-  RsrObject
-    RsrConnection( isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore)
+Connection is the central mediator for RSR. When using the framework, an associated application will hold onto Connection. When terminating or otherwise done with RSR, it will close the Connection to signal this.
 
+Connection offers a limited public interface. The private methods are subject to change and shouldn't be used by any application.
+
+The Connection can be monitored by subscribing to any of the Announcements defined under ConnectionStateAnnouncement. See #announcer.
+
+The Connection is generally created indirectly via one of the ConnectionSpecification subclasses.
 "
 Class {
 	#name : 'RsrConnection',

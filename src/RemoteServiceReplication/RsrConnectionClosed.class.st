@@ -3,7 +3,7 @@ This Announcement is used to signal that the specified Connection was closed.
 "
 Class {
 	#name : 'RsrConnectionClosed',
-	#superclass : 'RsrAnnouncement',
+	#superclass : 'RsrConnectionStateAnnouncement',
 	#instVars : [
 		'connection'
 	],
