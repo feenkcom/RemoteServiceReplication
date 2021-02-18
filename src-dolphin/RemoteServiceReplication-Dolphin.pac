@@ -51,6 +51,11 @@ package!
 
 "Class Definitions"!
 
+Object subclass: #RsrForwarder
+	instanceVariableNames: '_service'
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
 RsrObject subclass: #RsrAbstractService
 	instanceVariableNames: 'finalizationSend'
 	classVariableNames: ''
@@ -88,11 +93,6 @@ RsrObject subclass: #RsrSocket
 	classInstanceVariableNames: ''!
 ProtoObject subclass: #RsrProtoObject
 	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrProtoObject subclass: #RsrForwarder
-	instanceVariableNames: '_service'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -309,6 +309,9 @@ hash
 
 "Classes"!
 
+RsrForwarder guid: (GUID fromString: '{63d391a4-77f2-42aa-82a9-31cb9e9ed808}')!
+RsrForwarder comment: ''!
+!RsrForwarder categoriesForClass!Unclassified! !
 RsrAbstractService guid: (GUID fromString: '{7fe58ad6-2d95-4e01-9243-9cb9d5506477}')!
 RsrAbstractService comment: ''!
 !RsrAbstractService categoriesForClass!Unclassified! !
@@ -684,39 +687,5 @@ _fd: aFileDescriptor
 RsrProtoObject guid: (GUID fromString: '{8c807a21-ab7c-4f1d-9c7a-f012b4953ad7}')!
 RsrProtoObject comment: ''!
 !RsrProtoObject categoriesForClass!RemoteServiceReplication-Dolphin! !
-RsrForwarder guid: (GUID fromString: '{63d391a4-77f2-42aa-82a9-31cb9e9ed808}')!
-RsrForwarder comment: ''!
-!RsrForwarder categoriesForClass!Unclassified! !
-!RsrForwarder methodsFor!
-
-aspectDisplayOn: aStream
-
-	aStream
-		nextPutAll: 'RsrForwarder(';
-		print: _service;
-		nextPutAll: ')'!
-
-class
-
-	^RsrForwarder!
-
-icon
-
-	^self class icon!
-
-newAspect: each
-class: aspectClass
-
-	^aspectClass name: each!
-
-respondsTo: aSelector
-
-	^self class canUnderstand: aSelector! !
-!RsrForwarder categoriesFor: #aspectDisplayOn:!private! !
-!RsrForwarder categoriesFor: #class!private! !
-!RsrForwarder categoriesFor: #icon!private! !
-!RsrForwarder categoriesFor: #newAspect:class:!private! !
-!RsrForwarder categoriesFor: #respondsTo:!private! !
-
 "Binary Globals"!
 
