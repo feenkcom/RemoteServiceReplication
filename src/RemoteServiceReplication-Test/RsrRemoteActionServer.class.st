@@ -45,6 +45,18 @@ RsrRemoteActionServer >> debugHandler: aBlock [
 	debugHandler := aBlock
 ]
 
+{ #category : 'evaluating' }
+RsrRemoteActionServer >> evaluateAction [
+
+	^self action value
+]
+
+{ #category : 'evaluating' }
+RsrRemoteActionServer >> evaluateAction: anObject [
+
+	^self action value: anObject
+]
+
 { #category : 'processing' }
 RsrRemoteActionServer >> postUpdate [
 
@@ -79,22 +91,4 @@ RsrRemoteActionServer >> preUpdateHandler [
 RsrRemoteActionServer >> preUpdateHandler: aBlock [
 
 	preUpdateHandler := aBlock
-]
-
-{ #category : 'evaluating' }
-RsrRemoteActionServer >> value [
-
-	^self action value
-]
-
-{ #category : 'evaluating' }
-RsrRemoteActionServer >> value: anObject [
-
-	^self action value: anObject
-]
-
-{ #category : 'evaluating' }
-RsrRemoteActionServer >> valueWithArguments: anArray [
-
-	^self action valueWithArguments: anArray
 ]

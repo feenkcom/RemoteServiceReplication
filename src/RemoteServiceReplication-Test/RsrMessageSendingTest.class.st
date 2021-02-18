@@ -448,7 +448,7 @@ RsrMessageSendingTest >> testReturnArgument [
 	arguments
 		do:
 			[:each | | result |
-			result := server value: each.
+			result := server evaluateAction: each.
 			self
 				assert: result
 				equals: each].
@@ -456,7 +456,7 @@ RsrMessageSendingTest >> testReturnArgument [
 		assert: (client value: arguments)
 		equals: arguments.
 	self
-		assert: (server value: arguments)
+		assert: (server evaluateAction: arguments)
 		equals: arguments.
 	self
 		assert: (client value: client)

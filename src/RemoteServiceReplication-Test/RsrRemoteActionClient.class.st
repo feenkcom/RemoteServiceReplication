@@ -7,13 +7,13 @@ Class {
 { #category : 'evaluating' }
 RsrRemoteActionClient >> asyncValue [
 
-	^remoteSelf value
+	^remoteSelf evaluateAction
 ]
 
 { #category : 'evaluating' }
 RsrRemoteActionClient >> asyncValue: anObject [
 
-	^remoteSelf value: anObject
+	^remoteSelf evaluateAction: anObject
 ]
 
 { #category : 'evaluating' }
