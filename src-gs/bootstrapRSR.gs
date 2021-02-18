@@ -454,7 +454,7 @@ removeallmethods RsrProtoObject
 removeallclassmethods RsrProtoObject
 
 doit
-(RsrProtoObject
+(Object
 	subclass: 'RsrForwarder'
 	instVarNames: #( _service )
 	classVars: #(  )
@@ -5068,14 +5068,14 @@ category: 'evaluating'
 method: RsrRemoteActionClient
 asyncValue
 
-	^remoteSelf value
+	^remoteSelf evaluateAction
 %
 
 category: 'evaluating'
 method: RsrRemoteActionClient
 asyncValue: anObject
 
-	^remoteSelf value: anObject
+	^remoteSelf evaluateAction: anObject
 %
 
 category: 'evaluating'
@@ -5136,6 +5136,20 @@ debugHandler: aBlock
 	debugHandler := aBlock
 %
 
+category: 'evaluating'
+method: RsrRemoteActionServer
+evaluateAction
+
+	^self action value
+%
+
+category: 'evaluating'
+method: RsrRemoteActionServer
+evaluateAction: anObject
+
+	^self action value: anObject
+%
+
 category: 'processing'
 method: RsrRemoteActionServer
 postUpdate
@@ -5176,27 +5190,6 @@ method: RsrRemoteActionServer
 preUpdateHandler: aBlock
 
 	preUpdateHandler := aBlock
-%
-
-category: 'evaluating'
-method: RsrRemoteActionServer
-value
-
-	^self action value
-%
-
-category: 'evaluating'
-method: RsrRemoteActionServer
-value: anObject
-
-	^self action value: anObject
-%
-
-category: 'evaluating'
-method: RsrRemoteActionServer
-valueWithArguments: anArray
-
-	^self action valueWithArguments: anArray
 %
 
 ! Class implementation for 'RsrReturnUnknownService'
@@ -14390,7 +14383,7 @@ testReturnArgument
 	arguments
 		do:
 			[:each | | result |
-			result := server value: each.
+			result := server evaluateAction: each.
 			self
 				assert: result
 				equals: each].
@@ -14398,7 +14391,7 @@ testReturnArgument
 		assert: (client value: arguments)
 		equals: arguments.
 	self
-		assert: (server value: arguments)
+		assert: (server evaluateAction: arguments)
 		equals: arguments.
 	self
 		assert: (client value: client)
