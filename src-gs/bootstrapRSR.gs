@@ -3,6 +3,61 @@
 ! Generated file, do not Edit
 
 doit
+(Announcement
+	subclass: 'RsrAnnouncement'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication-Base';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrAnnouncement
+removeallclassmethods RsrAnnouncement
+
+doit
+(RsrAnnouncement
+	subclass: 'RsrConnectionStateAnnouncement'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrConnectionStateAnnouncement
+removeallclassmethods RsrConnectionStateAnnouncement
+
+doit
+(RsrConnectionStateAnnouncement
+	subclass: 'RsrConnectionClosed'
+	instVarNames: #( connection )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		comment: 'This Announcement is used to signal that the specified Connection was closed.';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrConnectionClosed
+removeallclassmethods RsrConnectionClosed
+
+doit
 (Error
 	subclass: 'RsrError'
 	instVarNames: #(  )
@@ -457,7 +512,7 @@ removeallclassmethods RsrAbstractReason
 
 doit
 (RsrAbstractReason
-	subclass: 'RsrConnectionClosed'
+	subclass: 'RsrConnectionClosedBeforeReceivingResponse'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -470,8 +525,8 @@ doit
 true.
 %
 
-removeallmethods RsrConnectionClosed
-removeallclassmethods RsrConnectionClosed
+removeallmethods RsrConnectionClosedBeforeReceivingResponse
+removeallclassmethods RsrConnectionClosedBeforeReceivingResponse
 
 doit
 (RsrAbstractReason
@@ -1570,7 +1625,7 @@ removeallclassmethods RsrReleaseServices
 doit
 (RsrObject
 	subclass: 'RsrConnection'
-	instVarNames: #( channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages closeSemaphore specification )
+	instVarNames: #( channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages specification announcer )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1578,11 +1633,13 @@ doit
 	options: #()
 )
 		category: 'RemoteServiceReplication';
-		comment: 'No class-specific documentation for RsrConnection, hierarchy is:
-Object
-  RsrObject
-    RsrConnection( isOpen transactionSpigot commandWriter commandReader registry objectCache socket stream pendingMessages dispatcher oidSpigot serviceFactory log closeSemaphore)
-';
+		comment: 'Connection is the central mediator for RSR. When using the framework, an associated application will hold onto Connection. When terminating or otherwise done with RSR, it will close the Connection to signal this.
+
+Connection offers a limited public interface. The private methods are subject to change and shouldn''t be used by any application.
+
+The Connection can be monitored by subscribing to any of the Announcements defined under ConnectionStateAnnouncement. See #announcer.
+
+The Connection is generally created indirectly via one of the ConnectionSpecification subclasses.';
 		immediateInvariant.
 true.
 %
@@ -3971,6 +4028,37 @@ true.
 
 removeallmethods RsrTokenExchangeCodecTestCase
 removeallclassmethods RsrTokenExchangeCodecTestCase
+
+! Class implementation for 'RsrConnectionClosed'
+
+!		Class methods for 'RsrConnectionClosed'
+
+category: 'instance creation'
+classmethod: RsrConnectionClosed
+connection: aConnection
+
+	^self new
+		connection: aConnection;
+		yourself
+%
+
+!		Instance methods for 'RsrConnectionClosed'
+
+category: 'accessing'
+method: RsrConnectionClosed
+connection
+	"The Connection that was closed."
+
+	^connection
+%
+
+category: 'accessing'
+method: RsrConnectionClosed
+connection: aConnection
+	"Store the Connection that was closed."
+
+	connection := aConnection
+%
 
 ! Class implementation for 'RsrAlreadyRegistered'
 
@@ -6894,6 +6982,14 @@ oidSpigot: anOidSpigot
 
 !		Instance methods for 'RsrConnection'
 
+category: 'public-accessing'
+method: RsrConnection
+announcer
+	"Returns the announcer used by RSR to announce events."
+
+	^announcer
+%
+
 category: 'private-accessing'
 method: RsrConnection
 channel
@@ -6927,9 +7023,9 @@ close
 	temp := Dictionary new.
 	pm := pendingMessages.
 	pendingMessages := temp.
-	pm do: [:each | each promise break: RsrConnectionClosed new].
+	pm do: [:each | each promise break: RsrConnectionClosedBeforeReceivingResponse new].
 	registry := RsrThreadSafeDictionary new.
-	closeSemaphore signal
+	announcer announce: (RsrConnectionClosed connection: self)
 %
 
 category: 'private-initialization'
@@ -6942,7 +7038,7 @@ initialize
 	registry := RsrThreadSafeDictionary new.
 	dispatchQueue := RsrDispatchQueue new.
 	log := RsrLog new.
-	closeSemaphore := Semaphore new.
+	announcer := Announcer new
 %
 
 category: 'public-testing'
@@ -7087,9 +7183,13 @@ category: 'public-waiting'
 method: RsrConnection
 waitUntilClose
 
-	closeSemaphore
-		wait;
-		signal
+	| semaphore |
+	semaphore := Semaphore new.
+	announcer
+		when: RsrConnectionClosed
+		send: #signal
+		to: semaphore.
+	semaphore wait
 %
 
 category: 'private-service management'
@@ -13928,7 +14028,7 @@ testCloseConnectionDuringMessageSend
 	reason := self expectCatch: promise.
 	self
 		assert: reason class
-		equals: RsrConnectionClosed
+		equals: RsrConnectionClosedBeforeReceivingResponse
 %
 
 category: 'running-errors'

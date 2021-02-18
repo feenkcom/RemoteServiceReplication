@@ -46,6 +46,7 @@ package classNames
 	add: #RsrConnectFailed;
 	add: #RsrConnectionFailed;
 	add: #RsrByteArrayReference;
+	add: #RsrAnnouncement;
 	yourself.
 
 package methodNames
@@ -70,6 +71,14 @@ Object
 	poolDictionaries: ''
 	classInstanceVariableNames: 'current'!
 !RsrProcessModel categoriesForClass!RemoteServiceReplication-Base! !
+
+Announcement
+	subclass: #RsrAnnouncement
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	classInstanceVariableNames: ''!
+!RsrAnnouncement categoriesForClass!RemoteServiceReplication-Base! !
 
 RsrObject
 	subclass: #RsrDateAndTime
@@ -524,10 +533,16 @@ typeIdentifier	^9! !
 currentStackDump	^self current currentStackDump! !
 
 !RsrProcessModel class methodsFor!
+configureFrameworkProcess	"Apply framework configuration to the currently running process."	^self current configureFrameworkProcess! !
+
+!RsrProcessModel class methodsFor!
 fork: aBlockat: aPrioritynamed: aString	^self current		fork: aBlock		at: aPriority		named: aString! !
 
 !RsrProcessModel class methodsFor!
 renameProcess: aString	"Rename the current process to the provided string"	^self current renameProcess: aString! !
+
+!RsrProcessModel class methodsFor!
+configureCommunicationsProcess	"Apply framework configuration to the currently running communications process."	^self current configureCommunicationsProcess! !
 
 !RsrProcessModel class methodsFor!
 fork: aBlocknamed: aString	^self current fork: aBlock named: aString! !
@@ -698,13 +713,25 @@ resolve: aConnection	^Character codePoint: intermediate! !
 encode: aStreamusing: anEncoder	anEncoder		encodeControlWord: anEncoder immediateOID		onto: aStream.	anEncoder		encodeControlWord: self typeIdentifier		onto: aStream.	anEncoder		encodeControlWord: intermediate		onto: aStream! !
 
 !RsrProcessModel methodsFor!
-fork: aBlocknamed: aString	[self renameProcess: aString.	aBlock value] fork! !
+configureFrameworkProcess	"Apply framework configuration to the currently running process."	Processor activeProcess		"breakpointLevel: 0;"		priority: self frameworkSchedulingPriority! !
 
 !RsrProcessModel methodsFor!
 fork: aBlockat: aPrioritynamed: aString	[self renameProcess: aString.	aBlock value] forkAt: aPriority! !
 
 !RsrProcessModel methodsFor!
+configureCommunicationsProcess	"Apply framework configuration to the currently running communications process."	Processor activeProcess		"breakpointLevel: 0;"		priority: self communicationsSchedulePriority! !
+
+!RsrProcessModel methodsFor!
 renameProcess: aString	Processor activeProcess name: aString! !
+
+!RsrProcessModel methodsFor!
+communicationsSchedulePriority	"Returns the priority level used by communications processes."	^Processor highIOPriority! !
+
+!RsrProcessModel methodsFor!
+frameworkSchedulingPriority	"Returns the priority level used by normal framework processes."	^Processor userInterruptPriority! !
+
+!RsrProcessModel methodsFor!
+fork: aBlocknamed: aString	[self renameProcess: aString.	aBlock value] fork! !
 
 !RsrAlreadyRegistered methodsFor!
 service	^service! !
