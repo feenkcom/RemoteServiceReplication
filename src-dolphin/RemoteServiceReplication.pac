@@ -36,8 +36,8 @@ package classNames
 	add: #RsrCommandSink;
 	add: #RsrServiceSnapshot;
 	add: #RsrMessageSend;
-	add: #RsrInternalSocketConnectionSpecification;
 	add: #RsrInitiateConnection;
+	add: #RsrInternalSocketConnectionSpecification;
 	add: #RsrCommand;
 	add: #RsrTokenExchange;
 	add: #RsrBufferedSocketStream;
@@ -69,7 +69,6 @@ package classNames
 	add: #RsrSnapshotAnalysis;
 	add: #RsrNumericSpigot;
 	add: #RsrSocketConnectionSpecification;
-	add: #RsrDispatchQueue;
 	add: #RsrDeliverResponse;
 	add: #RsrTokenReceiver;
 	add: #RsrChannel;
@@ -145,7 +144,7 @@ RsrCommand comment: 'No class-specific documentation for RsrCommand, hierarchy i
 
 RsrObject
 	subclass: #RsrConnection
-	instanceVariableNames: 'channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages specification announcer'
+	instanceVariableNames: 'channel transactionSpigot oidSpigot log registry pendingMessages specification announcer'
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: ''!
@@ -160,15 +159,6 @@ RsrObject
 	classInstanceVariableNames: ''!
 RsrConnectionSpecification comment: 'Please comment me using the following template inspired by Class Responsibility Collaborator (CRC) design:For the Class part:  State a one line summary. For example, "I represent a paragraph of text".For the Responsibility part: Three sentences about my main responsibilities - what I do, what I know.For the Collaborators Part: State my main collaborators and one line about how I interact with them. Public API and Key Messages- message one   - message two - (for bonus points) how to create instances.   One simple example is simply gorgeous. Internal Representation and Key Implementation Points.    Implementation Points'!
 !RsrConnectionSpecification categoriesForClass!RemoteServiceReplication! !
-
-RsrObject
-	subclass: #RsrDispatchQueue
-	instanceVariableNames: 'queue process isRunning'
-	classVariableNames: ''
-	poolDictionaries: ''
-	classInstanceVariableNames: ''!
-RsrDispatchQueue comment: 'DispatchQueueThis class serves one purpose -- evaluate actions serially. Certain parts of the framework require this. For instance, Command processing needs to happen in the order it was received. (Note, this is not true of SendMessage commands which should fork the actual message send.)ProtectionsThis class should provide some low-level #on:do:. I don''t yet know what form this should take. I suspect it should coordinate w/ the Connection but I will leave this until I find an example error case.'!
-!RsrDispatchQueue categoriesForClass!RemoteServiceReplication! !
 
 RsrObject
 	subclass: #RsrHandshake
@@ -1595,32 +1585,11 @@ initialize	super initialize.	listener := self socketClass new.	isWaitingForC
 !RsrAcceptConnection methodsFor!
 waitForConnection	| socket stream steps handshake channel connection |	self ensureListening.	[isWaitingForConnection := true.	socket := [listener accept]		on: RsrSocketError		do: [:ex | ex resignalAs: RsrWaitForConnectionCancelled new]]			ensure:				[listener close.				listener := nil.				isWaitingForConnection := false].	stream := RsrSocketStream on: socket.	steps := Array		with: RsrProtocolVersionNegotiationServer new		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).	handshake := RsrHandshake		steps: steps		stream: stream.	handshake perform.	channel := RsrBinaryStreamChannel		inStream: stream		outStream: stream.	connection := RsrConnection		specification: self		channel: channel		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	^connection open! !
 
-!RsrDispatchQueue methodsFor!
-async: aBlock	"Evaluate the block asynchronously and do not return a result"	queue nextPut: aBlock.	^nil! !
-
-!RsrDispatchQueue methodsFor!
-initialize	super initialize.	queue := SharedQueue new! !
-
-!RsrDispatchQueue methodsFor!
-runLoop	[self isRunning]		whileTrue:			[[queue next value]				on: Error				do: [:ex | self trace. Transcript show: ex messageText; cr. ex pass]]! !
-
-!RsrDispatchQueue methodsFor!
-dispatch: aBlock	^self async: aBlock! !
-
-!RsrDispatchQueue methodsFor!
-stop	"Stop process events in the dispatch queue."	isRunning := false.	self dispatch: []. "Ensure another action is added to the queue to ensure shutdown if it hasn't yet happened."	process := nil! !
-
-!RsrDispatchQueue methodsFor!
-start	"Start processing queued events."	isRunning := true.	process := RsrProcessModel		fork: [self runLoop]		named: 'DispatchQueue run loop'! !
-
-!RsrDispatchQueue methodsFor!
-isRunning	^isRunning! !
-
 !RsrConnection methodsFor!
 serviceAt: aSIDifAbsent: aBlock	"Return the service associated with the provided SID."	| entry |	entry := registry at: aSID ifAbsent: [nil].	"Ensure we do not hold the lock for long."	entry == nil		ifTrue: [^aBlock value].	"The Service may have been garbage collected but	the entry may not yet be removed. Ensure we	evaluate the block in that case as well."	^entry service		ifNil: aBlock		ifNotNil: [:service | service]! !
 
 !RsrConnection methodsFor!
-close	| pm temp |	channel close.	dispatchQueue stop.	temp := Dictionary new.	pm := pendingMessages.	pendingMessages := temp.	pm do: [:each | each promise break: RsrConnectionClosedBeforeReceivingResponse new].	registry := RsrThreadSafeDictionary new.	announcer announce: (RsrConnectionClosed connection: self)! !
+close	| pm temp |	channel close.	temp := Dictionary new.	pm := pendingMessages.	pendingMessages := temp.	pm do: [:each | each promise break: RsrConnectionClosedBeforeReceivingResponse new].	registry := RsrThreadSafeDictionary new.	announcer announce: (RsrConnectionClosed connection: self)! !
 
 !RsrConnection methodsFor!
 log	^log! !
@@ -1629,10 +1598,10 @@ log	^log! !
 _remoteClientReleased: aSID	"Remotely, a Client instance has been garbage collected.	Ensure we only reference the associated service weakly."	| entry |	entry := registry		at: aSID		ifAbsent: [^self].	entry becomeWeak.! !
 
 !RsrConnection methodsFor!
-initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := RsrThreadSafeDictionary new.	registry := RsrThreadSafeDictionary new.	dispatchQueue := RsrDispatchQueue new.	log := RsrLog new.	announcer := Announcer new! !
+initialize	super initialize.	transactionSpigot := RsrThreadSafeNumericSpigot naturals.	pendingMessages := RsrThreadSafeDictionary new.	registry := RsrThreadSafeDictionary new.	log := RsrLog new.	announcer := Announcer new! !
 
 !RsrConnection methodsFor!
-mournActionForServerSID: aSID	^[dispatchQueue dispatch: [registry removeKey: aSID]]! !
+mournActionForServerSID: aSID	^[registry removeKey: aSID]! !
 
 !RsrConnection methodsFor!
 channel: aChannel	channel := aChannel.	channel connection: self! !
@@ -1651,6 +1620,9 @@ oidSpigot: anIntegerSpigot	oidSpigot := anIntegerSpigot! !
 
 !RsrConnection methodsFor!
 transactionSpigot	^transactionSpigot! !
+
+!RsrConnection methodsFor!
+_releaseSID: aSID	| command |	self isOpen		ifFalse: [^self].	self log trace: 'Cleaning up OID:', aSID printString.	command := RsrReleaseServices sids: (Array with: aSID).	self _sendCommand: command! !
 
 !RsrConnection methodsFor!
 serviceAt: aSID	^self		serviceAt: aSID		ifAbsent: [RsrUnknownSID signal: aSID printString]! !
@@ -1677,7 +1649,7 @@ specification	"Returns the Specification used to create this Connection.	If th
 _sendCommand: aCommand	"Send the provided Command to our peer."	channel send: aCommand! !
 
 !RsrConnection methodsFor!
-mournActionForClientSID: aSID	^[dispatchQueue		dispatch:			[registry removeKey: aSID.			self releaseOid: aSID]]! !
+mournActionForClientSID: aSID	^[registry removeKey: aSID.			self _releaseSID: aSID]! !
 
 !RsrConnection methodsFor!
 waitUntilClose	| semaphore |	semaphore := Semaphore new.	announcer		when: RsrConnectionClosed		send: #signal		to: semaphore.	semaphore wait! !
@@ -1689,13 +1661,10 @@ channelDisconnected	self log info: 'Disconnected'.	self close! !
 announcer	"Returns the announcer used by RSR to announce events."	^announcer! !
 
 !RsrConnection methodsFor!
-releaseOid: anOid	| command |	self isOpen		ifFalse: [^self].	self log trace: 'Cleaning up OID:', anOid printString.	command := RsrReleaseServices sids: (Array with: anOid).	self _sendCommand: command! !
-
-!RsrConnection methodsFor!
 _forwarderClass	^RsrForwarder! !
 
 !RsrConnection methodsFor!
-open	dispatchQueue start.	channel open! !
+open	channel open! !
 
 !RsrConnection methodsFor!
 transactionSpigot: anObject	transactionSpigot := anObject! !

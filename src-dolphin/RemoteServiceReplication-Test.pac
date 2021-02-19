@@ -1280,7 +1280,7 @@ testReturnAlsoUpdatesLocalService	"Ensure that when the remote peer service ret
 testUnimplementedRemoteSend	"Ensure a remote DNU is reported back to the sender."	| marker client reason |	marker := #testMarker.	client := RsrClientNoInstVars new		registerWith: connectionA;		synchronize.	reason := self expectCatch: client unimplementedRemoteSend.	self		assert: reason class		equals: RsrRemoteExceptionServer.	self		assert: reason exceptionClassName		equals: #MessageNotUnderstood! !
 
 !RsrMessageSendingTest methodsFor!
-testReturnArgument	| client server arguments dt response |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTime now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server value: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server value: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
+testReturnArgument	| client server arguments dt response |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [:object | object].	arguments := OrderedCollection new		addAll: #( '' #symbol 'string' $h 0 -14 14 18446744073709551616 -18446744073709551616 nil true false ); 		add: (Character codePoint: 16r259F);		add: (Dictionary new at: 1 put: 2; yourself);		add: (Set with: 14);		add: #[1 2 3 4];		add: (OrderedCollection with: 42 with: 43);		add: #(1 2 #(nil));		yourself.	dt := RsrDateAndTime now.	response := client value: dt.	self		assert: (dt asSeconds * 1000000) rounded		equals: (response asSeconds * 1000000) rounded.	arguments		do:			[:each | | result |			result := client value: each.			self				assert: result				equals: each].	arguments		do:			[:each | | result |			result := server evaluateAction: each.			self				assert: result				equals: each].	self		assert: (client value: arguments)		equals: arguments.	self		assert: (server evaluateAction: arguments)		equals: arguments.	self		assert: (client value: client)		identicalTo: client! !
 
 !RsrMessageSendingTest methodsFor!
 testDebugHandlerFulfill	"Ensure that if a debug handler resolves the message,	that the fulfillment value is received remotely."	| marker client server |	marker := #testMarker.	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal. 42 "ensure we do not return the marker"].	server debugHandler: [:exception :messageSend :resolver | resolver fulfill: marker. nil "ensure we do not return the marker"].	self		assert: client value		equals: marker.	server action: [RsrNonresumableError signal. 42 "ensure we do not return the marker"].	self		assert: client value		equals: marker! !
@@ -1328,22 +1328,19 @@ postUpdate	self postUpdateHandler value! !
 debugHandler: aBlock	debugHandler := aBlock! !
 
 !RsrRemoteActionServer methodsFor!
-value	^self action value! !
-
-!RsrRemoteActionServer methodsFor!
-value: anObject	^self action value: anObject! !
-
-!RsrRemoteActionServer methodsFor!
 action	^action! !
 
 !RsrRemoteActionServer methodsFor!
 preUpdateHandler	^preUpdateHandler ifNil: [[]]! !
 
 !RsrRemoteActionServer methodsFor!
+evaluateAction	^self action value! !
+
+!RsrRemoteActionServer methodsFor!
 postUpdateHandler: aBlock	postUpdateHandler := aBlock! !
 
 !RsrRemoteActionServer methodsFor!
-valueWithArguments: anArray	^self action valueWithArguments: anArray! !
+preUpdateHandler: aBlock	preUpdateHandler := aBlock! !
 
 !RsrRemoteActionServer methodsFor!
 action: aBlock	action := aBlock! !
@@ -1352,7 +1349,7 @@ action: aBlock	action := aBlock! !
 preUpdate	self preUpdateHandler value! !
 
 !RsrRemoteActionServer methodsFor!
-preUpdateHandler: aBlock	preUpdateHandler := aBlock! !
+evaluateAction: anObject	^self action value: anObject! !
 
 !RsrRemoteActionServer methodsFor!
 postUpdateHandler	^postUpdateHandler ifNil: [[]]! !
@@ -1487,13 +1484,13 @@ received: aCommand	lastCommand := aCommand! !
 lastCommand	^lastCommand! !
 
 !RsrRemoteActionClient methodsFor!
-asyncValue	^remoteSelf value! !
+asyncValue	^remoteSelf evaluateAction! !
 
 !RsrRemoteActionClient methodsFor!
 value	^self asyncValue wait! !
 
 !RsrRemoteActionClient methodsFor!
-asyncValue: anObject	^remoteSelf value: anObject! !
+asyncValue: anObject	^remoteSelf evaluateAction: anObject! !
 
 !RsrRemoteActionClient methodsFor!
 value: anObject	^(self asyncValue: anObject) wait! !
