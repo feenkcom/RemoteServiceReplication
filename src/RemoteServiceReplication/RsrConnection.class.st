@@ -14,7 +14,6 @@ Class {
 		'channel',
 		'transactionSpigot',
 		'oidSpigot',
-		'dispatchQueue',
 		'log',
 		'registry',
 		'pendingMessages',
@@ -108,6 +107,17 @@ as: sid [
 	registry
 		at: sid
 		put: registryEntry
+]
+
+{ #category : 'private-coordination' }
+RsrConnection >> _releaseSID: aSID [
+
+	| command |
+	self isOpen
+		ifFalse: [^self].
+	self log trace: 'Cleaning up OID:', aSID printString.
+	command := RsrReleaseServices sids: (Array with: aSID).
+	self _sendCommand: command
 ]
 
 { #category : 'private-service management' }
@@ -208,7 +218,6 @@ RsrConnection >> close [
 
 	| pm temp |
 	channel close.
-	dispatchQueue stop.
 	temp := Dictionary new.
 	pm := pendingMessages.
 	pendingMessages := temp.
@@ -224,7 +233,6 @@ RsrConnection >> initialize [
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	pendingMessages := RsrThreadSafeDictionary new.
 	registry := RsrThreadSafeDictionary new.
-	dispatchQueue := RsrDispatchQueue new.
 	log := RsrLog new.
 	announcer := Announcer new
 ]
@@ -244,16 +252,14 @@ RsrConnection >> log [
 { #category : 'private-service management' }
 RsrConnection >> mournActionForClientSID: aSID [
 
-	^[dispatchQueue
-		dispatch:
-			[registry removeKey: aSID.
-			self releaseOid: aSID]]
+	^[registry removeKey: aSID.
+			self _releaseSID: aSID]
 ]
 
 { #category : 'private-service management' }
 RsrConnection >> mournActionForServerSID: aSID [
 
-	^[dispatchQueue dispatch: [registry removeKey: aSID]]
+	^[registry removeKey: aSID]
 ]
 
 { #category : 'private-accessing' }
@@ -271,7 +277,6 @@ RsrConnection >> oidSpigot: anIntegerSpigot [
 { #category : 'public-lifecycle' }
 RsrConnection >> open [
 
-	dispatchQueue start.
 	channel open
 ]
 
@@ -279,17 +284,6 @@ RsrConnection >> open [
 RsrConnection >> pendingMessages [
 
 	^pendingMessages
-]
-
-{ #category : 'private-coordination' }
-RsrConnection >> releaseOid: anOid [
-
-	| command |
-	self isOpen
-		ifFalse: [^self].
-	self log trace: 'Cleaning up OID:', anOid printString.
-	command := RsrReleaseServices sids: (Array with: anOid).
-	self _sendCommand: command
 ]
 
 { #category : 'private-service management' }
