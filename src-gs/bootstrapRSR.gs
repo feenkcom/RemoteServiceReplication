@@ -1625,7 +1625,7 @@ removeallclassmethods RsrReleaseServices
 doit
 (RsrObject
 	subclass: 'RsrConnection'
-	instVarNames: #( channel transactionSpigot oidSpigot dispatchQueue log registry pendingMessages specification announcer )
+	instVarNames: #( channel transactionSpigot oidSpigot log registry pendingMessages specification announcer )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1802,32 +1802,6 @@ true.
 
 removeallmethods RsrDateAndTime
 removeallclassmethods RsrDateAndTime
-
-doit
-(RsrObject
-	subclass: 'RsrDispatchQueue'
-	instVarNames: #( queue process isRunning )
-	classVars: #(  )
-	classInstVars: #(  )
-	poolDictionaries: #()
-	inDictionary: Globals
-	options: #()
-)
-		category: 'RemoteServiceReplication';
-		comment: 'DispatchQueue
-
-This class serves one purpose -- evaluate actions serially. Certain parts of the framework require this. For instance, Command processing needs to happen in the order it was received. (Note, this is not true of SendMessage commands which should fork the actual message send.)
-
-
-Protections
-
-This class should provide some low-level #on:do:. I don''t yet know what form this should take. I suspect it should coordinate w/ the Connection but I will leave this until I find an example error case.';
-		immediateInvariant.
-true.
-%
-
-removeallmethods RsrDispatchQueue
-removeallclassmethods RsrDispatchQueue
 
 doit
 (RsrObject
@@ -7012,7 +6986,6 @@ close
 
 	| pm temp |
 	channel close.
-	dispatchQueue stop.
 	temp := Dictionary new.
 	pm := pendingMessages.
 	pendingMessages := temp.
@@ -7029,7 +7002,6 @@ initialize
 	transactionSpigot := RsrThreadSafeNumericSpigot naturals.
 	pendingMessages := RsrThreadSafeDictionary new.
 	registry := RsrThreadSafeDictionary new.
-	dispatchQueue := RsrDispatchQueue new.
 	log := RsrLog new.
 	announcer := Announcer new
 %
@@ -7052,17 +7024,15 @@ category: 'private-service management'
 method: RsrConnection
 mournActionForClientSID: aSID
 
-	^[dispatchQueue
-		dispatch:
-			[registry removeKey: aSID.
-			self releaseOid: aSID]]
+	^[registry removeKey: aSID.
+			self _releaseSID: aSID]
 %
 
 category: 'private-service management'
 method: RsrConnection
 mournActionForServerSID: aSID
 
-	^[dispatchQueue dispatch: [registry removeKey: aSID]]
+	^[registry removeKey: aSID]
 %
 
 category: 'private-accessing'
@@ -7083,7 +7053,6 @@ category: 'public-lifecycle'
 method: RsrConnection
 open
 
-	dispatchQueue start.
 	channel open
 %
 
@@ -7092,18 +7061,6 @@ method: RsrConnection
 pendingMessages
 
 	^pendingMessages
-%
-
-category: 'private-coordination'
-method: RsrConnection
-releaseOid: anOid
-
-	| command |
-	self isOpen
-		ifFalse: [^self].
-	self log trace: 'Cleaning up OID:', anOid printString.
-	command := RsrReleaseServices sids: (Array with: anOid).
-	self _sendCommand: command
 %
 
 category: 'private-service management'
@@ -7232,6 +7189,18 @@ as: sid
 	registry
 		at: sid
 		put: registryEntry
+%
+
+category: 'private-coordination'
+method: RsrConnection
+_releaseSID: aSID
+
+	| command |
+	self isOpen
+		ifFalse: [^self].
+	self log trace: 'Cleaning up OID:', aSID printString.
+	command := RsrReleaseServices sids: (Array with: aSID).
+	self _sendCommand: command
 %
 
 category: 'private-service management'
@@ -7593,73 +7562,6 @@ connect
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	^connection open
-%
-
-! Class implementation for 'RsrDispatchQueue'
-
-!		Instance methods for 'RsrDispatchQueue'
-
-category: 'dispatching'
-method: RsrDispatchQueue
-async: aBlock
-	"Evaluate the block asynchronously and do not return a result"
-
-	queue nextPut: aBlock.
-	^nil
-%
-
-category: 'dispatching'
-method: RsrDispatchQueue
-dispatch: aBlock
-
-	^self async: aBlock
-%
-
-category: 'initializing'
-method: RsrDispatchQueue
-initialize
-
-	super initialize.
-	queue := SharedQueue new
-%
-
-category: 'testing'
-method: RsrDispatchQueue
-isRunning
-
-	^isRunning
-%
-
-category: 'running'
-method: RsrDispatchQueue
-runLoop
-
-	[self isRunning]
-		whileTrue:
-			[[queue next value]
-				on: Error
-				do: [:ex | self trace. Transcript show: ex messageText; cr. ex pass]]
-%
-
-category: 'lifecycle'
-method: RsrDispatchQueue
-start
-	"Start processing queued events."
-
-	isRunning := true.
-	process := RsrProcessModel
-		fork: [self runLoop]
-		named: 'DispatchQueue run loop'
-%
-
-category: 'lifecycle'
-method: RsrDispatchQueue
-stop
-	"Stop process events in the dispatch queue."
-
-	isRunning := false.
-	self dispatch: []. "Ensure another action is added to the queue to ensure shutdown if it hasn't yet happened."
-	process := nil
 %
 
 ! Class implementation for 'RsrEnvironment'
