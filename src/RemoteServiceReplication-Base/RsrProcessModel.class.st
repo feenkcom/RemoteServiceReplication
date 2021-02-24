@@ -21,6 +21,13 @@ RsrProcessModel class >> configureFrameworkProcess [
 	^self current configureFrameworkProcess
 ]
 
+{ #category : 'configuring' }
+RsrProcessModel class >> configureUnhandleExceptionProtection [
+	"Configure the process to ensure we are able to trap any unhandled exceptions."
+
+	^self current configureUnhandleExceptionProtection
+]
+
 { #category : 'managing-concurrency' }
 RsrProcessModel class >> currentStackDump [
 
@@ -64,7 +71,6 @@ RsrProcessModel >> configureCommunicationsProcess [
 	"Apply framework configuration to the currently running communications process."
 
 	Processor activeProcess
-		"breakpointLevel: 0;"
 		priority: self communicationsSchedulePriority
 ]
 
@@ -73,7 +79,6 @@ RsrProcessModel >> configureFrameworkProcess [
 	"Apply framework configuration to the currently running process."
 
 	Processor activeProcess
-		"breakpointLevel: 0;"
 		priority: self frameworkSchedulingPriority
 ]
 

@@ -95,7 +95,7 @@ RsrRemotePromiseResolver >> resolution: result [
 					[:ex | | answer |
 					answer := Array
 						with: #break
-						with: (RsrRemoteException from: ex).
+						with: (RsrRemoteException from: ex exception).
 					self
 						sendResult: answer
 						closureRoots: answer.

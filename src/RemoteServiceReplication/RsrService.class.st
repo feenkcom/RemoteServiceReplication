@@ -112,7 +112,6 @@ RsrService >> configureProcess [
 	#preUpdate and #postUpdate run in a configuration manner prescribed by the framework."
 
 	Processor activeProcess
-		"breakpointLevel: 1;"
 		priority: self serviceSchedulingPriority
 ]
 

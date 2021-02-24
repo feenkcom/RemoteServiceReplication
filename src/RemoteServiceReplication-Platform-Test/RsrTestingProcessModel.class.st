@@ -36,5 +36,5 @@ RsrTestingProcessModel >> forkedException [
 { #category : 'accessing' }
 RsrTestingProcessModel >> protect: aBlock [
 
-	^[aBlock on: Error do: [:ex | forkedException := ex copy. ex return]]
+	^[aBlock on: self class unhandledExceptionClass do: [:ue | forkedException := ue exception copy. ue return]]
 ]
