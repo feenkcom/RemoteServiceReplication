@@ -87,16 +87,16 @@ RsrProcessModel >> fork: aBlock
 at: aPriority
 named: aString [
 
-	[self renameProcess: aString.
-	aBlock value] forkAt: aPriority
+	^[[self renameProcess: aString.
+	aBlock value] on: UnhandledError do: [:ex | ex inspect. ex pass]] forkAt: aPriority
 ]
 
 { #category : 'managing-concurrency' }
 RsrProcessModel >> fork: aBlock
 named: aString [
 
-	[self renameProcess: aString.
-	aBlock value] fork
+	^[[self renameProcess: aString.
+	aBlock value] on: UnhandledError do: [:ex | ex inspect. ex pass]] fork
 ]
 
 { #category : 'configuring' }
