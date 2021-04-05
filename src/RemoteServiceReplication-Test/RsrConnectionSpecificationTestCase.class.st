@@ -45,6 +45,30 @@ RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 ]
 
 { #category : 'running' }
+RsrConnectionSpecificationTestCase >> testBindToWildcardPort [
+
+	| acceptor initiator semaphore connectionA connectionB |
+	acceptor := RsrAcceptConnection
+		host: self localhost
+		port: RsrAcceptConnection wildcardPort.
+	acceptor ensureListening.
+	self assert: acceptor listeningPort > 0.
+	initiator := RsrInitiateConnection
+		host: self localhost
+		port: acceptor listeningPort.
+	semaphore := Semaphore new.
+	RsrProcessModel
+		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
+		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.
+	semaphore wait; wait.
+	self
+		assert: connectionA isOpen;
+		assert: connectionB isOpen.
+	connectionA close.
+	connectionB close
+]
+
+{ #category : 'running' }
 RsrConnectionSpecificationTestCase >> testCancelWaitForConnection [
 
 	| acceptor |

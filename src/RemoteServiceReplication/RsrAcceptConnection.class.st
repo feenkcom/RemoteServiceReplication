@@ -23,6 +23,12 @@ RsrAcceptConnection class >> wildcardAddress [
 	^'0.0.0.0'
 ]
 
+{ #category : 'accessing' }
+RsrAcceptConnection class >> wildcardPort [
+
+	^0
+]
+
 { #category : 'actions' }
 RsrAcceptConnection >> cancelWaitForConnection [
 
@@ -53,6 +59,16 @@ RsrAcceptConnection >> initialize [
 RsrAcceptConnection >> isWaitingForConnection [
 
 	^isWaitingForConnection
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection >> listeningPort [
+	"Return the port the underlying socket is listening on.
+	This is useful when using the wildcard port to dynamically
+	assign a port number."
+
+	isListening ifFalse: [^nil].
+	^listener port
 ]
 
 { #category : 'actions' }
