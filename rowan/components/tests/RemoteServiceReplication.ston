@@ -5,6 +5,7 @@ RwSimpleProjectLoadComponentV2 {
 	#componentNames : [ ],
 	#packageNames : [
 		'RemoteServiceReplication-Platform-Test',
+		'RemoteServiceReplication-GemStone-Test',
 		'RemoteServiceReplication-Test'
 	],
 	#comment : 'test packages for RSR'

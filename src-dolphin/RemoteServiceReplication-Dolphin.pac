@@ -19,6 +19,7 @@ package classNames
 package methodNames
 	add: #Object -> #asString;
 	add: #RsrCharacterArrayReference -> #convertBytes:;
+	add: #RsrConnection -> #platformSpecificOpeningTasks;
 	add: #RsrDoubleReference -> #convertBytes:;
 	add: #RsrObject -> #initialize;
 	add: #RsrProcessModel -> #currentStackDump;
@@ -36,6 +37,7 @@ package methodNames
 	add: 'RsrProcessModel class' -> #current;
 	add: 'RsrProcessModel class' -> #current:;
 	add: 'RsrProcessModel class' -> #resetCurrent;
+	add: 'RsrProcessModel class' -> #unhandledExceptionClass;
 	add: 'RsrReference class' -> #initializeReferenceMapping;
 	yourself.
 
@@ -122,6 +124,14 @@ convertToBytes: aCharacterArray
 
 	^aCharacterArray asUtf8String asByteArray! !
 !RsrCharacterArrayReference class categoriesFor: #convertToBytes:!converting!public! !
+
+!RsrConnection methodsFor!
+
+platformSpecificOpeningTasks
+	"Configure the Connection for this platform."
+
+	^self! !
+!RsrConnection categoriesFor: #platformSpecificOpeningTasks!public! !
 
 !RsrDateAndTime class methodsFor!
 
@@ -214,10 +224,16 @@ current: concurrency
 
 resetCurrent
 
-	^current := self new! !
+	^current := self new!
+
+unhandledExceptionClass
+	"Returns the Dolphin UnhandledException class. Right now, one doesn't exist so this returns Error."
+
+	^Error! !
 !RsrProcessModel class categoriesFor: #current!public! !
 !RsrProcessModel class categoriesFor: #current:!public! !
 !RsrProcessModel class categoriesFor: #resetCurrent!public! !
+!RsrProcessModel class categoriesFor: #unhandledExceptionClass!public! !
 
 !RsrReference class methodsFor!
 

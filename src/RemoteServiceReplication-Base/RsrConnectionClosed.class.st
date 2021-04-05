@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'connection'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'instance creation' }

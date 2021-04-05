@@ -39,6 +39,12 @@ RsrEphemeron >> mourn [
 ]
 
 { #category : 'accessing' }
+RsrEphemeron >> mournAction [
+
+	^mournAction
+]
+
+{ #category : 'accessing' }
 RsrEphemeron >> mournAction: aBlock [
 
 	mournAction := aBlock

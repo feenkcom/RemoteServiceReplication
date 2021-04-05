@@ -1,5 +1,5 @@
 Class {
 	#name : 'RsrConnectionStateAnnouncement',
 	#superclass : 'RsrAnnouncement',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }

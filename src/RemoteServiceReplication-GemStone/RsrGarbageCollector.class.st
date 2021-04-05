@@ -7,13 +7,11 @@ Class {
 { #category : 'cleaning' }
 RsrGarbageCollector class >> maximumReclamation [
 
-	| object ephemeron sema |
-	object := Object new.
+	| sema ephemeron |
 	sema := Semaphore new.
 	ephemeron := RsrEphemeron
-		on: object
+		on: Object new
 		mournAction: [sema signal].
-	object := nil.
 	System
 		_generationScavenge_vmMarkSweep;
 		_generationScavenge_vmMarkSweep.

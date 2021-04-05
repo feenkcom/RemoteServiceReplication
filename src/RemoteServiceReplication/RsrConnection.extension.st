@@ -1,70 +1,6 @@
-"
-Connection is the central mediator for RSR. When using the framework, an associated application will hold onto Connection. When terminating or otherwise done with RSR, it will close the Connection to signal this.
+Extension { #name : 'RsrConnection' }
 
-Connection offers a limited public interface. The private methods are subject to change and shouldn't be used by any application.
-
-The Connection can be monitored by subscribing to any of the Announcements defined under ConnectionStateAnnouncement. See #announcer.
-
-The Connection is generally created indirectly via one of the ConnectionSpecification subclasses.
-"
-Class {
-	#name : 'RsrConnection',
-	#superclass : 'RsrObject',
-	#instVars : [
-		'channel',
-		'transactionSpigot',
-		'oidSpigot',
-		'log',
-		'registry',
-		'pendingMessages',
-		'specification',
-		'announcer'
-	],
-	#category : 'RemoteServiceReplication'
-}
-
-{ #category : 'instance creation' }
-RsrConnection class >> channel: aChannel
-transactionSpigot: aNumericSpigot
-oidSpigot: anOidSpigot [
-	"Create a new Connection with an already Configured Channel.
-	Provide spigots as their behavior is specified by the Channel creation
-	protocols."
-
-	^self
-		specification: nil
-		channel: aChannel
-		transactionSpigot: aNumericSpigot
-		oidSpigot: anOidSpigot
-]
-
-{ #category : 'instance creation' }
-RsrConnection class >> new [
-	"Instances of Connection should not be created via #new.
-	Instead use ConnectionSpecification.
-	See SystemTestCase>>#setUp for an example."
-
-	self shouldNotImplement
-]
-
-{ #category : 'instance creation' }
-RsrConnection class >> specification: aConnectionSpecification
-channel: aChannel
-transactionSpigot: aNumericSpigot
-oidSpigot: anOidSpigot [
-	"Create a new Connection with an already Configured Channel.
-	Provide spigots as their behavior is specified by the Channel creation
-	protocols."
-
-	^super new
-		specification: aConnectionSpecification;
-		channel: aChannel;
-		transactionSpigot: aNumericSpigot;
-		oidSpigot: anOidSpigot;
-		yourself
-]
-
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _ensureRegistered: aService [
 
 	aService _connection == nil
@@ -73,13 +9,13 @@ RsrConnection >> _ensureRegistered: aService [
 		ifFalse: [^RsrAlreadyRegistered signalService: aService intendedConnection: self]
 ]
 
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _forwarderClass [
 
 	^RsrForwarder
 ]
 
-{ #category : 'private-handling commands' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _receivedCommand: aCommand [
 	"Execute the command in the context of the receiving Connection."
 
@@ -90,7 +26,7 @@ RsrConnection >> _receivedCommand: aCommand [
 		named: 'Processing ', aCommand class name
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _register: aService
 as: sid [
 
@@ -109,7 +45,7 @@ as: sid [
 		put: registryEntry
 ]
 
-{ #category : 'private-coordination' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _releaseSID: aSID [
 
 	| command |
@@ -120,7 +56,7 @@ RsrConnection >> _releaseSID: aSID [
 	self _sendCommand: command
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _remoteClientReleased: aSID [
 	"Remotely, a Client instance has been garbage collected.
 	Ensure we only reference the associated service weakly."
@@ -132,14 +68,14 @@ RsrConnection >> _remoteClientReleased: aSID [
 	entry becomeWeak.
 ]
 
-{ #category : 'private-handling commands' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _sendCommand: aCommand [
 	"Send the provided Command to our peer."
 
 	channel send: aCommand
 ]
 
-{ #category : 'private-handling commands' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _sendMessage: aMessage
 to: aService [
 
@@ -175,7 +111,7 @@ to: aService [
 	^promise
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> _stronglyRetain: aServer [
 	"Retain the already registered server strongly."
 
@@ -186,47 +122,27 @@ RsrConnection >> _stronglyRetain: aServer [
 	entry becomeStrong
 ]
 
-{ #category : 'public-accessing' }
-RsrConnection >> announcer [
-	"Returns the announcer used by RSR to announce events."
-
-	^announcer
-]
-
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> channel [
 
 	^channel
 ]
 
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> channel: aChannel [
 
 	channel := aChannel.
 	channel connection: self
 ]
 
-{ #category : 'private-events' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> channelDisconnected [
 
 	self log info: 'Disconnected'.
 	self close
 ]
 
-{ #category : 'public-lifecycle' }
-RsrConnection >> close [
-
-	| pm temp |
-	channel close.
-	temp := Dictionary new.
-	pm := pendingMessages.
-	pendingMessages := temp.
-	pm do: [:each | each promise break: RsrConnectionClosedBeforeReceivingResponse new].
-	registry := RsrThreadSafeDictionary new.
-	announcer announce: (RsrConnectionClosed connection: self)
-]
-
-{ #category : 'private-initialization' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> initialize [
 
 	super initialize.
@@ -237,56 +153,44 @@ RsrConnection >> initialize [
 	announcer := Announcer new
 ]
 
-{ #category : 'public-testing' }
-RsrConnection >> isOpen [
-
-	^channel isConnected
-]
-
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> log [
 
 	^log
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> mournActionForClientSID: aSID [
 
 	^[registry removeKey: aSID.
 			self _releaseSID: aSID]
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> mournActionForServerSID: aSID [
 
 	^[registry removeKey: aSID]
 ]
 
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> oidSpigot [
 
 	^oidSpigot
 ]
 
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> oidSpigot: anIntegerSpigot [
 
 	oidSpigot := anIntegerSpigot
 ]
 
-{ #category : 'public-lifecycle' }
-RsrConnection >> open [
-
-	channel open
-]
-
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> pendingMessages [
 
 	^pendingMessages
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> serviceAt: aSID [
 
 	^self
@@ -294,7 +198,7 @@ RsrConnection >> serviceAt: aSID [
 		ifAbsent: [RsrUnknownSID signal: aSID printString]
 ]
 
-{ #category : 'private-service management' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> serviceAt: aSID
 ifAbsent: aBlock [
 	"Return the service associated with the provided SID."
@@ -312,47 +216,20 @@ ifAbsent: aBlock [
 		ifNotNil: [:service | service]
 ]
 
-{ #category : 'public-accessing' }
-RsrConnection >> specification [
-	"Returns the Specification used to create this Connection.
-	If the Connection was not create using a Specification, returns nil."
-
-	^specification
-]
-
-{ #category : 'public-accessing' }
-RsrConnection >> specification: aConnectionSpecification [
-	"Store the Specification used to the create this Connection."
-
-	specification := aConnectionSpecification
-]
-
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> transactionSpigot [
 
 	^transactionSpigot
 ]
 
-{ #category : 'private-accessing' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> transactionSpigot: anObject [
 
 	transactionSpigot := anObject
 ]
 
-{ #category : 'private-events' }
+{ #category : '*remoteservicereplication' }
 RsrConnection >> unknownError: anException [
 
 	self close
-]
-
-{ #category : 'public-waiting' }
-RsrConnection >> waitUntilClose [
-
-	| semaphore |
-	semaphore := Semaphore new.
-	announcer
-		when: RsrConnectionClosed
-		send: #signal
-		to: semaphore.
-	semaphore wait
 ]

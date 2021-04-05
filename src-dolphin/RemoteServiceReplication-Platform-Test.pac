@@ -3,6 +3,9 @@ package := Package name: 'RemoteServiceReplication-Platform-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
+	add: #RsrMockServer;
+	add: #RsrGarbageCollectorTestCase;
+	add: #RsrTestingProcessModel;
 	add: #RsrSocketTestCase;
 	add: #RsrMockService;
 	add: #RsrTestCase;
@@ -10,9 +13,6 @@ package classNames
 	add: #RsrMockClient;
 	add: #RsrClassResolverTestCase;
 	add: #RsrSocketPair;
-	add: #RsrMockServer;
-	add: #RsrGarbageCollectorTestCase;
-	add: #RsrTestingProcessModel;
 	yourself.
 
 package methodNames
@@ -135,13 +135,13 @@ isAbstract	^self == RsrTestCase! !
 defaultTimeLimit	"This is needed for Pharo"	^5 seconds! !
 
 !RsrSocketTestCase methodsFor!
-deferClose: aSocket	sockets add: aSocket.	^aSocket! !
+deferClose: aSocket	sockets nextPut: aSocket.	^aSocket! !
 
 !RsrSocketTestCase methodsFor!
 testCloseDuringAccept	| listener |	listener := self newSocket.	listener		bindAddress: '127.0.0.1'		port: 45300.	listener listen: 1.	RsrProcessModel		fork: [(Delay forSeconds: 1) wait. listener close]		named: 'Pending Socket Close'.	self		should: [listener accept]		raise: RsrSocketError! !
 
 !RsrSocketTestCase methodsFor!
-tearDown	sockets do: [:each | each close].	super tearDown! !
+tearDown	[sockets isEmpty]		whileFalse: [sockets next close].	super tearDown! !
 
 !RsrSocketTestCase methodsFor!
 testAcceptOnAlreadyClosedSocket	| listener |	listener := self newSocket.	listener		bindAddress: '127.0.0.1'		port: 45300.	listener listen: 1.	listener close.	self		should: [listener accept]		raise: RsrSocketError! !
@@ -186,7 +186,7 @@ testPartialRead	| peerA peerB writeBuffer readBuffer count numRead |	self		c
 testSuccessfulConnect	| socket |	socket := self newSocket.	self deny: socket isConnected.	socket		connectToHost: 'gemtalksystems.com'		port: 80.	self assert: socket isConnected.	socket close.	self deny: socket isConnected! !
 
 !RsrSocketTestCase methodsFor!
-setUp	super setUp.	sockets := OrderedCollection new! !
+setUp	super setUp.	sockets := SharedQueue new.! !
 
 !RsrTestingProcessModel methodsFor!
 fork: aBlocknamed: aString	^super		fork: (self protect: aBlock)		named: aString! !
@@ -195,7 +195,7 @@ fork: aBlocknamed: aString	^super		fork: (self protect: aBlock)		named: aSt
 fork: aBlockat: aPrioritynamed: aString	^super		fork: (self protect: aBlock)		at: aPriority		named: aString! !
 
 !RsrTestingProcessModel methodsFor!
-protect: aBlock	^[aBlock on: Error do: [:ex | forkedException := ex copy. ex return]]! !
+protect: aBlock	^[aBlock on: self class unhandledExceptionClass do: [:ue | forkedException := ue exception copy. ue return]]! !
 
 !RsrTestingProcessModel methodsFor!
 forkedException	^forkedException! !

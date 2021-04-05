@@ -8,7 +8,7 @@ Class {
 		'mutex',
 		'map'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'accessing' }
@@ -17,7 +17,7 @@ ifAbsent: aBlock [
 
 	| isPresent result |
 	isPresent := true.
-	result := mutex critical: [map at: aKey ifAbsent: [isPresent := false]].
+	result := self critical: [map at: aKey ifAbsent: [isPresent := false]].
 	^isPresent
 		ifTrue: [result]
 		ifFalse: [aBlock value]
@@ -27,15 +27,21 @@ ifAbsent: aBlock [
 RsrThreadSafeDictionary >> at: aKey
 put: aValue [
 
-	mutex critical: [map at: aKey put: aValue].
+	self critical: [map at: aKey put: aValue].
 	^aValue
+]
+
+{ #category : 'utilities' }
+RsrThreadSafeDictionary >> critical: aBlock [
+
+	^mutex critical: aBlock
 ]
 
 { #category : 'enumerating' }
 RsrThreadSafeDictionary >> do: aBlock [
 
 	| values |
-	values := mutex critical: [map values].
+	values := self critical: [map values].
 	values do: aBlock
 ]
 
@@ -50,7 +56,7 @@ RsrThreadSafeDictionary >> initialize [
 { #category : 'removing' }
 RsrThreadSafeDictionary >> removeKey: anRsrId [
 
-	^mutex critical: [map removeKey: anRsrId ifAbsent: [nil]]
+	^self critical: [map removeKey: anRsrId ifAbsent: [nil]]
 ]
 
 { #category : 'removing' }
@@ -59,7 +65,7 @@ ifAbsent: aBlock [
 
 	| element wasRemoved |
 	wasRemoved := true.
-	element := mutex critical: [map removeKey: anRsrId ifAbsent: [wasRemoved := false]].
+	element := self critical: [map removeKey: anRsrId ifAbsent: [wasRemoved := false]].
 	^wasRemoved
 		ifTrue: [element]
 		ifFalse: [aBlock value]
