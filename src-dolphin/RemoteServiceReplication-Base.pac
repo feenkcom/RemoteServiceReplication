@@ -3,50 +3,50 @@ package := Package name: 'RemoteServiceReplication-Base'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrReference;
-	add: #RsrIntegerReference;
-	add: #RsrUnknownSID;
 	add: #RsrCharacterReference;
-	add: #RsrBrokenPromise;
+	add: #RsrPromiseError;
 	add: #RsrTrueReference;
-	add: #RsrProcessModel;
+	add: #RsrServiceReference;
+	add: #RsrWaitForConnectionCancelled;
+	add: #RsrAnnouncement;
 	add: #RsrOrderedCollectionReference;
-	add: #RsrInvalidBind;
+	add: #RsrSocketError;
 	add: #RsrCharacterArrayReference;
-	add: #RsrNonresumableError;
+	add: #RsrConnectionFailed;
 	add: #RsrImmediateReference;
-	add: #RsrNegativeIntegerReference;
-	add: #RsrUnsupportedObject;
+	add: #RsrIntegerReference;
+	add: #RsrUnknownClass;
 	add: #RsrCollectionReference;
-	add: #RsrResumableError;
+	add: #RsrAlreadyResolved;
 	add: #RsrNilReference;
-	add: #RsrError;
-	add: #RsrDoubleReference;
+	add: #RsrProcessModel;
 	add: #RsrObject;
 	add: #RsrSetReference;
-	add: #RsrSocketClosed;
+	add: #RsrConnectFailed;
 	add: #RsrStringReference;
-	add: #RsrPromiseError;
+	add: #RsrNonresumableError;
 	add: #RsrBooleanReference;
-	add: #RsrPositiveIntegerReference;
-	add: #RsrWaitForConnectionCancelled;
+	add: #RsrNegativeIntegerReference;
+	add: #RsrUnknownSID;
 	add: #RsrArrayReference;
-	add: #RsrSocketError;
+	add: #RsrBrokenPromise;
 	add: #RsrValueReference;
-	add: #RsrAlreadyRegistered;
-	add: #RsrOutOfRange;
+	add: #RsrError;
 	add: #RsrDateAndTime;
 	add: #RsrDateAndTimeReference;
-	add: #RsrUnknownClass;
+	add: #RsrInvalidBind;
 	add: #RsrSymbolReference;
-	add: #RsrAlreadyResolved;
+	add: #RsrOutOfRange;
 	add: #RsrFalseReference;
-	add: #RsrServiceReference;
+	add: #RsrPositiveIntegerReference;
+	add: #RsrUnsupportedObject;
 	add: #RsrDictionaryReference;
-	add: #RsrConnectFailed;
-	add: #RsrConnectionFailed;
+	add: #RsrResumableError;
 	add: #RsrByteArrayReference;
-	add: #RsrAnnouncement;
+	add: #RsrAlreadyRegistered;
+	add: #RsrReference;
+	add: #RsrDoubleReference;
+	add: #RsrSocketClosed;
 	yourself.
 
 package methodNames
@@ -94,7 +94,7 @@ RsrObject
 	classVariableNames: ''
 	poolDictionaries: ''
 	classInstanceVariableNames: 'referenceMapping'!
-RsrReference comment: 'RsrReferenceReference instances are created as a by-product of freezing the state of a Service. This typically happens when the framework creates a SendMessage or DeliverResponse command.The Reference represents and is able to resolve the object is it represents. In some cases, the value is immediate. In the case of ServiceReference, the stored Service Identifier is resolved in the context of a connection.Resolving must occur in the context of a Connection. Though this is true, the minimal information necessary for a Reference to resolve is the Registry.SendMessage and DeliverResponse store fields like receiver or result as references. They are resolved when the Command is set to execute.Collaborators:- ServiceSnapshot- Encoder- Decoder'!
+RsrReference comment: 'RsrReferenceReference instances are created as a by-product of freezing the state of a Service. This typically happens when the framework creates a SendMessage or DeliverResponse command.The Reference represents and is able to resolve the object it represents. In some cases, the value is immediate. In the case of ServiceReference, the stored Service Identifier is resolved in the context of a connection.Resolving must occur in the context of a Connection. Though this is true, the minimal information necessary for a Reference to resolve is the Registry.SendMessage and DeliverResponse store fields like receiver or result as references. They are resolved when the Command is set to execute.Collaborators:- ServiceSnapshot- Encoder- Decoder'!
 !RsrReference categoriesForClass!RemoteServiceReplication-Base! !
 
 Error
@@ -505,6 +505,9 @@ typeIdentifier	^6! !
 !RsrNilReference class methodsFor!
 from: aNil	^self new! !
 
+!RsrCharacterArrayReference class methodsFor!
+from: aCharacterArray	| bytes |	bytes := self convertToBytes: aCharacterArray.	^self intermediate: bytes! !
+
 !RsrDictionaryReference class methodsFor!
 typeIdentifier	^13! !
 
@@ -513,9 +516,6 @@ analyze: aDictionaryusing: anAnalyzer	^anAnalyzer analyzeDictionary: aDiction
 
 !RsrDictionaryReference class methodsFor!
 from: aDictionary	| referenceStream |	referenceStream := WriteStream on: (Array new: aDictionary size * 2).	aDictionary		keysAndValuesDo:			[:key :value |			referenceStream				nextPut: (RsrReference from: key);				nextPut: (RsrReference from: value)].	^self intermediate: referenceStream contents! !
-
-!RsrCharacterArrayReference class methodsFor!
-from: aCharacterArray	| bytes |	bytes := self convertToBytes: aCharacterArray.	^self intermediate: bytes! !
 
 !RsrNegativeIntegerReference class methodsFor!
 typeIdentifier	^4! !
@@ -529,24 +529,6 @@ from: aDateAndTime	| intermediate |	intermediate := RsrDateAndTime microsecon
 !RsrArrayReference class methodsFor!
 typeIdentifier	^9! !
 
-!RsrProcessModel class methodsFor!
-currentStackDump	^self current currentStackDump! !
-
-!RsrProcessModel class methodsFor!
-configureFrameworkProcess	"Apply framework configuration to the currently running process."	^self current configureFrameworkProcess! !
-
-!RsrProcessModel class methodsFor!
-fork: aBlockat: aPrioritynamed: aString	^self current		fork: aBlock		at: aPriority		named: aString! !
-
-!RsrProcessModel class methodsFor!
-renameProcess: aString	"Rename the current process to the provided string"	^self current renameProcess: aString! !
-
-!RsrProcessModel class methodsFor!
-configureCommunicationsProcess	"Apply framework configuration to the currently running communications process."	^self current configureCommunicationsProcess! !
-
-!RsrProcessModel class methodsFor!
-fork: aBlocknamed: aString	^self current fork: aBlock named: aString! !
-
 !RsrImmediateReference class methodsFor!
 analyze: anObjectusing: anAnalyzer	^anAnalyzer analyzeImmediate: anObject! !
 
@@ -559,6 +541,24 @@ typeIdentifier	^5! !
 !RsrCharacterReference class methodsFor!
 from: aCharacter	^self intermediate: aCharacter codePoint! !
 
+!RsrProcessModel class methodsFor!
+currentStackDump	^self current currentStackDump! !
+
+!RsrProcessModel class methodsFor!
+configureFrameworkProcess	"Apply framework configuration to the currently running process."	^self current configureFrameworkProcess! !
+
+!RsrProcessModel class methodsFor!
+fork: aBlockat: aPrioritynamed: aString	^self current		fork: aBlock		at: aPriority		named: aString! !
+
+!RsrProcessModel class methodsFor!
+configureCommunicationsProcess	"Apply framework configuration to the currently running communications process."	^self current configureCommunicationsProcess! !
+
+!RsrProcessModel class methodsFor!
+renameProcess: aString	"Rename the current process to the provided string"	^self current renameProcess: aString! !
+
+!RsrProcessModel class methodsFor!
+fork: aBlocknamed: aString	^self current fork: aBlock named: aString! !
+
 !RsrAlreadyRegistered class methodsFor!
 signalService: aServiceintendedConnection: aConnection	^self new		service: aService;		intendedConnection: aConnection;		signal! !
 
@@ -568,14 +568,14 @@ intermediate: anObject	^self new		intermediate: anObject;		yourself! !
 !RsrObject class methodsFor!
 trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
 
-!RsrTrueReference class methodsFor!
-typeIdentifier	^7! !
-
 !RsrSetReference class methodsFor!
 typeIdentifier	^11! !
 
 !RsrSetReference class methodsFor!
 from: aSet	| referenceStream |	referenceStream := WriteStream on: (Array new: aSet size).	aSet do:  [:each | referenceStream nextPut: (RsrReference from: each)].	^self intermediate: referenceStream contents! !
+
+!RsrTrueReference class methodsFor!
+typeIdentifier	^7! !
 
 !RsrUnsupportedObject methodsFor!
 object	^object! !
@@ -746,22 +746,22 @@ intendedConnection	^intendedConnection! !
 intendedConnection: aConnection	intendedConnection := aConnection! !
 
 !RsrValueReference methodsFor!
-resolve: aConnection	^intermediate! !
+intermediate: anObject	"Store the intermediate form of this object"	intermediate := anObject! !
 
 !RsrValueReference methodsFor!
-intermediate: anObject	"Store the intermediate form of this object"	intermediate := anObject! !
+resolve: aConnection	^intermediate! !
 
 !RsrResumableError methodsFor!
 isResumable	^true! !
+
+!RsrObject methodsFor!
+minimalWait	"Ensure the calling process is not schedulable for a short period of time."	(Delay forMilliseconds: 1) wait! !
 
 !RsrObject methodsFor!
 note: aString	"This method can be used to leave a note in code. For instance, a code path that needs to be tested."! !
 
 !RsrObject methodsFor!
 trace	Transcript		show: RsrProcessModel currentStackDump;		cr;		cr! !
-
-!RsrObject methodsFor!
-minimalWait	"Ensure the calling process is not schedulable for a short period of time."	(Delay forMilliseconds: 1) wait! !
 
 !RsrSetReference methodsFor!
 resolve: aConnection	| set |	set := Set new: intermediate size * 2.	intermediate do: [:each | set add: (each resolve: aConnection)].	^set! !

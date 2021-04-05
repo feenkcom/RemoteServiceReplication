@@ -3,9 +3,6 @@ package := Package name: 'RemoteServiceReplication-Platform-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrMockServer;
-	add: #RsrGarbageCollectorTestCase;
-	add: #RsrTestingProcessModel;
 	add: #RsrSocketTestCase;
 	add: #RsrMockService;
 	add: #RsrTestCase;
@@ -13,6 +10,9 @@ package classNames
 	add: #RsrMockClient;
 	add: #RsrClassResolverTestCase;
 	add: #RsrSocketPair;
+	add: #RsrMockServer;
+	add: #RsrGarbageCollectorTestCase;
+	add: #RsrTestingProcessModel;
 	yourself.
 
 package methodNames
@@ -189,13 +189,13 @@ testSuccessfulConnect	| socket |	socket := self newSocket.	self deny: socket
 setUp	super setUp.	sockets := OrderedCollection new! !
 
 !RsrTestingProcessModel methodsFor!
-protect: aBlock	^[aBlock on: Error do: [:ex | forkedException := ex copy. ex return]]! !
+fork: aBlocknamed: aString	^super		fork: (self protect: aBlock)		named: aString! !
 
 !RsrTestingProcessModel methodsFor!
 fork: aBlockat: aPrioritynamed: aString	^super		fork: (self protect: aBlock)		at: aPriority		named: aString! !
 
 !RsrTestingProcessModel methodsFor!
-fork: aBlocknamed: aString	^super		fork: (self protect: aBlock)		named: aString! !
+protect: aBlock	^[aBlock on: Error do: [:ex | forkedException := ex copy. ex return]]! !
 
 !RsrTestingProcessModel methodsFor!
 forkedException	^forkedException! !
@@ -276,10 +276,10 @@ shortWait	(Delay forMilliseconds: 100) wait! !
 deny: anObjectidenticalTo: bObject	self assert: anObject ~~ bObject! !
 
 !RsrTestCase methodsFor!
-assumption: aString	"This method serves as a marker for assumptions made in the tests.	Perhaps some of the senders can be removed in the future."! !
+maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
 
 !RsrTestCase methodsFor!
-maximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !
+assumption: aString	"This method serves as a marker for assumptions made in the tests.	Perhaps some of the senders can be removed in the future."! !
 
 !RsrGarbageCollectorTestCase methodsFor!
 testMaximumReclamation	self assert: RsrGarbageCollector maximumReclamation! !

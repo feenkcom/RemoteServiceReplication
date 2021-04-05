@@ -3,68 +3,68 @@ package := Package name: 'RemoteServiceReplication-Test'.
 package paxVersion: 1; basicComment: ''.
 
 package classNames
-	add: #RsrReflectedVariableTestServiceA;
-	add: #RsrValueHolder;
-	add: #RsrLifetimeTest;
-	add: #RsrServerNoInstVars;
-	add: #RsrPromiseTest;
-	add: #RsrCommandCodecTest;
-	add: #RsrSocketSpeciesEquality;
-	add: #RsrRemoteAction;
-	add: #RsrInMemoryMessageSendingTest;
-	add: #RsrKnownClient;
-	add: #RsrInstrumentedService;
-	add: #RsrTestService;
-	add: #RsrConnectionTestCase;
-	add: #RsrTokenExchangeCodecTestCase;
-	add: #RsrConnectionSpecificationTestCase;
-	add: #RsrForwarderTest;
-	add: #RsrSocketServiceTest;
-	add: #RsrReflectedVariableTestServiceB;
-	add: #RsrValueHolderClient;
-	add: #RsrInMemoryLifetimeTest;
 	add: #RsrConcurrentTestService;
-	add: #RsrServiceReferenceService;
-	add: #RsrSnapshotAnalysisTest;
-	add: #RsrCommandDecoderTest;
-	add: #RsrStressTest;
-	add: #RsrRemoteActionClient;
-	add: #RsrSocketMessageSendingTest;
-	add: #RsrInstrumentedClient;
-	add: #RsrClientTestService;
-	add: #RsrInMemoryConnectionTestCase;
-	add: #RsrServiceNoInstVars;
-	add: #RsrNumericSpigotTest;
-	add: #RsrSpeciesEquality;
-	add: #RsrReflectedVariableTestClient;
-	add: #RsrValueHolderServer;
-	add: #RsrSocketLifetimeTest;
-	add: #RsrReturnUnknownService;
-	add: #RsrConcurrentTestClient;
-	add: #RsrClientReferenceService;
-	add: #RsrSocketStreamTestCase;
-	add: #RsrCommandEncoderTest;
-	add: #RsrInMemoryStressTest;
-	add: #RsrRemoteActionServer;
-	add: #RsrServiceTest;
-	add: #RsrInstrumentedServer;
-	add: #RsrServerTestService;
-	add: #RsrSocketConnectionTestCase;
 	add: #RsrClientNoInstVars;
 	add: #RsrThreadSafeNumericSpigotTest;
-	add: #RsrInMemorySpeciesEquality;
-	add: #RsrReflectedVariableTestServer;
-	add: #RsrSignalErrorInAsString;
-	add: #RsrMessageSendingTest;
-	add: #RsrKnownServer;
-	add: #RsrConcurrentTestServer;
-	add: #RsrServerReferenceService;
-	add: #RsrSystemTestCase;
-	add: #RsrProtocolVersionNegotiationCodecTestCase;
-	add: #RsrSocketStressTest;
-	add: #RsrNullChannel;
-	add: #RsrSendUnknownService;
 	add: #RsrInMemoryServiceTest;
+	add: #RsrRemoteActionClient;
+	add: #RsrSignalErrorInAsString;
+	add: #RsrSocketLifetimeTest;
+	add: #RsrInstrumentedClient;
+	add: #RsrServerReferenceService;
+	add: #RsrSocketSpeciesEquality;
+	add: #RsrSocketStreamTestCase;
+	add: #RsrSendUnknownService;
+	add: #RsrConnectionSpecificationTestCase;
+	add: #RsrReflectedVariableTestClient;
+	add: #RsrValueHolder;
+	add: #RsrSocketConnectionTestCase;
+	add: #RsrTokenExchangeCodecTestCase;
+	add: #RsrConcurrentTestClient;
+	add: #RsrServerNoInstVars;
+	add: #RsrPromiseTest;
+	add: #RsrSocketServiceTest;
+	add: #RsrRemoteActionServer;
+	add: #RsrCommandCodecTest;
+	add: #RsrMessageSendingTest;
+	add: #RsrInstrumentedServer;
+	add: #RsrTestService;
+	add: #RsrStressTest;
+	add: #RsrSystemTestCase;
+	add: #RsrKnownClient;
+	add: #RsrSocketMessageSendingTest;
+	add: #RsrForwarderTest;
+	add: #RsrReflectedVariableTestServer;
+	add: #RsrValueHolderClient;
+	add: #RsrLifetimeTest;
+	add: #RsrConcurrentTestServer;
+	add: #RsrServiceReferenceService;
+	add: #RsrProtocolVersionNegotiationCodecTestCase;
+	add: #RsrSpeciesEquality;
+	add: #RsrReturnUnknownService;
+	add: #RsrCommandDecoderTest;
+	add: #RsrInMemoryMessageSendingTest;
+	add: #RsrReflectedVariableTestServiceA;
+	add: #RsrClientTestService;
+	add: #RsrInMemoryStressTest;
+	add: #RsrConnectionTestCase;
+	add: #RsrNullChannel;
+	add: #RsrServiceNoInstVars;
+	add: #RsrServiceTest;
+	add: #RsrNumericSpigotTest;
+	add: #RsrRemoteAction;
+	add: #RsrValueHolderServer;
+	add: #RsrInMemoryLifetimeTest;
+	add: #RsrInstrumentedService;
+	add: #RsrClientReferenceService;
+	add: #RsrSnapshotAnalysisTest;
+	add: #RsrInMemorySpeciesEquality;
+	add: #RsrKnownServer;
+	add: #RsrCommandEncoderTest;
+	add: #RsrReflectedVariableTestServiceB;
+	add: #RsrServerTestService;
+	add: #RsrInMemoryConnectionTestCase;
+	add: #RsrSocketStressTest;
 	yourself.
 
 package methodNames
@@ -842,16 +842,16 @@ setUp	super setUp.	self initializeSocketConnections! !
 initializeConnections	self initializeInMemoryConnections! !
 
 !RsrPromiseTest methodsFor!
-testAsyncFulfill	| promise semaphore expected catchRan first second third |	promise := RsrPromise new.	semaphore := Semaphore new.	expected := Object new.	catchRan := false.	promise		when: [:object | first := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	promise		when: [:object | second := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	self		deny: promise isResolved;		deny: promise isBroken;		deny: promise isFulfilled.	promise fulfill: expected.	self		assert: promise isResolved;		deny: promise isBroken;		assert: promise isFulfilled.	semaphore wait; wait.	self shortWait. "Ensure any catch blocks run if they are going to schedule."	self deny: catchRan.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	promise		when: [:object | third := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	semaphore wait.	self shortWait.	self deny: catchRan.	self		assert: third		identicalTo: expected! !
+testAsyncBreak	| promise semaphore expected whenRan first second third |	promise := RsrPromise new.	semaphore := Semaphore new.	expected := Object new.	whenRan := false.	promise		when: [:object | whenRan := true. semaphore signal]		catch: [:reason | first := reason. semaphore signal].	promise		when: [:object | whenRan := true. semaphore signal]		catch: [:reason | second := reason. semaphore signal].	self		deny: promise isResolved;		deny: promise isBroken;		deny: promise isFulfilled.	promise break: expected.	self		assert: promise isResolved;		assert: promise isBroken;		deny: promise isFulfilled.	semaphore wait; wait.	self shortWait. "Ensure any when blocks run if they are going to schedule."	self deny: whenRan.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	promise		when: [:object | whenRan := true. semaphore signal]		catch: [:reason | third := reason. semaphore signal].	semaphore wait.	self shortWait.	self deny: whenRan.	self		assert: third		identicalTo: expected! !
+
+!RsrPromiseTest methodsFor!
+testSyncFulfill	| promise expected exceptionRaised first second |	promise := RsrPromise new.	expected := Object new.	exceptionRaised := false.	RsrProcessModel		fork: [[first := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]]		named: 'Pending BrokenPromise'.	RsrProcessModel		fork: [[second := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]]		named: 'Pending BrokenPromise'.	promise fulfill: expected.	self shortWait. "Allow results to process."	self deny: exceptionRaised.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	self		assert: promise wait		identicalTo: expected! !
 
 !RsrPromiseTest methodsFor!
 testSyncBreak	| promise expected exceptionRaised first second third |	promise := RsrPromise new.	expected := Object new.	exceptionRaised := false.	RsrProcessModel		fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. first := ex reason. ex return]]		named: 'Pending BrokenPromise'.	RsrProcessModel		fork: [[promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. second := ex reason. ex return]]		named: 'Pending BrokenPromise'.	promise break: expected.	self shortWait. "Allow results to process."	self assert: exceptionRaised.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	self		should: [promise wait]		raise: RsrBrokenPromise.	third := [promise wait]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self		assert: third		identicalTo: expected! !
 
 !RsrPromiseTest methodsFor!
-testAsyncBreak	| promise semaphore expected whenRan first second third |	promise := RsrPromise new.	semaphore := Semaphore new.	expected := Object new.	whenRan := false.	promise		when: [:object | whenRan := true. semaphore signal]		catch: [:reason | first := reason. semaphore signal].	promise		when: [:object | whenRan := true. semaphore signal]		catch: [:reason | second := reason. semaphore signal].	self		deny: promise isResolved;		deny: promise isBroken;		deny: promise isFulfilled.	promise break: expected.	self		assert: promise isResolved;		assert: promise isBroken;		deny: promise isFulfilled.	semaphore wait; wait.	self shortWait. "Ensure any when blocks run if they are going to schedule."	self deny: whenRan.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	promise		when: [:object | whenRan := true. semaphore signal]		catch: [:reason | third := reason. semaphore signal].	semaphore wait.	self shortWait.	self deny: whenRan.	self		assert: third		identicalTo: expected! !
-
-!RsrPromiseTest methodsFor!
-testSyncFulfill	| promise expected exceptionRaised first second |	promise := RsrPromise new.	expected := Object new.	exceptionRaised := false.	RsrProcessModel		fork: [[first := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]]		named: 'Pending BrokenPromise'.	RsrProcessModel		fork: [[second := promise wait] on: RsrBrokenPromise do: [:ex | exceptionRaised := true. ex return]]		named: 'Pending BrokenPromise'.	promise fulfill: expected.	self shortWait. "Allow results to process."	self deny: exceptionRaised.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	self		assert: promise wait		identicalTo: expected! !
+testAsyncFulfill	| promise semaphore expected catchRan first second third |	promise := RsrPromise new.	semaphore := Semaphore new.	expected := Object new.	catchRan := false.	promise		when: [:object | first := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	promise		when: [:object | second := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	self		deny: promise isResolved;		deny: promise isBroken;		deny: promise isFulfilled.	promise fulfill: expected.	self		assert: promise isResolved;		deny: promise isBroken;		assert: promise isFulfilled.	semaphore wait; wait.	self shortWait. "Ensure any catch blocks run if they are going to schedule."	self deny: catchRan.	self		assert: first		identicalTo: expected.	self		assert: second		identicalTo: expected.	promise		when: [:object | third := object. semaphore signal]		catch: [:reason | catchRan := true. semaphore signal].	semaphore wait.	self shortWait.	self deny: catchRan.	self		assert: third		identicalTo: expected! !
 
 !RsrRemoteAction methodsFor!
 sharedVariable: anObject	sharedVariable := anObject! !
@@ -950,13 +950,13 @@ initializeInMemoryConnections	| spec |	spec := RsrInMemoryConnectionSpecifica
 setUp	"Subclasses need to start their connections by calling	#initializeInMemoryConnections or #initializeSocketConnections.	#tearDown will close connections."	super setUp! !
 
 !RsrSystemTestCase methodsFor!
-tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
+expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !
 
 !RsrSystemTestCase methodsFor!
 expectCatch: aPromise	| semaphore wasFulfilled result whenValue |	semaphore := Semaphore new.	wasFulfilled := false.	aPromise		when: [:value | whenValue := value. wasFulfilled := true. semaphore signal]		catch: [:reason | result := reason. semaphore signal].	semaphore wait.	self deny: wasFulfilled.	^result! !
 
 !RsrSystemTestCase methodsFor!
-expectWhen: aPromise	| semaphore wasBroken result |	semaphore := Semaphore new.	wasBroken := false.	aPromise		when: [:value | result := value. semaphore signal]		catch: [:r | wasBroken := true. semaphore signal].	semaphore wait.	self deny: wasBroken.	^result! !
+tearDown	connectionA ifNotNil: [:conn | conn close].	connectionB ifNotNil: [:conn | conn close].	connectionA := connectionB := nil.	super tearDown! !
 
 !RsrInstrumentedClient methodsFor!
 postUpdateCount: anInteger	postUpdateCount := anInteger! !
@@ -981,30 +981,6 @@ service: anObject	service := anObject! !
 
 !RsrServiceReferenceService methodsFor!
 service	^ service! !
-
-!RsrInstrumentedService methodsFor!
-preUpdate	self preUpdateCount: self preUpdateCount + 1! !
-
-!RsrInstrumentedService methodsFor!
-postUpdate	self postUpdateCount: self postUpdateCount + 1! !
-
-!RsrConcurrentTestClient methodsFor!
-delayedCounter	^remoteSelf delayedCounter wait! !
-
-!RsrConcurrentTestClient methodsFor!
-counterWithIncrement	^remoteSelf counterWithIncrement wait! !
-
-!RsrConcurrentTestClient methodsFor!
-stashProcess	remoteSelf stashProcess wait! !
-
-!RsrSignalErrorInAsString methodsFor!
-asString	^Error signal! !
-
-!RsrSocketMessageSendingTest methodsFor!
-setUp	super setUp.	self initializeSocketConnections! !
-
-!RsrClientNoInstVars methodsFor!
-unimplementedRemoteSend	"Send a selector which is not implemented remotely resuling in a DNU."	^remoteSelf doNotImplementThisSelectorOrYouWillBreakATest! !
 
 !RsrCommandDecoderTest methodsFor!
 testServiceDecodeIdentity	"Ensure that decoding an object multiple times results in	a single object getting created."	| firstService secondService |	firstService := self decodeService: self serviceNoInstVarsEncoding.	secondService := self decodeService: self serviceNoInstVarsEncoding.	self		assert: firstService		identicalTo: secondService! !
@@ -1038,6 +1014,30 @@ testSendMessage	| service encoding command |	service := RsrServerNoInstVars n
 
 !RsrCommandDecoderTest methodsFor!
 decodeService: anObjectBytes	^(self decoder decodeServiceSnapshot: anObjectBytes readStream) reifyIn: self connection! !
+
+!RsrInstrumentedService methodsFor!
+preUpdate	self preUpdateCount: self preUpdateCount + 1! !
+
+!RsrInstrumentedService methodsFor!
+postUpdate	self postUpdateCount: self postUpdateCount + 1! !
+
+!RsrConcurrentTestClient methodsFor!
+delayedCounter	^remoteSelf delayedCounter wait! !
+
+!RsrConcurrentTestClient methodsFor!
+counterWithIncrement	^remoteSelf counterWithIncrement wait! !
+
+!RsrConcurrentTestClient methodsFor!
+stashProcess	remoteSelf stashProcess wait! !
+
+!RsrClientNoInstVars methodsFor!
+unimplementedRemoteSend	"Send a selector which is not implemented remotely resuling in a DNU."	^remoteSelf doNotImplementThisSelectorOrYouWillBreakATest! !
+
+!RsrSignalErrorInAsString methodsFor!
+asString	^Error signal! !
+
+!RsrSocketMessageSendingTest methodsFor!
+setUp	super setUp.	self initializeSocketConnections! !
 
 !RsrInMemoryConnectionTestCase methodsFor!
 setUp	super setUp.	self initializeInMemoryConnections! !
@@ -1120,47 +1120,20 @@ testSymbol	self		verify: #'';		verify: #symbol! !
 !RsrConnectionTestCase methodsFor!
 testWaitUntilClose	| semaphore marker |	semaphore := Semaphore new.	marker := false.	RsrProcessModel		fork:			[semaphore signal.			[connectionB waitUntilClose.			marker := true]				ensure: [semaphore signal]]		named: 'Pending Connection Closure'.	semaphore wait.	self deny: marker.	connectionA close.	semaphore wait.	self assert: marker! !
 
-!RsrSnapshotAnalysisTest methodsFor!
-testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client analysis expected |	client := RsrRemoteAction clientClass new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self		assert: analysis snapshots size		equals: 1.	self assert: client isMirrored! !
+!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
+testSupportedVersions	| supportedVersions encoding result |	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).	encoding :=		#[0 0 0 0 0 0 0 0], "Type"		#[0 0 0 0 0 0 0 4], "4 versions supported"		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 1],		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 7].	result := self stream: [:stream | self codec encodeSupportedVersions: supportedVersions onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: supportedVersions! !
 
-!RsrSnapshotAnalysisTest methodsFor!
-tearDown	connection close.	connection := nil.	super tearDown! !
+!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
+testChosenVersion	| chosenVersion encoding result |	chosenVersion := RsrChosenVersion version: 7.	encoding :=		#[0 0 0 0 0 0 0 1], "Type"		#[0 0 0 0 0 0 0 7]. "Version"	result := self stream: [:stream | self codec encodeChosenVersion: chosenVersion onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: chosenVersion! !
 
-!RsrSnapshotAnalysisTest methodsFor!
-testSetCycle	| set analysis |	set := Set new.	set add: set.	analysis := self analyze: set.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 1.	set := Set new.	set add: (Array with: set).	analysis := self analyze: set.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2! !
+!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
+stream: aBlock	^ByteArray streamContents: [:stream | aBlock value: stream]! !
 
-!RsrSnapshotAnalysisTest methodsFor!
-analyze: anObject	| analysis |	analysis := RsrSnapshotAnalysis		roots: (Array with: anObject)		connection: connection.	analysis perform.	^analysis! !
+!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
+testNoVersionOverlap	| noVersionOverlap encoding result |	noVersionOverlap := RsrNoVersionOverlap new.	encoding := #[0 0 0 0 0 0 0 2]. "Type"	result := self stream: [:stream | self codec encodeNoVersionOverlap: noVersionOverlap onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: noVersionOverlap! !
 
-!RsrSnapshotAnalysisTest methodsFor!
-testArrayCycle	| array analysis |	array := Array new: 1.	array at: 1 put: array.	analysis := self analyze: array.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 1.	array at: 1 put: { array }.	analysis := self analyze: array.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2.! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testNewServiceInArray	"Ensure a new service in a collection is properly tagged"	| service analysis expected |	service := RsrServerNoInstVars new.	analysis := self analyze: (Array with: service).	expected := OrderedCollection with: service.	self		assert: analysis snapshots size		equals: 1.	self assert: service isMirrored! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testMultiPathsToSameService	"Tests issue 76, Unnecessary duplicate snapshots being sent."	| childService parentService orderedCollection analysis |	childService := RsrRemoteAction clientClass new.	parentService := RsrRemoteAction clientClass sharedVariable:		                 childService.	orderedCollection := OrderedCollection		                     with: childService		                     with: parentService.	analysis := self analyze: orderedCollection.	self assert: analysis snapshots size equals: 2.	self		assert: parentService isMirrored;		assert: childService isMirrored! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testServiceNoInstVars	| client analysis expected snapshot |	client := RsrClientNoInstVars new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self assert: client isMirrored.	self		assert: analysis snapshots size		equals: 1.	snapshot := analysis snapshots first.	self		assert: snapshot slots size		equals: 0.	self assert: snapshot shouldCreateServer.	self		assert: snapshot templateClass		equals: client class templateClass! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testOrderedCollectionCycle	| oc analysis |	oc := OrderedCollection new.	oc add: oc.	analysis := self analyze: oc.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 1.	oc := OrderedCollection with: (Array with: oc).	analysis := self analyze: oc.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 3! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testServiceWithCycle	| rootClient referencedClient analysis |	rootClient := RsrRemoteAction new.	referencedClient := RsrRemoteAction sharedVariable: rootClient.	rootClient sharedVariable: referencedClient.	analysis := self analyze: rootClient.	self		assert: analysis snapshots size equals: 2;		assert: analysis analyzedObjects size equals: 2! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testDictionaryCycle	| dictionary analysis |	dictionary := Dictionary new.	dictionary at: 1 put: dictionary.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2.	dictionary removeKey: 1.	dictionary at: dictionary put: 1.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size		equals: 2.	self		assert: key isMirrored;		assert: value isMirrored! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis |	referencedService := RsrRemoteAction clientClass new.	client := RsrRemoteAction clientClass sharedVariable: referencedService.	analysis := self analyze: client.	self		assert: analysis snapshots size		equals: 2.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
-
-!RsrSnapshotAnalysisTest methodsFor!
-setUp	super setUp.	connection := RsrConnection		channel: RsrNullChannel new		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connection open! !
+!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
+codec	^RsrProtocolVersionNegotiationCodec new! !
 
 !RsrCommandEncoderTest methodsFor!
 testNaN	| encoding |	"Signaling NaN is not tested.	Negative NaN is not tested."	encoding :=		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 15],		#[255 248 0 0 0 0 0 0].	self		verifyImmediate: RsrDoubleReference nan		encoding: encoding.! !
@@ -1192,20 +1165,47 @@ register: aService	self connection _ensureRegistered: aService! !
 !RsrCommandEncoderTest methodsFor!
 testSendMessage	| service analysis command result expectedEncoding |	service := RsrClientNoInstVars new.	self register: service.	analysis := RsrSnapshotAnalysis		roots: (Array with: service)		connection: self connection.	analysis perform.	command := RsrSendMessage		transaction: 1		receiverReference: (RsrReference from: service)		selectorReference: (RsrSymbolReference from: #return42)		argumentReferences: #().	command snapshots: analysis snapshots.	result := self encoder encodeSendMessage: command.	expectedEncoding :=		#[0 0 0 0 0 0 0 1], "SendMessage Command"		#[0 0 0 0 0 0 0 1], "Transaction ID"		#[0 0 0 0 0 0 0 1], "One service is part of this message"		self serviceNoInstVarsEncoding,		#[0 0 0 0 0 0 0 1], "Receiver OID"		#[0 0 0 0 0 0 0 0], "Selector Reference"		#[0 0 0 0 0 0 0 1], "Object Type for Symbol"		#[0 0 0 0 0 0 0 8], "Length of UTF-8 bytes"		#[114 101 116 117 114 110 52 50], "#return42"		#[0 0 0 0 0 0 0 0]. "Argument Count"	self		assert: result		equals: expectedEncoding! !
 
-!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
-testSupportedVersions	| supportedVersions encoding result |	supportedVersions := RsrSupportedVersions versions: #(0 1 2 7).	encoding :=		#[0 0 0 0 0 0 0 0], "Type"		#[0 0 0 0 0 0 0 4], "4 versions supported"		#[0 0 0 0 0 0 0 0],		#[0 0 0 0 0 0 0 1],		#[0 0 0 0 0 0 0 2],		#[0 0 0 0 0 0 0 7].	result := self stream: [:stream | self codec encodeSupportedVersions: supportedVersions onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: supportedVersions! !
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceAllDataObjects	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| client analysis expected |	client := RsrRemoteAction clientClass new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self		assert: analysis snapshots size		equals: 1.	self assert: client isMirrored! !
 
-!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
-testChosenVersion	| chosenVersion encoding result |	chosenVersion := RsrChosenVersion version: 7.	encoding :=		#[0 0 0 0 0 0 0 1], "Type"		#[0 0 0 0 0 0 0 7]. "Version"	result := self stream: [:stream | self codec encodeChosenVersion: chosenVersion onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: chosenVersion! !
+!RsrSnapshotAnalysisTest methodsFor!
+tearDown	connection close.	connection := nil.	super tearDown! !
 
-!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
-stream: aBlock	^ByteArray streamContents: [:stream | aBlock value: stream]! !
+!RsrSnapshotAnalysisTest methodsFor!
+testSetCycle	| set analysis |	set := Set new.	set add: set.	analysis := self analyze: set.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 1.	set := Set new.	set add: (Array with: set).	analysis := self analyze: set.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2! !
 
-!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
-testNoVersionOverlap	| noVersionOverlap encoding result |	noVersionOverlap := RsrNoVersionOverlap new.	encoding := #[0 0 0 0 0 0 0 2]. "Type"	result := self stream: [:stream | self codec encodeNoVersionOverlap: noVersionOverlap onto: stream].	self		assert: result		equals: encoding.	result := self codec decode: encoding readStream.	self		assert: result		equals: noVersionOverlap! !
+!RsrSnapshotAnalysisTest methodsFor!
+analyze: anObject	| analysis |	analysis := RsrSnapshotAnalysis		roots: (Array with: anObject)		connection: connection.	analysis perform.	^analysis! !
 
-!RsrProtocolVersionNegotiationCodecTestCase methodsFor!
-codec	^RsrProtocolVersionNegotiationCodec new! !
+!RsrSnapshotAnalysisTest methodsFor!
+testArrayCycle	| array analysis |	array := Array new: 1.	array at: 1 put: array.	analysis := self analyze: array.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 1.	array at: 1 put: { array }.	analysis := self analyze: array.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2.! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testMultiPathsToSameService	"Tests issue 76, Unnecessary duplicate snapshots being sent."	| childService parentService orderedCollection analysis |	childService := RsrRemoteAction clientClass new.	parentService := RsrRemoteAction clientClass sharedVariable:		                 childService.	orderedCollection := OrderedCollection		                     with: childService		                     with: parentService.	analysis := self analyze: orderedCollection.	self assert: analysis snapshots size equals: 2.	self		assert: parentService isMirrored;		assert: childService isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testNewServiceInArray	"Ensure a new service in a collection is properly tagged"	| service analysis expected |	service := RsrServerNoInstVars new.	analysis := self analyze: (Array with: service).	expected := OrderedCollection with: service.	self		assert: analysis snapshots size		equals: 1.	self assert: service isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceNoInstVars	| client analysis expected snapshot |	client := RsrClientNoInstVars new.	analysis := self analyze: client.	expected := OrderedCollection with: client.	self assert: client isMirrored.	self		assert: analysis snapshots size		equals: 1.	snapshot := analysis snapshots first.	self		assert: snapshot slots size		equals: 0.	self assert: snapshot shouldCreateServer.	self		assert: snapshot templateClass		equals: client class templateClass! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testOrderedCollectionCycle	| oc analysis |	oc := OrderedCollection new.	oc add: oc.	analysis := self analyze: oc.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 1.	oc := OrderedCollection with: (Array with: oc).	analysis := self analyze: oc.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 3! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceWithCycle	| rootClient referencedClient analysis |	rootClient := RsrRemoteAction new.	referencedClient := RsrRemoteAction sharedVariable: rootClient.	rootClient sharedVariable: referencedClient.	analysis := self analyze: rootClient.	self		assert: analysis snapshots size equals: 2;		assert: analysis analyzedObjects size equals: 2! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testDictionaryCycle	| dictionary analysis |	dictionary := Dictionary new.	dictionary at: 1 put: dictionary.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2.	dictionary removeKey: 1.	dictionary at: dictionary put: 1.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size equals: 0;		assert: analysis analyzedObjects size equals: 2! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testNewServicesInDictionary	"Ensure a new service in a collection is properly tagged"	| key value dictionary analysis |	key := RsrServerNoInstVars new.	value := RsrServerNoInstVars new.	dictionary := Dictionary new		at: key put: value;		yourself.	analysis := self analyze: dictionary.	self		assert: analysis snapshots size		equals: 2.	self		assert: key isMirrored;		assert: value isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+testServiceReferencingAnotherService	"While this code is structurally similar to #testClientNoInstVars, it ensures	that Data Objects are actually encoded in-line."	| referencedService client analysis |	referencedService := RsrRemoteAction clientClass new.	client := RsrRemoteAction clientClass sharedVariable: referencedService.	analysis := self analyze: client.	self		assert: analysis snapshots size		equals: 2.	self		assert: client isMirrored;		assert: referencedService isMirrored! !
+
+!RsrSnapshotAnalysisTest methodsFor!
+setUp	super setUp.	connection := RsrConnection		channel: RsrNullChannel new		transactionSpigot: RsrThreadSafeNumericSpigot naturals		oidSpigot: RsrThreadSafeNumericSpigot naturals.	connection open! !
 
 !RsrSocketStressTest methodsFor!
 initializeConnections	self initializeSocketConnections! !
@@ -1271,10 +1271,10 @@ testRemoteProcessTerminationDuringMessageSend	| client server reason |	client
 testRemoteErrorWithTag	| client server tag messageText reason |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	tag := nil.	messageText := 'messageText'.	server action: [Error new tag: tag; messageText: messageText; signal].	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self assert: reason isRemoteException.	self		assert: reason tag		equals: 'messageText'.	self		assert: reason messageText		equals: 'messageText'.	self		assert: reason stack isString;		assert: reason stack size > 0.	tag := 42.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self		assert: reason tag		equals: '42'.	tag := RsrSignalErrorInAsString new.	reason := [client value]		on: RsrBrokenPromise		do: [:ex | ex return: ex reason].	self		assert: reason tag		equals: 'Unable to pack #tag containing an instance of RsrSignalErrorInAsString'! !
 
 !RsrMessageSendingTest methodsFor!
-testDebugHandlerException	"Ensure that an exception that occurs in the debug handler	is reported back as the reason for Promise breaking."	| marker client server reason |	marker := #testMarker.	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal].	server debugHandler: [:exception :messageSend :resolver | Error signal].	reason := self expectCatch: client asyncValue.	self		assert: reason exceptionClassName		equals: #Error.	server action: [RsrNonresumableError signal].	reason := self expectCatch: client asyncValue.	self		assert: reason exceptionClassName		equals: #Error.! !
+testReturnAlsoUpdatesLocalService	"Ensure that when the remote peer service returns a value,	that it is also sent to update the local service."	| client server value response |	client := RsrReflectedVariableTestClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	value := 42.	self		deny: client varA		equals: value.	self		deny: client varB		equals: value.	response := client setVarsToAndReturn: value.	self		assert: response		equals: value.	self		assert: server varA		equals: value.	self		assert: server varB		equals: value.	self		assert: client varA		equals: value.	self		assert: client varB		equals: value! !
 
 !RsrMessageSendingTest methodsFor!
-testReturnAlsoUpdatesLocalService	"Ensure that when the remote peer service returns a value,	that it is also sent to update the local service."	| client server value response |	client := RsrReflectedVariableTestClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	value := 42.	self		deny: client varA		equals: value.	self		deny: client varB		equals: value.	response := client setVarsToAndReturn: value.	self		assert: response		equals: value.	self		assert: server varA		equals: value.	self		assert: server varB		equals: value.	self		assert: client varA		equals: value.	self		assert: client varB		equals: value! !
+testDebugHandlerException	"Ensure that an exception that occurs in the debug handler	is reported back as the reason for Promise breaking."	| marker client server reason |	marker := #testMarker.	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrResumableError signal].	server debugHandler: [:exception :messageSend :resolver | Error signal].	reason := self expectCatch: client asyncValue.	self		assert: reason exceptionClassName		equals: #Error.	server action: [RsrNonresumableError signal].	reason := self expectCatch: client asyncValue.	self		assert: reason exceptionClassName		equals: #Error.! !
 
 !RsrMessageSendingTest methodsFor!
 testUnimplementedRemoteSend	"Ensure a remote DNU is reported back to the sender."	| marker client reason |	marker := #testMarker.	client := RsrClientNoInstVars new		registerWith: connectionA;		synchronize.	reason := self expectCatch: client unimplementedRemoteSend.	self		assert: reason class		equals: RsrRemoteExceptionServer.	self		assert: reason exceptionClassName		equals: #MessageNotUnderstood! !
@@ -1295,10 +1295,10 @@ testPrePostUpdateError	| client server reason |	client := RsrRemoteActionClie
 testAsyncReturnService	| client server service |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrValueHolderServer new].	service := self expectWhen: client asyncValue.	self		assert: service class		equals: RsrValueHolderClient! !
 
 !RsrMessageSendingTest methodsFor!
-testReturnNewServiceInArray	| client server array returnedService |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [Array with: RsrValueHolderServer new].	array := client value.	returnedService := array first.	self		assert: returnedService class		equals: RsrValueHolderClient! !
+testRemoteProcessTerminationDuringDebugHandler	| client server reason |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server		action: [Error signal];		debugHandler: [:ex :message :resolver | self terminateCurrentProcess].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
 
 !RsrMessageSendingTest methodsFor!
-testRemoteProcessTerminationDuringDebugHandler	| client server reason |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server		action: [Error signal];		debugHandler: [:ex :message :resolver | self terminateCurrentProcess].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
+testReturnNewServiceInArray	| client server array returnedService |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [Array with: RsrValueHolderServer new].	array := client value.	returnedService := array first.	self		assert: returnedService class		equals: RsrValueHolderClient! !
 
 !RsrMessageSendingTest methodsFor!
 testRemoteProcessTerminationDuringPrePostUpdate	| client server reason |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server		preUpdateHandler: [self terminateCurrentProcess];		postUpdateHandler: [];		action: [].	reason := self expectCatch: client asyncValue.	self		assert: reason		equals: 'Message send terminated without a result'! !
@@ -1331,10 +1331,10 @@ debugHandler: aBlock	debugHandler := aBlock! !
 action	^action! !
 
 !RsrRemoteActionServer methodsFor!
-preUpdateHandler	^preUpdateHandler ifNil: [[]]! !
+evaluateAction	^self action value! !
 
 !RsrRemoteActionServer methodsFor!
-evaluateAction	^self action value! !
+preUpdateHandler	^preUpdateHandler ifNil: [[]]! !
 
 !RsrRemoteActionServer methodsFor!
 postUpdateHandler: aBlock	postUpdateHandler := aBlock! !
@@ -1367,22 +1367,7 @@ remoteSelf	^remoteSelf! !
 sharedVariable	^sharedVariable! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
-testListenThenLaterAccept	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost 		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	acceptor ensureListening.	RsrProcessModel		fork: [semaphore signal. [connectionB := initiator connect] ensure: [semaphore signal]]		named: 'Pending InitiateConnection'.	semaphore wait.	connectionA := acceptor waitForConnection.	semaphore wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
-
-!RsrConnectionSpecificationTestCase methodsFor!
-port	^47652! !
-
-!RsrConnectionSpecificationTestCase methodsFor!
 testEstablishConnection	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	RsrProcessModel		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
-
-!RsrConnectionSpecificationTestCase methodsFor!
-testInternalConnectionSpecificationConnectReturnsConnection	"Ensure that sending #connect to an InternalConnectionSpecification	results in returning one of the created Connections."	| spec connection |	spec := RsrInMemoryConnectionSpecification new.	connection := spec connect.	self assert: connection isOpen.	connection close.	spec := RsrInternalSocketConnectionSpecification new.	connection := spec connect.	self assert: connection isOpen.	connection close! !
-
-!RsrConnectionSpecificationTestCase methodsFor!
-testCancelWaitForConnection	| acceptor |	acceptor := RsrAcceptConnection port: self port.	RsrProcessModel		fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection]		named: 'Canceling AcceptConnection'.	self		should: [acceptor waitForConnection]		raise: RsrWaitForConnectionCancelled! !
-
-!RsrConnectionSpecificationTestCase methodsFor!
-alternativeLocalhost	^'127.0.1.1'! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
 testFailedAcceptOnAlternativeLocalhost	| acceptor initiator semaphore |	acceptor := RsrAcceptConnection		host: self alternativeLocalhost		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	RsrProcessModel		fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]]		named: 'Pending WaitForConnectionCancelled'.	[semaphore wait.	self		should: [initiator connect]		raise: RsrSocketError]			ensure: [acceptor cancelWaitForConnection]! !
@@ -1391,7 +1376,25 @@ testFailedAcceptOnAlternativeLocalhost	| acceptor initiator semaphore |	accep
 localhost	^'127.0.0.1'! !
 
 !RsrConnectionSpecificationTestCase methodsFor!
+alternativeLocalhost	^'127.0.1.1'! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+port	^47652! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testInternalConnectionSpecificationConnectReturnsConnection	"Ensure that sending #connect to an InternalConnectionSpecification	results in returning one of the created Connections."	| spec connection |	spec := RsrInMemoryConnectionSpecification new.	connection := spec connect.	self assert: connection isOpen.	connection close.	spec := RsrInternalSocketConnectionSpecification new.	connection := spec connect.	self assert: connection isOpen.	connection close! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
 testAcceptOnLocalhost	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost 		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	RsrProcessModel		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testCancelWaitForConnection	| acceptor |	acceptor := RsrAcceptConnection port: self port.	RsrProcessModel		fork: [(Delay forSeconds: 1) wait. acceptor cancelWaitForConnection]		named: 'Canceling AcceptConnection'.	self		should: [acceptor waitForConnection]		raise: RsrWaitForConnectionCancelled! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testBindToWildcardPort	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost		port: RsrAcceptConnection wildcardPort.	acceptor ensureListening.	self assert: acceptor listeningPort > 0.	initiator := RsrInitiateConnection		host: self localhost		port: acceptor listeningPort.	semaphore := Semaphore new.	RsrProcessModel		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.	semaphore wait; wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
+
+!RsrConnectionSpecificationTestCase methodsFor!
+testListenThenLaterAccept	| acceptor initiator semaphore connectionA connectionB |	acceptor := RsrAcceptConnection		host: self localhost 		port: self port.	initiator := RsrInitiateConnection		host: self localhost		port: self port.	semaphore := Semaphore new.	acceptor ensureListening.	RsrProcessModel		fork: [semaphore signal. [connectionB := initiator connect] ensure: [semaphore signal]]		named: 'Pending InitiateConnection'.	semaphore wait.	connectionA := acceptor waitForConnection.	semaphore wait.	self		assert: connectionA isOpen;		assert: connectionB isOpen.	connectionA close.	connectionB close! !
 
 !RsrReflectedVariableTestServiceB methodsFor!
 varB	^varB! !
@@ -1421,10 +1424,10 @@ mirror: aService	| client |	client := RsrClientNoInstVars new		registerWith:
 testVariableReflection	| localService remoteService |	localService := RsrTestService clientClass new		sharedVariable: #shared;		privateVariable: #private;		yourself.	self mirror: localService.	remoteService := connectionB serviceAt: localService _id.	self		assert: localService sharedVariable		identicalTo: remoteService sharedVariable.	self		assert: localService privateVariable		identicalTo: #private.	self		assert: remoteService privateVariable		identicalTo: nil! !
 
 !RsrServiceTest methodsFor!
-testEnsureServersAreCachedAndReused	| client service1 service2 |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	service1 := connectionB serviceAt: client _id.	self mirror: client.	service2 := connectionB serviceAt: client _id.	self		assert: service1		identicalTo: service2! !
+testMessagesDispactchedConcurrentlyForMultipleServices	"Ensure messages are dispatched concurrently"	| client1 server1 client2 server2 semaphore expected1 expected2 promise1 promise2 |	client1 := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	client2 := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server1 := connectionB serviceAt: client1 _id.	server2 := connectionB serviceAt: client2 _id.	semaphore := Semaphore new.	expected1 := #expected1.	expected2 := #expected2.	server1 action: [semaphore wait. expected1].	server2 action: [semaphore signal. expected2].	promise1 := client1 asyncValue.	promise2 := client2 asyncValue.	self shortWait.	self		assert: promise1 isResolved;		assert: promise2 isResolved.	self		assert: promise1 value		equals: expected1.	self		assert: promise2 value		equals: expected2! !
 
 !RsrServiceTest methodsFor!
-testMessagesDispactchedConcurrentlyForMultipleServices	"Ensure messages are dispatched concurrently"	| client1 server1 client2 server2 semaphore expected1 expected2 promise1 promise2 |	client1 := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	client2 := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server1 := connectionB serviceAt: client1 _id.	server2 := connectionB serviceAt: client2 _id.	semaphore := Semaphore new.	expected1 := #expected1.	expected2 := #expected2.	server1 action: [semaphore wait. expected1].	server2 action: [semaphore signal. expected2].	promise1 := client1 asyncValue.	promise2 := client2 asyncValue.	self shortWait.	self		assert: promise1 isResolved;		assert: promise2 isResolved.	self		assert: promise1 value		equals: expected1.	self		assert: promise2 value		equals: expected2! !
+testEnsureServersAreCachedAndReused	| client service1 service2 |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	service1 := connectionB serviceAt: client _id.	self mirror: client.	service2 := connectionB serviceAt: client _id.	self		assert: service1		identicalTo: service2! !
 
 !RsrServiceTest methodsFor!
 testAnalyzeServiceRegisteredWithDifferentConnection	| instance analysis |	instance := RsrRemoteAction clientClass new.	analysis := RsrSnapshotAnalysis		roots: (Array with: instance)		connection: connectionA.	analysis perform.	self assert: instance isMirrored.	analysis := RsrSnapshotAnalysis		roots: (Array with: instance)		connection: connectionB.	self		should: [analysis perform]		raise: RsrAlreadyRegistered! !
@@ -1433,7 +1436,7 @@ testAnalyzeServiceRegisteredWithDifferentConnection	| instance analysis |	ins
 testSendClientWithoutAssociatedServer	| client server reason |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [:x | x].	reason := self expectCatch: (client asyncValue: RsrKnownClient new).	self		assert: reason class		equals: RsrRemoteExceptionServer.	self		assert: reason exceptionClassName		equals: #RsrUnknownClass! !
 
 !RsrServiceTest methodsFor!
-testRegisterWith	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	instance registerWith: connectionA.	self assert: instance isMirrored.	self		should: [instance registerWith: connectionB]		raise: RsrAlreadyRegistered! !
+testMessageDispatchedConcurrentlyToSingleService	"Ensure all messages are sent concurrently (including those sent to a single service)"	| client server counter promise1 promise2 |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	counter := 0.	server action: [counter := counter + 1. self shortWait. counter].	promise1 := client asyncValue.	promise2 := client asyncValue.	self		assert: promise1 wait		equals: 2. "The #shortWait will cause the second counter increment before the counter is returned."	self		assert: promise2 wait		equals: 2! !
 
 !RsrServiceTest methodsFor!
 testIsMirrored	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	self mirror: instance.	self assert: instance isMirrored! !
@@ -1451,7 +1454,7 @@ testInitialization	| instance |	instance := RsrRemoteAction clientClass new.
 testPrePostUpdate	| client server | 	client := RsrInstrumentedClient new		registerWith: connectionA;		yourself.	self		assert: client preUpdateCount		equals: 0.	self		assert: client postUpdateCount		equals: 0.	client return: nil.	server := connectionB serviceAt: client _id.	self		assert: client preUpdateCount		equals: 1.	self		assert: client postUpdateCount		equals: 1.	self		assert: server preUpdateCount		equals: 1.	self		assert: server postUpdateCount		equals: 1.	client return: nil.	self		assert: client preUpdateCount		equals: 2.	self		assert: client postUpdateCount		equals: 2.	self		assert: server preUpdateCount		equals: 2.	self		assert: server postUpdateCount		equals: 2.! !
 
 !RsrServiceTest methodsFor!
-testMessageDispatchedConcurrentlyToSingleService	"Ensure all messages are sent concurrently (including those sent to a single service)"	| client server counter promise1 promise2 |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	counter := 0.	server action: [counter := counter + 1. self shortWait. counter].	promise1 := client asyncValue.	promise2 := client asyncValue.	self		assert: promise1 wait		equals: 2. "The #shortWait will cause the second counter increment before the counter is returned."	self		assert: promise2 wait		equals: 2! !
+testRegisterWith	| instance |	instance := RsrRemoteAction clientClass new.	self deny: instance isMirrored.	instance registerWith: connectionA.	self assert: instance isMirrored.	self		should: [instance registerWith: connectionB]		raise: RsrAlreadyRegistered! !
 
 !RsrServiceTest methodsFor!
 testReturnServerWithoutAssociatedClient	| client server reason |	client := RsrRemoteActionClient new		registerWith: connectionA;		synchronize.	server := connectionB serviceAt: client _id.	server action: [RsrKnownServer new].	reason := self expectCatch: client asyncValue.	self		assert: reason class		equals: RsrDecodingRaisedException! !

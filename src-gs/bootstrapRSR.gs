@@ -2332,7 +2332,7 @@ doit
 
 Reference instances are created as a by-product of freezing the state of a Service. This typically happens when the framework creates a SendMessage or DeliverResponse command.
 
-The Reference represents and is able to resolve the object is it represents. In some cases, the value is immediate. In the case of ServiceReference, the stored Service Identifier is resolved in the context of a connection.
+The Reference represents and is able to resolve the object it represents. In some cases, the value is immediate. In the case of ServiceReference, the stored Service Identifier is resolved in the context of a connection.
 
 Resolving must occur in the context of a Connection. Though this is true, the minimal information necessary for a Reference to resolve is the Registry.
 
@@ -7461,6 +7461,13 @@ wildcardAddress
 	^'0.0.0.0'
 %
 
+category: 'accessing'
+classmethod: RsrAcceptConnection
+wildcardPort
+
+	^0
+%
+
 !		Instance methods for 'RsrAcceptConnection'
 
 category: 'actions'
@@ -7497,6 +7504,17 @@ method: RsrAcceptConnection
 isWaitingForConnection
 
 	^isWaitingForConnection
+%
+
+category: 'accessing'
+method: RsrAcceptConnection
+listeningPort
+	"Return the port the underlying socket is listening on.
+	This is useful when using the wildcard port to dynamically
+	assign a port number."
+
+	isListening ifFalse: [^nil].
+	^listener port
 %
 
 category: 'actions'
@@ -12341,6 +12359,31 @@ testAcceptOnLocalhost
 	initiator := RsrInitiateConnection
 		host: self localhost
 		port: self port.
+	semaphore := Semaphore new.
+	RsrProcessModel
+		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
+		fork: [[connectionB := initiator connect] ensure: [semaphore signal]] named: 'Pending InitiateConnection'.
+	semaphore wait; wait.
+	self
+		assert: connectionA isOpen;
+		assert: connectionB isOpen.
+	connectionA close.
+	connectionB close
+%
+
+category: 'running'
+method: RsrConnectionSpecificationTestCase
+testBindToWildcardPort
+
+	| acceptor initiator semaphore connectionA connectionB |
+	acceptor := RsrAcceptConnection
+		host: self localhost
+		port: RsrAcceptConnection wildcardPort.
+	acceptor ensureListening.
+	self assert: acceptor listeningPort > 0.
+	initiator := RsrInitiateConnection
+		host: self localhost
+		port: acceptor listeningPort.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
