@@ -46,13 +46,14 @@ RsrAcceptConnection >> ensureListening [
 	isListening := true
 ]
 
-{ #category : 'initializing' }
+{ #category : 'other' }
 RsrAcceptConnection >> initialize [
 
 	super initialize.
 	listener := self socketClass new.
 	isWaitingForConnection := false.
-	isListening := false
+	isListening := false.
+	token := RsrToken newRandom
 ]
 
 { #category : 'testing' }
@@ -87,7 +88,7 @@ RsrAcceptConnection >> waitForConnection [
 	stream := RsrSocketStream on: socket.
 	steps := Array
 		with: RsrProtocolVersionNegotiationServer new
-		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).
+		with: (RsrTokenReceiver token: self token).
 	handshake := RsrHandshake
 		steps: steps
 		stream: stream.

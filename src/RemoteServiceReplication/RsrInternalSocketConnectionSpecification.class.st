@@ -8,9 +8,14 @@ Class {
 RsrInternalSocketConnectionSpecification >> connect [
 	"Establish an internal Connection pair via socket."
 
-	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection] named: 'Pending AcceptConnection'.
+	| acceptor initiator |
+	acceptor := RsrAcceptConnection port: self defaultPort.
+	initiator := RsrInitiateConnection host: '127.0.0.1' port: self defaultPort token: acceptor token.
+	RsrProcessModel
+		fork: [connectionA := acceptor waitForConnection]
+		named: 'Pending AcceptConnection'.
 	self minimalWait. "Allow other process to schedule."
-	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.
+	connectionB := initiator connect.
 	self minimalWait. "Allow other process to schedule."
 	self assertOpen.
 	connectionA specification: self.

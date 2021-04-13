@@ -31,7 +31,8 @@ RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -55,7 +56,8 @@ RsrConnectionSpecificationTestCase >> testBindToWildcardPort [
 	self assert: acceptor listeningPort > 0.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: acceptor listeningPort.
+		port: acceptor listeningPort
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -88,7 +90,8 @@ RsrConnectionSpecificationTestCase >> testEstablishConnection [
 	acceptor := RsrAcceptConnection port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -110,7 +113,8 @@ RsrConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]]
@@ -147,7 +151,8 @@ RsrConnectionSpecificationTestCase >> testListenThenLaterAccept [
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	acceptor ensureListening.
 	RsrProcessModel

@@ -8,7 +8,8 @@ Class {
 	#superclass : 'RsrConnectionSpecification',
 	#instVars : [
 		'host',
-		'port'
+		'port',
+		'token'
 	],
 	#category : 'RemoteServiceReplication'
 }
@@ -20,6 +21,18 @@ port: port [
 	^self new
 		host: hostnameOrAddress;
 		port: port;
+		yourself
+]
+
+{ #category : 'instance creation' }
+RsrSocketConnectionSpecification class >> host: hostnameOrAddress
+port: port
+token: aToken [
+
+	^self new
+		host: hostnameOrAddress;
+		port: port;
+		token: aToken;
 		yourself
 ]
 
@@ -56,4 +69,18 @@ RsrSocketConnectionSpecification >> socketClass [
 	"Return the class that should be used for creating Socket instances."
 
 	^RsrSocket
+]
+
+{ #category : 'accessing' }
+RsrSocketConnectionSpecification >> token [
+	"Returns the token used during handshake."
+
+	^token
+]
+
+{ #category : 'accessing' }
+RsrSocketConnectionSpecification >> token: aToken [
+	"Stores the token used during handshake."
+
+	token := aToken
 ]

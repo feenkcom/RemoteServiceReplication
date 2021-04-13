@@ -26,7 +26,7 @@ RsrInitiateConnection >> connect [
 	stream := RsrSocketStream on: socket.
 	steps := Array
 		with: RsrProtocolVersionNegotiationClient new
-		with: (RsrTokenSender token: (RsrToken bytes: (ByteArray new: 16))).
+		with: (RsrTokenSender token: self token).
 	handshake := RsrHandshake
 		steps: steps
 		stream: stream.
