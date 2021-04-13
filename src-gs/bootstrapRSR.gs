@@ -1743,7 +1743,7 @@ removeallclassmethods RsrInternalSocketConnectionSpecification
 doit
 (RsrConnectionSpecification
 	subclass: 'RsrSocketConnectionSpecification'
-	instVarNames: #( host port )
+	instVarNames: #( host port token )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -7417,9 +7417,14 @@ method: RsrInternalSocketConnectionSpecification
 connect
 	"Establish an internal Connection pair via socket."
 
-	RsrProcessModel fork: [connectionA := (RsrAcceptConnection port: self defaultPort) waitForConnection] named: 'Pending AcceptConnection'.
+	| acceptor initiator |
+	acceptor := RsrAcceptConnection port: self defaultPort.
+	initiator := RsrInitiateConnection host: '127.0.0.1' port: self defaultPort token: acceptor token.
+	RsrProcessModel
+		fork: [connectionA := acceptor waitForConnection]
+		named: 'Pending AcceptConnection'.
 	self minimalWait. "Allow other process to schedule."
-	connectionB := (RsrInitiateConnection host: '127.0.0.1' port: self defaultPort) connect.
+	connectionB := initiator connect.
 	self minimalWait. "Allow other process to schedule."
 	self assertOpen.
 	connectionA specification: self.
@@ -7447,6 +7452,19 @@ port: port
 	^self new
 		host: hostnameOrAddress;
 		port: port;
+		yourself
+%
+
+category: 'instance creation'
+classmethod: RsrSocketConnectionSpecification
+host: hostnameOrAddress
+port: port
+token: aToken
+
+	^self new
+		host: hostnameOrAddress;
+		port: port;
+		token: aToken;
 		yourself
 %
 
@@ -7490,6 +7508,22 @@ socketClass
 	"Return the class that should be used for creating Socket instances."
 
 	^RsrSocket
+%
+
+category: 'accessing'
+method: RsrSocketConnectionSpecification
+token
+	"Returns the token used during handshake."
+
+	^token
+%
+
+category: 'accessing'
+method: RsrSocketConnectionSpecification
+token: aToken
+	"Stores the token used during handshake."
+
+	token := aToken
 %
 
 ! Class implementation for 'RsrAcceptConnection'
@@ -7540,14 +7574,15 @@ ensureListening
 	isListening := true
 %
 
-category: 'initializing'
+category: 'other'
 method: RsrAcceptConnection
 initialize
 
 	super initialize.
 	listener := self socketClass new.
 	isWaitingForConnection := false.
-	isListening := false
+	isListening := false.
+	token := RsrToken newRandom
 %
 
 category: 'testing'
@@ -7585,7 +7620,7 @@ waitForConnection
 	stream := RsrSocketStream on: socket.
 	steps := Array
 		with: RsrProtocolVersionNegotiationServer new
-		with: (RsrTokenReceiver token: (RsrToken bytes: (ByteArray new: 16))).
+		with: (RsrTokenReceiver token: self token).
 	handshake := RsrHandshake
 		steps: steps
 		stream: stream.
@@ -7617,7 +7652,7 @@ connect
 	stream := RsrSocketStream on: socket.
 	steps := Array
 		with: RsrProtocolVersionNegotiationClient new
-		with: (RsrTokenSender token: (RsrToken bytes: (ByteArray new: 16))).
+		with: (RsrTokenSender token: self token).
 	handshake := RsrHandshake
 		steps: steps
 		stream: stream.
@@ -11049,6 +11084,21 @@ bytes: aByteArray
 		yourself
 %
 
+category: 'instance creation'
+classmethod: RsrToken
+newRandom
+	"Create a new Token with random bytes."
+
+	| random bytes |
+	random := HostRandom new.
+	bytes := ByteArray new: 16.
+	bytes unsigned32At: 1 put: random integer.
+	bytes unsigned32At: 5 put: random integer.
+	bytes unsigned32At: 9 put: random integer.
+	bytes unsigned32At: 13 put: random integer.
+	^self bytes: bytes
+%
+
 !		Instance methods for 'RsrToken'
 
 category: 'comparing'
@@ -12415,7 +12465,8 @@ testAcceptOnLocalhost
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -12440,7 +12491,8 @@ testBindToWildcardPort
 	self assert: acceptor listeningPort > 0.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: acceptor listeningPort.
+		port: acceptor listeningPort
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -12475,7 +12527,8 @@ testEstablishConnection
 	acceptor := RsrAcceptConnection port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -12498,7 +12551,8 @@ testFailedAcceptOnAlternativeLocalhost
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]]
@@ -12537,7 +12591,8 @@ testListenThenLaterAccept
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port.
+		port: self port
+		token: acceptor token.
 	semaphore := Semaphore new.
 	acceptor ensureListening.
 	RsrProcessModel
