@@ -1743,7 +1743,7 @@ removeallclassmethods RsrInternalSocketConnectionSpecification
 doit
 (RsrConnectionSpecification
 	subclass: 'RsrSocketConnectionSpecification'
-	instVarNames: #( host port token )
+	instVarNames: #( host port )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1780,9 +1780,27 @@ removeallmethods RsrAcceptConnection
 removeallclassmethods RsrAcceptConnection
 
 doit
+(RsrAcceptConnection
+	subclass: 'RsrGciAcceptConnection'
+	instVarNames: #( token )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrGciAcceptConnection
+removeallclassmethods RsrGciAcceptConnection
+
+doit
 (RsrSocketConnectionSpecification
 	subclass: 'RsrInitiateConnection'
-	instVarNames: #(  )
+	instVarNames: #( token )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1805,6 +1823,24 @@ true.
 
 removeallmethods RsrInitiateConnection
 removeallclassmethods RsrInitiateConnection
+
+doit
+(RsrInitiateConnection
+	subclass: 'RsrGciInitiateConnection'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: Globals
+	options: #()
+)
+		category: 'RemoteServiceReplication';
+		immediateInvariant.
+true.
+%
+
+removeallmethods RsrGciInitiateConnection
+removeallclassmethods RsrGciInitiateConnection
 
 doit
 (RsrObject
@@ -3235,7 +3271,7 @@ doit
 	inDictionary: Globals
 	options: #()
 )
-		category: 'RemoteServiceReplication';
+		category: 'RemoteServiceReplication-Base';
 		immediateInvariant.
 true.
 %
@@ -3253,7 +3289,7 @@ doit
 	inDictionary: Globals
 	options: #()
 )
-		category: 'RemoteServiceReplication';
+		category: 'RemoteServiceReplication-Base';
 		immediateInvariant.
 true.
 %
@@ -7419,7 +7455,7 @@ connect
 
 	| acceptor initiator |
 	acceptor := RsrAcceptConnection port: self defaultPort.
-	initiator := RsrInitiateConnection host: '127.0.0.1' port: self defaultPort token: acceptor token.
+	initiator := RsrInitiateConnection host: '127.0.0.1' port: self defaultPort.
 	RsrProcessModel
 		fork: [connectionA := acceptor waitForConnection]
 		named: 'Pending AcceptConnection'.
@@ -7452,19 +7488,6 @@ port: port
 	^self new
 		host: hostnameOrAddress;
 		port: port;
-		yourself
-%
-
-category: 'instance creation'
-classmethod: RsrSocketConnectionSpecification
-host: hostnameOrAddress
-port: port
-token: aToken
-
-	^self new
-		host: hostnameOrAddress;
-		port: port;
-		token: aToken;
 		yourself
 %
 
@@ -7508,22 +7531,6 @@ socketClass
 	"Return the class that should be used for creating Socket instances."
 
 	^RsrSocket
-%
-
-category: 'accessing'
-method: RsrSocketConnectionSpecification
-token
-	"Returns the token used during handshake."
-
-	^token
-%
-
-category: 'accessing'
-method: RsrSocketConnectionSpecification
-token: aToken
-	"Stores the token used during handshake."
-
-	token := aToken
 %
 
 ! Class implementation for 'RsrAcceptConnection'
@@ -7574,6 +7581,15 @@ ensureListening
 	isListening := true
 %
 
+category: 'accessing'
+method: RsrAcceptConnection
+handshakeSteps
+	"Returns a sequence of steps needed to perform a successful handshake."
+
+	^Array
+		with: RsrProtocolVersionNegotiationServer new
+%
+
 category: 'other'
 method: RsrAcceptConnection
 initialize
@@ -7581,8 +7597,7 @@ initialize
 	super initialize.
 	listener := self socketClass new.
 	isWaitingForConnection := false.
-	isListening := false.
-	token := RsrToken newRandom
+	isListening := false
 %
 
 category: 'testing'
@@ -7607,7 +7622,7 @@ category: 'actions'
 method: RsrAcceptConnection
 waitForConnection
 
-	| socket stream steps handshake channel connection |
+	| socket stream handshake channel connection |
 	self ensureListening.
 	[isWaitingForConnection := true.
 	socket := [listener accept]
@@ -7618,11 +7633,8 @@ waitForConnection
 				listener := nil.
 				isWaitingForConnection := false].
 	stream := RsrSocketStream on: socket.
-	steps := Array
-		with: RsrProtocolVersionNegotiationServer new
-		with: (RsrTokenReceiver token: self token).
 	handshake := RsrHandshake
-		steps: steps
+		steps: self handshakeSteps
 		stream: stream.
 	handshake perform.
 	channel := RsrBinaryStreamChannel
@@ -7636,6 +7648,59 @@ waitForConnection
 	^connection open
 %
 
+! Class implementation for 'RsrGciAcceptConnection'
+
+!		Class methods for 'RsrGciAcceptConnection'
+
+category: 'instance creation'
+classmethod: RsrGciAcceptConnection
+host: hostnameOrAddress
+port: port
+token: aToken
+
+	^self new
+		host: hostnameOrAddress;
+		port: port;
+		token: aToken;
+		yourself
+%
+
+!		Instance methods for 'RsrGciAcceptConnection'
+
+category: 'accessing'
+method: RsrGciAcceptConnection
+handshakeSteps
+	"Returns a sequence of steps needed to perform a successful handshake."
+
+	^Array
+		with: RsrProtocolVersionNegotiationServer new
+		with: (RsrTokenReceiver token: self token)
+%
+
+category: 'initializing'
+method: RsrGciAcceptConnection
+initialize
+
+	super initialize.
+	token := RsrToken newRandom
+%
+
+category: 'accessing'
+method: RsrGciAcceptConnection
+token
+	"Returns the token used during handshake."
+
+	^token
+%
+
+category: 'accessing'
+method: RsrGciAcceptConnection
+token: aToken
+	"Stores the token used during handshake."
+
+	token := aToken
+%
+
 ! Class implementation for 'RsrInitiateConnection'
 
 !		Instance methods for 'RsrInitiateConnection'
@@ -7644,17 +7709,14 @@ category: 'connecting'
 method: RsrInitiateConnection
 connect
 
-	| socket stream steps handshake channel connection |
+	| socket stream handshake channel connection |
 	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.
 	stream := RsrSocketStream on: socket.
-	steps := Array
-		with: RsrProtocolVersionNegotiationClient new
-		with: (RsrTokenSender token: self token).
 	handshake := RsrHandshake
-		steps: steps
+		steps: self handshakeSteps
 		stream: stream.
 	handshake perform.
 	channel := RsrBinaryStreamChannel
@@ -7666,6 +7728,60 @@ connect
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	^connection open
+%
+
+category: 'accessing'
+method: RsrInitiateConnection
+handshakeSteps
+	"Returns a sequence of steps needed to perform a successful handshake."
+
+	^Array
+		with: RsrProtocolVersionNegotiationClient new
+%
+
+! Class implementation for 'RsrGciInitiateConnection'
+
+!		Class methods for 'RsrGciInitiateConnection'
+
+category: 'instance creation'
+classmethod: RsrGciInitiateConnection
+host: hostnameOrAddress
+port: port
+token: aToken
+
+	^self new
+		host: hostnameOrAddress;
+		port: port;
+		token: aToken;
+		yourself
+%
+
+!		Instance methods for 'RsrGciInitiateConnection'
+
+category: 'accessing'
+method: RsrGciInitiateConnection
+handshakeSteps
+	"Returns a sequence of steps needed to perform a successful handshake."
+
+	^Array
+		with: RsrProtocolVersionNegotiationClient new
+		with: (RsrTokenSender token: self token)
+%
+
+category: 'accessing'
+method: RsrGciInitiateConnection
+token
+	"Returns the token used during handshake."
+
+	^token
+%
+
+category: 'accessing'
+method: RsrGciInitiateConnection
+token: aToken
+	"Stores the token used during handshake."
+
+	token := aToken
 %
 
 ! Class implementation for 'RsrEnvironment'
@@ -11084,21 +11200,6 @@ bytes: aByteArray
 		yourself
 %
 
-category: 'instance creation'
-classmethod: RsrToken
-newRandom
-	"Create a new Token with random bytes."
-
-	| random bytes |
-	random := HostRandom new.
-	bytes := ByteArray new: 16.
-	bytes unsigned32At: 1 put: random integer.
-	bytes unsigned32At: 5 put: random integer.
-	bytes unsigned32At: 9 put: random integer.
-	bytes unsigned32At: 13 put: random integer.
-	^self bytes: bytes
-%
-
 !		Instance methods for 'RsrToken'
 
 category: 'comparing'
@@ -12465,8 +12566,7 @@ testAcceptOnLocalhost
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port
-		token: acceptor token.
+		port: self port.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -12491,8 +12591,7 @@ testBindToWildcardPort
 	self assert: acceptor listeningPort > 0.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: acceptor listeningPort
-		token: acceptor token.
+		port: acceptor listeningPort.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -12527,8 +12626,7 @@ testEstablishConnection
 	acceptor := RsrAcceptConnection port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port
-		token: acceptor token.
+		port: self port.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
@@ -12551,8 +12649,7 @@ testFailedAcceptOnAlternativeLocalhost
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port
-		token: acceptor token.
+		port: self port.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]]
@@ -12591,8 +12688,7 @@ testListenThenLaterAccept
 		port: self port.
 	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port
-		token: acceptor token.
+		port: self port.
 	semaphore := Semaphore new.
 	acceptor ensureListening.
 	RsrProcessModel
@@ -15800,6 +15896,25 @@ referenceClassFor: anObject
 	^self referenceMapping
 		at: anObject class
 		ifAbsent: [RsrUnsupportedObject signal: anObject]
+%
+
+! Class extensions for 'RsrToken'
+
+!		Class methods for 'RsrToken'
+
+category: '*remoteservicereplication-gemstone'
+classmethod: RsrToken
+newRandom
+	"Create a new Token with random bytes."
+
+	| random bytes |
+	random := HostRandom new.
+	bytes := ByteArray new: 16.
+	bytes unsigned32At: 1 put: random integer.
+	bytes unsigned32At: 5 put: random integer.
+	bytes unsigned32At: 9 put: random integer.
+	bytes unsigned32At: 13 put: random integer.
+	^self bytes: bytes
 %
 
 ! Class Initialization
