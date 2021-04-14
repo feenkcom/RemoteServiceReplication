@@ -9,7 +9,7 @@ RsrInternalSocketConnectionSpecification >> connect [
 	"Establish an internal Connection pair via socket."
 
 	| acceptor initiator |
-	acceptor := RsrGciAcceptConnection port: self defaultPort.
+	acceptor := RsrAcceptConnection port: self defaultPort.
 	initiator := RsrGciInitiateConnection host: '127.0.0.1' port: self defaultPort token: acceptor token.
 	RsrProcessModel
 		fork: [connectionA := acceptor waitForConnection]

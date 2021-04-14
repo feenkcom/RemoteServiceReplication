@@ -1,7 +1,7 @@
 Class {
 	#name : 'RsrTokenExchangeMessage',
 	#superclass : 'RsrObject',
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication-Base'
 }
 
 { #category : 'comparing' }

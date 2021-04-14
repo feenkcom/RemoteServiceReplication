@@ -26,13 +26,12 @@ RsrConnectionSpecificationTestCase >> port [
 RsrConnectionSpecificationTestCase >> testAcceptOnLocalhost [
 
 	| acceptor initiator semaphore connectionA connectionB |
-	acceptor := RsrGciAcceptConnection
+	acceptor := RsrAcceptConnection
 		host: self localhost 
 		port: self port.
-	initiator := RsrGciInitiateConnection
+	initiator := RsrInitiateConnection
 		host: self localhost
-		port: self port
-		token: acceptor token.
+		port: self port.
 	semaphore := Semaphore new.
 	RsrProcessModel
 		fork: [[connectionA := acceptor waitForConnection] ensure: [semaphore signal]] named: 'Pending AcceptConnection';
