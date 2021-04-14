@@ -46,14 +46,21 @@ RsrAcceptConnection >> ensureListening [
 	isListening := true
 ]
 
+{ #category : 'accessing' }
+RsrAcceptConnection >> handshakeSteps [
+	"Returns a sequence of steps needed to perform a successful handshake."
+
+	^Array
+		with: RsrProtocolVersionNegotiationServer new
+]
+
 { #category : 'other' }
 RsrAcceptConnection >> initialize [
 
 	super initialize.
 	listener := self socketClass new.
 	isWaitingForConnection := false.
-	isListening := false.
-	token := RsrToken newRandom
+	isListening := false
 ]
 
 { #category : 'testing' }
@@ -75,7 +82,7 @@ RsrAcceptConnection >> listeningPort [
 { #category : 'actions' }
 RsrAcceptConnection >> waitForConnection [
 
-	| socket stream steps handshake channel connection |
+	| socket stream handshake channel connection |
 	self ensureListening.
 	[isWaitingForConnection := true.
 	socket := [listener accept]
@@ -86,11 +93,8 @@ RsrAcceptConnection >> waitForConnection [
 				listener := nil.
 				isWaitingForConnection := false].
 	stream := RsrSocketStream on: socket.
-	steps := Array
-		with: RsrProtocolVersionNegotiationServer new
-		with: (RsrTokenReceiver token: self token).
 	handshake := RsrHandshake
-		steps: steps
+		steps: self handshakeSteps
 		stream: stream.
 	handshake perform.
 	channel := RsrBinaryStreamChannel

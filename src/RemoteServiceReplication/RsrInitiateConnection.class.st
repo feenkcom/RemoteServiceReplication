@@ -12,23 +12,23 @@ initiator := RsrInitiateConnection
 Class {
 	#name : 'RsrInitiateConnection',
 	#superclass : 'RsrSocketConnectionSpecification',
+	#instVars : [
+		'token'
+	],
 	#category : 'RemoteServiceReplication'
 }
 
 { #category : 'connecting' }
 RsrInitiateConnection >> connect [
 
-	| socket stream steps handshake channel connection |
+	| socket stream handshake channel connection |
 	socket := self socketClass new.
 	socket
 		connectToHost: self host
 		port: self port.
 	stream := RsrSocketStream on: socket.
-	steps := Array
-		with: RsrProtocolVersionNegotiationClient new
-		with: (RsrTokenSender token: self token).
 	handshake := RsrHandshake
-		steps: steps
+		steps: self handshakeSteps
 		stream: stream.
 	handshake perform.
 	channel := RsrBinaryStreamChannel
@@ -40,4 +40,12 @@ RsrInitiateConnection >> connect [
 		transactionSpigot: RsrThreadSafeNumericSpigot naturals negated
 		oidSpigot: RsrThreadSafeNumericSpigot naturals negated.
 	^connection open
+]
+
+{ #category : 'accessing' }
+RsrInitiateConnection >> handshakeSteps [
+	"Returns a sequence of steps needed to perform a successful handshake."
+
+	^Array
+		with: RsrProtocolVersionNegotiationClient new
 ]
