@@ -44,7 +44,7 @@ RsrConnection class >> new [
 	Instead use ConnectionSpecification.
 	See SystemTestCase>>#setUp for an example."
 
-	self shouldNotImplement: #new
+	self shouldNotImplement
 ]
 
 { #category : 'instance creation' }
