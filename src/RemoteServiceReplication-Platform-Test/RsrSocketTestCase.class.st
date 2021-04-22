@@ -42,7 +42,7 @@ RsrSocketTestCase >> createPair: aBlock [
 { #category : 'cleanup' }
 RsrSocketTestCase >> deferClose: aSocket [
 
-	sockets add: aSocket.
+	sockets nextPut: aSocket.
 	^aSocket
 ]
 
@@ -56,13 +56,14 @@ RsrSocketTestCase >> newSocket [
 RsrSocketTestCase >> setUp [
 
 	super setUp.
-	sockets := OrderedCollection new
+	sockets := SharedQueue new.
 ]
 
 { #category : 'running' }
 RsrSocketTestCase >> tearDown [
 
-	sockets do: [:each | each close].
+	[sockets isEmpty]
+		whileFalse: [sockets next close].
 	super tearDown
 ]
 

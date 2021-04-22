@@ -20,7 +20,8 @@ RsrSocket class >> _nativeSocket: aGsSignalingSocket [
 RsrSocket >> _nativeSocket: aGsSignalingSocket [
 	"Private - Configure w/ a platform socket"
 
-	nativeSocket := aGsSignalingSocket
+	nativeSocket := aGsSignalingSocket.
+	nativeSocket interrupting: true
 ]
 
 { #category : 'accepting connections' }
@@ -70,7 +71,8 @@ port: port [
 RsrSocket >> initialize [
 
 	super initialize.
-	nativeSocket := GsSignalingSocket new
+	nativeSocket := GsSignalingSocket new.
+	nativeSocket interrupting: true
 ]
 
 { #category : 'testing' }
