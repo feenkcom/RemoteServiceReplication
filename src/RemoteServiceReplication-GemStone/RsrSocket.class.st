@@ -60,6 +60,7 @@ port: port [
 	<hostname> - The name or ip address of a machine which should accept a connection.
 	<port> - An integer representing a valid TCP port."
 
+	nativeSocket interrupting: true.
 	[nativeSocket
 		connectTo: port
 		on: hostname]
@@ -72,7 +73,6 @@ RsrSocket >> initialize [
 
 	super initialize.
 	nativeSocket := GsSignalingSocket new.
-	nativeSocket interrupting: true
 ]
 
 { #category : 'testing' }
