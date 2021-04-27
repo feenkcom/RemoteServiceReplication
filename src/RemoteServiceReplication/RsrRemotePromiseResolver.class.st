@@ -90,12 +90,12 @@ RsrRemotePromiseResolver >> resolution: result [
 			[self
 				sendResult: result
 				closureRoots: (Array with: result), extraRoots]
-				on: self sendMessage unhandledExceptionClass
+				on: Error
 				do:
 					[:ex | | answer |
 					answer := Array
 						with: #break
-						with: (RsrRemoteException from: ex exception).
+						with: (RsrRemoteException from: ex).
 					self
 						sendResult: answer
 						closureRoots: answer.
