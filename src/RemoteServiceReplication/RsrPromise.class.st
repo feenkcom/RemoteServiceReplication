@@ -64,6 +64,15 @@ RsrPromise >> break: aReason [
 	resolvedMutex signal
 ]
 
+{ #category : 'signalling' }
+RsrPromise >> exception [
+	"Answer the reason the promise is broken"
+
+	^ self isBroken
+		ifTrue: [ value ]
+		ifFalse: [ self error: 'Promise not broken' ]
+]
+
 { #category : 'resolving' }
 RsrPromise >> fulfill: anObject [
 	"Fulfill the receiver and notify any observers."
@@ -139,6 +148,7 @@ RsrPromise >> wait [
 	"Wait for a the receiver to be Resolved.
 	If fulfilled - return the fulfillment value.
 	If broken - raise an RsrBrokenPromise exception w/ the reason."
+	<remoteDebuggerSignal>
 
 	self waitForResolution.
 	^self isBroken
