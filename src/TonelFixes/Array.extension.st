@@ -1,6 +1,6 @@
-Extension { #name : 'Array' }
+Extension { #name : #Array }
 
-{ #category : '*TonelFixes' }
+{ #category : #'*TonelFixes' }
 Array >> asTonelValue [
 	^ self collect: [ :each | each asTonelValue ]
 ]

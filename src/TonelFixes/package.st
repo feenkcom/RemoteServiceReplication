@@ -1,1 +1,1 @@
-Package { #name : 'TonelFixes' }
+Package { #name : #TonelFixes }
