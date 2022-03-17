@@ -28,6 +28,14 @@ outStream: outStream [
 		yourself
 ]
 
+{ #category : 'accessing' }
+RsrBinaryStreamChannel >> addCommunicationProcessesTo: aSet [
+	"Add all processes used for Communication to the provided set."
+
+	sink addCommunicationProcessesTo: aSet.
+	source addCommunicationProcessesTo: aSet
+]
+
 { #category : 'lifecycle' }
 RsrBinaryStreamChannel >> close [
 	"Shutdown the Command sink and source."

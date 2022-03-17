@@ -42,6 +42,13 @@ outQueue: outQueue [
 		yourself
 ]
 
+{ #category : 'accessing' }
+RsrInMemoryChannel >> addCommunicationProcessesTo: aSet [
+	"Add all processes used for Communication to the provided set."
+	
+	aSet add: drainProcess 
+]
+
 { #category : 'lifecycle' }
 RsrInMemoryChannel >> close [
 

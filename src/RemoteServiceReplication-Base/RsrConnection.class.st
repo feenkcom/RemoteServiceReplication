@@ -112,6 +112,19 @@ RsrConnection >> specification: aConnectionSpecification [
 	specification := aConnectionSpecification
 ]
 
+{ #category : 'public-accessing' }
+RsrConnection >> vitalProcesses [
+	"Return the set of processes required in order for this RSR connection to function.
+	This may be a subset of the processes used by RSR.
+	For instance, in GemStone, this need not return the ephemeron mourning
+	process as this isn't critical to the basic functioning of RSR."
+
+	| processes |
+	processes := IdentitySet new.
+	channel addCommunicationProcessesTo: processes.
+	^processes
+]
+
 { #category : 'public-waiting' }
 RsrConnection >> waitUntilClose [
 

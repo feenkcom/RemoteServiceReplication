@@ -16,6 +16,13 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrCommandSink >> addCommunicationProcessesTo: aSet [
+	"Add all processes used for Communication to the provided set."
+	
+	aSet add: process
+]
+
+{ #category : 'accessing' }
 RsrCommandSink >> encoder [
 
 	^RsrCommandEncoder new
