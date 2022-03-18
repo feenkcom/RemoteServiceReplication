@@ -178,6 +178,16 @@ RsrService >> preUpdate [
 	^self
 ]
 
+{ #category : 'public-events' }
+RsrService >> registeredWithConnection [
+	"Sent to the service when it is first registered with a connection.
+	This message is guaranteed to be sent before the state of the receiver
+	is serialized the first time, so it is safe for the receiver to modify its
+	shared state here."
+
+	^ self
+]
+
 { #category : 'public-registration' }
 RsrService >> registerWith: aConnection [
 
