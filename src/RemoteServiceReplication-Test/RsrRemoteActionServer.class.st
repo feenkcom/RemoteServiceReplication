@@ -5,7 +5,8 @@ Class {
 		'action',
 		'debugHandler',
 		'preUpdateHandler',
-		'postUpdateHandler'
+		'postUpdateHandler',
+		'postRegistrationHandler'
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
@@ -55,6 +56,24 @@ RsrRemoteActionServer >> evaluateAction [
 RsrRemoteActionServer >> evaluateAction: anObject [
 
 	^self action value: anObject
+]
+
+{ #category : 'processing' }
+RsrRemoteActionServer >> postRegistration [
+
+	self postRegistrationHandler value
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> postRegistrationHandler [
+
+	^postRegistrationHandler ifNil: [[]]
+]
+
+{ #category : 'accessing' }
+RsrRemoteActionServer >> postRegistrationHandler: aBlock [
+
+	postRegistrationHandler := aBlock
 ]
 
 { #category : 'processing' }

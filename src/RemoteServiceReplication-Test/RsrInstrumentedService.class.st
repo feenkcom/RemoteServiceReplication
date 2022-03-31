@@ -32,6 +32,12 @@ RsrInstrumentedService class >> templateClassName [
 ]
 
 { #category : 'events' }
+RsrInstrumentedService >> postRegistration [
+
+	self postRegistrationCount: self postRegistrationCount + 1
+]
+
+{ #category : 'events' }
 RsrInstrumentedService >> postUpdate [
 
 	self postUpdateCount: self postUpdateCount + 1

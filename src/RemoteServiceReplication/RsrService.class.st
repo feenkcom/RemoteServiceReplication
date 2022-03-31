@@ -163,12 +163,14 @@ RsrService >> isServer [
 
 { #category : 'public-events' }
 RsrService >> postRegistration [
-	"Sent to the service after it is first registered with a connection.
-	This message is guaranteed to be sent before the state of the receiver
-	is serialized the first time, so it is safe for the receiver to modify its
-	shared state here."
+	"This message is sent immediately after the Service
+	is registered with a Connection for the first time.
 
-	^ self
+	The framework views both Client and Server peers as
+	the same object. When a peer is created by the
+	framework, it will not receive #postRegistration."
+
+	^self
 ]
 
 { #category : 'public-events' }
