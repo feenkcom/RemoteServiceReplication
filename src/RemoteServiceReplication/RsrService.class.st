@@ -162,6 +162,16 @@ RsrService >> isServer [
 ]
 
 { #category : 'public-events' }
+RsrService >> postRegistration [
+	"Sent to the service after it is first registered with a connection.
+	This message is guaranteed to be sent before the state of the receiver
+	is serialized the first time, so it is safe for the receiver to modify its
+	shared state here."
+
+	^ self
+]
+
+{ #category : 'public-events' }
 RsrService >> postUpdate [
 	"#postUpdate is called just after the Service's shared variables are updated by the framework.
 	This method can be overridden to ensure internal consistency."
@@ -176,16 +186,6 @@ RsrService >> preUpdate [
 	Note: If this method raises an exception, RSR will not signal #postUpdate."
 
 	^self
-]
-
-{ #category : 'public-events' }
-RsrService >> registeredWithConnection [
-	"Sent to the service when it is first registered with a connection.
-	This message is guaranteed to be sent before the state of the receiver
-	is serialized the first time, so it is safe for the receiver to modify its
-	shared state here."
-
-	^ self
 ]
 
 { #category : 'public-registration' }

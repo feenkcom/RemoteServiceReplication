@@ -5,7 +5,7 @@ RsrConnection >> _ensureRegistered: aService [
 	aService _connection == nil
 		ifTrue: [ 
 			self _register: aService as: oidSpigot next.
-			aService registeredWithConnection.
+			aService postRegistration.
 			^ self ].
 	aService _connection == self
 		ifFalse: [ ^ RsrAlreadyRegistered signalService: aService intendedConnection: self ]
