@@ -171,7 +171,7 @@ RsrSnapshotAnalysisTest >> testServiceAllDataObjects [
 { #category : 'running' }
 RsrSnapshotAnalysisTest >> testServiceNoInstVars [
 
-	| client analysis expected snapshot |
+	| client analysis expected snapshot snapshotTemplate |
 	client := RsrClientNoInstVars new.
 	analysis := self analyze: client.
 	expected := OrderedCollection with: client.
@@ -184,9 +184,10 @@ RsrSnapshotAnalysisTest >> testServiceNoInstVars [
 		assert: snapshot slots size
 		equals: 0.
 	self assert: snapshot shouldCreateServer.
+	snapshotTemplate := connection templateResolver templateNamed: snapshot templateName.
 	self
-		assert: snapshot templateClass
-		equals: client class templateClass
+		assert: snapshotTemplate
+		equals: client _template
 ]
 
 { #category : 'running' }

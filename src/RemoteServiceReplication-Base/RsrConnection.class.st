@@ -18,7 +18,8 @@ Class {
 		'registry',
 		'pendingMessages',
 		'specification',
-		'announcer'
+		'announcer',
+		'templateResolver'
 	],
 	#category : 'RemoteServiceReplication-Base'
 }
@@ -123,6 +124,21 @@ RsrConnection >> vitalProcesses [
 	processes := IdentitySet new.
 	channel addCommunicationProcessesTo: processes.
 	^processes
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> templateResolver [
+	"Returns the TemplateResolver used to lookup a template by name or Service."
+
+	^templateResolver
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> templateResolver: aTemplateResolver [
+	"Sets the TemplateResolver, used to lookup a template by name or Service,
+	to a custom version."
+
+	templateResolver := aTemplateResolver
 ]
 
 { #category : 'public-waiting' }

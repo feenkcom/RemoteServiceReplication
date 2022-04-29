@@ -152,7 +152,8 @@ RsrConnection >> initialize [
 	pendingMessages := RsrThreadSafeDictionary new.
 	registry := RsrThreadSafeDictionary new.
 	log := RsrLog new.
-	announcer := Announcer new
+	announcer := Announcer new.
+	templateResolver := RsrTemplateResolver new
 ]
 
 { #category : '*remoteservicereplication' }

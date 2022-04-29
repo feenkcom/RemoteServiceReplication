@@ -106,6 +106,13 @@ RsrService >> _synchronize [
 	^self
 ]
 
+{ #category : 'private-accessing' }
+RsrService >> _template [
+	"Returns the template associated with this Service. General users should use #template."
+
+	^_connection templateResolver templateFor: self
+]
+
 { #category : 'public-events' }
 RsrService >> configureProcess [
 	"#configureProcess is called each time the framework calls into the framework to evaluate generic user code.
@@ -208,4 +215,12 @@ RsrService >> synchronize [
 
 	remoteSelf == nil
 		ifFalse: [remoteSelf _synchronize wait]
+]
+
+{ #category : 'public-accessing' }
+RsrService >> template [
+	"Returns the template associated with this Service.
+	This method should NOT be redefined."
+
+	^self _template
 ]

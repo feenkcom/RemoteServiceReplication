@@ -47,9 +47,10 @@ do: aBlock [
 { #category : 'variable utilites' }
 RsrServiceSnapshot class >> reflectedVariablesFor: aService [
 
-	| currentClass variables |
+	| currentClass variables template |
 	variables := OrderedCollection new.
-	currentClass := aService class templateClass.
+	template := aService _template.
+	currentClass := template.
 	[currentClass == RsrService]
 		whileFalse:
 			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
@@ -69,10 +70,11 @@ do: aBlock [
 { #category : 'accessing' }
 RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 
-	| instance |
+	| instance template |
+	template := aConnection templateResolver templateNamed: self templateName.
 	instance := self shouldCreateServer
-		ifTrue: [self templateClass serverClass basicNew]
-		ifFalse: [self templateClass clientClass basicNew].
+		ifTrue: [template serverClass basicNew]
+		ifFalse: [template clientClass basicNew].
 	aConnection
 		_register: instance
 		as: self sid.
@@ -214,8 +216,8 @@ RsrServiceSnapshot >> targetServiceType [
 		ifFalse: [#server]
 ]
 
-{ #category : 'accessing' }
-RsrServiceSnapshot >> templateClass [
+{ #category : 'other' }
+RsrServiceSnapshot >> templateName [
 
-	^self targetClass templateClass
+	^self targetClassName
 ]
