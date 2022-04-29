@@ -12,8 +12,10 @@ RsrTemplateResolver >> templateFor: aService [
 ]
 
 { #category : 'resolving' }
-RsrTemplateResolver >> templateNamed: aTemplateName [
+RsrTemplateResolver >> templateNamed: aTemplateName
+ifAbsent: aBlock [
 	"Resolve a template with the provided name."
 
-	^(RsrClassResolver classNamed: aTemplateName) templateClass
+	self flag: 'This should not send #templateClass. This can go away once ServiceSnapshot wire encoding is updated.'.
+	^(RsrClassResolver classNamed: aTemplateName ifAbsent: [^aBlock value]) templateClass
 ]
