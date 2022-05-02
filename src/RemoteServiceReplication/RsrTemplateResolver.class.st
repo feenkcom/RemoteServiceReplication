@@ -8,7 +8,11 @@ Class {
 RsrTemplateResolver >> templateFor: aService [
 	"Resolve the template associated with the provided Service."
 
-	^aService class templateClass
+	| template |
+	template := aService class.
+	[template isTemplateClass]
+		whileFalse: [template := template superclass].
+	^template
 ]
 
 { #category : 'resolving' }

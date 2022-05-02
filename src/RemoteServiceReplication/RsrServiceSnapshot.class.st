@@ -138,7 +138,6 @@ RsrServiceSnapshot >> instanceIn: aConnection [
 RsrServiceSnapshot >> reifyIn: aConnection [
 
 	| instance referenceStream |
-	"Instance should already be registered"
 	instance := self instanceIn: aConnection.
 	(self class reflectedVariablesFor: instance) size = slots size 
 		ifFalse: [ self error: 'Incorrectly encoded instance detected' ].
