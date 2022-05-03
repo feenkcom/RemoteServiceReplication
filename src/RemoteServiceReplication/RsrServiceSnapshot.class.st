@@ -77,6 +77,8 @@ RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 			[self flag: 'This should go away once we cleanup the on-the-wire encoding.'.
 			RsrUnknownClass signal].
 	template := aConnection templateResolver templateNamed: self templateName.
+	((aConnection policy permits: template) or: [template inheritsFrom: RsrReasonService])
+		ifFalse: [RsrServiceRejected signalReason: (RsrPolicyRejectedService sid: sid templateName: templateName)].
 	instance := self shouldCreateServer
 		ifTrue: [template serverClass basicNew]
 		ifFalse: [template clientClass basicNew].

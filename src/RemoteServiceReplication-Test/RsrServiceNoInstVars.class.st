@@ -22,6 +22,12 @@ RsrServiceNoInstVars class >> templateClassName [
 	^#RsrServiceNoInstVars
 ]
 
+{ #category : 'testing-methods' }
+RsrServiceNoInstVars >> asyncSendReturnArgument: anObject [
+
+	^remoteSelf returnArgument: anObject
+]
+
 { #category : 'accessing' }
 RsrServiceNoInstVars >> returnArgument: anObject [
 

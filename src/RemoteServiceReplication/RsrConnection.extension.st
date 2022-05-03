@@ -153,7 +153,8 @@ RsrConnection >> initialize [
 	registry := RsrThreadSafeDictionary new.
 	log := RsrLog new.
 	announcer := Announcer new.
-	templateResolver := RsrTemplateResolver new
+	templateResolver := RsrTemplateResolver new.
+	policy := RsrDefaultPolicy new
 ]
 
 { #category : '*remoteservicereplication' }
