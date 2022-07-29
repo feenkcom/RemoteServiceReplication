@@ -1,6 +1,6 @@
-Extension { #name : #Symbol }
+Extension { #name : 'Symbol' }
 
-{ #category : #'*TonelFixes' }
+{ #category : '*TonelFixes' }
 Symbol >> asTonelValue [
 	^ self asString
 ]
