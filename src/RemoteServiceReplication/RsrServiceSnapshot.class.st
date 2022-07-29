@@ -17,7 +17,8 @@ Class {
 	#superclass : 'RsrObject',
 	#instVars : [
 		'sid',
-		'targetClassName',
+		'templateName',
+		'shouldCreateServer',
 		'slots'
 	],
 	#category : 'RemoteServiceReplication'
@@ -47,9 +48,10 @@ do: aBlock [
 { #category : 'variable utilites' }
 RsrServiceSnapshot class >> reflectedVariablesFor: aService [
 
-	| currentClass variables |
+	| currentClass variables template |
 	variables := OrderedCollection new.
-	currentClass := aService class templateClass.
+	template := aService _template.
+	currentClass := template.
 	[currentClass == RsrService]
 		whileFalse:
 			[currentClass instVarNames reverseDo: [:each | variables addFirst: each].
@@ -69,27 +71,38 @@ do: aBlock [
 { #category : 'accessing' }
 RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 
-	| instance |
+	| instance template |
+	templateName isNil
+		ifTrue:
+			[self flag: 'This should go away once we cleanup the on-the-wire encoding.'.
+			RsrUnknownClass signal].
+	template := aConnection templateResolver templateNamed: self templateName.
+	((aConnection policy permits: template) or: [template inheritsFrom: RsrReasonService])
+		ifFalse: [RsrServiceRejected signalReason: (RsrPolicyRejectedService sid: sid templateName: templateName)].
 	instance := self shouldCreateServer
-		ifTrue: [self templateClass serverClass basicNew]
-		ifFalse: [self templateClass clientClass basicNew].
+		ifTrue: [template serverClass basicNew]
+		ifFalse: [template clientClass basicNew].
 	aConnection
 		_register: instance
 		as: self sid.
 	^instance
 ]
 
-{ #category : 'encoding/decoding' }
+{ #category : 'other' }
 RsrServiceSnapshot >> decode: aStream
 using: aDecoder [
 
-	| species instVarCount |
+	| species instVarCount targetClassName resolver template |
 	species := aDecoder decodeControlWord: aStream.
 	sid := aDecoder decodeControlWord: aStream.
 	instVarCount := aDecoder decodeControlWord: aStream.
 	targetClassName := (aDecoder decodeReference: aStream) resolve: nil.
 	slots := OrderedCollection new: instVarCount.
-	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)]
+	instVarCount timesRepeat: [slots add: (aDecoder decodeReference: aStream)].
+	resolver := RsrTemplateResolver new.
+	template := resolver templateNamed: targetClassName ifAbsent: [^nil].
+	templateName := template name.
+	shouldCreateServer := template serverClassName = targetClassName.
 ]
 
 { #category : 'encoding/decoding' }
@@ -127,7 +140,6 @@ RsrServiceSnapshot >> instanceIn: aConnection [
 RsrServiceSnapshot >> reifyIn: aConnection [
 
 	| instance referenceStream |
-	"Instance should already be registered"
 	instance := self instanceIn: aConnection.
 	(self class reflectedVariablesFor: instance) size = slots size 
 		ifFalse: [ self error: 'Incorrectly encoded instance detected' ].
@@ -142,7 +154,7 @@ RsrServiceSnapshot >> reifyIn: aConnection [
 { #category : 'testing' }
 RsrServiceSnapshot >> shouldCreateServer [
 
-	^self targetServiceType == #server
+	^shouldCreateServer
 ]
 
 { #category : 'accessing' }
@@ -169,13 +181,15 @@ RsrServiceSnapshot >> slots: anArrayOfReferences [
 	slots := anArrayOfReferences
 ]
 
-{ #category : 'snapshotting' }
+{ #category : 'other' }
 RsrServiceSnapshot >> snapshot: aService [
 
+	| template |
+	template := aService _template.
 	sid := aService _id.
-	targetClassName := aService class isClientClass
-		ifTrue: [aService class serverClassName]
-		ifFalse: [aService class clientClassName].
+	templateName := template name.
+	"If I am snapshotting a Client, the Snapshot represents a Server."
+	shouldCreateServer := aService class isClientClass.
 	slots := OrderedCollection new.
 	RsrServiceSnapshot
 		reflectedVariablesFor: aService
@@ -189,15 +203,13 @@ RsrServiceSnapshot >> snapshotIdentifier [
 ]
 
 { #category : 'other' }
-RsrServiceSnapshot >> targetClass [
-
-	^RsrClassResolver classNamed: self targetClassName
-]
-
-{ #category : 'other' }
 RsrServiceSnapshot >> targetClassName [
 
-	^targetClassName
+	| template |
+	template := RsrTemplateResolver new templateNamed: self templateName.
+	^self shouldCreateServer
+		ifTrue: [template serverClassName]
+		ifFalse: [template clientClassName]
 ]
 
 { #category : 'other' }
@@ -206,16 +218,8 @@ RsrServiceSnapshot >> targetClassNameReference [
 	^RsrSymbolReference from: self targetClassName
 ]
 
-{ #category : 'accessing' }
-RsrServiceSnapshot >> targetServiceType [
+{ #category : 'other' }
+RsrServiceSnapshot >> templateName [
 
-	^self targetClass isClientClass
-		ifTrue: [#client]
-		ifFalse: [#server]
-]
-
-{ #category : 'accessing' }
-RsrServiceSnapshot >> templateClass [
-
-	^self targetClass templateClass
+	^templateName
 ]

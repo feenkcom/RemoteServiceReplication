@@ -2,11 +2,13 @@ Extension { #name : 'RsrConnection' }
 
 { #category : '*remoteservicereplication' }
 RsrConnection >> _ensureRegistered: aService [
-
 	aService _connection == nil
-		ifTrue: [^self _register: aService as: oidSpigot next].
+		ifTrue: [ 
+			self _register: aService as: oidSpigot next.
+			aService postRegistration.
+			^ self ].
 	aService _connection == self
-		ifFalse: [^RsrAlreadyRegistered signalService: aService intendedConnection: self]
+		ifFalse: [ ^ RsrAlreadyRegistered signalService: aService intendedConnection: self ]
 ]
 
 { #category : '*remoteservicereplication' }
@@ -150,7 +152,9 @@ RsrConnection >> initialize [
 	pendingMessages := RsrThreadSafeDictionary new.
 	registry := RsrThreadSafeDictionary new.
 	log := RsrLog new.
-	announcer := Announcer new
+	announcer := Announcer new.
+	templateResolver := RsrTemplateResolver new.
+	policy := RsrDefaultPolicy new
 ]
 
 { #category : '*remoteservicereplication' }

@@ -13,10 +13,23 @@ Class {
 	#superclass : 'RsrInstrumentedService',
 	#instVars : [
 		'preUpdateCount',
-		'postUpdateCount'
+		'postUpdateCount',
+		'postRegistrationCount'
 	],
 	#category : 'RemoteServiceReplication-Test'
 }
+
+{ #category : 'accessing' }
+RsrInstrumentedClient >> postRegistrationCount [
+
+	^postRegistrationCount ifNil: [0]
+]
+
+{ #category : 'accessing' }
+RsrInstrumentedClient >> postRegistrationCount: anInteger [
+
+	postRegistrationCount := anInteger
+]
 
 { #category : 'accessing' }
 RsrInstrumentedClient >> postUpdateCount [
@@ -51,5 +64,11 @@ RsrInstrumentedClient >> return: anObject [
 { #category : 'evaluating' }
 RsrInstrumentedClient >> value [
 
-	^remoteSelf value wait
+	^remoteSelf evaluateAction wait
+]
+
+{ #category : 'evaluating' }
+RsrInstrumentedClient >> value: anObject [
+
+	^(remoteSelf evaluateAction: anObject) wait
 ]

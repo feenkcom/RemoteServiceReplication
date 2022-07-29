@@ -142,6 +142,91 @@ RsrServiceTest >> testMessagesDispactchedConcurrentlyForMultipleServices [
 ]
 
 { #category : 'running' }
+RsrServiceTest >> testPostRegistration [
+
+	| client  server testClient testServer regCount |
+	"#registerWith: validation"
+	client := RsrInstrumentedClient new.
+	self
+		assert: client postRegistrationCount
+		equals: 0.
+	client registerWith: connectionA.
+	self
+		assert: client postRegistrationCount
+		equals: 1.
+	client registerWith: connectionA.
+	self
+		assert: client postRegistrationCount
+		equals: 1.
+	client synchronize.
+	server := self peerOf: client.
+	self
+		assert: client postRegistrationCount
+		equals: 1.
+	self
+		assert: server postRegistrationCount
+		equals: 0.
+
+	"Validate implicit registration of argument Service"
+	testClient := RsrInstrumentedClient new.
+	server action: [:testServerArg | testServerArg postRegistrationCount].
+	regCount := client value: testClient.
+	self
+		assert: regCount
+		equals: 0.
+	self
+		assert: testClient postRegistrationCount
+		equals: 1.
+	testServer := self peerOf: testClient.
+	self
+		assert: testServer postRegistrationCount
+		equals: 0.
+
+	"Validate implicit registration of returned Services"
+	testClient := testServer := nil.
+	server action: [testServer := RsrInstrumentedServer new].
+	testClient := client value.
+	self
+		assert: testClient postRegistrationCount
+		equals: 0.
+	self
+		assert: testServer postRegistrationCount
+		equals: 1
+]
+
+{ #category : 'running' }
+RsrServiceTest >> testPostRegistrationRaisesException [
+
+	| client server reason tag badService signaledException caughtException |
+	"Return values"
+	client := RsrRemoteActionClient new
+		registerWith: connectionA;
+		synchronize.
+	server := self peerOf: client.
+	tag := DateAndTime now asString.
+	server action: [RsrRemoteActionServer new postRegistrationHandler: [Error new tag: tag; signal]; yourself].
+	reason := self expectCatch: client asyncValue.
+	self
+		assert: reason exceptionClassName
+		equals: #Error.
+	self
+		assert: reason tag
+		equals: tag. "This string came through RSR. It is equivalent but not identical."
+
+	"Message sends"
+	signaledException := Error new.
+	badService := RsrRemoteActionServer new
+		postRegistrationHandler: [signaledException signal];
+		yourself.
+	caughtException := [client value: badService]
+		on: Error
+		do: [:ex | ex return: ex].
+	self
+		assert: signaledException
+		identicalTo: caughtException "RSR did not alter this exception. It should be identical."
+]
+
+{ #category : 'running' }
 RsrServiceTest >> testPrePostUpdate [
 
 	| client server | 

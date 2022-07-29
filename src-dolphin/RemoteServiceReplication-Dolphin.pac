@@ -10,7 +10,6 @@ package classNames
 	add: #RsrEnvironment;
 	add: #RsrForwarder;
 	add: #RsrGarbageCollector;
-	add: #RsrProtoObject;
 	add: #RsrRegistryEntry;
 	add: #RsrScientist;
 	add: #RsrSocket;
@@ -92,11 +91,6 @@ RsrObject subclass: #RsrSocket
 	instanceVariableNames: 'fd isConnected isBound'
 	classVariableNames: ''
 	poolDictionaries: 'WinSocketConstants'
-	classInstanceVariableNames: ''!
-ProtoObject subclass: #RsrProtoObject
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
 	classInstanceVariableNames: ''!
 
 "Global Aliases"!
@@ -699,9 +693,4 @@ _fd: aFileDescriptor
 		_fd: aFileDescriptor;
 		yourself! !
 !RsrSocket class categoriesFor: #_fd:!private! !
-
-RsrProtoObject guid: (GUID fromString: '{8c807a21-ab7c-4f1d-9c7a-f012b4953ad7}')!
-RsrProtoObject comment: ''!
-!RsrProtoObject categoriesForClass!RemoteServiceReplication-Dolphin! !
-"Binary Globals"!
 

@@ -68,6 +68,17 @@ RsrSystemTestCase >> initializeSocketConnections [
 		assert: connectionB isOpen
 ]
 
+{ #category : 'accessing' }
+RsrSystemTestCase >> peerOf: aService [
+
+	| connectionInPeer |
+	connectionInPeer := aService _connection.
+	connectionInPeer ifNil: [self assert: false description: 'Unable to obtain the peer of an unregistered Service.'].
+	^connectionInPeer == connectionA
+		ifTrue: [connectionB serviceAt: aService _id]
+		ifFalse: [connectionA serviceAt: aService _id]
+]
+
 { #category : 'initialization' }
 RsrSystemTestCase >> setUp [
 	"Subclasses need to start their connections by calling

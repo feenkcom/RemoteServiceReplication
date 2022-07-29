@@ -14,6 +14,13 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'accessing' }
+RsrChannel >> addCommunicationProcessesTo: aSet [
+	"Add all processes used for Communication to the provided set."
+	
+	self subclassResponsibility
+]
+
 { #category : 'lifecycle' }
 RsrChannel >> close [
 	"Ensure the channel is closed to further communication."

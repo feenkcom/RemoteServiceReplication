@@ -18,7 +18,9 @@ Class {
 		'registry',
 		'pendingMessages',
 		'specification',
-		'announcer'
+		'announcer',
+		'templateResolver',
+		'policy'
 	],
 	#category : 'RemoteServiceReplication-Base'
 }
@@ -98,6 +100,20 @@ RsrConnection >> open [
 ]
 
 { #category : 'public-accessing' }
+RsrConnection >> policy [
+	"Policy which determines if we can reify a received Service."
+
+	^policy
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> policy: aPolicy [
+	"Policy which determines if we can reify a received Service."
+
+	policy := aPolicy
+]
+
+{ #category : 'public-accessing' }
 RsrConnection >> specification [
 	"Returns the Specification used to create this Connection.
 	If the Connection was not create using a Specification, returns nil."
@@ -110,6 +126,34 @@ RsrConnection >> specification: aConnectionSpecification [
 	"Store the Specification used to the create this Connection."
 
 	specification := aConnectionSpecification
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> templateResolver [
+	"Returns the TemplateResolver used to lookup a template by name or Service."
+
+	^templateResolver
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> templateResolver: aTemplateResolver [
+	"Sets the TemplateResolver, used to lookup a template by name or Service,
+	to a custom version."
+
+	templateResolver := aTemplateResolver
+]
+
+{ #category : 'public-accessing' }
+RsrConnection >> vitalProcesses [
+	"Return the set of processes required in order for this RSR connection to function.
+	This may be a subset of the processes used by RSR.
+	For instance, in GemStone, this need not return the ephemeron mourning
+	process as this isn't critical to the basic functioning of RSR."
+
+	| processes |
+	processes := IdentitySet new.
+	channel addCommunicationProcessesTo: processes.
+	^processes
 ]
 
 { #category : 'public-waiting' }

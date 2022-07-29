@@ -106,6 +106,13 @@ RsrService >> _synchronize [
 	^self
 ]
 
+{ #category : 'private-accessing' }
+RsrService >> _template [
+	"Returns the template associated with this Service. General users should use #template."
+
+	^_connection templateResolver templateFor: self
+]
+
 { #category : 'public-events' }
 RsrService >> configureProcess [
 	"#configureProcess is called each time the framework calls into the framework to evaluate generic user code.
@@ -162,6 +169,18 @@ RsrService >> isServer [
 ]
 
 { #category : 'public-events' }
+RsrService >> postRegistration [
+	"This message is sent immediately after the Service
+	is registered with a Connection for the first time.
+
+	The framework views both Client and Server peers as
+	the same object. When a peer is created by the
+	framework, it will not receive #postRegistration."
+
+	^self
+]
+
+{ #category : 'public-events' }
 RsrService >> postUpdate [
 	"#postUpdate is called just after the Service's shared variables are updated by the framework.
 	This method can be overridden to ensure internal consistency."
@@ -196,4 +215,12 @@ RsrService >> synchronize [
 
 	remoteSelf == nil
 		ifFalse: [remoteSelf _synchronize wait]
+]
+
+{ #category : 'public-accessing' }
+RsrService >> template [
+	"Returns the template associated with this Service.
+	This method should NOT be redefined."
+
+	^self _template
 ]

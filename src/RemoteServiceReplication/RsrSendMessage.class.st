@@ -59,7 +59,9 @@ RsrSendMessage >> executeFor: aConnection [
 	resolver := RsrRemotePromiseResolver for: self over: aConnection.
 	"Must keep a strong reference to each service until the roots are referenced."
 	[[RsrProcessModel configureUnhandleExceptionProtection.
-	servicesStrongly := self reifyAllIn: aConnection.
+	[servicesStrongly := self reifyAllIn: aConnection]
+		on: RsrServiceRejected
+		do: [:ex | resolver break: ex reason. ^self].
 	receiver := self receiverReference resolve: aConnection.
 	selector := self selectorReference resolve: aConnection.
 	arguments := self argumentReferences collect: [:each | each resolve: aConnection].

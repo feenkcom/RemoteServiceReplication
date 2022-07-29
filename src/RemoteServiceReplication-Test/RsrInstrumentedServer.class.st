@@ -14,6 +14,7 @@ Class {
 	#instVars : [
 		'preUpdateCount',
 		'postUpdateCount',
+		'postRegistrationCount',
 		'action'
 	],
 	#category : 'RemoteServiceReplication-Test'
@@ -29,6 +30,30 @@ RsrInstrumentedServer >> action [
 RsrInstrumentedServer >> action: aBlock [
 
 	action := aBlock
+]
+
+{ #category : 'evaluating' }
+RsrInstrumentedServer >> evaluateAction [
+
+	^self action value
+]
+
+{ #category : 'evaluating' }
+RsrInstrumentedServer >> evaluateAction: anObject [
+
+	^self action cull: anObject
+]
+
+{ #category : 'accessing' }
+RsrInstrumentedServer >> postRegistrationCount [
+
+	^postRegistrationCount ifNil: [0]
+]
+
+{ #category : 'accessing' }
+RsrInstrumentedServer >> postRegistrationCount: anInteger [
+
+	postRegistrationCount := anInteger
 ]
 
 { #category : 'accessing' }
@@ -59,10 +84,4 @@ RsrInstrumentedServer >> preUpdateCount: anInteger [
 RsrInstrumentedServer >> return: anObject [
 
 	^anObject
-]
-
-{ #category : 'evaluating' }
-RsrInstrumentedServer >> value [
-
-	^self action value
 ]

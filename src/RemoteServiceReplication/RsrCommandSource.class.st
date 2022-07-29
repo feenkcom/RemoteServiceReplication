@@ -8,6 +8,13 @@ Class {
 }
 
 { #category : 'accessing' }
+RsrCommandSource >> addCommunicationProcessesTo: aSet [
+	"Add all processes used for Communication to the provided set."
+	
+	aSet add: process
+]
+
+{ #category : 'accessing' }
 RsrCommandSource >> decoder [
 
 	^RsrCommandDecoder new
