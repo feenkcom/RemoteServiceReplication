@@ -2,6 +2,7 @@ Class {
 	#name : 'RsrAcceptConnection',
 	#superclass : 'RsrSocketConnectionSpecification',
 	#instVars : [
+		'portRange',
 		'listener',
 		'isListening',
 		'isWaitingForConnection'
@@ -10,11 +11,26 @@ Class {
 }
 
 { #category : 'instance creation' }
+RsrAcceptConnection class >> host: hostnameOrAddress portRange: anInterval [
+
+	^ self new
+		  host: hostnameOrAddress;
+		  portRange: anInterval;
+		  yourself
+]
+
+{ #category : 'instance creation' }
 RsrAcceptConnection class >> port: aPortInteger [
 
-	^super
-		host: self wildcardAddress
-		port: aPortInteger
+	^ self
+		  host: self wildcardAddress
+		  portRange: (aPortInteger to: aPortInteger)
+]
+
+{ #category : 'instance creation' }
+RsrAcceptConnection class >> portRange: anInterval [
+
+	^ self host: self wildcardAddress portRange: anInterval
 ]
 
 { #category : 'accessing' }
@@ -27,6 +43,20 @@ RsrAcceptConnection class >> wildcardAddress [
 RsrAcceptConnection class >> wildcardPort [
 
 	^0
+]
+
+{ #category : 'private' }
+RsrAcceptConnection >> bind [
+
+	"Attempt to listen on each of the port range, answer the successful port or signal RsrInvalidBind"
+
+	portRange do: [ :portToTry | 
+		[ listener bindAddress: self host port: portToTry ]
+			on: RsrInvalidBind
+			do: [ :ex | ex return ].
+		^ portToTry ].
+	RsrInvalidBind signal:
+		'Cannot bind to any port in range ' , portRange printString
 ]
 
 { #category : 'actions' }
@@ -42,7 +72,7 @@ RsrAcceptConnection >> ensureListening [
 	listener
 		bindAddress: self host
 		port: self port.
-	listener listen: 1.
+	listener listen: 5.
 	isListening := true
 ]
 
@@ -77,6 +107,18 @@ RsrAcceptConnection >> listeningPort [
 
 	isListening ifFalse: [^nil].
 	^listener port
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection >> portRange [
+
+	^ portRange
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection >> portRange: anObject [
+
+	portRange := anObject
 ]
 
 { #category : 'actions' }
