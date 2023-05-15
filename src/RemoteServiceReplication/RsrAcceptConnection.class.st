@@ -51,10 +51,11 @@ RsrAcceptConnection >> bind [
 	"Attempt to listen on each of the port range, answer the successful port or signal RsrInvalidBind"
 
 	portRange do: [ :portToTry | 
-		[ listener bindAddress: self host port: portToTry ]
+		[ 
+		listener bindAddress: self host port: portToTry.
+		^ portToTry ]
 			on: RsrInvalidBind
-			do: [ :ex | ex return ].
-		^ portToTry ].
+			do: [ :ex | ex return ] ].
 	RsrInvalidBind signal:
 		'Cannot bind to any port in range ' , portRange printString
 ]
@@ -69,9 +70,7 @@ RsrAcceptConnection >> cancelWaitForConnection [
 RsrAcceptConnection >> ensureListening [
 
 	isListening ifTrue: [^self].
-	listener
-		bindAddress: self host
-		port: self port.
+	self bind.
 	listener listen: 5.
 	isListening := true
 ]
