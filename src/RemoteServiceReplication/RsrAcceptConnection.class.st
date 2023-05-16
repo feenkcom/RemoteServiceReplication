@@ -11,6 +11,15 @@ Class {
 }
 
 { #category : 'instance creation' }
+RsrAcceptConnection class >> host: hostnameOrAddress port: portNumber [
+
+	^ self new
+		  host: hostnameOrAddress;
+		  portRange: (portNumber to: portNumber);
+		  yourself
+]
+
+{ #category : 'instance creation' }
 RsrAcceptConnection class >> host: hostnameOrAddress portRange: anInterval [
 
 	^ self new
@@ -22,9 +31,7 @@ RsrAcceptConnection class >> host: hostnameOrAddress portRange: anInterval [
 { #category : 'instance creation' }
 RsrAcceptConnection class >> port: aPortInteger [
 
-	^ self
-		  host: self wildcardAddress
-		  portRange: (aPortInteger to: aPortInteger)
+	^ self host: self wildcardAddress port: aPortInteger
 ]
 
 { #category : 'instance creation' }

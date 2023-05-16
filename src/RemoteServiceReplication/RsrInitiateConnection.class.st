@@ -18,6 +18,15 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
+{ #category : 'instance creation' }
+RsrInitiateConnection class >> host: hostnameOrAddress port: port [
+
+	^ self new
+		  host: hostnameOrAddress;
+		  port: port;
+		  yourself
+]
+
 { #category : 'connecting' }
 RsrInitiateConnection >> connect [
 
