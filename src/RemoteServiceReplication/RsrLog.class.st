@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrLog',
-	#superclass : 'RsrObject',
+	#name : #RsrLog,
+	#superclass : #RsrObject,
 	#instVars : [
 		'verbosity',
 		'sinks'
@@ -8,41 +8,41 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'configuring' }
+{ #category : #configuring }
 RsrLog >> addSink: aLogSink [
 
 	sinks add: aLogSink
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> critical: aString [
 
 	self verbosity >= self levelCritical
 		ifTrue: [self log: aString level: #critical]
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> debug: aString [
 
 	self verbosity >= self levelDebug
 		ifTrue: [	self log: aString level: #debug]
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> error: aString [
 
 	self verbosity >= self levelError
 		ifTrue: [self log: aString level: #error]
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> info: aString [
 
 	self verbosity >= self levelInfo
 		ifTrue: [self log: aString level: #info]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 RsrLog >> initialize [
 
 	super initialize.
@@ -50,43 +50,43 @@ RsrLog >> initialize [
 	sinks := OrderedCollection new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> levelCritical [
 
 	^0
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> levelDebug [
 
 	^4
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> levelError [
 
 	^1
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> levelInfo [
 
 	^3
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> levelTrace [
 
 	^5
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> levelWarn [
 
 	^2
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> log: aMessage
 level: aLevelString [
 
@@ -95,26 +95,26 @@ level: aLevelString [
 	sinks do: [:each | each write: message]
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> trace: aString [
 
 	self verbosity >= self levelTrace
 		ifTrue: [self log: aString level: #trace]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> verbosity [
 
 	^verbosity
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLog >> verbosity: aLogLevel [
 
 	verbosity := aLogLevel
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLog >> warning: aString [
 
 	self verbosity >= self levelWarn

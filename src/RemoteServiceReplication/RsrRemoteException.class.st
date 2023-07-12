@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrRemoteException',
-	#superclass : 'RsrReasonService',
+	#name : #RsrRemoteException,
+	#superclass : #RsrReasonService,
 	#instVars : [
 		'exceptionClassName',
 		'tag',
@@ -10,13 +10,13 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException class >> clientClassName [
 
 	^#RsrRemoteExceptionClient
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrRemoteException class >> from: anException [
 	"Create an instance of the RemoteException reason.
 	The client is used here because once we send it, we are done with it.
@@ -37,50 +37,50 @@ RsrRemoteException class >> from: anException [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException class >> serverClassName [
 
 	^#RsrRemoteExceptionServer
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException class >> templateClassName [
 
 	^#RsrRemoteException
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> exceptionClassName [
 
 	^exceptionClassName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> exceptionClassName: aSymbol [
 
 	exceptionClassName := aSymbol
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrRemoteException >> isRemoteException [
 	"This is a RemoteException reason"
 
 	^true
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> messageText [
 
 	^messageText
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> messageText: aString [
 
 	messageText := aString
 ]
 
-{ #category : 'printing' }
+{ #category : #printing }
 RsrRemoteException >> printOn: aStream [
 
 	aStream
@@ -93,25 +93,25 @@ RsrRemoteException >> printOn: aStream [
 		nextPutAll: stack
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> stack [
 
 	^stack
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> stack: aString [
 
 	stack := aString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> tag [
 
 	^tag
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteException >> tag: aString [
 
 	tag := aString

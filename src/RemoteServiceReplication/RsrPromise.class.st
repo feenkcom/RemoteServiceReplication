@@ -32,8 +32,8 @@ Example Usage:
 ```
 "
 Class {
-	#name : 'RsrPromise',
-	#superclass : 'RsrObject',
+	#name : #RsrPromise,
+	#superclass : #RsrObject,
 	#instVars : [
 		'mutex',
 		'value',
@@ -41,17 +41,17 @@ Class {
 		'resolvedMutex',
 		'resolutionActions'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : #RemoteServiceReplication
 }
 
-{ #category : 'private' }
+{ #category : #private }
 RsrPromise >> assertNotResolved [
 
 	self isResolved
 		ifTrue: [RsrAlreadyResolved signal].
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrPromise >> break: aReason [
 	"Notify the receiver's observers that the Promise will not be fulfilled."
 
@@ -64,7 +64,7 @@ RsrPromise >> break: aReason [
 	resolvedMutex signal
 ]
 
-{ #category : 'signalling' }
+{ #category : #signalling }
 RsrPromise >> exception [
 	"Answer the reason the promise is broken"
 
@@ -73,7 +73,7 @@ RsrPromise >> exception [
 		ifFalse: [ self error: 'Promise not broken' ]
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrPromise >> fulfill: anObject [
 	"Fulfill the receiver and notify any observers."
 
@@ -86,7 +86,7 @@ RsrPromise >> fulfill: anObject [
 	resolvedMutex signal
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 RsrPromise >> initialize [
 
 	super initialize.
@@ -96,28 +96,28 @@ RsrPromise >> initialize [
 	resolutionActions := OrderedCollection new
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrPromise >> isBroken [
 	"Report if the receiver is currently broken"
 
 	^state == #Broken
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrPromise >> isFulfilled [
 	"Report is the receiver is currently fulfilled"
 
 	^state == #Fulfilled
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrPromise >> isResolved [
 	"Report if the receiver is currently resolved."
 
 	^self isFulfilled or: [self isBroken]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 RsrPromise >> notifyActions [
 	"Activate any registered action's fulfillment blocks.
 	Ensure that they are activated only once and that
@@ -136,19 +136,19 @@ RsrPromise >> notifyActions [
 				ifFalse: [RsrProcessModel fork: [each catch value: value] named: 'Promise Break Notification']]
 ]
 
-{ #category : 'observing' }
+{ #category : #observing }
 RsrPromise >> value [
 	"Alias for #wait"
 
 	^self wait
 ]
 
-{ #category : 'observing' }
+{ #category : #observing }
 RsrPromise >> wait [
 	"Wait for a the receiver to be Resolved.
 	If fulfilled - return the fulfillment value.
 	If broken - raise an RsrBrokenPromise exception w/ the reason."
-	<remoteDebuggerSignal>
+	<gemstoneDebuggerSignal>
 
 	self waitForResolution.
 	^self isBroken
@@ -156,7 +156,7 @@ RsrPromise >> wait [
 		ifFalse: [value]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 RsrPromise >> waitForResolution [
 	"There doesn't seem to be a great way to implement this method.
 	The ensure below is generally safe but does have a side-effect of signaling
@@ -171,7 +171,7 @@ RsrPromise >> waitForResolution [
 	[[self isResolved] whileFalse: [resolvedMutex wait]] ensure: [resolvedMutex signal]
 ]
 
-{ #category : 'observing' }
+{ #category : #observing }
 RsrPromise >> when: aWhenBlock
 catch: aCatchBlock [
 	"Activate an appropriate block when the receiver is resolved.

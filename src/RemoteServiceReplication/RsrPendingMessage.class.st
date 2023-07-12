@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrPendingMessage',
-	#superclass : 'RsrObject',
+	#name : #RsrPendingMessage,
+	#superclass : #RsrObject,
 	#instVars : [
 		'services',
 		'promise'
@@ -8,7 +8,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrPendingMessage class >> services: aList
 promise: aPromise [
 
@@ -18,25 +18,25 @@ promise: aPromise [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPendingMessage >> promise [
 
 	^promise
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPendingMessage >> promise: aPromise [
 
 	promise := aPromise
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPendingMessage >> services [
 
 	^services
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPendingMessage >> services: aList [
 
 	services := aList

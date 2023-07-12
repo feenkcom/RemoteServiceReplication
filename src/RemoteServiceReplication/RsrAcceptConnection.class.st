@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrAcceptConnection',
-	#superclass : 'RsrSocketConnectionSpecification',
+	#name : #RsrAcceptConnection,
+	#superclass : #RsrSocketConnectionSpecification,
 	#instVars : [
 		'listener',
 		'isListening',
@@ -9,7 +9,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrAcceptConnection class >> port: aPortInteger [
 
 	^super
@@ -17,25 +17,25 @@ RsrAcceptConnection class >> port: aPortInteger [
 		port: aPortInteger
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection class >> wildcardAddress [
 
 	^'0.0.0.0'
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection class >> wildcardPort [
 
 	^0
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrAcceptConnection >> cancelWaitForConnection [
 
 	listener ifNotNil: [:socket | socket close]
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrAcceptConnection >> ensureListening [
 
 	isListening ifTrue: [^self].
@@ -46,7 +46,7 @@ RsrAcceptConnection >> ensureListening [
 	isListening := true
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection >> handshakeSteps [
 	"Returns a sequence of steps needed to perform a successful handshake."
 
@@ -54,7 +54,7 @@ RsrAcceptConnection >> handshakeSteps [
 		with: RsrProtocolVersionNegotiationServer new
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrAcceptConnection >> initialize [
 
 	super initialize.
@@ -63,13 +63,13 @@ RsrAcceptConnection >> initialize [
 	isListening := false
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrAcceptConnection >> isWaitingForConnection [
 
 	^isWaitingForConnection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection >> listeningPort [
 	"Return the port the underlying socket is listening on.
 	This is useful when using the wildcard port to dynamically
@@ -79,7 +79,7 @@ RsrAcceptConnection >> listeningPort [
 	^listener port
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrAcceptConnection >> waitForConnection [
 
 	| socket stream handshake channel connection |

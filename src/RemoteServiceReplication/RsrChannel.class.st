@@ -6,74 +6,74 @@ Object
 
 "
 Class {
-	#name : 'RsrChannel',
-	#superclass : 'RsrObject',
+	#name : #RsrChannel,
+	#superclass : #RsrObject,
 	#instVars : [
 		'connection'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrChannel >> addCommunicationProcessesTo: aSet [
 	"Add all processes used for Communication to the provided set."
 	
 	self subclassResponsibility
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrChannel >> close [
 	"Ensure the channel is closed to further communication."
 
 	^self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrChannel >> connection [
 
 	^connection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrChannel >> connection: aConnection [
 
 	connection := aConnection
 ]
 
-{ #category : 'events' }
+{ #category : #events }
 RsrChannel >> genericError: anError [
 
 	^self connection unknownError: anError
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrChannel >> isConnected [
 	"Report whether the Channel is open between Connections."
 
 	^self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrChannel >> log [
 
 	^self connection log
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrChannel >> open [
 	"Ensure the channel is open and ready for communication."
 
 	^self subclassResponsibility
 ]
 
-{ #category : 'events' }
+{ #category : #events }
 RsrChannel >> received: aCommand [
 	"A command has come in over the channel. Propogate it to the Connection."
 
 	self connection _receivedCommand: aCommand
 ]
 
-{ #category : 'events' }
+{ #category : #events }
 RsrChannel >> send: aCommand [
 	"Send the provided command over the channel."
 

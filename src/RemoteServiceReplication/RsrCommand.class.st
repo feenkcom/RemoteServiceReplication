@@ -6,25 +6,25 @@ Object
 
 "
 Class {
-	#name : 'RsrCommand',
-	#superclass : 'RsrObject',
+	#name : #RsrCommand,
+	#superclass : #RsrObject,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrCommand >> encode: aStream
 using: anEncoder [
 
 	self subclassResponsibility
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 RsrCommand >> executeFor: aConnection [
 
 	self subclassResponsibility
 ]
 
-{ #category : 'reporting' }
+{ #category : #reporting }
 RsrCommand >> reportOn: aLog [
 
 	self subclassResponsibility

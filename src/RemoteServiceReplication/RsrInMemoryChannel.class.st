@@ -22,8 +22,8 @@ Example usage:
 	connectionB open.
 "
 Class {
-	#name : 'RsrInMemoryChannel',
-	#superclass : 'RsrChannel',
+	#name : #RsrInMemoryChannel,
+	#superclass : #RsrChannel,
 	#instVars : [
 		'inQueue',
 		'outQueue',
@@ -32,7 +32,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrInMemoryChannel class >> inQueue: inQueue
 outQueue: outQueue [
 
@@ -42,21 +42,21 @@ outQueue: outQueue [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInMemoryChannel >> addCommunicationProcessesTo: aSet [
 	"Add all processes used for Communication to the provided set."
 	
 	aSet add: drainProcess 
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrInMemoryChannel >> close [
 
 	outQueue nextPut: nil.
 	inQueue nextPut: nil
 ]
 
-{ #category : 'processing' }
+{ #category : #processing }
 RsrInMemoryChannel >> drainLoop [
 
 	| command |
@@ -67,25 +67,25 @@ RsrInMemoryChannel >> drainLoop [
 	self connection channelDisconnected
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInMemoryChannel >> inQueue [
 
 	^inQueue
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInMemoryChannel >> inQueue: aSharedQueue [
 
 	inQueue := aSharedQueue
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrInMemoryChannel >> isConnected [
 
 	^drainProcess isNil not
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrInMemoryChannel >> open [
 
 	drainProcess := RsrProcessModel
@@ -96,19 +96,19 @@ RsrInMemoryChannel >> open [
 		named: 'InMemoryChannel Receiving'
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInMemoryChannel >> outQueue [
 
 	^outQueue
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInMemoryChannel >> outQueue: aSharedQueue [
 
 	outQueue := aSharedQueue
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrInMemoryChannel >> send: aCommand [
 
 	outQueue nextPut: aCommand

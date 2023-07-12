@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrMessagingCommand',
-	#superclass : 'RsrCommand',
+	#name : #RsrMessagingCommand,
+	#superclass : #RsrCommand,
 	#instVars : [
 		'snapshots',
 		'transaction'
@@ -8,7 +8,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'executing' }
+{ #category : #executing }
 RsrMessagingCommand >> reifyAllIn: aConnection [
 
 	| servicesStrongly |
@@ -20,24 +20,24 @@ RsrMessagingCommand >> reifyAllIn: aConnection [
 	^ servicesStrongly "Sender must keep a strong reference until the root is anchored."
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessagingCommand >> snapshots [
 
 	^snapshots
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessagingCommand >> snapshots: anArrayOfSnapshots [
 
 	snapshots := anArrayOfSnapshots
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessagingCommand >> transaction [
 	^ transaction
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessagingCommand >> transaction: anObject [
 	transaction := anObject
 ]

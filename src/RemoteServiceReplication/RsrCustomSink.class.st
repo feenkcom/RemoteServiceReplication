@@ -1,13 +1,13 @@
 Class {
-	#name : 'RsrCustomSink',
-	#superclass : 'RsrLogSink',
+	#name : #RsrCustomSink,
+	#superclass : #RsrLogSink,
 	#instVars : [
 		'action'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrCustomSink class >> action: aBlock [
 
 	^self new
@@ -15,19 +15,19 @@ RsrCustomSink class >> action: aBlock [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCustomSink >> action [
 
 	^action
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCustomSink >> action: aBlock [
 
 	action := aBlock
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrCustomSink >> write: aMessage [
 
 	self action value: aMessage

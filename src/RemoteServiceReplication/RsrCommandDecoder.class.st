@@ -7,12 +7,12 @@ Object
 
 "
 Class {
-	#name : 'RsrCommandDecoder',
-	#superclass : 'RsrCommandCodec',
+	#name : #RsrCommandDecoder,
+	#superclass : #RsrCommandCodec,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrCommandDecoder class >> registry: aRegistry [
 
 	^self new
@@ -20,7 +20,7 @@ RsrCommandDecoder class >> registry: aRegistry [
 		yourself
 ]
 
-{ #category : 'decoding-commands' }
+{ #category : #'decoding-commands' }
 RsrCommandDecoder >> decodeCommand: aStream [
 	"Decode an object from the stream"
 
@@ -32,7 +32,7 @@ RsrCommandDecoder >> decodeCommand: aStream [
 	^RsrError signal: 'Unknown command identifier: ', command printString
 ]
 
-{ #category : 'decoding-commands' }
+{ #category : #'decoding-commands' }
 RsrCommandDecoder >> decodeDeliverResponse: aStream [
 
     | transaction numServices serviceSnapshots response |
@@ -47,7 +47,7 @@ RsrCommandDecoder >> decodeDeliverResponse: aStream [
         yourself
 ]
 
-{ #category : 'decoding-services' }
+{ #category : #'decoding-services' }
 RsrCommandDecoder >> decodeImmediateReference: aStream [
 
 	| referenceType |
@@ -57,7 +57,7 @@ RsrCommandDecoder >> decodeImmediateReference: aStream [
 		using: self
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrCommandDecoder >> decodeReference: aStream [
 
 	| oid |
@@ -66,7 +66,7 @@ RsrCommandDecoder >> decodeReference: aStream [
 	^RsrServiceReference sid: oid
 ]
 
-{ #category : 'decoding-commands' }
+{ #category : #'decoding-commands' }
 RsrCommandDecoder >> decodeReleaseServices: aStream [
 
 	| count oids |
@@ -81,7 +81,7 @@ RsrCommandDecoder >> decodeReleaseServices: aStream [
 	^RsrReleaseServices sids: oids
 ]
 
-{ #category : 'decoding-commands' }
+{ #category : #'decoding-commands' }
 RsrCommandDecoder >> decodeSendMessage: aStream [
 
 	| transaction argCount receiverReference selector numServices serviceSnapshots arguments instance |
@@ -101,7 +101,7 @@ RsrCommandDecoder >> decodeSendMessage: aStream [
 	^instance
 ]
 
-{ #category : 'decoding-services' }
+{ #category : #'decoding-services' }
 RsrCommandDecoder >> decodeServiceSnapshot: aStream [
 
 	| snapshot |
@@ -112,7 +112,7 @@ RsrCommandDecoder >> decodeServiceSnapshot: aStream [
 	^snapshot
 ]
 
-{ #category : 'decoding-services' }
+{ #category : #'decoding-services' }
 RsrCommandDecoder >> instanceOfImmediate: aReferenceType [
 
 	aReferenceType = 1

@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrInternalSocketConnectionSpecification',
-	#superclass : 'RsrInternalConnectionSpecification',
+	#name : #RsrInternalSocketConnectionSpecification,
+	#superclass : #RsrInternalConnectionSpecification,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'connecting' }
+{ #category : #connecting }
 RsrInternalSocketConnectionSpecification >> connect [
 	"Establish an internal Connection pair via socket."
 
@@ -23,7 +23,7 @@ RsrInternalSocketConnectionSpecification >> connect [
 	^connectionA
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInternalSocketConnectionSpecification >> defaultPort [
 	"Returns the default port number used to listen for connections."
 

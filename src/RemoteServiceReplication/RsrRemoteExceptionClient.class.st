@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrRemoteExceptionClient',
-	#superclass : 'RsrRemoteException',
+	#name : #RsrRemoteExceptionClient,
+	#superclass : #RsrRemoteException,
 	#category : 'RemoteServiceReplication'
 }

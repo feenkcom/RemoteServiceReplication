@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrTokenAccepted',
-	#superclass : 'RsrTokenExchangeMessage',
+	#name : #RsrTokenAccepted,
+	#superclass : #RsrTokenExchangeMessage,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrTokenAccepted >> wasAccepted [
 
 	^true

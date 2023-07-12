@@ -7,12 +7,12 @@ Note:
 Subclasses of RsrReasonService are alway permitted as they are required by the framework.
 "
 Class {
-	#name : 'RsrAbstractPolicy',
-	#superclass : 'RsrObject',
+	#name : #RsrAbstractPolicy,
+	#superclass : #RsrObject,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrAbstractPolicy >> permits: aTemplate [
 	"Returning true to allow the framework to instantiate 
 	a Service received over the Connection."
