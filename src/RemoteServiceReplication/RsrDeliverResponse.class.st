@@ -7,15 +7,15 @@ Object
 
 "
 Class {
-	#name : 'RsrDeliverResponse',
-	#superclass : 'RsrMessagingCommand',
+	#name : #RsrDeliverResponse,
+	#superclass : #RsrMessagingCommand,
 	#instVars : [
 		'responseReference'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrDeliverResponse class >> transaction: aTransactionId
 responseReference: aReference
 snapshots: anArrayOfSnapshots [
@@ -27,7 +27,7 @@ snapshots: anArrayOfSnapshots [
 		yourself
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrDeliverResponse >> encode: aStream
 using: anEncoder [
 
@@ -36,7 +36,7 @@ using: anEncoder [
 		onto: aStream
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 RsrDeliverResponse >> executeFor: aConnection [
 
 	| pendingMessage result servicesStrongly |
@@ -59,37 +59,37 @@ RsrDeliverResponse >> executeFor: aConnection [
 				(RsrDecodingRaisedException exception: ex) ]
 ]
 
-{ #category : 'reporting' }
+{ #category : #reporting }
 RsrDeliverResponse >> reportOn: aLog [
 
 	aLog debug: 'RsrDeliverResponse(', self response class name, ')'
 ]
 
-{ #category : 'reporting' }
+{ #category : #reporting }
 RsrDeliverResponse >> reportUnknownTransactionIn: aConnection [
 
 	aConnection log error: 'Unknown transaction (', self transaction asString, ') while processing Response'
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrDeliverResponse >> response [
 
 	^self responseReference
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrDeliverResponse >> response: anObject [
 
 	^self responseReference: anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrDeliverResponse >> responseReference [
 
 	^responseReference
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrDeliverResponse >> responseReference: aReference [
 
 	responseReference := aReference

@@ -12,12 +12,12 @@ Server -> Client:
 		- Server: Closes socket
 "
 Class {
-	#name : 'RsrProtocolVersionNegotiation',
-	#superclass : 'RsrHandshakeStep',
+	#name : #RsrProtocolVersionNegotiation,
+	#superclass : #RsrHandshakeStep,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrProtocolVersionNegotiation >> codec [
 
 	^RsrProtocolVersionNegotiationCodec new

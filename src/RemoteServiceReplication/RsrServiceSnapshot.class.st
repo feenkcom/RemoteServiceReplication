@@ -13,8 +13,8 @@ Collaborators:
 - Reference
 "
 Class {
-	#name : 'RsrServiceSnapshot',
-	#superclass : 'RsrObject',
+	#name : #RsrServiceSnapshot,
+	#superclass : #RsrObject,
 	#instVars : [
 		'sid',
 		'templateName',
@@ -24,7 +24,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrServiceSnapshot class >> from: aService [
 
 	^self new
@@ -32,7 +32,7 @@ RsrServiceSnapshot class >> from: aService [
 		yourself
 ]
 
-{ #category : 'variable utilites' }
+{ #category : #'variable utilites' }
 RsrServiceSnapshot class >> reflectedVariableIndicesFor: aService
 do: aBlock [
 
@@ -45,7 +45,7 @@ do: aBlock [
 			aBlock value: index]
 ]
 
-{ #category : 'variable utilites' }
+{ #category : #'variable utilites' }
 RsrServiceSnapshot class >> reflectedVariablesFor: aService [
 
 	| currentClass variables template |
@@ -59,7 +59,7 @@ RsrServiceSnapshot class >> reflectedVariablesFor: aService [
 	^variables
 ]
 
-{ #category : 'variable utilites' }
+{ #category : #'variable utilites' }
 RsrServiceSnapshot class >> reflectedVariablesFor: aService
 do: aBlock [
 
@@ -68,7 +68,7 @@ do: aBlock [
 		do: [:index | aBlock value: (aService instVarAt: index)]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 
 	| instance template |
@@ -88,7 +88,7 @@ RsrServiceSnapshot >> createInstanceRegisteredIn: aConnection [
 	^instance
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrServiceSnapshot >> decode: aStream
 using: aDecoder [
 
@@ -105,7 +105,7 @@ using: aDecoder [
 	shouldCreateServer := template serverClassName = targetClassName.
 ]
 
-{ #category : 'encoding/decoding' }
+{ #category : #'encoding/decoding' }
 RsrServiceSnapshot >> encode: aStream
 using: anEncoder [
 
@@ -124,7 +124,7 @@ using: anEncoder [
 	self slots do: [:each | each encode: aStream using: anEncoder]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> instanceIn: aConnection [
 
 	| instance |
@@ -136,7 +136,7 @@ RsrServiceSnapshot >> instanceIn: aConnection [
 	^instance
 ]
 
-{ #category : 'reifying' }
+{ #category : #reifying }
 RsrServiceSnapshot >> reifyIn: aConnection [
 
 	| instance referenceStream |
@@ -151,37 +151,37 @@ RsrServiceSnapshot >> reifyIn: aConnection [
 	^ instance
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrServiceSnapshot >> shouldCreateServer [
 
 	^shouldCreateServer
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> sid [
 
 	^sid
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> sid: aServiceID [
 
 	sid := aServiceID
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> slots [
 
 	^slots
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> slots: anArrayOfReferences [
 
 	slots := anArrayOfReferences
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrServiceSnapshot >> snapshot: aService [
 
 	| template |
@@ -196,13 +196,13 @@ RsrServiceSnapshot >> snapshot: aService [
 		do: [:each | slots add: (RsrReference from: each)]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrServiceSnapshot >> snapshotIdentifier [
 
 	^0
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrServiceSnapshot >> targetClassName [
 
 	| template |
@@ -212,13 +212,13 @@ RsrServiceSnapshot >> targetClassName [
 		ifFalse: [template clientClassName]
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrServiceSnapshot >> targetClassNameReference [
 
 	^RsrSymbolReference from: self targetClassName
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrServiceSnapshot >> templateName [
 
 	^templateName

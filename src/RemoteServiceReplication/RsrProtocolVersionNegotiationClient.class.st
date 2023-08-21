@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrProtocolVersionNegotiationClient',
-	#superclass : 'RsrProtocolVersionNegotiation',
+	#name : #RsrProtocolVersionNegotiationClient,
+	#superclass : #RsrProtocolVersionNegotiation,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'handshaking' }
+{ #category : #handshaking }
 RsrProtocolVersionNegotiationClient >> performOver: aStream [
 	"Perform the Client's porition of the handshake"
 

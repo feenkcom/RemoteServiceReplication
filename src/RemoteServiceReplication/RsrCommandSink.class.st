@@ -7,34 +7,34 @@ Object
 
 "
 Class {
-	#name : 'RsrCommandSink',
-	#superclass : 'RsrStreamChannelLoop',
+	#name : #RsrCommandSink,
+	#superclass : #RsrStreamChannelLoop,
 	#instVars : [
 		'queue'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSink >> addCommunicationProcessesTo: aSet [
 	"Add all processes used for Communication to the provided set."
 	
 	aSet add: process
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSink >> encoder [
 
 	^RsrCommandEncoder new
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrCommandSink >> enqueue: aCommand [
 
 	self isActive ifTrue: [queue nextPut: aCommand]
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrCommandSink >> executeCycle [
 
 	[| command |
@@ -51,51 +51,51 @@ RsrCommandSink >> executeCycle [
 			self channel channelDisconnected]
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrCommandSink >> flush [
 
 	self outStream flush
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 RsrCommandSink >> initialize [
 
 	super initialize.
 	queue := SharedQueue new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSink >> outStream [
 
 	^self channel outStream
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSink >> runLoopName [
 
 	^'Connection Writing'
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrCommandSink >> stop [
 
 	super stop.
 	queue nextPut: self stopToken
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSink >> stopToken [
 
 	^self stoppedState
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrCommandSink >> write: aByteArray [
 
 	self outStream nextPutAll: aByteArray
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrCommandSink >> writeCommand: aCommand [
 
 	self report: aCommand.

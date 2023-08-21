@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrHandshakeStep',
-	#superclass : 'RsrObject',
+	#name : #RsrHandshakeStep,
+	#superclass : #RsrObject,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'performing' }
+{ #category : #performing }
 RsrHandshakeStep >> performOver: aStream [
 	"Perform the work for this step."
 

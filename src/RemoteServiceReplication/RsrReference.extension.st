@@ -1,6 +1,6 @@
-Extension { #name : 'RsrReference' }
+Extension { #name : #RsrReference }
 
-{ #category : '*remoteservicereplication' }
+{ #category : #'*remoteservicereplication' }
 RsrReference class >> referenceClassFor: anObject [
 
 	(anObject isKindOf: RsrService)

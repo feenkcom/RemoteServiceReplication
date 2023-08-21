@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrInMemoryConnectionSpecification',
-	#superclass : 'RsrInternalConnectionSpecification',
+	#name : #RsrInMemoryConnectionSpecification,
+	#superclass : #RsrInternalConnectionSpecification,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'connecting' }
+{ #category : #connecting }
 RsrInMemoryConnectionSpecification >> connect [
 	"Establish an internal Connection pair via SharedQueues."
 

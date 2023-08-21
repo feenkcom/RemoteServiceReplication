@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrTemplateResolver',
-	#superclass : 'RsrAbstractTemplateResolver',
+	#name : #RsrTemplateResolver,
+	#superclass : #RsrAbstractTemplateResolver,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrTemplateResolver >> templateFor: aService [
 	"Resolve the template associated with the provided Service."
 
@@ -15,7 +15,7 @@ RsrTemplateResolver >> templateFor: aService [
 	^template
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrTemplateResolver >> templateNamed: aTemplateName
 ifAbsent: aBlock [
 	"Resolve a template with the provided name."

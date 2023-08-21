@@ -1,26 +1,26 @@
 Class {
-	#name : 'RsrCommandSource',
-	#superclass : 'RsrStreamChannelLoop',
+	#name : #RsrCommandSource,
+	#superclass : #RsrStreamChannelLoop,
 	#instVars : [
 		'decoder'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSource >> addCommunicationProcessesTo: aSet [
 	"Add all processes used for Communication to the provided set."
 	
 	aSet add: process
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSource >> decoder [
 
 	^RsrCommandDecoder new
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrCommandSource >> executeCycle [
 
 	[| command |
@@ -34,20 +34,20 @@ RsrCommandSource >> executeCycle [
 			self channel channelDisconnected]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSource >> inStream [
 	"Return the read stream associated w/ this channel."
 
 	^self channel inStream
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrCommandSource >> nextCommand [
 
 	^self decoder decodeCommand: self inStream
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCommandSource >> runLoopName [
 
 	^'Connection Reading'

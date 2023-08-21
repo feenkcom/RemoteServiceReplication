@@ -10,8 +10,8 @@ initiator := RsrInitiateConnection
 ^initiator connect
 "
 Class {
-	#name : 'RsrInitiateConnection',
-	#superclass : 'RsrSocketConnectionSpecification',
+	#name : #RsrInitiateConnection,
+	#superclass : #RsrSocketConnectionSpecification,
 	#instVars : [
 		'token'
 	],
@@ -51,7 +51,7 @@ RsrInitiateConnection >> connect [
 	^connection open
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInitiateConnection >> handshakeSteps [
 	"Returns a sequence of steps needed to perform a successful handshake."
 

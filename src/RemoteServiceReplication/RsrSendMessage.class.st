@@ -7,8 +7,8 @@ Object
 
 "
 Class {
-	#name : 'RsrSendMessage',
-	#superclass : 'RsrMessagingCommand',
+	#name : #RsrSendMessage,
+	#superclass : #RsrMessagingCommand,
 	#instVars : [
 		'receiverReference',
 		'selectorReference',
@@ -17,7 +17,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrSendMessage class >> transaction: aTransactionId
 receiverReference: aServiceReference
 selectorReference: aSelectorReference
@@ -31,19 +31,19 @@ argumentReferences: anArrayOfReferences [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> argumentReferences [
 
 	^argumentReferences
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> argumentReferences: anArrayOfReferences [
 
 	argumentReferences := anArrayOfReferences
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrSendMessage >> encode: aStream
 using: anEncoder [
 
@@ -52,7 +52,7 @@ using: anEncoder [
 		onto: aStream
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 RsrSendMessage >> executeFor: aConnection [
 
 	| resolver servicesStrongly receiver selector arguments messageSend |
@@ -83,7 +83,7 @@ RsrSendMessage >> executeFor: aConnection [
 				ifFalse: [resolver break: 'Message send terminated without a result']]
 ]
 
-{ #category : 'reporting' }
+{ #category : #reporting }
 RsrSendMessage >> logException: anException
 to: aLog [
 
@@ -100,7 +100,7 @@ to: aLog [
 	aLog error: message
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 RsrSendMessage >> perform: aMessageSend
 answerUsing: aResolver [
 
@@ -133,37 +133,37 @@ answerUsing: aResolver [
 							ex return]]]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> receiverReference [
 
 	^receiverReference
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> receiverReference: aServiceReference [
 
 	receiverReference := aServiceReference
 ]
 
-{ #category : 'reporting' }
+{ #category : #reporting }
 RsrSendMessage >> reportOn: aLog [
 
 	aLog debug: 'RsrSendMessage(', self receiverReference asString, '>>', self selectorReference asString, ')'
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> selectorReference [
 
 	^selectorReference
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> selectorReference: aSymbolReference [
 
 	selectorReference := aSymbolReference
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSendMessage >> unhandledExceptionClass [
 	"The class which signals that an unhandled execption has been signaled."
 

@@ -1,16 +1,16 @@
 Class {
-	#name : 'RsrProtocolVersionNegotiationCodec',
-	#superclass : 'RsrCodec',
+	#name : #RsrProtocolVersionNegotiationCodec,
+	#superclass : #RsrCodec,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrProtocolVersionNegotiationCodec >> chosenVersionIdentifier [
 
 	^1
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrProtocolVersionNegotiationCodec >> decode: aStream [
 	"Decode a message from <aStream>"
 
@@ -25,7 +25,7 @@ RsrProtocolVersionNegotiationCodec >> decode: aStream [
 	^RsrProtocolVersionNegotiationFailed signal: 'Unknown identifier: ', identifier printString
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrProtocolVersionNegotiationCodec >> decodeChosenVersion: aStream [
 
 	| version |
@@ -33,13 +33,13 @@ RsrProtocolVersionNegotiationCodec >> decodeChosenVersion: aStream [
 	^RsrChosenVersion version: version
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrProtocolVersionNegotiationCodec >> decodeNoVersionOverlap: aStream [
 
 	^RsrNoVersionOverlap new
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrProtocolVersionNegotiationCodec >> decodeSupportedVersions: aStream [
 
 	| numberOfVersions versions |
@@ -48,7 +48,7 @@ RsrProtocolVersionNegotiationCodec >> decodeSupportedVersions: aStream [
 	^RsrSupportedVersions versions: versions
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrProtocolVersionNegotiationCodec >> encodeChosenVersion: aChosenVersion
 onto: aStream [
 
@@ -60,7 +60,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrProtocolVersionNegotiationCodec >> encodeNoVersionOverlap: aNoVersionOverlap
 onto: aStream [
 
@@ -69,7 +69,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrProtocolVersionNegotiationCodec >> encodeSupportedVersions: aSupportedVersions
 onto: aStream [
 
@@ -84,13 +84,13 @@ onto: aStream [
 	versions do: [:each | self encodeControlWord: each onto: aStream]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrProtocolVersionNegotiationCodec >> noVersionOverlapIdentifier [
 
 	^2
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrProtocolVersionNegotiationCodec >> supportedVersionsIdentifier [
 
 	^0

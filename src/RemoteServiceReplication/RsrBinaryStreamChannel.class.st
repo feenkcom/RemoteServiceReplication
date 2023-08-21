@@ -7,8 +7,8 @@ Object
 
 "
 Class {
-	#name : 'RsrBinaryStreamChannel',
-	#superclass : 'RsrChannel',
+	#name : #RsrBinaryStreamChannel,
+	#superclass : #RsrChannel,
 	#instVars : [
 		'sink',
 		'source',
@@ -18,7 +18,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrBinaryStreamChannel class >> inStream: inStream
 outStream: outStream [
 
@@ -28,7 +28,7 @@ outStream: outStream [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> addCommunicationProcessesTo: aSet [
 	"Add all processes used for Communication to the provided set."
 
@@ -36,7 +36,7 @@ RsrBinaryStreamChannel >> addCommunicationProcessesTo: aSet [
 	source addCommunicationProcessesTo: aSet
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrBinaryStreamChannel >> close [
 	"Shutdown the Command sink and source."
 
@@ -48,28 +48,28 @@ RsrBinaryStreamChannel >> close [
 	inStream close
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrBinaryStreamChannel >> disconnected [
 	"The socket has disconnected so the channel is no longer open."
 
 	self connection channelDisconnected
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> inStream [
 	"Returns the stream associated w/ reading"
 
 	^inStream
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> inStream: aBinaryReadStream [
 	"Sets the stream associated w/ reading"
 
 	inStream := aBinaryReadStream
 ]
 
-{ #category : 'initializing' }
+{ #category : #initializing }
 RsrBinaryStreamChannel >> initialize [
 
 	super initialize.
@@ -77,13 +77,13 @@ RsrBinaryStreamChannel >> initialize [
 	sink := RsrCommandSink on: self
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrBinaryStreamChannel >> isConnected [
 
 	^self inStream atEnd not and: [self outStream atEnd not]
 ]
 
-{ #category : 'lifecycle' }
+{ #category : #lifecycle }
 RsrBinaryStreamChannel >> open [
 	"Ensure the Command sink and source are running"
 
@@ -91,34 +91,34 @@ RsrBinaryStreamChannel >> open [
 	sink start
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> outStream [
 	"Returns the stream associated w/ writing"
 
 	^outStream
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> outStream: aBinaryWriteStream [
 	"Sets the stream associated w/ writing"
 
 	outStream := aBinaryWriteStream
 ]
 
-{ #category : 'command processing' }
+{ #category : #'command processing' }
 RsrBinaryStreamChannel >> send: aCommand [
 	"Send the provided command over the channel"
 
 	sink enqueue: aCommand
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> sink [
 
 	^sink
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBinaryStreamChannel >> source [
 
 	^source

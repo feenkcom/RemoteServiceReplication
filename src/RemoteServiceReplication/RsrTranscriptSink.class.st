@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrTranscriptSink',
-	#superclass : 'RsrLogSink',
+	#name : #RsrTranscriptSink,
+	#superclass : #RsrLogSink,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrTranscriptSink >> write: aMessageString [
 
 	Transcript

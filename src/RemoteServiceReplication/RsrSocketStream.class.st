@@ -1,13 +1,13 @@
 Class {
-	#name : 'RsrSocketStream',
-	#superclass : 'RsrStream',
+	#name : #RsrSocketStream,
+	#superclass : #RsrStream,
 	#instVars : [
 		'socket'
 	],
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrSocketStream class >> on: anRsrSocket [
 
 	^self new
@@ -15,34 +15,34 @@ RsrSocketStream class >> on: anRsrSocket [
 		yourself
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrSocketStream >> atEnd [
 	"Return whether additional bytes could become available on the socket."
 
 	^socket isConnected not
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSocketStream >> chunkSize [
 	"The largest size that should be read from or written to a Socket in each attempt."
 
 	^4096
 ]
 
-{ #category : 'closing' }
+{ #category : #closing }
 RsrSocketStream >> close [
 
 	socket close
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSocketStream >> next [
 	"Return the next byte"
 
 	^self next: 1
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSocketStream >> next: count [
 	"Return exactly <count> number of bytes.
 	Signal RsrSocketClosed if the socket closes."
@@ -61,7 +61,7 @@ RsrSocketStream >> next: count [
 	^bytes
 ]
 
-{ #category : 'adding' }
+{ #category : #adding }
 RsrSocketStream >> nextPutAll: bytes [
 	"Write <bytes> to the socket."
 
@@ -78,7 +78,7 @@ RsrSocketStream >> nextPutAll: bytes [
 			position := position + numWritten]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSocketStream >> socket: anRsrSocket [
 
 	socket := anRsrSocket

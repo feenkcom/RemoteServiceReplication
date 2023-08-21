@@ -2,8 +2,8 @@
 PolicyRejectedService signals to a caller that their peer's Connection Policy does not permit the described object's creation.
 "
 Class {
-	#name : 'RsrPolicyRejectedService',
-	#superclass : 'RsrReasonService',
+	#name : #RsrPolicyRejectedService,
+	#superclass : #RsrReasonService,
 	#instVars : [
 		'sid',
 		'templateName'
@@ -11,7 +11,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrPolicyRejectedService class >> sid: aSID
 templateName: aTemplateName [
 	"Create an instance of the PolicyRejectedService reason.
@@ -25,34 +25,34 @@ templateName: aTemplateName [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPolicyRejectedService class >> templateClassName [
 
 	^#RsrPolicyRejectedService
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPolicyRejectedService >> sid [
 	"Service ID"
 
 	^sid
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPolicyRejectedService >> sid: aSID [
 	"Service ID"
 
 	sid := aSID
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPolicyRejectedService >> templateName [
 	"The Template's name"
 
 	^templateName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPolicyRejectedService >> templateName: aTemplateName [
 	"The Template's name"
 

@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrLogWithPrefix',
-	#superclass : 'RsrObject',
+	#name : #RsrLogWithPrefix,
+	#superclass : #RsrObject,
 	#instVars : [
 		'prefix',
 		'log'
@@ -8,7 +8,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLogWithPrefix class >> log: aLog [
 
 	^self new
@@ -16,7 +16,7 @@ RsrLogWithPrefix class >> log: aLog [
 		yourself
 ]
 
-{ #category : 'logging' }
+{ #category : #logging }
 RsrLogWithPrefix class >> prefix: aString
 log: aLog [
 
@@ -26,31 +26,31 @@ log: aLog [
 		yourself
 ]
 
-{ #category : 'debugging' }
+{ #category : #debugging }
 RsrLogWithPrefix >> debug: aString [
 
 	^self log debug: self prefix, '/', aString
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLogWithPrefix >> log [
 
 	^log
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLogWithPrefix >> log: aLog [
 
 	log := aLog
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLogWithPrefix >> prefix [
 
 	^prefix
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrLogWithPrefix >> prefix: aString [
 
 	prefix := aString

@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrConnectionSpecification',
-	#superclass : 'RsrObject',
+	#name : #RsrConnectionSpecification,
+	#superclass : #RsrObject,
 	#category : 'RemoteServiceReplication'
 }

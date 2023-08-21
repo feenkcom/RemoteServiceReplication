@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrMessageSend',
-	#superclass : 'RsrObject',
+	#name : #RsrMessageSend,
+	#superclass : #RsrObject,
 	#instVars : [
 		'receiver',
 		'selector',
@@ -9,7 +9,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrMessageSend class >> receiver: anObject
 selector: aSelector
 arguments: anArray [
@@ -21,19 +21,19 @@ arguments: anArray [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessageSend >> arguments [
 
 	^arguments
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessageSend >> arguments: anArray [
 
 	arguments := anArray
 ]
 
-{ #category : 'evaluating' }
+{ #category : #evaluating }
 RsrMessageSend >> perform [
 
 	^self receiver
@@ -41,25 +41,25 @@ RsrMessageSend >> perform [
 		withArguments: self arguments
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessageSend >> receiver [
 
 	^receiver
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessageSend >> receiver: anObject [
 
 	receiver := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessageSend >> selector [
 
 	^selector
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrMessageSend >> selector: aSelector [
 
 	selector := aSelector

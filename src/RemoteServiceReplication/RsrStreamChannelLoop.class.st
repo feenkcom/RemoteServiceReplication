@@ -6,8 +6,8 @@ Object
 
 "
 Class {
-	#name : 'RsrStreamChannelLoop',
-	#superclass : 'RsrObject',
+	#name : #RsrStreamChannelLoop,
+	#superclass : #RsrObject,
 	#instVars : [
 		'process',
 		'channel',
@@ -16,7 +16,7 @@ Class {
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrStreamChannelLoop class >> on: aChannel [
 
 	^self new
@@ -24,44 +24,44 @@ RsrStreamChannelLoop class >> on: aChannel [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrStreamChannelLoop >> channel [
 
 	^channel
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrStreamChannelLoop >> channel: aChannel [
 
 	channel := aChannel
 ]
 
-{ #category : 'running' }
+{ #category : #running }
 RsrStreamChannelLoop >> executeCycle [
 
 	self subclassResponsibility
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 RsrStreamChannelLoop >> initialize [
 
 	super initialize.
 	state := self stoppedState
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrStreamChannelLoop >> isActive [
 
 	^state == self runningState
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrStreamChannelLoop >> isProcessActive [
 
 	^process ~~ nil
 ]
 
-{ #category : 'running' }
+{ #category : #running }
 RsrStreamChannelLoop >> log [
 
 	^RsrLogWithPrefix
@@ -69,25 +69,25 @@ RsrStreamChannelLoop >> log [
 		log: self channel log
 ]
 
-{ #category : 'running' }
+{ #category : #running }
 RsrStreamChannelLoop >> log: aString [
 
 	self log debug: aString
 ]
 
-{ #category : 'running' }
+{ #category : #running }
 RsrStreamChannelLoop >> report: aCommand [
 
 	aCommand reportOn: self log
 ]
 
-{ #category : 'running' }
+{ #category : #running }
 RsrStreamChannelLoop >> reportException: anException [
 
 	self log: anException description
 ]
 
-{ #category : 'running' }
+{ #category : #running }
 RsrStreamChannelLoop >> runLoop [
 
 	[self isActive]
@@ -100,7 +100,7 @@ RsrStreamChannelLoop >> runLoop [
 					self channel genericError: ex]]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrStreamChannelLoop >> runLoopName [
 	"Return the name of the associated run loop.
 	This name is assigned to the Process used to execute the run loop."
@@ -108,13 +108,13 @@ RsrStreamChannelLoop >> runLoopName [
 	^self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrStreamChannelLoop >> runningState [
 
 	^#Running
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrStreamChannelLoop >> start [
 
 	state := self runningState.
@@ -126,14 +126,14 @@ RsrStreamChannelLoop >> start [
 		named: self runLoopName
 ]
 
-{ #category : 'commands' }
+{ #category : #commands }
 RsrStreamChannelLoop >> stop [
 
 	self isActive ifFalse: [^self].
 	state := self stoppedState
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrStreamChannelLoop >> stoppedState [
 
 	^#Stop

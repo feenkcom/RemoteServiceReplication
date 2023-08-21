@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrTokenExchangeCodec',
-	#superclass : 'RsrCodec',
+	#name : #RsrTokenExchangeCodec,
+	#superclass : #RsrCodec,
 	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrTokenExchangeCodec >> decode: aStream [
 
 	| identifier |
@@ -18,7 +18,7 @@ RsrTokenExchangeCodec >> decode: aStream [
 	^RsrTokenExchangeFailed signal: 'Unknown identifier: ', identifier printString
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrTokenExchangeCodec >> decodeToken: aStream [
 
 	| size |
@@ -26,7 +26,7 @@ RsrTokenExchangeCodec >> decodeToken: aStream [
 	^RsrToken bytes: (aStream next: size)
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrTokenExchangeCodec >> encodeToken: aToken
 onto: aStream [
 
@@ -39,7 +39,7 @@ onto: aStream [
 	aStream nextPutAll: aToken bytes
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrTokenExchangeCodec >> encodeTokenAccepted: aTokenAccepted
 onto: aStream [
 
@@ -48,7 +48,7 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrTokenExchangeCodec >> encodeTokenRejected: aTokenRejected
 onto: aStream [
 
@@ -57,19 +57,19 @@ onto: aStream [
 		onto: aStream
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchangeCodec >> tokenAcceptedIdentifier [
 
 	^1
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchangeCodec >> tokenIdentifier [
 
 	^0
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchangeCodec >> tokenRejectedIdentifier [
 
 	^2
