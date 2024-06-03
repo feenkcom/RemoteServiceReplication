@@ -1,6 +1,6 @@
-Extension { #name : 'RsrDoubleReference' }
+Extension { #name : #RsrDoubleReference }
 
-{ #category : '*RemoteServiceReplication-Pharo' }
+{ #category : #'*RemoteServiceReplication-Pharo' }
 RsrDoubleReference >> convertBytes: bytes [
 
 	^bytes
@@ -8,7 +8,7 @@ RsrDoubleReference >> convertBytes: bytes [
 		bigEndian: true
 ]
 
-{ #category : '*RemoteServiceReplication-Pharo' }
+{ #category : #'*RemoteServiceReplication-Pharo' }
 RsrDoubleReference class >> convertToBytes: aFloat [
 
 	| bytes |
@@ -20,13 +20,13 @@ RsrDoubleReference class >> convertToBytes: aFloat [
 	^bytes
 ]
 
-{ #category : '*RemoteServiceReplication-Pharo' }
+{ #category : #'*RemoteServiceReplication-Pharo' }
 RsrDoubleReference class >> infinity [
 
 	^Float infinity
 ]
 
-{ #category : '*RemoteServiceReplication-Pharo' }
+{ #category : #'*RemoteServiceReplication-Pharo' }
 RsrDoubleReference class >> nan [
 
 	^Float nan

@@ -1,10 +1,10 @@
 Class {
-	#name : 'RsrInstruments',
-	#superclass : 'RsrObject',
+	#name : #RsrInstruments,
+	#superclass : #RsrObject,
 	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : 'instrumenting' }
+{ #category : #instrumenting }
 RsrInstruments >> instrument: aBlock
 label: aString [
 
@@ -16,7 +16,7 @@ label: aString [
 	^result
 ]
 
-{ #category : 'instrumenting' }
+{ #category : #instrumenting }
 RsrInstruments >> profile: aBlock
 label: aString [
 
@@ -25,7 +25,7 @@ label: aString [
 	^result
 ]
 
-{ #category : 'instrumenting' }
+{ #category : #instrumenting }
 RsrInstruments >> profile: aBlock
 label: aString
 if: aCondition [

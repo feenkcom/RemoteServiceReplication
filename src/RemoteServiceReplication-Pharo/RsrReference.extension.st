@@ -1,6 +1,6 @@
-Extension { #name : 'RsrReference' }
+Extension { #name : #RsrReference }
 
-{ #category : '*RemoteServiceReplication-Pharo' }
+{ #category : #'*RemoteServiceReplication-Pharo' }
 RsrReference class >> initializeReferenceMapping [
 	"RsrReference initializeReferenceMapping"
 

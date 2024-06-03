@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrForwarder',
-	#superclass : 'Object',
+	#name : #RsrForwarder,
+	#superclass : #Object,
 	#instVars : [
 		'_service'
 	],

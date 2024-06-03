@@ -1,16 +1,16 @@
 Class {
-	#name : 'RsrClassResolver',
-	#superclass : 'RsrObject',
+	#name : #RsrClassResolver,
+	#superclass : #RsrObject,
 	#category : 'RemoteServiceReplication-Pharo'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrClassResolver class >> classNamed: aSymbol [
 
 	^Smalltalk at: aSymbol ifAbsent: [RsrUnknownClass signal: aSymbol]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrClassResolver class >> classNamed: aSymbol
 ifAbsent: aBlock [
 

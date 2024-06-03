@@ -1,5 +1,5 @@
 Class {
-	#name : 'RsrAbstractService',
-	#superclass : 'Object',
+	#name : #RsrAbstractService,
+	#superclass : #Object,
 	#category : 'RemoteServiceReplication-Pharo'
 }
