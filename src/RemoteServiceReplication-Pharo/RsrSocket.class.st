@@ -61,7 +61,9 @@ port: port [
 	nativeSocket
 		bindTo: address
 		port: port]
-			on: NameLookupFailure, PrimitiveFailed, SocketError, InvalidSocketStatusException
+			"Sockets signal SocketError instead of PrimitiveFailed in Pharo 11, 
+			PrimitiveFailed should be removed from here when Pharo 10 compatibility is dropped"
+			on: (ExceptionSet withClassNames: #(#NameLookupFailure #PrimitiveFailed #SocketError #InvalidSocketStatusException))
 			do: [:ex | ex resignalAs: (RsrInvalidBind new messageText: ex messageText)]
 ]
 
