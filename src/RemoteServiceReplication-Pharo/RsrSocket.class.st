@@ -135,6 +135,10 @@ startingAt: index [
 	| tempBuffer numRead |
 	self assertConnected.
 	tempBuffer := ByteArray new: count.
+	nativeSocket
+		waitForDataFor: 1
+		ifClosed: [RsrSocketClosed signal]
+		ifTimedOut: [^0].
 	numRead := nativeSocket receiveDataInto: tempBuffer.
 	numRead = 0
 		ifTrue: [RsrSocketClosed signal].
