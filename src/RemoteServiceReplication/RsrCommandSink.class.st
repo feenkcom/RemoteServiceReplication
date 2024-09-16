@@ -48,7 +48,7 @@ RsrCommandSink >> executeCycle [
 		do:
 			[:ex |
 			self reportException: ex.
-			self channel channelDisconnected]
+			self channel disconnected]
 ]
 
 { #category : #commands }

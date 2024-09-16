@@ -3,7 +3,7 @@
 run
 	| topazFileHeader gsSrcRoot repositoryRoot specUrl loadSpec resolvedProject topazFileNameMap 
 		projectSetDefinition projectSetModification visitor |
-		topazFileHeader := '! Copyright (C) GemTalk Systems 1986-2020.  All Rights Reserved.
+		topazFileHeader := '! Copyright (C) GemTalk Systems 1986-', Date today year asString, '.  All Rights Reserved.
 '.
 	repositoryRoot := '$ROWAN_PROJECTS_HOME/RemoteServiceReplication' asFileReference.
   gsSrcRoot := repositoryRoot / 'src-gs'.

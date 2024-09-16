@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 ### Install RSR from Tonel files into a Rowan-enabled stone
 ### Exits with 0 if success, 1 if failed
 
