@@ -1,7 +1,7 @@
 RwLoadSpecificationV2 {
 	#specName : 'Announcements',
 	#projectName : 'Announcements',
-	#gitUrl : 'git@github.com:GemTalk/Announcements.git',
+	#gitUrl : 'https://github.com/GemTalk/Announcements.git',
 	#revision : 'main',
 	#projectSpecFile : 'rowan/project.ston',
 	#componentNames : [
