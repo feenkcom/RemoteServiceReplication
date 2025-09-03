@@ -18,10 +18,10 @@ BaselineOfRemoteServiceReplicationForGlamorousToolkit >> baseline: spec [
 						with: [ spec requires: #('RemoteServiceReplication-Platform-Test') ].
 		 	spec
 					package: 'TonelFixes';
-					package: 'RemoteServiceReplication-Pharo'
+					package: 'RemoteServiceReplication-Pharo-12'
 						with: [ spec requires: #('TonelFixes' 'RemoteServiceReplication-Base') ];
 					package: 'RemoteServiceReplication'
-						with: [ spec requires: #('RemoteServiceReplication-Pharo') ] ]
+						with: [ spec requires: #('RemoteServiceReplication-Pharo-12') ] ]
 ]
 
 { #category : 'accessing' }
