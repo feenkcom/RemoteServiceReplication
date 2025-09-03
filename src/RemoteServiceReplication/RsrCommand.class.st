@@ -6,9 +6,10 @@ Object
 
 "
 Class {
-	#name : #RsrCommand,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrCommand',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #encoding }

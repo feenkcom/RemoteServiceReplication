@@ -5,13 +5,14 @@ Class {
 		'client',
 		'server'
 	],
-	#category : 'RemoteServiceReplication-Test'
+	#category : 'RemoteServiceReplication-Test',
+	#package : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
 RsrStressTest class >> defaultTimeLimit [
 
-	^30 seconds
+	^Duration seconds: 60
 ]
 
 { #category : 'testing' }
@@ -43,6 +44,12 @@ RsrStressTest >> concurrentlyRun: aBlock [
 	self deny: anyCurtailed
 ]
 
+{ #category : 'accessing' }
+RsrStressTest >> defaultTestDuration [
+
+	^self class defaultTimeLimit / 4
+]
+
 { #category : 'initialize/release' }
 RsrStressTest >> initializeServices [
 
@@ -62,19 +69,25 @@ RsrStressTest >> numThreads [
 { #category : 'running-utilities' }
 RsrStressTest >> repeatedlyRun: aBlock [
 
-	self repetitions timesRepeat: aBlock
+	| endTime |
+	endTime := DateAndTime now + self defaultTestDuration.
+	self
+		repeatedlyRun: aBlock
+		until: endTime
+]
+
+{ #category : 'running-utilities' }
+RsrStressTest >> repeatedlyRun: aBlock
+until: endTime [
+
+	[DateAndTime now < endTime]
+		whileTrue: [aBlock value]
 ]
 
 { #category : 'running-utilities' }
 RsrStressTest >> repeatedlySend: anObject [
 
 	self repeatedlyRun: [self send: anObject]
-]
-
-{ #category : 'accessing' }
-RsrStressTest >> repetitions [
-
-	^1000
 ]
 
 { #category : 'running-utilities' }
@@ -108,9 +121,7 @@ RsrStressTest >> tearDown [
 { #category : 'running' }
 RsrStressTest >> test10MBytes [
 
-	| bytes |
-	bytes := ByteArray new: 1024 * 1024 * 10.
-	50 timesRepeat: [self send: bytes]
+	self repeatedlySend: (ByteArray new: 1024 * 1024 * 10)
 ]
 
 { #category : 'running' }
@@ -123,12 +134,6 @@ RsrStressTest >> test1KBytes [
 RsrStressTest >> test1MBytes [
 
 	self repeatedlySend: (ByteArray new: 1024 squared)
-]
-
-{ #category : 'running' }
-RsrStressTest >> test2KBytes [
-
-	self repeatedlySend: (ByteArray new: 1024 *2)
 ]
 
 { #category : 'running' }

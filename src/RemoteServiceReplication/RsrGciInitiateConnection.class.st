@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrGciInitiateConnection,
-	#superclass : #RsrInitiateConnection,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrGciInitiateConnection',
+	#superclass : 'RsrInitiateConnection',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #'instance creation' }

@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrLogSink,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrLogSink',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #writing }

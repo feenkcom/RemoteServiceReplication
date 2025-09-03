@@ -1,7 +1,7 @@
 Class {
-	#name : #RsrGarbageCollector,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication-Pharo'
+	#name : 'RsrGarbageCollector',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Pharo-11'
 }
 
 { #category : #cleaning }

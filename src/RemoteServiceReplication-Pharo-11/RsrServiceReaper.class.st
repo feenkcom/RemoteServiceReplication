@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'weakStorage'
 	],
-	#category : 'RemoteServiceReplication-Pharo'
+	#category : 'RemoteServiceReplication-Pharo-11'
 }
 
 { #category : #'instance creation' }

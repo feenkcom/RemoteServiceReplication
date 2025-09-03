@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrCommandCodec,
-	#superclass : #RsrCodec,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrCommandCodec',
+	#superclass : 'RsrCodec',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #'private-accessing-commands' }

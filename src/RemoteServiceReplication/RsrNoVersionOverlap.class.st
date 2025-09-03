@@ -2,9 +2,10 @@
 This message is sent when a Server has determined it cannot talk any version of the protocol that the Client has requested to speak.
 "
 Class {
-	#name : #RsrNoVersionOverlap,
-	#superclass : #RsrProtocolVersionNegotiationMessage,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrNoVersionOverlap',
+	#superclass : 'RsrProtocolVersionNegotiationMessage',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #comparing }

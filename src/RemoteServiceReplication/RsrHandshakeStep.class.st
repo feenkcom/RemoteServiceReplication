@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrHandshakeStep,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrHandshakeStep',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #performing }

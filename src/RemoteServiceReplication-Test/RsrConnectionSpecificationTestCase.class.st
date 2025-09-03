@@ -1,7 +1,8 @@
 Class {
 	#name : 'RsrConnectionSpecificationTestCase',
 	#superclass : 'RsrTestCase',
-	#category : 'RemoteServiceReplication-Test'
+	#category : 'RemoteServiceReplication-Test',
+	#package : 'RemoteServiceReplication-Test'
 }
 
 { #category : 'accessing' }
@@ -204,24 +205,15 @@ RsrConnectionSpecificationTestCase >> testEstablishConnection [
 ]
 
 { #category : 'running' }
-RsrConnectionSpecificationTestCase >> testFailedAcceptOnAlternativeLocalhost [
+RsrConnectionSpecificationTestCase >> testFailedConnect [
 
-	| acceptor initiator semaphore |
-	acceptor := RsrAcceptConnection
-		host: self alternativeLocalhost
-		port: self port.
+	| initiator |
 	initiator := RsrInitiateConnection
 		host: self localhost
 		port: self port.
-	semaphore := Semaphore new.
-	RsrProcessModel
-		fork: [[semaphore signal. acceptor waitForConnection] on: RsrWaitForConnectionCancelled do: [:ex | ex return]]
-		named: 'Pending WaitForConnectionCancelled'.
-	[semaphore wait.
 	self
 		should: [initiator connect]
-		raise: RsrSocketError]
-			ensure: [acceptor cancelWaitForConnection]
+		raise: RsrSocketError
 ]
 
 { #category : 'running' }

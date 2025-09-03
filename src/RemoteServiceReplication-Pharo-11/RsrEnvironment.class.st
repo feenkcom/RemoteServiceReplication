@@ -1,7 +1,7 @@
 Class {
-	#name : #RsrEnvironment,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication-Pharo'
+	#name : 'RsrEnvironment',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication-Pharo-11'
 }
 
 { #category : #branching }

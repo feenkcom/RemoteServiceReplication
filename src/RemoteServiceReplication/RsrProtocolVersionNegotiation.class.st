@@ -12,9 +12,10 @@ Server -> Client:
 		- Server: Closes socket
 "
 Class {
-	#name : #RsrProtocolVersionNegotiation,
-	#superclass : #RsrHandshakeStep,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrProtocolVersionNegotiation',
+	#superclass : 'RsrHandshakeStep',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #accessing }

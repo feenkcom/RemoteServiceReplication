@@ -9,7 +9,8 @@ Class {
 		'sendBuffer',
 		'position'
 	],
-	#category : 'RemoteServiceReplication'
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #'instance creation' }

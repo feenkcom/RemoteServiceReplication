@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrTemplateResolver,
-	#superclass : #RsrAbstractTemplateResolver,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrTemplateResolver',
+	#superclass : 'RsrAbstractTemplateResolver',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #resolving }

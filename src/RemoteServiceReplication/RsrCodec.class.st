@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrCodec,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrCodec',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #converting }

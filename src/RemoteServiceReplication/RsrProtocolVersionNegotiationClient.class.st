@@ -1,7 +1,8 @@
 Class {
-	#name : #RsrProtocolVersionNegotiationClient,
-	#superclass : #RsrProtocolVersionNegotiation,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrProtocolVersionNegotiationClient',
+	#superclass : 'RsrProtocolVersionNegotiation',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #handshaking }

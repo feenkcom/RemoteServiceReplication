@@ -7,9 +7,10 @@ Note:
 Subclasses of RsrReasonService are alway permitted as they are required by the framework.
 "
 Class {
-	#name : #RsrAbstractPolicy,
-	#superclass : #RsrObject,
-	#category : 'RemoteServiceReplication'
+	#name : 'RsrAbstractPolicy',
+	#superclass : 'RsrObject',
+	#category : 'RemoteServiceReplication',
+	#package : 'RemoteServiceReplication'
 }
 
 { #category : #testing }
