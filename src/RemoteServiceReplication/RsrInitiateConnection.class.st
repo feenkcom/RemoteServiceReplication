@@ -10,14 +10,23 @@ initiator := RsrInitiateConnection
 ^initiator connect
 "
 Class {
-	#name : 'RsrInitiateConnection',
-	#superclass : 'RsrSocketConnectionSpecification',
+	#name : #RsrInitiateConnection,
+	#superclass : #RsrSocketConnectionSpecification,
 	#instVars : [
 		'token'
 	],
 	#category : 'RemoteServiceReplication',
 	#package : 'RemoteServiceReplication'
 }
+
+{ #category : 'instance creation' }
+RsrInitiateConnection class >> host: hostnameOrAddress port: port [
+
+	^ self new
+		  host: hostnameOrAddress;
+		  port: port;
+		  yourself
+]
 
 { #category : 'connecting' }
 RsrInitiateConnection >> connect [
@@ -43,7 +52,7 @@ RsrInitiateConnection >> connect [
 	^connection open
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInitiateConnection >> handshakeSteps [
 	"Returns a sequence of steps needed to perform a successful handshake."
 

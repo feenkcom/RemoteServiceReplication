@@ -1,11 +1,10 @@
 Class {
-	#name : 'RsrTokenReceiver',
-	#superclass : 'RsrTokenExchange',
-	#category : 'RemoteServiceReplication',
-	#package : 'RemoteServiceReplication'
+	#name : #RsrTokenReceiver,
+	#superclass : #RsrTokenExchange,
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'performing' }
+{ #category : #performing }
 RsrTokenReceiver >> performOver: aStream [
 	"Send the token. Wait for confirmation."
 

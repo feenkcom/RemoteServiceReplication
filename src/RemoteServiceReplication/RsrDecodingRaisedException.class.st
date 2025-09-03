@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrDecodingRaisedException',
-	#superclass : 'RsrAbstractReason',
+	#name : #RsrDecodingRaisedException,
+	#superclass : #RsrAbstractReason,
 	#instVars : [
 		'exception'
 	],
@@ -8,7 +8,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrDecodingRaisedException class >> exception: anException [
 
 	^self new
@@ -16,13 +16,13 @@ RsrDecodingRaisedException class >> exception: anException [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrDecodingRaisedException >> exception [
 
 	^exception
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrDecodingRaisedException >> exception: anException [
 
 	exception := anException

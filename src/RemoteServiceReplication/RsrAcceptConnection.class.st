@@ -1,7 +1,8 @@
 Class {
-	#name : 'RsrAcceptConnection',
-	#superclass : 'RsrSocketConnectionSpecification',
+	#name : #RsrAcceptConnection,
+	#superclass : #RsrSocketConnectionSpecification,
 	#instVars : [
+		'portRange',
 		'listener',
 		'isListening',
 		'isWaitingForConnection'
@@ -11,23 +12,60 @@ Class {
 }
 
 { #category : 'instance creation' }
-RsrAcceptConnection class >> port: aPortInteger [
+RsrAcceptConnection class >> host: hostnameOrAddress port: portNumber [
 
-	^super
-		host: self wildcardAddress
-		port: aPortInteger
+	^ self new
+		  host: hostnameOrAddress;
+		  portRange: (portNumber to: portNumber);
+		  yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : 'instance creation' }
+RsrAcceptConnection class >> host: hostnameOrAddress portRange: anInterval [
+
+	^ self new
+		  host: hostnameOrAddress;
+		  portRange: anInterval;
+		  yourself
+]
+
+{ #category : 'instance creation' }
+RsrAcceptConnection class >> port: aPortInteger [
+
+	^ self host: self wildcardAddress port: aPortInteger
+]
+
+{ #category : 'instance creation' }
+RsrAcceptConnection class >> portRange: anInterval [
+
+	^ self host: self wildcardAddress portRange: anInterval
+]
+
+{ #category : #accessing }
 RsrAcceptConnection class >> wildcardAddress [
 
 	^'0.0.0.0'
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection class >> wildcardPort [
 
 	^0
+]
+
+{ #category : 'private' }
+RsrAcceptConnection >> bind [
+
+	"Attempt to listen on each of the port range, answer the successful port or signal RsrInvalidBind"
+
+	portRange do: [ :portToTry | 
+		[ 
+		listener bindAddress: self host port: portToTry.
+		^ portToTry ]
+			on: RsrInvalidBind
+			do: [ :ex | ex return ] ].
+	RsrInvalidBind signal:
+		'Cannot bind to any port in range ' , portRange printString
 ]
 
 { #category : 'actions' }
@@ -36,18 +74,16 @@ RsrAcceptConnection >> cancelWaitForConnection [
 	listener ifNotNil: [:socket | socket close]
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrAcceptConnection >> ensureListening [
 
 	isListening ifTrue: [^self].
-	listener
-		bindAddress: self host
-		port: self port.
-	listener listen: 1.
+	self bind.
+	listener listen: 5.
 	isListening := true
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection >> handshakeSteps [
 	"Returns a sequence of steps needed to perform a successful handshake."
 
@@ -55,7 +91,7 @@ RsrAcceptConnection >> handshakeSteps [
 		with: RsrProtocolVersionNegotiationServer new
 ]
 
-{ #category : 'other' }
+{ #category : #other }
 RsrAcceptConnection >> initialize [
 
 	super initialize.
@@ -64,13 +100,13 @@ RsrAcceptConnection >> initialize [
 	isListening := false
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrAcceptConnection >> isWaitingForConnection [
 
 	^isWaitingForConnection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrAcceptConnection >> listeningPort [
 	"Return the port the underlying socket is listening on.
 	This is useful when using the wildcard port to dynamically
@@ -78,6 +114,18 @@ RsrAcceptConnection >> listeningPort [
 
 	isListening ifFalse: [^nil].
 	^listener port
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection >> portRange [
+
+	^ portRange
+]
+
+{ #category : 'accessing' }
+RsrAcceptConnection >> portRange: anObject [
+
+	portRange := anObject
 ]
 
 { #category : 'actions' }

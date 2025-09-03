@@ -1,12 +1,12 @@
-Extension { #name : 'RsrForwarder' }
+Extension { #name : #RsrForwarder }
 
-{ #category : '*remoteservicereplication' }
+{ #category : #'*remoteservicereplication' }
 RsrForwarder >> _service: aService [
 
 	_service := aService
 ]
 
-{ #category : '*remoteservicereplication' }
+{ #category : #'*remoteservicereplication' }
 RsrForwarder >> doesNotUnderstand: aMessage [
 
 	^_service _connection
@@ -14,7 +14,7 @@ RsrForwarder >> doesNotUnderstand: aMessage [
 		to: _service
 ]
 
-{ #category : '*remoteservicereplication' }
+{ #category : #'*remoteservicereplication' }
 RsrForwarder class >> on: anRsrObject [
 
 	| instance |

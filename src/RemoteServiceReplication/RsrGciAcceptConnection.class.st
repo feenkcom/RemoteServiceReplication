@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrGciAcceptConnection',
-	#superclass : 'RsrAcceptConnection',
+	#name : #RsrGciAcceptConnection,
+	#superclass : #RsrAcceptConnection,
 	#instVars : [
 		'token'
 	],
@@ -8,7 +8,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrGciAcceptConnection class >> host: hostnameOrAddress
 port: port
 token: aToken [
@@ -20,7 +20,7 @@ token: aToken [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrGciAcceptConnection >> handshakeSteps [
 	"Returns a sequence of steps needed to perform a successful handshake."
 
@@ -29,21 +29,21 @@ RsrGciAcceptConnection >> handshakeSteps [
 		with: (RsrTokenReceiver token: self token)
 ]
 
-{ #category : 'initializing' }
+{ #category : #initializing }
 RsrGciAcceptConnection >> initialize [
 
 	super initialize.
 	token := RsrToken newRandom
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrGciAcceptConnection >> token [
 	"Returns the token used during handshake."
 
 	^token
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrGciAcceptConnection >> token: aToken [
 	"Stores the token used during handshake."
 

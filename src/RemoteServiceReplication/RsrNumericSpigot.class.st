@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrNumericSpigot',
-	#superclass : 'RsrObject',
+	#name : #RsrNumericSpigot,
+	#superclass : #RsrObject,
 	#instVars : [
 		'current',
 		'step'
@@ -9,7 +9,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrNumericSpigot class >> naturals [
 
 	^self
@@ -17,7 +17,7 @@ RsrNumericSpigot class >> naturals [
 		step: 1
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrNumericSpigot class >> new [
 
 	^self
@@ -25,7 +25,7 @@ RsrNumericSpigot class >> new [
 		step: 1
 ]
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrNumericSpigot class >> start: aNumber
 step: anIncrement [
 
@@ -35,7 +35,7 @@ step: anIncrement [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrNumericSpigot >> negated [
 
 	^self class
@@ -43,7 +43,7 @@ RsrNumericSpigot >> negated [
 		step: step negated
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrNumericSpigot >> next [
 
 	| result |
@@ -52,7 +52,7 @@ RsrNumericSpigot >> next [
 	^result
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrNumericSpigot >> next: aCount [
 
 	| result |
@@ -61,19 +61,19 @@ RsrNumericSpigot >> next: aCount [
 	^result
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrNumericSpigot >> start: aNumber [
 
 	current := aNumber
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrNumericSpigot >> step [
 
 	^step
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrNumericSpigot >> step: anIncrement [
 
 	step := anIncrement

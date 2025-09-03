@@ -4,8 +4,8 @@ This class is responsible for taking breaking or fulfilling its associated Promi
 This class may be mutated outside of the thread which created it. Therefore, it contains a protection mutex to ensure consistency.
 "
 Class {
-	#name : 'RsrRemotePromiseResolver',
-	#superclass : 'RsrObject',
+	#name : #RsrRemotePromiseResolver,
+	#superclass : #RsrObject,
 	#instVars : [
 		'mutex',
 		'sendMessage',
@@ -17,7 +17,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrRemotePromiseResolver class >> for: aSendMessage
 over: aConnection [
 
@@ -27,52 +27,52 @@ over: aConnection [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemotePromiseResolver >> addRoot: aService [
 
 	mutex critical: [extraRoots add: aService]
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 RsrRemotePromiseResolver >> assertNotResolved [
 
 	self hasResolved
 		ifTrue: [RsrAlreadyResolved signal]
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrRemotePromiseResolver >> break: aReason [
 	"<aReason> can be any object supported by RSR."
 
 	self resolution: (Array with: #break with: aReason)
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemotePromiseResolver >> connection [
 
 	^connection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemotePromiseResolver >> connection: aConnection [
 
 	connection := aConnection
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrRemotePromiseResolver >> fulfill: result [
 	"Fulfill the remote promise with a fulfilled value of <result>"
 
 	self resolution: (Array with: #fulfill with: result)
 ]
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrRemotePromiseResolver >> hasResolved [
 
 	^hasResolved
 ]
 
-{ #category : 'private' }
+{ #category : #private }
 RsrRemotePromiseResolver >> initialize [
 
 	super initialize.
@@ -81,7 +81,7 @@ RsrRemotePromiseResolver >> initialize [
 	mutex := Semaphore forMutualExclusion
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrRemotePromiseResolver >> resolution: result [
 	"Process and dispatch the result"
 
@@ -104,19 +104,19 @@ RsrRemotePromiseResolver >> resolution: result [
 			hasResolved := true]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemotePromiseResolver >> sendMessage [
 
 	^sendMessage
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemotePromiseResolver >> sendMessage: aSendMessage [
 
 	sendMessage := aSendMessage
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrRemotePromiseResolver >> sendResult: result
 closureRoots: roots [
 
@@ -131,7 +131,7 @@ closureRoots: roots [
 		snapshots: analysis snapshots
 ]
 
-{ #category : 'resolving' }
+{ #category : #resolving }
 RsrRemotePromiseResolver >> sendResultReference: resultReference
 snapshots: snapshots [
 

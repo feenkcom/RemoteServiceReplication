@@ -6,8 +6,8 @@ Object
 
 "
 Class {
-	#name : 'RsrSnapshotAnalysis',
-	#superclass : 'RsrObject',
+	#name : #RsrSnapshotAnalysis,
+	#superclass : #RsrObject,
 	#instVars : [
 		'roots',
 		'snapshots',
@@ -18,7 +18,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrSnapshotAnalysis class >> roots: anArray
 connection: aConnection [
 
@@ -28,7 +28,7 @@ connection: aConnection [
 		yourself
 ]
 
-{ #category : 'analyzing' }
+{ #category : #analyzing }
 RsrSnapshotAnalysis >> analyze: anObject [
 
 	(analyzedObjects includes: anObject) ifTrue: [ ^ self ].
@@ -36,14 +36,14 @@ RsrSnapshotAnalysis >> analyze: anObject [
 	^ (self referenceClassFor: anObject) analyze: anObject using: self
 ]
 
-{ #category : 'analyzing' }
+{ #category : #analyzing }
 RsrSnapshotAnalysis >> analyzeCollection: aCollection [
 
 	aCollection do: [ :each | self analyze: each ].
 	^ aCollection
 ]
 
-{ #category : 'analyzing' }
+{ #category : #analyzing }
 RsrSnapshotAnalysis >> analyzeDictionary: aDictionary [
 
 	aDictionary keysAndValuesDo: [ :key :value | 
@@ -53,13 +53,13 @@ RsrSnapshotAnalysis >> analyzeDictionary: aDictionary [
 	^ aDictionary
 ]
 
-{ #category : 'analyzing' }
+{ #category : #analyzing }
 RsrSnapshotAnalysis >> analyzeImmediate: anImmediateObject [
 
 	^anImmediateObject
 ]
 
-{ #category : 'analyzing' }
+{ #category : #analyzing }
 RsrSnapshotAnalysis >> analyzeService: aService [
 
 	self ensureRegistered: aService.
@@ -69,25 +69,25 @@ RsrSnapshotAnalysis >> analyzeService: aService [
 	snapshots add: (RsrServiceSnapshot from: aService)
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> analyzedObjects [
 
 	^ analyzedObjects
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> connection [
 
 	^connection
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> connection: aConnection [
 
 	connection := aConnection
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrSnapshotAnalysis >> ensureRegistered: aService [
 
 	self connection _ensureRegistered: aService.
@@ -95,7 +95,7 @@ RsrSnapshotAnalysis >> ensureRegistered: aService [
 		ifTrue: [self connection _stronglyRetain: aService]
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 RsrSnapshotAnalysis >> initialize [
 
 	super initialize.
@@ -103,43 +103,43 @@ RsrSnapshotAnalysis >> initialize [
 	analyzedObjects := IdentitySet new
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrSnapshotAnalysis >> perform [
 
 	roots do: [:each | self analyze: each]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> referenceClassFor: anObject [
 
 	^RsrReference referenceClassFor: anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> roots [
 
 	^roots
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> roots: anArray [
 
 	roots := anArray
 ]
 
-{ #category : 'actions' }
+{ #category : #actions }
 RsrSnapshotAnalysis >> snapshot: aService [
 
 	snapshots add: (RsrServiceSnapshot from: aService)
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> snapshots [
 
 	^snapshots
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrSnapshotAnalysis >> snapshots: anOrderedCollection [
 
 	snapshots := anOrderedCollection

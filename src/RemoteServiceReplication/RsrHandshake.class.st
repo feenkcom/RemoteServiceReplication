@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrHandshake',
-	#superclass : 'RsrObject',
+	#name : #RsrHandshake,
+	#superclass : #RsrObject,
 	#instVars : [
 		'steps',
 		'stream'
@@ -9,7 +9,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrHandshake class >> steps: anArrayOfSteps
 stream: aStream [
 
@@ -19,35 +19,35 @@ stream: aStream [
 		yourself
 ]
 
-{ #category : 'performing' }
+{ #category : #performing }
 RsrHandshake >> perform [
 	"Perform the sequence of configured steps."
 
 	self steps do: [:each | each performOver: self stream]
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrHandshake >> steps [
 	"The sequence of handshake steps to perform."
 
 	^steps
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrHandshake >> steps: anArrayOfSteps [
 	"The sequence of handshake steps to perform."
 
 	steps := anArrayOfSteps
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrHandshake >> stream [
 	"The stream used by each step."
 
 	^stream
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrHandshake >> stream: aStream [
 	"The stream used by each step."
 

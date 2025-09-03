@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrInternalConnectionSpecification',
-	#superclass : 'RsrConnectionSpecification',
+	#name : #RsrInternalConnectionSpecification,
+	#superclass : #RsrConnectionSpecification,
 	#instVars : [
 		'connectionA',
 		'connectionB'
@@ -9,7 +9,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'asserting' }
+{ #category : #asserting }
 RsrInternalConnectionSpecification >> assertOpen [
 	"Assert that connectionA and connectionB are open.
 	Signal RsrConnectionFailed if they are not."
@@ -18,32 +18,32 @@ RsrInternalConnectionSpecification >> assertOpen [
 		ifFalse: [RsrConnectionFailed signal]
 ]
 
-{ #category : 'connecting' }
+{ #category : #connecting }
 RsrInternalConnectionSpecification >> connect [
 	"Establish an internal Connection pair."
 
 	self subclassResponsibility
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInternalConnectionSpecification >> connectionA [
 
 	^connectionA
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInternalConnectionSpecification >> connectionA: anObject [
 
 	^ connectionA := anObject
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInternalConnectionSpecification >> connectionB [
 
 	^connectionB
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrInternalConnectionSpecification >> connectionB: anObject [
 
 	connectionB := anObject

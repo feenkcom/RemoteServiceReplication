@@ -1,11 +1,10 @@
 Class {
-	#name : 'RsrTokenRejected',
-	#superclass : 'RsrTokenExchangeMessage',
-	#category : 'RemoteServiceReplication',
-	#package : 'RemoteServiceReplication'
+	#name : #RsrTokenRejected,
+	#superclass : #RsrTokenExchangeMessage,
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'testing' }
+{ #category : #testing }
 RsrTokenRejected >> wasAccepted [
 
 	^false

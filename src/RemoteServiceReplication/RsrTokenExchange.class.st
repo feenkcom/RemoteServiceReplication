@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrTokenExchange',
-	#superclass : 'RsrHandshakeStep',
+	#name : #RsrTokenExchange,
+	#superclass : #RsrHandshakeStep,
 	#instVars : [
 		'token'
 	],
@@ -8,7 +8,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchange class >> token: aToken [
 
 	^self new
@@ -16,19 +16,19 @@ RsrTokenExchange class >> token: aToken [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchange >> codec [
 
 	^RsrTokenExchangeCodec new
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchange >> token [
 
 	^token
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrTokenExchange >> token: aToken [
 
 	token := aToken

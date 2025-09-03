@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrPromiseResolutionAction',
-	#superclass : 'RsrObject',
+	#name : #RsrPromiseResolutionAction,
+	#superclass : #RsrObject,
 	#instVars : [
 		'when',
 		'catch'
@@ -9,7 +9,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrPromiseResolutionAction class >> when: aWhenBlock
 catch: aCatchBlock [
 
@@ -19,25 +19,25 @@ catch: aCatchBlock [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPromiseResolutionAction >> catch [
 
 	^catch
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPromiseResolutionAction >> catch: aBlock [
 
 	catch := aBlock
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPromiseResolutionAction >> when [
 
 	^when
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrPromiseResolutionAction >> when: aBlock [
 
 	when := aBlock

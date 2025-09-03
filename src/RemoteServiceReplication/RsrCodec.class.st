@@ -1,11 +1,10 @@
 Class {
-	#name : 'RsrCodec',
-	#superclass : 'RsrObject',
-	#category : 'RemoteServiceReplication',
-	#package : 'RemoteServiceReplication'
+	#name : #RsrCodec,
+	#superclass : #RsrObject,
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'converting' }
+{ #category : #converting }
 RsrCodec >> bytesAsInteger: bytes [
 
 	| res |
@@ -14,19 +13,19 @@ RsrCodec >> bytesAsInteger: bytes [
 	^res
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCodec >> controlWordMax [
 
 	^(2 raisedTo: 63) - 1
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCodec >> controlWordMin [
 
 	^(2 raisedTo: 63) negated
 ]
 
-{ #category : 'decoding' }
+{ #category : #decoding }
 RsrCodec >> decodeControlWord: aStream [
 
 	| bytes unsignedResult |
@@ -37,7 +36,7 @@ RsrCodec >> decodeControlWord: aStream [
 		ifFalse: [unsignedResult]
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrCodec >> encodeControlWord: anInteger
 onto: aStream [
 
@@ -53,7 +52,7 @@ onto: aStream [
 	aStream nextPutAll: encodedBytes
 ]
 
-{ #category : 'converting' }
+{ #category : #converting }
 RsrCodec >> integerAsByteArray: anInteger
 ofSize: aNumberOfBytes [
 
@@ -73,7 +72,7 @@ ofSize: aNumberOfBytes [
 	^bytes
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrCodec >> sizeOfInteger [
 	"Return the number of bytes used to encode an integer"
 

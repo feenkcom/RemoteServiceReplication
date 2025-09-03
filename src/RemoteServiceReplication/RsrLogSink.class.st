@@ -1,11 +1,10 @@
 Class {
-	#name : 'RsrLogSink',
-	#superclass : 'RsrObject',
-	#category : 'RemoteServiceReplication',
-	#package : 'RemoteServiceReplication'
+	#name : #RsrLogSink,
+	#superclass : #RsrObject,
+	#category : 'RemoteServiceReplication'
 }
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrLogSink >> write: aMessage [
 
 	self subclassResponsibility

@@ -7,8 +7,8 @@ Object
 
 "
 Class {
-	#name : 'RsrReleaseServices',
-	#superclass : 'RsrCommand',
+	#name : #RsrReleaseServices,
+	#superclass : #RsrCommand,
 	#instVars : [
 		'sids'
 	],
@@ -16,7 +16,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrReleaseServices class >> sids: anArrayOfServiceIDs [
 
 	^self new
@@ -24,7 +24,7 @@ RsrReleaseServices class >> sids: anArrayOfServiceIDs [
 		yourself
 ]
 
-{ #category : 'encoding' }
+{ #category : #encoding }
 RsrReleaseServices >> encode: aStream
 using: anEncoder [
 
@@ -33,25 +33,25 @@ using: anEncoder [
 		onto: aStream
 ]
 
-{ #category : 'executing' }
+{ #category : #executing }
 RsrReleaseServices >> executeFor: aConnection [
 
 	sids do: [:sid | aConnection _remoteClientReleased: sid]
 ]
 
-{ #category : 'reporting' }
+{ #category : #reporting }
 RsrReleaseServices >> reportOn: aLog [
 
 	aLog debug: 'RsrReleaseObjects(', self sids printString, ')'
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrReleaseServices >> sids [
 
 	^sids
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrReleaseServices >> sids: anArrayOfServiceIDs [
 
 	sids := anArrayOfServiceIDs

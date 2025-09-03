@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrRemoteError',
-	#superclass : 'RsrError',
+	#name : #RsrRemoteError,
+	#superclass : #RsrError,
 	#instVars : [
 		'originalClassName',
 		'stack'
@@ -9,7 +9,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrRemoteError class >> from: anException [
 
 	| tag |
@@ -26,25 +26,25 @@ RsrRemoteError class >> from: anException [
 		yourself
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteError >> originalClassName [
 
 	^originalClassName
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteError >> originalClassName: aSymbol [
 
 	originalClassName := aSymbol
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteError >> stack [
 
 	^stack
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrRemoteError >> stack: aString [
 
 	stack := aString

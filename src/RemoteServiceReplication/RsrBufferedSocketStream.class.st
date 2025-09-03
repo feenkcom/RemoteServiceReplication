@@ -1,6 +1,6 @@
 Class {
-	#name : 'RsrBufferedSocketStream',
-	#superclass : 'RsrObject',
+	#name : #RsrBufferedSocketStream,
+	#superclass : #RsrObject,
 	#instVars : [
 		'stream',
 		'outBuffer',
@@ -11,7 +11,7 @@ Class {
 	#package : 'RemoteServiceReplication'
 }
 
-{ #category : 'instance creation' }
+{ #category : #'instance creation' }
 RsrBufferedSocketStream class >> on: aSocketStream [
 
 	^self new
@@ -19,26 +19,26 @@ RsrBufferedSocketStream class >> on: aSocketStream [
 		yourself
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> atEnd [
 
 	^stream atEnd
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> checkAutoFlush [
 
 	nextToWrite > 4096
 		ifTrue: [ self flush ]
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> close [
 
 	stream close
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> flush [
 
 	writePosition = nextToWrite
@@ -48,7 +48,7 @@ RsrBufferedSocketStream >> flush [
 	stream flush
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> growOutBufferTo: aNumberOfBytes [
 
 	| rounding |
@@ -56,7 +56,7 @@ RsrBufferedSocketStream >> growOutBufferTo: aNumberOfBytes [
 	outBuffer := outBuffer , (ByteArray new: rounding - outBuffer size)
 ]
 
-{ #category : 'initialization' }
+{ #category : #initialization }
 RsrBufferedSocketStream >> initialize [
 
 	super initialize.
@@ -65,25 +65,25 @@ RsrBufferedSocketStream >> initialize [
 	writePosition := 1
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> isConnected [
 
 	^stream isConnected
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> next [
 
 	^self next: 1
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> next: aCount [
 
 	^stream next: aCount
 ]
 
-{ #category : 'writing' }
+{ #category : #writing }
 RsrBufferedSocketStream >> nextPutAll: aByteArray [
 
 	(outBuffer size >= (aByteArray size + nextToWrite))
@@ -97,7 +97,7 @@ RsrBufferedSocketStream >> nextPutAll: aByteArray [
 	self checkAutoFlush
 ]
 
-{ #category : 'accessing' }
+{ #category : #accessing }
 RsrBufferedSocketStream >> stream: aStream [
 
 	stream := aStream
